@@ -124,7 +124,7 @@ function getLlmConfig() {
 }
 
 const FOLLOWUP_SYSTEM_SUFFIX =
-  '\n\n你已完成首轮点评。学员会继续追问，请紧扣本题与其原答案，回答简短（约 150 字内），直接给要点，不要重复首轮内容。';
+  '\n\n你已完成对学员首轮作答的结构化点评。学员会继续追问，请紧扣本题场景与其原答案，回答简洁可执行（约 300 字内），可补 1 个追问引导其深化思考。';
 
 function buildChatMessages(systemPrompt, userContent, multiTurn) {
   const sys = systemPrompt + (multiTurn ? FOLLOWUP_SYSTEM_SUFFIX : '');
@@ -150,7 +150,7 @@ async function callDeepSeek(cfg, systemPrompt, userContent, multiTurn) {
     },
     body: JSON.stringify({
       model: cfg.model,
-      max_tokens: multiTurn ? 400 : 800,
+      max_tokens: 1000,
       messages: buildChatMessages(systemPrompt, userContent, multiTurn)
     })
   });
@@ -179,7 +179,7 @@ async function callAnthropic(cfg, systemPrompt, userContent, multiTurn) {
     },
     body: JSON.stringify({
       model: cfg.model,
-      max_tokens: multiTurn ? 400 : 800,
+      max_tokens: 1000,
       system: sys,
       messages
     })
