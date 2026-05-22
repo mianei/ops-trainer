@@ -241,18 +241,39 @@
     align-items: start;
   }
   @media (min-width: 900px) {
-    .workspace { grid-template-columns: 260px 1fr; gap: 1.5rem; }
+    .workspace {
+      grid-template-columns: 220px 1fr;
+      gap: 1.5rem;
+      align-items: start;
+    }
   }
 
   .module-nav {
     border-radius: var(--r-lg);
-    padding: 12px;
-    position: sticky; top: 68px;
+    padding: 8px;
+    position: sticky;
+    top: 72px;
+    align-self: start;
+  }
+  @media (min-width: 900px) {
+    .module-nav {
+      max-height: calc(100vh - 96px);
+      overflow-y: auto;
+      overflow-x: hidden;
+      overscroll-behavior: contain;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(0,0,0,0.15) transparent;
+    }
+    .module-nav::-webkit-scrollbar { width: 5px; }
+    .module-nav::-webkit-scrollbar-thumb {
+      background: rgba(0,0,0,0.12);
+      border-radius: 4px;
+    }
   }
   .module-nav-title {
-    font-size: 11px; font-weight: 600; letter-spacing: 0.1em;
+    font-size: 10px; font-weight: 600; letter-spacing: 0.08em;
     text-transform: uppercase; color: var(--ink3);
-    padding: 8px 12px 6px;
+    padding: 6px 10px 4px;
     display: flex; align-items: center; justify-content: space-between;
   }
   .module-nav-title .count {
@@ -262,16 +283,17 @@
   }
   .module-nav-title.cat-product { color: var(--product); }
   .module-nav-title.cat-product .count { background: var(--product-soft); }
-  .module-nav-title.cat-ops { color: var(--ops); margin-top: 8px; }
+  .module-nav-title.cat-ops { color: var(--ops); margin-top: 4px; }
   .module-nav-title.cat-ops .count { background: var(--ops-soft); }
   .module-nav-title.cat-interview { color: var(--interview); margin-top: 8px; }
   .module-nav-title.cat-interview .count { background: var(--interview-soft); }
   .module-nav-title.cat-biz { color: var(--biz); margin-top: 8px; }
   .module-nav-title.cat-biz .count { background: var(--biz-soft); }
   .module-nav-subtitle {
-    padding: 10px 14px 4px;
-    font-size: 10px; font-weight: 600; letter-spacing: 0.06em;
+    padding: 6px 10px 2px;
+    font-size: 9px; font-weight: 600; letter-spacing: 0.05em;
     color: var(--ink3); text-transform: uppercase;
+    line-height: 1.3;
   }
   .module-nav-title .count em {
     font-style: normal; font-weight: 500; opacity: 0.85;
@@ -279,7 +301,7 @@
   .module-nav-group { margin-bottom: 4px; }
   .module-item {
     display: block; width: 100%; text-align: left;
-    padding: 12px 12px 12px 14px;
+    padding: 7px 8px 7px 10px;
     border: none; border-radius: var(--r);
     background: transparent; cursor: pointer;
     font-family: inherit; transition: background 0.2s;
@@ -303,15 +325,22 @@
   .module-item.cat-product .mi-cat { color: var(--product); }
   .module-item.cat-ops .mi-cat { color: var(--ops); }
   .module-item .mi-label {
-    font-size: 14px; font-weight: 600; color: var(--ink);
-    line-height: 1.35; display: block;
+    font-size: 13px; font-weight: 600; color: var(--ink);
+    line-height: 1.3; display: block;
   }
   .module-item .mi-desc {
-    font-size: 11px; color: var(--ink3); margin-top: 4px;
-    line-height: 1.4; display: block;
+    display: none;
+  }
+  .module-item.active .mi-desc {
+    display: block;
+    font-size: 10px; color: var(--ink3); margin-top: 3px;
+    line-height: 1.35;
   }
 
-  .train-main { min-width: 0; }
+  .train-main {
+    min-width: 0;
+    min-height: min(520px, calc(100vh - 96px));
+  }
 
   .module-head {
     margin-bottom: 1.25rem;
@@ -424,85 +453,103 @@
     content: ''; width: 6px; height: 6px; border-radius: 50%;
     background: linear-gradient(135deg, var(--product), var(--ops));
   }
-  .chat-box {
-    display: flex;
-    flex-direction: column;
+  .feedback-body {
+    padding: 1.5rem 1.75rem;
+    font-size: 15px; line-height: 1.85;
+    white-space: pre-wrap; color: var(--ink);
   }
-  .chat-thread {
-    max-height: 320px;
+
+  .followup-wrap {
+    margin-top: 1rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--line);
+    display: none;
+  }
+  .followup-wrap.visible { display: block; }
+  .followup-label {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--ink3);
+    margin-bottom: 0.75rem;
+  }
+  .followup-thread {
+    max-height: 280px;
     overflow-y: auto;
-    padding: 14px 16px;
+    margin-bottom: 0.75rem;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
   }
-  .chat-thread:empty { min-height: 0; padding: 0; }
+  .followup-thread:empty { display: none; }
   .fu-msg {
-    padding: 8px 12px;
-    border-radius: 10px;
-    font-size: 14px; line-height: 1.55;
+    padding: 10px 14px;
+    border-radius: 12px;
+    font-size: 14px; line-height: 1.7;
     white-space: pre-wrap;
-    max-width: 88%;
+    max-width: 92%;
   }
   .fu-msg.user {
     align-self: flex-end;
     background: var(--ink);
     color: #fff;
-    border-bottom-right-radius: 3px;
+    border-bottom-right-radius: 4px;
   }
   .fu-msg.assistant {
     align-self: flex-start;
     background: var(--wash);
     color: var(--ink);
     border: 1px solid var(--line);
-    border-bottom-left-radius: 3px;
+    border-bottom-left-radius: 4px;
   }
   .fu-msg.pending {
     align-self: flex-start;
     background: transparent;
     border: none;
     padding: 4px 0;
-    max-width: none;
   }
-  .chat-compose {
+  .followup-compose {
     display: flex;
-    align-items: flex-end;
-    gap: 8px;
-    padding: 10px 12px;
-    border-top: 1px solid var(--line);
-    background: rgba(255,255,255,0.5);
+    flex-direction: column;
+    gap: 10px;
   }
-  .chat-compose textarea {
-    flex: 1;
-    min-height: 38px;
-    max-height: 100px;
-    padding: 8px 12px;
-    font-size: 14px; line-height: 1.5;
+  .followup-compose textarea {
+    width: 100%;
+    min-height: 72px;
+    max-height: 160px;
+    padding: 12px 14px;
+    font-size: 14px; line-height: 1.6;
     font-family: inherit;
     border: 1px solid var(--line);
     border-radius: var(--r);
-    resize: none;
+    resize: vertical;
     background: #fff;
     color: var(--ink);
   }
-  .chat-compose textarea:focus {
+  .followup-compose textarea:focus {
     outline: none;
     border-color: var(--ink2);
+    box-shadow: 0 0 0 3px rgba(0,0,0,0.04);
   }
-  .chat-compose textarea:disabled { opacity: 0.5; background: var(--wash); }
-  .btn-send {
-    flex-shrink: 0;
-    height: 38px;
-    padding: 0 16px;
-    font-size: 13px; font-weight: 600; font-family: inherit;
-    background: var(--ink);
-    color: #fff;
-    border: none;
+  .followup-compose textarea:disabled { opacity: 0.6; background: var(--wash); }
+  .followup-hint {
+    font-size: 12px; color: var(--ink3);
+    margin-top: -4px;
+  }
+  .btn-followup {
+    align-self: flex-start;
+    padding: 10px 18px;
+    font-size: 14px; font-weight: 600; font-family: inherit;
+    background: #fff;
+    color: var(--ink);
+    border: 1px solid var(--line);
     border-radius: var(--r);
     cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
   }
-  .btn-send:hover:not(:disabled) { opacity: 0.88; }
-  .btn-send:disabled { opacity: 0.35; cursor: not-allowed; }
+  .btn-followup:hover:not(:disabled) {
+    border-color: var(--ink2);
+    background: var(--wash);
+  }
+  .btn-followup:disabled { opacity: 0.45; cursor: not-allowed; }
 
   .dots { display: inline-flex; gap: 5px; padding: 8px 0; }
   .dots span {
@@ -942,12 +989,15 @@ function renderTopics() {
         <button class="btn-primary" id="btn-${t.id}" type="button">提交 · 获取 AI 点评</button>
       </div>
       <div class="feedback-card glass" id="resp-${t.id}">
-        <div class="feedback-head">与导师对话</div>
-        <div class="chat-box">
-          <div class="chat-thread" id="followup-thread-${t.id}"></div>
-          <div class="chat-compose">
-            <textarea id="followup-input-${t.id}" rows="1" maxlength="800" placeholder="继续追问…" disabled></textarea>
-            <button type="button" class="btn-send" id="followup-btn-${t.id}" disabled>发送</button>
+        <div class="feedback-head">AI 导师点评</div>
+        <div class="feedback-body" id="resp-body-${t.id}"></div>
+        <div class="followup-wrap" id="followup-${t.id}">
+          <div class="followup-label">继续追问导师</div>
+          <div class="followup-thread" id="followup-thread-${t.id}"></div>
+          <div class="followup-compose">
+            <textarea id="followup-input-${t.id}" rows="2" maxlength="800" placeholder="针对点评继续提问，例如：这个思路最大的风险是什么？还有哪些指标可以验证？" disabled></textarea>
+            <p class="followup-hint">Enter 发送 · Shift+Enter 换行 · 换题后对话会清空</p>
+            <button type="button" class="btn-followup" id="followup-btn-${t.id}" disabled>发送追问</button>
           </div>
         </div>
       </div>
@@ -1034,12 +1084,14 @@ function loadScenario(id) {
 
 function clearMentorSession(id) {
   delete mentorSessions[id];
+  const wrap = document.getElementById('followup-' + id);
   const thread = document.getElementById('followup-thread-' + id);
   const input = document.getElementById('followup-input-' + id);
   const btn = document.getElementById('followup-btn-' + id);
+  if (wrap) wrap.classList.remove('visible');
   if (thread) thread.innerHTML = '';
   if (input) { input.value = ''; input.disabled = true; }
-  if (btn) { btn.disabled = true; btn.textContent = '发送'; }
+  if (btn) { btn.disabled = true; btn.textContent = '发送追问'; }
 }
 
 function initFollowUp(id) {
@@ -1053,32 +1105,15 @@ function initFollowUp(id) {
       if (!btn.disabled) submitFollowUp(id);
     }
   });
-  input.addEventListener('input', () => {
-    input.style.height = 'auto';
-    input.style.height = Math.min(input.scrollHeight, 100) + 'px';
-  });
 }
 
 function enableFollowUp(id) {
+  const wrap = document.getElementById('followup-' + id);
   const input = document.getElementById('followup-input-' + id);
   const btn = document.getElementById('followup-btn-' + id);
+  if (wrap) wrap.classList.add('visible');
   if (input) input.disabled = false;
   if (btn) btn.disabled = false;
-}
-
-function showChatMessage(id, role, text, pending) {
-  const thread = document.getElementById('followup-thread-' + id);
-  if (!thread) return null;
-  const el = document.createElement('div');
-  el.className = 'fu-msg ' + role + (pending ? ' pending' : '');
-  if (pending) {
-    el.innerHTML = '<div class="dots"><span></span><span></span><span></span></div>';
-  } else {
-    el.textContent = text;
-  }
-  thread.appendChild(el);
-  thread.scrollTop = thread.scrollHeight;
-  return el;
 }
 
 function appendFollowUpBubble(id, role, text, pending) {
@@ -1111,7 +1146,7 @@ async function submitFollowUp(id) {
   const t = getTopic(id);
   btn.disabled = true;
   input.disabled = true;
-  btn.textContent = '…';
+  btn.textContent = '回复中…';
   appendFollowUpBubble(id, 'user', question, false);
   input.value = '';
   const pending = appendFollowUpBubble(id, 'assistant', '', true);
@@ -1155,7 +1190,7 @@ async function submitFollowUp(id) {
 
   btn.disabled = false;
   input.disabled = false;
-  btn.textContent = '发送';
+  btn.textContent = '发送追问';
   input.focus();
 }
 
@@ -1168,11 +1203,12 @@ async function submitAnswer(id) {
   const scenario = document.getElementById('scenario-' + id).textContent;
   const btn = document.getElementById('btn-' + id);
   const respArea = document.getElementById('resp-' + id);
+  const respBody = document.getElementById('resp-body-' + id);
 
   btn.disabled = true;
   btn.textContent = '点评生成中…';
   respArea.classList.add('visible');
-  const pendingReview = showChatMessage(id, 'assistant', '', true);
+  respBody.innerHTML = '<div class="dots"><span></span><span></span><span></span></div>';
 
   try {
     const res = await fetch('/api/chat', {
@@ -1191,32 +1227,29 @@ async function submitAnswer(id) {
     try {
       data = raw ? JSON.parse(raw) : {};
     } catch {
-      if (pendingReview) pendingReview.remove();
-      showChatMessage(id, 'assistant', '服务端返回格式异常，请稍后重试', false);
+      respBody.textContent = '服务端返回格式异常，请稍后重试';
       return;
     }
 
-    if (pendingReview) pendingReview.remove();
     if (data.ok && !data.text) {
-      showChatMessage(id, 'assistant', '请求异常，请刷新后重试', false);
+      respBody.textContent = '请求被误判为验证接口，请刷新页面后重试。若仍失败请重新部署最新 index.html。';
       return;
     }
     if (res.ok && data.text) {
-      showChatMessage(id, 'assistant', data.text, false);
+      respBody.textContent = data.text;
       mentorSessions[id] = { scenario, answer, feedback: data.text, history: [] };
       enableFollowUp(id);
     } else if (res.status === 401) {
-      showChatMessage(id, 'assistant', '访问码已失效，请重新登录。', false);
+      respBody.textContent = '访问码已失效，请重新登录。';
       setTimeout(() => { clearSession(); lockApp(); }, 2000);
     } else if (res.status === 429) {
-      showChatMessage(id, 'assistant', data.error || '今日次数已达上限', false);
+      respBody.textContent = data.error || '今日次数已达上限';
     } else {
-      showChatMessage(id, 'assistant', data.error || ('请求失败（HTTP ' + res.status + '）'), false);
+      respBody.textContent = data.error || ('请求失败（HTTP ' + res.status + '）');
       clearMentorSession(id);
     }
   } catch (e) {
-    if (pendingReview) pendingReview.remove();
-    showChatMessage(id, 'assistant', '网络错误：' + e.message, false);
+    respBody.textContent = '网络错误：' + e.message;
     clearMentorSession(id);
   }
 
