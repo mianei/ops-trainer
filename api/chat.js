@@ -123,7 +123,25 @@ function getLlmConfig() {
   };
 }
 
-async function callDeepSeek(cfg, systemPrompt, userContent) {
+const FOLLOWUP_SYSTEM_SUFFIX =
+  '\n\n你已完成对学员首轮作答的结构化点评。学员会继续追问，请紧扣本题场景与其原答案，回答简洁可执行（约 300 字内），可补 1 个追问引导其深化思考。';
+
+function buildChatMessages(systemPrompt, userContent, multiTurn) {
+  const sys = systemPrompt + (multiTurn ? FOLLOWUP_SYSTEM_SUFFIX : '');
+  if (!multiTurn) {
+    return [
+      { role: 'system', content: sys },
+      { role: 'user', content: userContent }
+    ];
+  }
+  const messages = [{ role: 'system', content: sys }];
+  for (const turn of multiTurn) {
+    messages.push({ role: turn.role, content: turn.content });
+  }
+  return messages;
+}
+
+async function callDeepSeek(cfg, systemPrompt, userContent, multiTurn) {
   const res = await fetch(`${cfg.baseUrl}/chat/completions`, {
     method: 'POST',
     headers: {
@@ -133,10 +151,7 @@ async function callDeepSeek(cfg, systemPrompt, userContent) {
     body: JSON.stringify({
       model: cfg.model,
       max_tokens: 1000,
-      messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: userContent }
-      ]
+      messages: buildChatMessages(systemPrompt, userContent, multiTurn)
     })
   });
   const data = await res.json();
@@ -149,7 +164,12 @@ async function callDeepSeek(cfg, systemPrompt, userContent) {
   return { text };
 }
 
-async function callAnthropic(cfg, systemPrompt, userContent) {
+async function callAnthropic(cfg, systemPrompt, userContent, multiTurn) {
+  const sys = systemPrompt + (multiTurn ? FOLLOWUP_SYSTEM_SUFFIX : '');
+  const messages = multiTurn
+    ? multiTurn.filter(m => m.role === 'user' || m.role === 'assistant')
+    : [{ role: 'user', content: userContent }];
+
   const res = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: {
@@ -160,8 +180,8 @@ async function callAnthropic(cfg, systemPrompt, userContent) {
     body: JSON.stringify({
       model: cfg.model,
       max_tokens: 1000,
-      system: systemPrompt,
-      messages: [{ role: 'user', content: userContent }]
+      system: sys,
+      messages
     })
   });
   const data = await res.json();
@@ -198,12 +218,57 @@ export default async function handler(req) {
     return json({ error: llm.error }, 500);
   }
 
+  const mode = body?.mode === 'followup' ? 'followup' : 'review';
   const { systemPrompt, scenario, answer } = body || {};
-  if (!systemPrompt || !scenario || !answer) {
+
+  if (!systemPrompt || !scenario) {
     return json({ error: '参数缺失' }, 400);
   }
-  if (typeof answer !== 'string' || answer.length > 4000) {
-    return json({ error: '答案过长或格式错误' }, 400);
+
+  let userContent = '';
+  let multiTurn = null;
+
+  if (mode === 'followup') {
+    const { priorFeedback, question, history } = body;
+    if (!answer || !priorFeedback || !question) {
+      return json({ error: '追问参数缺失' }, 400);
+    }
+    if (typeof question !== 'string' || question.length > 800) {
+      return json({ error: '追问过长或格式错误' }, 400);
+    }
+    if (!Array.isArray(history) || history.length > 12) {
+      return json({ error: '对话历史异常' }, 400);
+    }
+    for (const h of history) {
+      if (!h?.q || !h?.a || String(h.q).length > 800 || String(h.a).length > 4000) {
+        return json({ error: '对话历史格式错误' }, 400);
+      }
+    }
+    if (typeof answer !== 'string' || answer.length > 4000) {
+      return json({ error: '答案过长或格式错误' }, 400);
+    }
+
+    multiTurn = [
+      {
+        role: 'user',
+        content: `业务场景：${scenario}\n\n学员初答：${answer}`
+      },
+      { role: 'assistant', content: priorFeedback }
+    ];
+    for (const h of history) {
+      multiTurn.push({ role: 'user', content: h.q });
+      multiTurn.push({ role: 'assistant', content: h.a });
+    }
+    multiTurn.push({ role: 'user', content: question });
+    userContent = question;
+  } else {
+    if (!answer) {
+      return json({ error: '参数缺失' }, 400);
+    }
+    if (typeof answer !== 'string' || answer.length > 4000) {
+      return json({ error: '答案过长或格式错误' }, 400);
+    }
+    userContent = `业务场景：${scenario}\n\n我的分析：${answer}`;
   }
 
   const ip = getClientIp(req);
@@ -215,13 +280,11 @@ export default async function handler(req) {
     return json({ error: '今日全站使用量已达上限，请明天再来。' }, 429);
   }
 
-  const userContent = `业务场景：${scenario}\n\n我的分析：${answer}`;
-
   try {
     const result =
       llm.provider === 'deepseek'
-        ? await callDeepSeek(llm, systemPrompt, userContent)
-        : await callAnthropic(llm, systemPrompt, userContent);
+        ? await callDeepSeek(llm, systemPrompt, userContent, multiTurn)
+        : await callAnthropic(llm, systemPrompt, userContent, multiTurn);
 
     if (result.error) {
       return json({ error: result.error }, result.status || 502);
