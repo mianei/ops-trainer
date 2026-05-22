@@ -658,7 +658,25 @@ async function loadTopics() {
   if (!res.ok) throw new Error('HTTP ' + res.status);
   const data = await res.json();
   if (!Array.isArray(data.topics) || !data.topics.length) throw new Error('topics 格式错误');
-  return data.topics;
+  const topics = data.topics;
+  try {
+    const ex = await fetch('scenarios-extra.json?t=' + Date.now(), { cache: 'no-store' });
+    if (ex.ok) {
+      const extra = await ex.json();
+      topics.forEach(t => {
+        const list = extra[t.id];
+        if (!Array.isArray(list)) return;
+        list.forEach(s => {
+          if (typeof s === 'string' && s.trim()) t.scenarios.push(s.trim());
+        });
+      });
+    }
+  } catch (_) { /* 可选文件 */ }
+  return topics;
+}
+
+function totalScenarios() {
+  return TOPICS.reduce((n, t) => n + t.scenarios.length, 0);
 }
 
 function updateModuleHead(id) {
@@ -761,7 +779,7 @@ function renderTopics() {
 async function loadTopicsAndRender() {
   try {
     TOPICS = await loadTopics();
-    setSyncStatus(true, '已就绪 · ' + TOPICS.length + ' 个模块');
+    setSyncStatus(true, '已就绪 · ' + TOPICS.length + ' 模块 · ' + totalScenarios() + ' 道题');
     renderTopics();
   } catch (e) {
     setSyncStatus(false, '加载失败：' + e.message);
