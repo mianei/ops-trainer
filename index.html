@@ -55,7 +55,10 @@
     --r-lg: 20px;
     --r-xl: 28px;
     --max: 1080px;
-    --sticky-top: 80px;
+    --sticky-top: 76px;
+    --sidebar-w: 200px;
+    --sidebar-gap: 20px;
+    --rail-left: calc((100vw - min(100vw, var(--max))) / 2 + 24px + 20px);
     --sans: -apple-system, BlinkMacSystemFont, 'SF Pro SC', 'SF Pro Text', 'Helvetica Neue', 'Noto Sans SC', sans-serif;
   }
 
@@ -451,15 +454,19 @@
   }
   @media (min-width: 900px) {
     .workspace {
-      grid-template-columns: 200px minmax(0, 1fr);
-      gap: 1.25rem;
+      display: block;
     }
     .workspace-aside {
-      position: sticky;
-      top: var(--sticky-top, 80px);
-      align-self: start;
-      z-index: 35;
-      max-height: calc(100vh - var(--sticky-top, 80px) - 20px);
+      position: fixed;
+      left: var(--rail-left);
+      top: var(--sticky-top);
+      width: var(--sidebar-w);
+      max-height: calc(100vh - var(--sticky-top) - 24px);
+      z-index: 40;
+    }
+    .train-main {
+      margin-left: calc(var(--sidebar-w) + var(--sidebar-gap));
+      width: auto;
     }
   }
 
@@ -475,8 +482,8 @@
   }
   @media (min-width: 900px) {
     .module-nav {
-      width: 200px;
-      max-height: calc(100vh - var(--sticky-top, 80px) - 20px);
+      width: 100%;
+      max-height: calc(100vh - var(--sticky-top) - 24px);
       overflow-y: auto;
       overflow-x: hidden;
       overscroll-behavior: contain;
@@ -861,7 +868,7 @@
       border-left: none !important;
       border-top: 3px solid transparent;
     }
-    .train-main { max-height: none; overflow: visible; }
+    .train-main { max-height: none; overflow: visible; margin-left: 0; }
     .module-item.active { border-top-color: var(--ink); }
     .module-item.active.cat-product { border-top-color: var(--product); }
     .module-item.active.cat-ops { border-top-color: var(--ops); }
@@ -962,7 +969,7 @@
 
   <div id="mainContent" class="loading-main">加载训练模块…</div>
 
-  <footer class="footer">运营 · 产品思维训练器 · 仅供学习使用 · <span id="buildTag">v4.3</span></footer>
+  <footer class="footer">运营 · 产品思维训练器 · 仅供学习使用 · <span id="buildTag">v4.4</span></footer>
   </div>
 </div>
 
