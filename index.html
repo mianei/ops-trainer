@@ -268,8 +268,14 @@
   .module-nav-title.cat-interview .count { background: var(--interview-soft); }
   .module-nav-title.cat-biz { color: var(--biz); margin-top: 8px; }
   .module-nav-title.cat-biz .count { background: var(--biz-soft); }
-  .module-nav-title.cat-map { color: var(--map); margin-top: 8px; }
-  .module-nav-title.cat-map .count { background: var(--map-soft); }
+  .module-nav-subtitle {
+    padding: 10px 14px 4px;
+    font-size: 10px; font-weight: 600; letter-spacing: 0.06em;
+    color: var(--ink3); text-transform: uppercase;
+  }
+  .module-nav-title .count em {
+    font-style: normal; font-weight: 500; opacity: 0.85;
+  }
   .module-nav-group { margin-bottom: 4px; }
   .module-item {
     display: block; width: 100%; text-align: left;
@@ -552,9 +558,6 @@
     .module-item.active { border-top-color: var(--ink); }
     .module-item.active.cat-product { border-top-color: var(--product); }
     .module-item.active.cat-ops { border-top-color: var(--ops); }
-    .module-item.active.cat-interview { border-top-color: var(--interview); }
-    .module-item.active.cat-biz { border-top-color: var(--biz); }
-    .module-item.active.cat-map { border-top-color: var(--map); }
     .module-item .mi-desc { display: none; }
     .module-head { margin-bottom: 1rem; padding-bottom: 0.75rem; }
     .module-head h2 { font-size: 1.25rem; }
@@ -587,11 +590,10 @@
       <h1>训练运营思维<br/>与产品思维</h1>
       <p class="lead">不是教你写文案、做海报，而是面对真实业务困境时——如何拆解问题、做判断、讲清决策逻辑。</p>
       <ul class="pillar-list">
-        <li>产品思维 ×4：需求、竞品、功能设计、交互布局</li>
-        <li>运营思维 ×6：决策、数据、增长、留存、传播、危机</li>
-        <li>常见面试问题 ×8：Q1–Q12 + 综合/实操/深度 + 开放题 Q82–Q138</li>
-        <li>业务分析题 ×3 · 地图与出行 ×2</li>
-        <li>真实 Case · AI 点评后可继续追问导师</li>
+        <li><strong>产品思维</strong>：需求/功能/交互/竞品 + 面经 Q10–12、PM 实操、产品设计开放题</li>
+        <li><strong>运营思维</strong>：决策数据、增长留存 + 面经 Q1–138、业务分析、地图出行</li>
+        <li>行业题（OTA/电商/社区/即时零售）并入对应基础模块刷题</li>
+        <li>AI 点评后可继续追问导师</li>
       </ul>
     </div>
     <div class="gate-card glass">
@@ -623,12 +625,10 @@
     <h1>在真实场景里，练运营与产品的判断力。</h1>
     <p class="desc">每个模块对应一类职场高频困境。先独立作答，再获得 AI 导师的结构化点评——帮你建立可复用的思维框架，而不是标准答案。</p>
     <div class="hero-stats">
-      <div class="stat-item"><strong id="statProduct">4</strong><span>产品思维模块</span></div>
-      <div class="stat-item"><strong id="statOps">6</strong><span>运营思维模块</span></div>
-      <div class="stat-item"><strong id="statInterview">8</strong><span>常见面试问题</span></div>
-      <div class="stat-item"><strong id="statBiz">3</strong><span>业务分析题</span></div>
-      <div class="stat-item"><strong id="statMap">2</strong><span>地图与出行</span></div>
-      <div class="stat-item"><strong>AI</strong><span>导师式点评</span></div>
+      <div class="stat-item"><strong id="statProduct">7</strong><span>产品思维 · <em id="statProductQ">0</em> 题</span></div>
+      <div class="stat-item"><strong id="statOps">16</strong><span>运营思维 · <em id="statOpsQ">0</em> 题</span></div>
+      <div class="stat-item"><strong id="statTotal">23</strong><span>训练模块</span></div>
+      <div class="stat-item"><strong>AI</strong><span>点评 + 追问</span></div>
     </div>
   </section>
 
@@ -661,30 +661,55 @@ const gateCode = document.getElementById('gateCode');
 const gateBtn = document.getElementById('gateBtn');
 const gateError = document.getElementById('gateError');
 
+/** 按飞书《产运岗｜面经》知识库划分的侧栏结构（仅产品 / 运营两大板块） */
+const CURRICULUM = {
+  product: [
+    { section: '基础 · 需求与洞察', ids: ['user'] },
+    { section: '基础 · 功能与体验', ids: ['feature', 'interaction'] },
+    { section: '基础 · 竞品判断', ids: ['competitor'] },
+    { section: '面经 · 产品与需求', ids: ['iv-pm'] },
+    { section: '面经 · PM 实操方法', ids: ['iv-skills'] },
+    { section: '面经 · 产品设计开放题', ids: ['prod-open'] }
+  ],
+  ops: [
+    { section: '基础 · 决策与数据', ids: ['decision', 'data'] },
+    { section: '基础 · 增长与留存', ids: ['growth', 'retention'] },
+    { section: '基础 · 传播与危机', ids: ['content', 'crisis'] },
+    { section: '面经 · 求职表达 Q1–9', ids: ['iv-exp', 'iv-self', 'iv-career', 'iv-misc'] },
+    { section: '面经 · 产运深度 Q19–81', ids: ['iv-ops'] },
+    { section: '面经 · 平台商业策略', ids: ['iv-open'] },
+    { section: '面经 · 十大业务分析', ids: ['biz-platform', 'biz-vertical', 'biz-monetize'] },
+    { section: '面经 · 地图·出行·本地生活', ids: ['map-ride', 'map-local'] }
+  ]
+};
+
 function meta(topicOrId) {
   const t = typeof topicOrId === 'string' ? getTopic(topicOrId) : topicOrId;
   if (!t) return { cat: 'ops', catLabel: '运营思维', desc: '' };
-  const cat = t.cat || 'ops';
-  const catLabel = t.catLabel || (
-    cat === 'product' ? '产品思维'
-      : cat === 'interview' ? '常见面试问题'
-      : cat === 'biz' ? '业务分析题'
-      : cat === 'map' ? '地图与出行'
-      : '运营思维'
-  );
+  const cat = t.cat === 'product' ? 'product' : 'ops';
+  const catLabel = t.catLabel || (cat === 'product' ? '产品思维' : '运营思维');
   return { cat, catLabel, desc: t.desc || '' };
 }
 
+function topicMap() {
+  return new Map(TOPICS.map(t => [t.id, t]));
+}
+
+function countScenarios(list) {
+  return list.reduce((n, t) => n + (t.scenarios?.length || 0), 0);
+}
+
 function topicsByCategory() {
-  const product = TOPICS.filter(t => meta(t).cat === 'product');
-  const interview = TOPICS.filter(t => meta(t).cat === 'interview');
-  const biz = TOPICS.filter(t => meta(t).cat === 'biz');
-  const map = TOPICS.filter(t => meta(t).cat === 'map');
-  const ops = TOPICS.filter(t => {
-    const c = meta(t).cat;
-    return c !== 'product' && c !== 'interview' && c !== 'biz' && c !== 'map';
+  const map = topicMap();
+  const product = CURRICULUM.product.flatMap(s => s.ids.map(id => map.get(id)).filter(Boolean));
+  const ops = CURRICULUM.ops.flatMap(s => s.ids.map(id => map.get(id)).filter(Boolean));
+  const inCurriculum = new Set([...product, ...ops].map(t => t.id));
+  const extra = TOPICS.filter(t => !inCurriculum.has(t.id));
+  extra.forEach(t => {
+    if (meta(t).cat === 'product') product.push(t);
+    else ops.push(t);
   });
-  return { product, ops, interview, biz, map, ordered: [...product, ...ops, ...interview, ...biz, ...map] };
+  return { product, ops, ordered: [...product, ...ops] };
 }
 
 function topicsUrl() {
@@ -844,7 +869,7 @@ function updateModuleHead(id) {
   `;
 }
 
-function appendModuleBtn(nav, t, isActive) {
+function appendModuleBtn(parent, t, isActive) {
   const m = meta(t);
   const btn = document.createElement('button');
   btn.type = 'button';
@@ -855,23 +880,46 @@ function appendModuleBtn(nav, t, isActive) {
     <span class="mi-desc">${escapeHtml(m.desc)}</span>
   `;
   btn.onclick = () => switchTab(t.id, btn);
-  nav.appendChild(btn);
+  parent.appendChild(btn);
   return btn;
+}
+
+function renderNavGroup(nav, cat, catLabel, sections, topicById, firstActiveRef) {
+  const topics = sections.flatMap(s => s.ids.map(id => topicById.get(id)).filter(Boolean));
+  const q = countScenarios(topics);
+  const group = document.createElement('div');
+  group.className = 'module-nav-group';
+  group.innerHTML = `<div class="module-nav-title cat-${cat}">${catLabel}<span class="count">${topics.length} 模块 · <em>${q}</em> 题</span></div>`;
+  sections.forEach(sec => {
+    const sub = document.createElement('div');
+    sub.className = 'module-nav-subtitle';
+    sub.textContent = sec.section;
+    group.appendChild(sub);
+    sec.ids.forEach(id => {
+      const t = topicById.get(id);
+      if (!t) return;
+      appendModuleBtn(group, t, firstActiveRef.value);
+      if (firstActiveRef.value) firstActiveRef.value = false;
+    });
+  });
+  nav.appendChild(group);
+  return { topics, q };
 }
 
 function renderTopics() {
   const main = document.getElementById('mainContent');
-  const { product, ops, interview, biz, map, ordered } = topicsByCategory();
+  const { product, ops, ordered } = topicsByCategory();
+  const topicById = topicMap();
   const statP = document.getElementById('statProduct');
   const statO = document.getElementById('statOps');
-  const statI = document.getElementById('statInterview');
-  const statB = document.getElementById('statBiz');
-  const statM = document.getElementById('statMap');
+  const statPQ = document.getElementById('statProductQ');
+  const statOQ = document.getElementById('statOpsQ');
+  const statTotal = document.getElementById('statTotal');
   if (statP) statP.textContent = String(product.length);
   if (statO) statO.textContent = String(ops.length);
-  if (statI) statI.textContent = String(interview.length);
-  if (statB) statB.textContent = String(biz.length);
-  if (statM) statM.textContent = String(map.length);
+  if (statPQ) statPQ.textContent = String(countScenarios(product));
+  if (statOQ) statOQ.textContent = String(countScenarios(ops));
+  if (statTotal) statTotal.textContent = String(ordered.length);
 
   main.innerHTML = `
     <div class="workspace">
@@ -885,42 +933,9 @@ function renderTopics() {
 
   const nav = document.getElementById('moduleNav');
   const panels = document.getElementById('panels');
-
-  const g1 = document.createElement('div');
-  g1.className = 'module-nav-group';
-  g1.innerHTML = `<div class="module-nav-title cat-product">产品思维<span class="count">${product.length}</span></div>`;
-  nav.appendChild(g1);
-  product.forEach((t, i) => appendModuleBtn(g1, t, i === 0));
-
-  const g2 = document.createElement('div');
-  g2.className = 'module-nav-group';
-  g2.innerHTML = `<div class="module-nav-title cat-ops">运营思维<span class="count">${ops.length}</span></div>`;
-  nav.appendChild(g2);
-  ops.forEach(t => appendModuleBtn(g2, t, false));
-
-  if (interview.length) {
-    const g3 = document.createElement('div');
-    g3.className = 'module-nav-group';
-    g3.innerHTML = `<div class="module-nav-title cat-interview">常见面试问题<span class="count">${interview.length}</span></div>`;
-    nav.appendChild(g3);
-    interview.forEach(t => appendModuleBtn(g3, t, false));
-  }
-
-  if (biz.length) {
-    const g4 = document.createElement('div');
-    g4.className = 'module-nav-group';
-    g4.innerHTML = `<div class="module-nav-title cat-biz">业务分析题<span class="count">${biz.length}</span></div>`;
-    nav.appendChild(g4);
-    biz.forEach(t => appendModuleBtn(g4, t, false));
-  }
-
-  if (map.length) {
-    const g5 = document.createElement('div');
-    g5.className = 'module-nav-group';
-    g5.innerHTML = `<div class="module-nav-title cat-map">地图与出行<span class="count">${map.length}</span></div>`;
-    nav.appendChild(g5);
-    map.forEach(t => appendModuleBtn(g5, t, false));
-  }
+  const firstActiveRef = { value: true };
+  renderNavGroup(nav, 'product', '产品思维', CURRICULUM.product, topicById, firstActiveRef);
+  renderNavGroup(nav, 'ops', '运营思维', CURRICULUM.ops, topicById, firstActiveRef);
 
   let firstActive = true;
   ordered.forEach((t) => {
@@ -1003,16 +1018,20 @@ function switchTab(id, el) {
 
 function pickScenarios(topic) {
   const list = topic.scenarios || [];
-  const cat = meta(topic).cat;
-  if (cat === 'interview') {
+  const id = topic.id || '';
+  if (id === 'prod-open') {
+    const pd = list.filter(s => typeof s === 'string' && s.includes('【面试·产品设计·'));
+    return pd.length ? pd : list;
+  }
+  if (id.startsWith('iv-')) {
     const iv = list.filter(s => typeof s === 'string' && s.includes('【面试·'));
     return iv.length ? iv : list;
   }
-  if (cat === 'biz') {
+  if (id.startsWith('biz-')) {
     const bz = list.filter(s => typeof s === 'string' && s.includes('【业务分析·'));
     return bz.length ? bz : list;
   }
-  if (cat === 'map') {
+  if (id.startsWith('map-')) {
     const mp = list.filter(s => typeof s === 'string' && s.includes('【地图·'));
     return mp.length ? mp : list;
   }
