@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<!-- ops-trainer 前端 v2.3 -->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>运营思维训练器</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f4f3ef;
+    --surface: #ffffff;
+    --surface2: #eeecE6;
+    --border: rgba(0,0,0,0.08);
+    --border2: rgba(0,0,0,0.14);
+    --text: #1c1c1a;
+    --text2: #5c5c58;
+    --text3: #949490;
+    --accent: #534AB7;
+    --accent-light: #eeedfe;
+    --accent-dark: #3c3489;
+    --success: #2d6a1e;
+    --success-bg: #e8f4e0;
+    --danger: #b3261e;
+    --danger-bg: #fdecea;
+    --shadow: 0 12px 40px rgba(26, 24, 40, 0.08);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #141413;
+      --surface: #1f1f1d;
+      --surface2: #2a2a28;
+      --border: rgba(255,255,255,0.08);
+      --border2: rgba(255,255,255,0.14);
+      --text: #f0efe8;
+      --text2: #a8a8a2;
+      --text3: #6e6e6a;
+      --accent: #8b84e8;
+      --accent-light: #2a2658;
+      --accent-dark: #c4bff5;
+      --success: #9fd46a;
+      --success-bg: #1a3310;
+      --danger: #f2a39f;
+      --danger-bg: #3d1816;
+      --shadow: 0 12px 40px rgba(0,0,0,0.35);
+    }
+  }
+
+  html { font-size: 16px; }
+  body {
+    font-family: 'Noto Sans SC', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  /* —— 访问码门禁 —— */
+  #gate {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% -10%, rgba(83,74,183,0.18), transparent),
+      var(--bg);
+  }
+  #gate.hidden { display: none; }
+
+  .gate-card {
+    width: 100%;
+    max-width: 400px;
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 20px;
+    padding: 2rem 1.75rem;
+    box-shadow: var(--shadow);
+  }
+  .gate-logo {
+    width: 48px; height: 48px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, var(--accent), #7b6fd4);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    margin-bottom: 1.25rem;
+  }
+  .gate-card h1 {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .gate-card .sub {
+    font-size: 14px;
+    color: var(--text2);
+    margin-bottom: 1.5rem;
+  }
+  .gate-field label {
+    display: block;
+    font-size: 13px;
+    color: var(--text2);
+    margin-bottom: 8px;
+  }
+  .gate-field input {
+    width: 100%;
+    height: 44px;
+    padding: 0 14px;
+    font-size: 15px;
+    font-family: inherit;
+    background: var(--surface2);
+    border: 0.5px solid var(--border2);
+    border-radius: 10px;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .gate-field input:focus { border-color: var(--accent); }
+  .gate-remember {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 12px 0 1.25rem;
+    font-size: 13px;
+    color: var(--text2);
+    cursor: pointer;
+    user-select: none;
+  }
+  .gate-remember input { width: 16px; height: 16px; accent-color: var(--accent); }
+  .btn-enter {
+    width: 100%;
+    height: 44px;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: inherit;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: opacity 0.15s, transform 0.1s;
+  }
+  .btn-enter:hover { opacity: 0.9; }
+  .btn-enter:active { transform: scale(0.98); }
+  .btn-enter:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+  .gate-error {
+    margin-top: 12px;
+    padding: 10px 12px;
+    font-size: 13px;
+    color: var(--danger);
+    background: var(--danger-bg);
+    border-radius: 8px;
+    display: none;
+  }
+  .gate-error.visible { display: block; }
+  .gate-hint {
+    margin-top: 1.25rem;
+    font-size: 12px;
+    color: var(--text3);
+    text-align: center;
+  }
+
+  /* —— 主应用 —— */
+  #app { display: none; }
+  #app.visible { display: block; }
+
+  .page { max-width: 780px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+  }
+  .topbar-left .badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    color: var(--accent);
+    background: var(--accent-light);
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-bottom: 8px;
+  }
+  .topbar-left h1 { font-size: 26px; font-weight: 700; line-height: 1.3; }
+  .topbar-left p { font-size: 14px; color: var(--text2); margin-top: 6px; max-width: 480px; }
+  .btn-logout {
+    height: 34px;
+    padding: 0 14px;
+    font-size: 12px;
+    font-family: inherit;
+    color: var(--text2);
+    background: var(--surface);
+    border: 0.5px solid var(--border2);
+    border-radius: 8px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.15s;
+  }
+  .btn-logout:hover { background: var(--surface2); color: var(--text); }
+
+  .sync-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--text3);
+    margin-bottom: 1.25rem;
+    padding: 8px 12px;
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 8px;
+  }
+  .sync-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--text3);
+    flex-shrink: 0;
+  }
+  .sync-dot.ok { background: var(--success); }
+  .sync-dot.err { background: var(--danger); }
+
+  .tabs { display: flex; gap: 6px; margin-bottom: 1.5rem; flex-wrap: wrap; }
+  .tab {
+    padding: 7px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    font-family: inherit;
+    background: var(--surface);
+    color: var(--text2);
+    border: 0.5px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .tab:hover:not(.active) { background: var(--surface2); color: var(--text); }
+  .tab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  .scenario-card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin-bottom: 1.25rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+  }
+  .scenario-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .scenario-text { font-size: 15px; line-height: 1.75; }
+
+  .field-label { font-size: 13px; color: var(--text2); margin-bottom: 8px; }
+  textarea {
+    width: 100%;
+    min-height: 110px;
+    padding: 12px 14px;
+    font-size: 14px;
+    font-family: inherit;
+    line-height: 1.7;
+    background: var(--surface);
+    color: var(--text);
+    border: 0.5px solid var(--border2);
+    border-radius: 10px;
+    resize: vertical;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  textarea:focus { border-color: var(--accent); }
+  textarea::placeholder { color: var(--text3); }
+
+  .btn-row { display: flex; gap: 8px; margin-top: 1rem; flex-wrap: wrap; align-items: center; }
+  .btn-primary {
+    height: 38px;
+    padding: 0 20px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: inherit;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: opacity 0.15s, transform 0.1s;
+  }
+  .btn-primary:hover { opacity: 0.88; }
+  .btn-primary:active { transform: scale(0.97); }
+  .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+  .btn-ghost {
+    height: 38px;
+    padding: 0 16px;
+    font-size: 13px;
+    font-family: inherit;
+    background: transparent;
+    color: var(--text2);
+    border: 0.5px solid var(--border2);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .btn-ghost:hover { background: var(--surface2); color: var(--text); }
+
+  .response-area {
+    margin-top: 1.25rem;
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    display: none;
+  }
+  .response-area.visible { display: block; }
+  .response-header {
+    padding: 9px 16px;
+    background: var(--surface2);
+    border-bottom: 0.5px solid var(--border);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text2);
+    letter-spacing: 0.4px;
+  }
+  .response-body {
+    padding: 1.25rem 1.5rem;
+    font-size: 14px;
+    line-height: 1.9;
+    white-space: pre-wrap;
+    background: var(--surface);
+  }
+
+  .dots { display: inline-flex; gap: 4px; padding: 8px 0; }
+  .dots span {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--text3);
+    animation: pulse 1.2s ease-in-out infinite;
+  }
+  .dots span:nth-child(2) { animation-delay: 0.2s; }
+  .dots span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes pulse { 0%,80%,100%{opacity:0.2} 40%{opacity:1} }
+
+  .loading-main {
+    text-align: center;
+    padding: 4rem 1rem;
+    color: var(--text2);
+    font-size: 14px;
+  }
+
+  .footer {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 0.5px solid var(--border);
+    font-size: 12px;
+    color: var(--text3);
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<!-- 访问码门禁：验证通过前不显示主内容 -->
+<div id="gate">
+  <div class="gate-card">
+    <div class="gate-logo">🎯</div>
+    <h1>运营思维训练器</h1>
+    <p class="sub">请输入访问码后进入。访问码由站长发放，仅用于身份校验。</p>
+    <div class="gate-field">
+      <label for="gateCode">访问码</label>
+      <input type="password" id="gateCode" placeholder="请输入访问码" autocomplete="off" />
+    </div>
+    <label class="gate-remember">
+      <input type="checkbox" id="gateRemember" checked />
+      7 天内免重复输入
+    </label>
+    <button class="btn-enter" id="gateBtn" type="button">进入训练器</button>
+    <div class="gate-error" id="gateError"></div>
+    <p class="gate-hint">没有访问码？联系站长获取 · 页面版本 v2.3</p>
+  </div>
+</div>
+
+<div id="app">
+  <div class="page">
+    <div class="topbar">
+      <div class="topbar-left">
+        <div class="badge">AI · 运营</div>
+        <h1>运营思维训练器</h1>
+        <p>真实业务场景 × AI 点评，训练决策判断力。</p>
+      </div>
+      <button class="btn-logout" type="button" id="logoutBtn">退出登录</button>
+    </div>
+
+    <div class="sync-bar" id="syncBar">
+      <span class="sync-dot" id="syncDot"></span>
+      <span id="syncText">正在加载场景数据…</span>
+    </div>
+
+    <div id="mainContent" class="loading-main">加载中…</div>
+
+    <div class="footer">运营思维训练器 · 场景数据可从 GitHub 实时同步 · 仅供学习</div>
+  </div>
+</div>
+
+<script>
+/* ========== 配置 ==========
+ * 若网站在 GitHub，把下面地址改成你的 raw 链接，推送 topics.json 后刷新页面即更新场景：
+ * https://raw.githubusercontent.com/你的用户名/你的仓库/main/topics.json
+ * 留空 '' 则使用同目录下的 topics.json
+ */
+const GITHUB_TOPICS_URL = '';
+
+const CODE_KEY = 'ops-access-code';
+const SESSION_UNTIL_KEY = 'ops-session-until';
+const REMEMBER_DAYS = 7;
+
+let accessCode = '';
+let TOPICS = [];
+
+const gate = document.getElementById('gate');
+const app = document.getElementById('app');
+const gateCode = document.getElementById('gateCode');
+const gateBtn = document.getElementById('gateBtn');
+const gateError = document.getElementById('gateError');
+
+function topicsUrl() {
+  const base = GITHUB_TOPICS_URL.trim() || 'topics.json';
+  const sep = base.includes('?') ? '&' : '?';
+  return base + sep + 't=' + Date.now();
+}
+
+function setSyncStatus(ok, text) {
+  const dot = document.getElementById('syncDot');
+  const txt = document.getElementById('syncText');
+  if (!dot || !txt) return;
+  dot.className = 'sync-dot ' + (ok ? 'ok' : 'err');
+  txt.textContent = text;
+}
+
+function showGateError(msg) {
+  gateError.textContent = msg;
+  gateError.classList.add('visible');
+}
+
+function hideGateError() {
+  gateError.classList.remove('visible');
+}
+
+function getSessionUntil() {
+  const v = localStorage.getItem(SESSION_UNTIL_KEY);
+  return v ? Number(v) : 0;
+}
+
+function isSessionValid() {
+  return Date.now() < getSessionUntil();
+}
+
+function saveSession(remember) {
+  accessCode = gateCode.value.trim();
+  sessionStorage.setItem(CODE_KEY, accessCode);
+  if (remember) {
+    localStorage.setItem(CODE_KEY, accessCode);
+    localStorage.setItem(SESSION_UNTIL_KEY, String(Date.now() + REMEMBER_DAYS * 86400000));
+  } else {
+    localStorage.removeItem(CODE_KEY);
+    localStorage.removeItem(SESSION_UNTIL_KEY);
+  }
+}
+
+function clearSession() {
+  accessCode = '';
+  sessionStorage.removeItem(CODE_KEY);
+  localStorage.removeItem(CODE_KEY);
+  localStorage.removeItem(SESSION_UNTIL_KEY);
+}
+
+function unlockApp() {
+  gate.classList.add('hidden');
+  app.classList.add('visible');
+}
+
+function lockApp() {
+  gate.classList.remove('hidden');
+  app.classList.remove('visible');
+  gateCode.value = '';
+  hideGateError();
+}
+
+function authHeaders(code) {
+  return {
+    'Content-Type': 'application/json',
+    'X-Access-Code': code,
+    'X-Verify-Only': '1'
+  };
+}
+
+async function verifyCode(code) {
+  const headers = authHeaders(code);
+  const payload = JSON.stringify({ action: 'verify', accessCode: code });
+
+  let res = await fetch('/api/verify', { method: 'POST', headers, body: payload });
+  if (res.status === 404) {
+    res = await fetch('/api/chat', { method: 'POST', headers, body: payload });
+  }
+
+  const data = await res.json().catch(() => ({}));
+  if (res.ok && data.ok) return { ok: true };
+  if (res.status === 401) return { ok: false, msg: '访问码无效，请检查是否与 Vercel 中 ACCESS_CODE 完全一致' };
+  if (res.status === 404) {
+    return { ok: false, msg: 'API 未部署（404）。请把 api 文件夹推送到 GitHub 后在 Vercel 点 Redeploy。' };
+  }
+  if (res.status === 400) {
+    return {
+      ok: false,
+      msg: data.error === '参数缺失'
+        ? '服务端仍是旧版本。请重新 push 代码并在 Vercel 执行 Redeploy。'
+        : (data.error || '请求格式错误，请重新部署最新代码')
+    };
+  }
+  if (res.status === 500) return { ok: false, msg: data.error || '请在 Vercel 配置 ACCESS_CODE 环境变量后 Redeploy' };
+  return { ok: false, msg: data.error || '验证失败（HTTP ' + res.status + '）' };
+}
+
+async function tryEnter(code, remember) {
+  gateBtn.disabled = true;
+  gateBtn.textContent = '验证中…';
+  hideGateError();
+  try {
+    const result = await verifyCode(code);
+    if (!result.ok) {
+      showGateError(result.msg);
+      return false;
+    }
+    accessCode = code;
+    sessionStorage.setItem(CODE_KEY, accessCode);
+    if (remember) {
+      localStorage.setItem(CODE_KEY, accessCode);
+      localStorage.setItem(SESSION_UNTIL_KEY, String(Date.now() + REMEMBER_DAYS * 86400000));
+    }
+    unlockApp();
+    await loadTopicsAndRender();
+    return true;
+  } catch (e) {
+    showGateError('无法连接验证服务：' + e.message + '。请确认网站已通过 Vercel 部署（纯 GitHub Pages 无法校验访问码）。');
+    return false;
+  } finally {
+    gateBtn.disabled = false;
+    gateBtn.textContent = '进入训练器';
+  }
+}
+
+async function loadTopics() {
+  const url = topicsUrl();
+  const res = await fetch(url, { cache: 'no-store' });
+  if (!res.ok) throw new Error('加载 topics 失败：HTTP ' + res.status);
+  const data = await res.json();
+  if (!Array.isArray(data.topics) || data.topics.length === 0) {
+    throw new Error('topics.json 格式错误');
+  }
+  return data.topics;
+}
+
+async function loadTopicsAndRender() {
+  try {
+    TOPICS = await loadTopics();
+    const src = GITHUB_TOPICS_URL.trim() ? 'GitHub' : '本地';
+    setSyncStatus(true, '场景已同步 · 来源：' + src + ' · 共 ' + TOPICS.length + ' 个模块 · 刷新页面可拉取最新');
+    renderTopics();
+  } catch (e) {
+    setSyncStatus(false, '场景加载失败：' + e.message);
+    document.getElementById('mainContent').innerHTML =
+      '<p style="color:var(--danger)">无法加载训练场景，请检查 topics.json 或 GitHub 地址配置。</p>';
+  }
+}
+
+function renderTopics() {
+  const main = document.getElementById('mainContent');
+  main.innerHTML = '<div class="tabs" id="tabs"></div><div id="panels"></div>';
+  const tabs = document.getElementById('tabs');
+  const panels = document.getElementById('panels');
+
+  TOPICS.forEach((t, i) => {
+    const tab = document.createElement('button');
+    tab.className = 'tab' + (i === 0 ? ' active' : '');
+    tab.textContent = t.label;
+    tab.type = 'button';
+    tab.onclick = () => switchTab(t.id, tab);
+    tabs.appendChild(tab);
+
+    const panel = document.createElement('div');
+    panel.className = 'panel' + (i === 0 ? ' active' : '');
+    panel.id = 'panel-' + t.id;
+    panel.innerHTML = `
+      <div class="scenario-card">
+        <div class="scenario-label">场景</div>
+        <div class="scenario-text" id="scenario-${t.id}"></div>
+      </div>
+      <div class="field-label">${escapeHtml(t.fieldLabel)}</div>
+      <textarea id="answer-${t.id}" placeholder="${escapeAttr(t.placeholder)}"></textarea>
+      <div class="btn-row">
+        <button class="btn-primary" id="btn-${t.id}" type="button">提交分析 →</button>
+        <button class="btn-ghost" type="button" data-reload="${t.id}">换一个场景</button>
+      </div>
+      <div class="response-area" id="resp-${t.id}">
+        <div class="response-header">AI 点评</div>
+        <div class="response-body" id="resp-body-${t.id}"></div>
+      </div>
+    `;
+    panels.appendChild(panel);
+    panel.querySelector('[data-reload]').onclick = () => loadScenario(t.id);
+    document.getElementById('btn-' + t.id).onclick = () => submitAnswer(t.id);
+    loadScenario(t.id);
+  });
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function escapeAttr(s) {
+  return escapeHtml(s).replace(/"/g,'&quot;');
+}
+
+function getTopic(id) {
+  return TOPICS.find(t => t.id === id);
+}
+
+function switchTab(id, el) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('panel-' + id).classList.add('active');
+}
+
+function loadScenario(id) {
+  const t = getTopic(id);
+  const list = t.scenarios;
+  const idx = Math.floor(Math.random() * list.length);
+  document.getElementById('scenario-' + id).textContent = list[idx];
+  document.getElementById('answer-' + id).value = '';
+  document.getElementById('resp-' + id).classList.remove('visible');
+}
+
+async function submitAnswer(id) {
+  if (!accessCode) {
+    lockApp();
+    return;
+  }
+  const answer = document.getElementById('answer-' + id).value.trim();
+  if (!answer) {
+    alert('请先写下你的分析');
+    return;
+  }
+
+  const t = getTopic(id);
+  const scenario = document.getElementById('scenario-' + id).textContent;
+  const btn = document.getElementById('btn-' + id);
+  const respArea = document.getElementById('resp-' + id);
+  const respBody = document.getElementById('resp-body-' + id);
+
+  btn.disabled = true;
+  btn.textContent = '分析中…';
+  respArea.classList.add('visible');
+  respBody.innerHTML = '<div class="dots"><span></span><span></span><span></span></div>';
+
+  try {
+    const res = await fetch('/api/chat', {
+      method: 'POST',
+      headers: authHeaders(accessCode),
+      body: JSON.stringify({
+        accessCode,
+        topic: id,
+        systemPrompt: t.systemPrompt,
+        scenario,
+        answer
+      })
+    });
+    const data = await res.json();
+    if (res.ok && data.text) {
+      respBody.textContent = data.text;
+    } else if (res.status === 401) {
+      respBody.textContent = '访问码已失效，请重新登录。';
+      setTimeout(() => { clearSession(); lockApp(); }, 2000);
+    } else if (res.status === 429) {
+      respBody.textContent = data.error || '今日使用次数已达上限，明天再来吧。';
+    } else {
+      respBody.textContent = '请求失败：' + (data.error || ('HTTP ' + res.status));
+    }
+  } catch (e) {
+    respBody.textContent = '网络错误：' + e.message;
+  }
+
+  btn.disabled = false;
+  btn.textContent = '提交分析 →';
+}
+
+async function bootstrap() {
+  gateBtn.onclick = () => {
+    const code = gateCode.value.trim();
+    if (!code) { showGateError('请输入访问码'); return; }
+    tryEnter(code, document.getElementById('gateRemember').checked);
+  };
+  gateCode.addEventListener('keydown', e => {
+    if (e.key === 'Enter') gateBtn.click();
+  });
+  document.getElementById('logoutBtn').onclick = () => {
+    clearSession();
+    lockApp();
+  };
+
+  const remembered = localStorage.getItem(CODE_KEY);
+  if (remembered && isSessionValid()) {
+    gateCode.value = remembered;
+    const ok = await tryEnter(remembered, true);
+    if (ok) return;
+  }
+
+  const sessionCode = sessionStorage.getItem(CODE_KEY);
+  if (sessionCode) {
+    const ok = await tryEnter(sessionCode, false);
+    if (ok) return;
+  }
+
+  lockApp();
+}
+
+bootstrap();
+</script>
+</body>
+</html>

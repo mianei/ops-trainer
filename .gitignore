@@ -1,0 +1,13 @@
+# 密钥和本地配置，切勿上传
+api token.txt
+ds api claude.txt
+.env
+.env.*
+
+# 本地文档（勿上传 GitHub）
+*.docx
+*.xlsx
+
+# 系统文件
+.DS_Store
+Thumbs.db
