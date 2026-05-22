@@ -246,8 +246,19 @@
   .module-nav-title {
     font-size: 11px; font-weight: 600; letter-spacing: 0.1em;
     text-transform: uppercase; color: var(--ink3);
-    padding: 8px 12px 10px;
+    padding: 8px 12px 6px;
+    display: flex; align-items: center; justify-content: space-between;
   }
+  .module-nav-title .count {
+    font-size: 10px; font-weight: 700;
+    padding: 2px 7px; border-radius: 6px;
+    background: rgba(0,0,0,0.05);
+  }
+  .module-nav-title.cat-product { color: var(--product); }
+  .module-nav-title.cat-product .count { background: var(--product-soft); }
+  .module-nav-title.cat-ops { color: var(--ops); margin-top: 8px; }
+  .module-nav-title.cat-ops .count { background: var(--ops-soft); }
+  .module-nav-group { margin-bottom: 4px; }
   .module-item {
     display: block; width: 100%; text-align: left;
     padding: 12px 12px 12px 14px;
@@ -456,10 +467,9 @@
       <h1>训练运营思维<br/>与产品思维</h1>
       <p class="lead">不是教你写文案、做海报，而是面对真实业务困境时——如何拆解问题、做判断、讲清决策逻辑。</p>
       <ul class="pillar-list">
-        <li>用户需求与 Jobs-to-be-Done</li>
-        <li>业务决策、数据异常与增长拆解</li>
-        <li>竞品战略、留存分层与危机判断</li>
-        <li>AI 导师点评，纠正思维盲区</li>
+        <li>产品思维 ×4：需求、决策、竞品、增长</li>
+        <li>运营思维 ×4：数据、留存、传播、危机</li>
+        <li>真实 Case · AI 导师结构化点评</li>
       </ul>
     </div>
     <div class="gate-card glass">
@@ -475,7 +485,7 @@
       </label>
       <button class="btn-enter" id="gateBtn" type="button">开始训练</button>
       <div class="gate-error" id="gateError"></div>
-      <p class="gate-hint">v3.2 · 运营 · 产品思维</p>
+      <p class="gate-hint">产品 4 模块 · 运营 4 模块</p>
     </div>
   </div>
 </div>
@@ -491,8 +501,8 @@
     <h1>在真实场景里，练运营与产品的判断力。</h1>
     <p class="desc">每个模块对应一类职场高频困境。先独立作答，再获得 AI 导师的结构化点评——帮你建立可复用的思维框架，而不是标准答案。</p>
     <div class="hero-stats">
-      <div class="stat-item"><strong id="statModules">8</strong><span>训练模块</span></div>
-      <div class="stat-item"><strong>Case</strong><span>随机业务场景</span></div>
+      <div class="stat-item"><strong id="statProduct">4</strong><span>产品思维模块</span></div>
+      <div class="stat-item"><strong id="statOps">4</strong><span>运营思维模块</span></div>
       <div class="stat-item"><strong>AI</strong><span>导师式点评</span></div>
     </div>
   </section>
@@ -510,17 +520,6 @@
 <script>
 const GITHUB_TOPICS_URL = '';
 
-const TOPIC_META = {
-  user:       { cat: 'product', catLabel: '产品思维', desc: '区分表面反馈与核心需求' },
-  decision:   { cat: 'ops',     catLabel: '运营思维', desc: '在约束下做可辩护的决策' },
-  data:       { cat: 'ops',     catLabel: '运营思维', desc: '结构化排查数据异常' },
-  competitor: { cat: 'product', catLabel: '产品思维', desc: '看透竞品动作的战略意图' },
-  growth:     { cat: 'ops',     catLabel: '运营思维', desc: '用 AARRR 找对增长杠杆' },
-  retention:  { cat: 'ops',     catLabel: '运营思维', desc: '分层运营，而非一刀切' },
-  content:    { cat: 'ops',     catLabel: '运营思维', desc: '传播力与机制设计诊断' },
-  crisis:     { cat: 'ops',     catLabel: '运营思维', desc: '危机判断与回应框架' }
-};
-
 const CODE_KEY = 'ops-access-code';
 const SESSION_UNTIL_KEY = 'ops-session-until';
 const REMEMBER_DAYS = 7;
@@ -535,8 +534,20 @@ const gateCode = document.getElementById('gateCode');
 const gateBtn = document.getElementById('gateBtn');
 const gateError = document.getElementById('gateError');
 
-function meta(id) {
-  return TOPIC_META[id] || { cat: 'ops', catLabel: '运营思维', desc: '' };
+function meta(topicOrId) {
+  const t = typeof topicOrId === 'string' ? getTopic(topicOrId) : topicOrId;
+  if (!t) return { cat: 'ops', catLabel: '运营思维', desc: '' };
+  return {
+    cat: t.cat || 'ops',
+    catLabel: t.catLabel || (t.cat === 'product' ? '产品思维' : '运营思维'),
+    desc: t.desc || ''
+  };
+}
+
+function topicsByCategory() {
+  const product = TOPICS.filter(t => meta(t).cat === 'product');
+  const ops = TOPICS.filter(t => meta(t).cat !== 'product');
+  return { product, ops, ordered: [...product, ...ops] };
 }
 
 function topicsUrl() {
@@ -655,16 +666,32 @@ function updateModuleHead(id) {
   `;
 }
 
+function appendModuleBtn(nav, t, isActive) {
+  const m = meta(t);
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'module-item cat-' + m.cat + (isActive ? ' active' : '');
+  btn.dataset.id = t.id;
+  btn.innerHTML = `
+    <span class="mi-label">${escapeHtml(t.label)}</span>
+    <span class="mi-desc">${escapeHtml(m.desc)}</span>
+  `;
+  btn.onclick = () => switchTab(t.id, btn);
+  nav.appendChild(btn);
+  return btn;
+}
+
 function renderTopics() {
   const main = document.getElementById('mainContent');
-  const statEl = document.getElementById('statModules');
-  if (statEl) statEl.textContent = String(TOPICS.length);
+  const { product, ops, ordered } = topicsByCategory();
+  const statP = document.getElementById('statProduct');
+  const statO = document.getElementById('statOps');
+  if (statP) statP.textContent = String(product.length);
+  if (statO) statO.textContent = String(ops.length);
 
   main.innerHTML = `
     <div class="workspace">
-      <nav class="module-nav glass" id="moduleNav">
-        <div class="module-nav-title">训练模块</div>
-      </nav>
+      <nav class="module-nav glass" id="moduleNav"></nav>
       <div class="train-main">
         <div class="module-head" id="moduleHead"></div>
         <div id="panels"></div>
@@ -675,22 +702,23 @@ function renderTopics() {
   const nav = document.getElementById('moduleNav');
   const panels = document.getElementById('panels');
 
-  TOPICS.forEach((t, i) => {
-    const m = meta(t.id);
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'module-item cat-' + m.cat + (i === 0 ? ' active' : '');
-    btn.dataset.id = t.id;
-    btn.innerHTML = `
-      <span class="mi-cat">${escapeHtml(m.catLabel)}</span>
-      <span class="mi-label">${escapeHtml(t.label)}</span>
-      <span class="mi-desc">${escapeHtml(m.desc)}</span>
-    `;
-    btn.onclick = () => switchTab(t.id, btn);
-    nav.appendChild(btn);
+  const g1 = document.createElement('div');
+  g1.className = 'module-nav-group';
+  g1.innerHTML = `<div class="module-nav-title cat-product">产品思维<span class="count">${product.length}</span></div>`;
+  nav.appendChild(g1);
+  product.forEach((t, i) => appendModuleBtn(g1, t, i === 0));
 
+  const g2 = document.createElement('div');
+  g2.className = 'module-nav-group';
+  g2.innerHTML = `<div class="module-nav-title cat-ops">运营思维<span class="count">${ops.length}</span></div>`;
+  nav.appendChild(g2);
+  ops.forEach(t => appendModuleBtn(g2, t, false));
+
+  let firstActive = true;
+  ordered.forEach((t) => {
     const panel = document.createElement('div');
-    panel.className = 'panel' + (i === 0 ? ' active' : '');
+    panel.className = 'panel' + (firstActive ? ' active' : '');
+    firstActive = false;
     panel.id = 'panel-' + t.id;
     panel.innerHTML = `
       <article class="case-card glass">
@@ -719,7 +747,7 @@ function renderTopics() {
     loadScenario(t.id);
   });
 
-  activeTopicId = TOPICS[0].id;
+  activeTopicId = ordered[0].id;
   updateModuleHead(activeTopicId);
 }
 
