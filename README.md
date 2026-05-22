@@ -22,7 +22,10 @@
 | 变量 | 说明 |
 |------|------|
 | `ACCESS_CODE` | 访问码（用户进门时输入的密码） |
-| `ANTHROPIC_API_KEY` | Claude API Key |
+| `DEEPSEEK_API_KEY` | **DeepSeek API Key（推荐）** |
+| `DEEPSEEK_MODEL` | 可选，默认 `deepseek-chat` |
+| `AI_PROVIDER` | 可选，`deepseek` 或 `anthropic`，不填则自动检测 |
+| `ANTHROPIC_API_KEY` | Claude API Key（二选一） |
 | `ANTHROPIC_MODEL` | 可选，默认 `claude-sonnet-4-6` |
 | `UPSTASH_REDIS_REST_URL` | 可选，用于每日限流 |
 | `UPSTASH_REDIS_REST_TOKEN` | 可选 |
