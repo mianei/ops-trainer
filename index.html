@@ -588,13 +588,16 @@ function lockApp() {
 function authHeaders(code) {
   return {
     'Content-Type': 'application/json',
-    'X-Access-Code': code,
-    'X-Verify-Only': '1'
+    'X-Access-Code': code
   };
 }
 
 async function verifyCode(code) {
-  const headers = authHeaders(code);
+  const headers = {
+    'Content-Type': 'application/json',
+    'X-Access-Code': code,
+    'X-Verify-Only': '1'
+  };
   const payload = JSON.stringify({ action: 'verify', accessCode: code });
   let res = await fetch('/api/verify', { method: 'POST', headers: { 'X-Access-Code': code } });
   if (res.status === 404 || res.status === 400) {
@@ -789,7 +792,19 @@ async function submitAnswer(id) {
         answer
       })
     });
-    const data = await res.json();
+    let data = {};
+    const raw = await res.text();
+    try {
+      data = raw ? JSON.parse(raw) : {};
+    } catch {
+      respBody.textContent = '服务端返回格式异常，请稍后重试';
+      return;
+    }
+
+    if (data.ok && !data.text) {
+      respBody.textContent = '请求被误判为验证接口，请刷新页面后重试。若仍失败请重新部署最新 index.html。';
+      return;
+    }
     if (res.ok && data.text) {
       respBody.textContent = data.text;
     } else if (res.status === 401) {
@@ -798,7 +813,7 @@ async function submitAnswer(id) {
     } else if (res.status === 429) {
       respBody.textContent = data.error || '今日次数已达上限';
     } else {
-      respBody.textContent = '请求失败：' + (data.error || res.status);
+      respBody.textContent = data.error || ('请求失败（HTTP ' + res.status + '）');
     }
   } catch (e) {
     respBody.textContent = '网络错误：' + e.message;

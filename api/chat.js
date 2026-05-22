@@ -108,7 +108,7 @@ export default async function handler(req) {
     return json({ error: '访问码无效' }, 401);
   }
 
-  if (body?.action === 'verify' || getHeader(req, 'x-verify-only') === '1') {
+  if (body?.action === 'verify') {
     return json({ ok: true });
   }
 
