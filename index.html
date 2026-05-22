@@ -55,6 +55,7 @@
     --r-lg: 20px;
     --r-xl: 28px;
     --max: 1080px;
+    --sticky-top: 80px;
     --sans: -apple-system, BlinkMacSystemFont, 'SF Pro SC', 'SF Pro Text', 'Helvetica Neue', 'Noto Sans SC', sans-serif;
   }
 
@@ -435,6 +436,10 @@
     border-radius: var(--r-xl);
     padding: 20px;
     margin-bottom: 2rem;
+    overflow: visible;
+    background: var(--frost-strong);
+    border: 1px solid var(--frost-border);
+    box-shadow: var(--shadow-sm), var(--inset-hi);
   }
   .workspace {
     width: 100%;
@@ -442,13 +447,19 @@
     grid-template-columns: 1fr;
     gap: 1rem;
     align-items: start;
+    overflow: visible;
   }
   @media (min-width: 900px) {
     .workspace {
-      display: flex;
-      flex-direction: row;
-      align-items: flex-start;
+      grid-template-columns: 200px minmax(0, 1fr);
       gap: 1.25rem;
+    }
+    .workspace-aside {
+      position: sticky;
+      top: var(--sticky-top, 80px);
+      align-self: start;
+      z-index: 35;
+      max-height: calc(100vh - var(--sticky-top, 80px) - 20px);
     }
   }
 
@@ -465,9 +476,7 @@
   @media (min-width: 900px) {
     .module-nav {
       width: 200px;
-      position: sticky;
-      top: 72px;
-      max-height: calc(100vh - 88px);
+      max-height: calc(100vh - var(--sticky-top, 80px) - 20px);
       overflow-y: auto;
       overflow-x: hidden;
       overscroll-behavior: contain;
@@ -826,6 +835,10 @@
 
   @media (max-width: 899px) {
     .workspace { max-height: none; min-height: 0; display: grid; }
+    .workspace-aside {
+      position: static;
+      max-height: none;
+    }
     .module-nav {
       position: static;
       width: auto;
@@ -949,7 +962,7 @@
 
   <div id="mainContent" class="loading-main">加载训练模块…</div>
 
-  <footer class="footer">运营 · 产品思维训练器 · 仅供学习使用 · <span id="buildTag">v4.2</span></footer>
+  <footer class="footer">运营 · 产品思维训练器 · 仅供学习使用 · <span id="buildTag">v4.3</span></footer>
   </div>
 </div>
 
@@ -1244,9 +1257,11 @@ function renderTopics() {
   if (statTotal) statTotal.textContent = String(ordered.length);
 
   main.innerHTML = `
-    <div class="workspace-shell surface">
+    <div class="workspace-shell">
       <div class="workspace">
-        <nav class="module-nav" id="moduleNav"></nav>
+        <aside class="workspace-aside" aria-label="训练模块">
+          <nav class="module-nav" id="moduleNav"></nav>
+        </aside>
         <div class="train-main">
           <div class="module-head" id="moduleHead"></div>
           <div id="panels"></div>
