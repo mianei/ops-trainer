@@ -242,34 +242,65 @@
   }
   @media (min-width: 900px) {
     .workspace {
-      grid-template-columns: 220px 1fr;
-      gap: 1.5rem;
-      align-items: start;
+      display: flex;
+      flex-direction: row;
+      align-items: stretch;
+      gap: 1.25rem;
+      min-height: calc(100vh - 220px);
+      max-height: calc(100vh - 220px);
     }
   }
 
   .module-nav {
     border-radius: var(--r-lg);
-    padding: 8px;
-    position: sticky;
-    top: 72px;
-    align-self: start;
+    padding: 6px;
+    flex-shrink: 0;
   }
   @media (min-width: 900px) {
     .module-nav {
-      max-height: calc(100vh - 96px);
+      width: 200px;
+      max-height: 100%;
       overflow-y: auto;
       overflow-x: hidden;
       overscroll-behavior: contain;
       scrollbar-width: thin;
       scrollbar-color: rgba(0,0,0,0.15) transparent;
     }
-    .module-nav::-webkit-scrollbar { width: 5px; }
+    .module-nav::-webkit-scrollbar { width: 4px; }
     .module-nav::-webkit-scrollbar-thumb {
       background: rgba(0,0,0,0.12);
       border-radius: 4px;
     }
   }
+  .nav-group-details {
+    border-radius: var(--r);
+    margin-bottom: 4px;
+    background: rgba(255,255,255,0.35);
+  }
+  .nav-group-details summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 8px 10px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    user-select: none;
+  }
+  .nav-group-details summary::-webkit-details-marker { display: none; }
+  .nav-group-details.cat-product summary { color: var(--product); }
+  .nav-group-details.cat-ops summary { color: var(--ops); }
+  .nav-group-details .nav-summary-count {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 5px;
+    background: rgba(0,0,0,0.06);
+  }
+  .nav-group-details:not([open]) .nav-group-body { display: none; }
+  .nav-group-body { padding: 2px 4px 6px; }
   .module-nav-title {
     font-size: 10px; font-weight: 600; letter-spacing: 0.08em;
     text-transform: uppercase; color: var(--ink3);
@@ -289,19 +320,12 @@
   .module-nav-title.cat-interview .count { background: var(--interview-soft); }
   .module-nav-title.cat-biz { color: var(--biz); margin-top: 8px; }
   .module-nav-title.cat-biz .count { background: var(--biz-soft); }
-  .module-nav-subtitle {
-    padding: 6px 10px 2px;
-    font-size: 9px; font-weight: 600; letter-spacing: 0.05em;
-    color: var(--ink3); text-transform: uppercase;
-    line-height: 1.3;
-  }
   .module-nav-title .count em {
     font-style: normal; font-weight: 500; opacity: 0.85;
   }
-  .module-nav-group { margin-bottom: 4px; }
   .module-item {
     display: block; width: 100%; text-align: left;
-    padding: 7px 8px 7px 10px;
+    padding: 5px 8px 5px 10px;
     border: none; border-radius: var(--r);
     background: transparent; cursor: pointer;
     font-family: inherit; transition: background 0.2s;
@@ -325,21 +349,25 @@
   .module-item.cat-product .mi-cat { color: var(--product); }
   .module-item.cat-ops .mi-cat { color: var(--ops); }
   .module-item .mi-label {
-    font-size: 13px; font-weight: 600; color: var(--ink);
-    line-height: 1.3; display: block;
+    font-size: 12px; font-weight: 600; color: var(--ink);
+    line-height: 1.25; display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
-  .module-item .mi-desc {
-    display: none;
-  }
-  .module-item.active .mi-desc {
-    display: block;
-    font-size: 10px; color: var(--ink3); margin-top: 3px;
-    line-height: 1.35;
-  }
+  .module-item .mi-desc { display: none; }
 
   .train-main {
     min-width: 0;
-    min-height: min(520px, calc(100vh - 96px));
+    flex: 1;
+  }
+  @media (min-width: 900px) {
+    .train-main {
+      max-height: 100%;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      padding-right: 4px;
+    }
   }
 
   .module-head {
@@ -572,18 +600,30 @@
   }
 
   @media (max-width: 899px) {
+    .workspace { max-height: none; min-height: 0; display: grid; }
     .module-nav {
       position: static;
+      width: auto;
+      max-height: none;
       display: flex; flex-wrap: nowrap; overflow-x: auto;
       gap: 8px; padding: 10px;
       scrollbar-width: none;
     }
+    .nav-group-details {
+      display: contents;
+      background: transparent;
+    }
+    .nav-group-details summary { display: none; }
+    .nav-group-body {
+      display: contents;
+    }
     .module-nav-title { display: none; }
     .module-item {
-      flex: 0 0 auto; min-width: 140px;
+      flex: 0 0 auto; min-width: 120px;
       border-left: none !important;
       border-top: 3px solid transparent;
     }
+    .train-main { max-height: none; overflow: visible; }
     .module-item.active { border-top-color: var(--ink); }
     .module-item.active.cat-product { border-top-color: var(--product); }
     .module-item.active.cat-ops { border-top-color: var(--ops); }
@@ -916,23 +956,34 @@ function appendModuleBtn(parent, t, isActive) {
 function renderNavGroup(nav, cat, catLabel, sections, topicById, firstActiveRef) {
   const topics = sections.flatMap(s => s.ids.map(id => topicById.get(id)).filter(Boolean));
   const q = countScenarios(topics);
-  const group = document.createElement('div');
-  group.className = 'module-nav-group';
-  group.innerHTML = `<div class="module-nav-title cat-${cat}">${catLabel}<span class="count">${topics.length} 模块 · <em>${q}</em> 题</span></div>`;
+  const details = document.createElement('details');
+  details.className = 'nav-group-details cat-' + cat;
+  details.open = firstActiveRef.value;
+  const summary = document.createElement('summary');
+  summary.innerHTML = `${escapeHtml(catLabel)}<span class="nav-summary-count">${topics.length} 模块</span>`;
+  details.appendChild(summary);
+  const body = document.createElement('div');
+  body.className = 'nav-group-body';
   sections.forEach(sec => {
-    const sub = document.createElement('div');
-    sub.className = 'module-nav-subtitle';
-    sub.textContent = sec.section;
-    group.appendChild(sub);
     sec.ids.forEach(id => {
       const t = topicById.get(id);
       if (!t) return;
-      appendModuleBtn(group, t, firstActiveRef.value);
+      appendModuleBtn(body, t, firstActiveRef.value);
       if (firstActiveRef.value) firstActiveRef.value = false;
     });
   });
-  nav.appendChild(group);
+  details.appendChild(body);
+  nav.appendChild(details);
   return { topics, q };
+}
+
+function syncNavAccordion(topicId) {
+  const t = getTopic(topicId);
+  if (!t) return;
+  const cat = meta(t).cat;
+  document.querySelectorAll('.nav-group-details').forEach(el => {
+    el.open = el.classList.contains('cat-' + cat);
+  });
 }
 
 function renderTopics() {
@@ -1010,6 +1061,7 @@ function renderTopics() {
   });
 
   activeTopicId = ordered[0].id;
+  syncNavAccordion(activeTopicId);
   updateModuleHead(activeTopicId);
 }
 
@@ -1040,9 +1092,16 @@ function switchTab(id, el) {
   activeTopicId = id;
   document.querySelectorAll('.module-item').forEach(n => n.classList.remove('active'));
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  el.classList.add('active');
+  if (el) el.classList.add('active');
+  else {
+    const btn = document.querySelector('.module-item[data-id="' + id + '"]');
+    if (btn) btn.classList.add('active');
+  }
   document.getElementById('panel-' + id).classList.add('active');
+  syncNavAccordion(id);
   updateModuleHead(id);
+  const trainMain = document.querySelector('.train-main');
+  if (trainMain) trainMain.scrollTop = 0;
 }
 
 function pickScenarios(topic) {
