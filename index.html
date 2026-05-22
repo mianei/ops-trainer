@@ -1,467 +1,404 @@
 <!DOCTYPE html>
-<!-- ops-trainer v3.1 · 白色流线磨砂风格 -->
+<!-- ops-trainer v3.2 -->
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <meta name="color-scheme" content="light" />
-<title>运营思维训练器</title>
+<title>运营 · 产品思维训练器</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@500;600;700&display=swap" rel="stylesheet" />
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --bg: #f4f6f9;
-    --bg-pure: #ffffff;
-    --text: #1c1c1e;
-    --text2: #5c5c62;
-    --text3: #8e8e93;
-    --line: rgba(0, 0, 0, 0.06);
-    --line-strong: rgba(0, 0, 0, 0.12);
-    --accent: #1c1c1e;
-    --glass: rgba(255, 255, 255, 0.78);
-    --glass-strong: rgba(255, 255, 255, 0.92);
-    --glass-border: rgba(255, 255, 255, 0.95);
-    --shadow: 0 4px 24px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
-    --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.08);
-    --blur: blur(20px) saturate(160%);
-    --danger: #d70015;
-    --danger-bg: rgba(215, 0, 21, 0.08);
-    --success: #248a3d;
-    --radius: 16px;
-    --radius-lg: 24px;
-    --pill: 980px;
+    --bg: #f6f7f9;
+    --white: #ffffff;
+    --ink: #111113;
+    --ink2: #4a4a52;
+    --ink3: #8b8b95;
+    --line: rgba(17, 17, 19, 0.08);
+    --product: #c45c26;
+    --product-soft: rgba(196, 92, 38, 0.1);
+    --ops: #1e5a8a;
+    --ops-soft: rgba(30, 90, 138, 0.1);
+    --glass: rgba(255, 255, 255, 0.82);
+    --blur: blur(22px) saturate(165%);
+    --shadow: 0 2px 16px rgba(17, 17, 19, 0.05);
+    --shadow-lg: 0 24px 64px rgba(17, 17, 19, 0.09);
+    --danger: #c41e1e;
+    --danger-bg: rgba(196, 30, 30, 0.07);
+    --ok: #1d7a3a;
+    --r: 14px;
+    --r-lg: 22px;
+    --serif: 'Noto Serif SC', 'Songti SC', serif;
+    --sans: 'Noto Sans SC', -apple-system, sans-serif;
   }
 
-  html { font-size: 16px; scroll-behavior: smooth; }
+  html { font-size: 16px; }
   body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Noto Sans SC', sans-serif;
+    font-family: var(--sans);
     background: var(--bg);
-    color: var(--text);
+    color: var(--ink);
     min-height: 100vh;
-    line-height: 1.5;
+    line-height: 1.6;
     -webkit-font-smoothing: antialiased;
-    overflow-x: hidden;
   }
 
-  /* 流线背景 */
   .bg-scene {
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-    background: linear-gradient(165deg, #fafbfc 0%, #eef1f6 45%, #f8f9fb 100%);
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background: linear-gradient(180deg, #fafbfc 0%, #eef1f5 55%, #f6f7f9 100%);
     overflow: hidden;
   }
   .bg-scene svg {
-    position: absolute;
-    width: 120%;
-    height: auto;
-    min-height: 100%;
-    left: -10%;
-    top: -5%;
-    opacity: 0.85;
-  }
-  .wave-layer-2 {
-    top: 15% !important;
-    opacity: 0.5 !important;
-    transform: scale(1.05);
+    position: absolute; width: 110%; left: -5%; top: -8%;
+    opacity: 0.75;
   }
 
   .glass {
     background: var(--glass);
     backdrop-filter: var(--blur);
     -webkit-backdrop-filter: var(--blur);
-    border: 1px solid var(--glass-border);
+    border: 1px solid rgba(255,255,255,0.9);
     box-shadow: var(--shadow);
-  }
-  .glass-strong {
-    background: var(--glass-strong);
-    backdrop-filter: var(--blur);
-    -webkit-backdrop-filter: var(--blur);
-    border: 1px solid rgba(255,255,255,1);
-    box-shadow: var(--shadow-lg);
   }
 
   /* —— 门禁 —— */
   #gate {
-    position: fixed;
-    inset: 0;
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 1.5rem;
+    position: fixed; inset: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: center;
+    padding: 1.25rem;
   }
   #gate.hidden { display: none; }
 
-  .gate-wrap {
-    position: relative;
-    z-index: 1;
+  .gate-layout {
+    position: relative; z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
     width: 100%;
-    max-width: 440px;
+    max-width: 920px;
   }
-  .gate-card {
-    padding: 2.75rem 2.25rem 2.25rem;
-    border-radius: var(--radius-lg);
+  @media (min-width: 768px) {
+    .gate-layout { grid-template-columns: 1.1fr 0.9fr; align-items: stretch; }
   }
-  .gate-logo {
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--text3);
+
+  .gate-intro {
+    padding: 2.5rem 2rem;
+    border-radius: var(--r-lg);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .gate-intro .eyebrow {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--ink3); margin-bottom: 1.25rem;
+  }
+  .gate-intro h1 {
+    font-family: var(--serif);
+    font-size: clamp(1.75rem, 4vw, 2.25rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    margin-bottom: 1rem;
+  }
+  .gate-intro .lead {
+    font-size: 15px; color: var(--ink2); line-height: 1.75;
     margin-bottom: 1.75rem;
   }
-  .gate-card h1 {
-    font-size: 32px;
-    font-weight: 700;
-    letter-spacing: -0.03em;
-    line-height: 1.15;
-    margin-bottom: 0.6rem;
-    color: var(--text);
+  .pillar-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .pillar-list li {
+    font-size: 13px; color: var(--ink2);
+    padding-left: 14px; position: relative;
   }
-  .gate-card .sub {
-    font-size: 15px;
-    font-weight: 400;
-    color: var(--text2);
-    margin-bottom: 2rem;
-    line-height: 1.6;
+  .pillar-list li::before {
+    content: ''; position: absolute; left: 0; top: 0.55em;
+    width: 5px; height: 5px; border-radius: 50%; background: var(--ink3);
   }
+
+  .gate-card { padding: 2rem 1.75rem; border-radius: var(--r-lg); }
+  .gate-card h2 {
+    font-size: 18px; font-weight: 600; margin-bottom: 6px;
+  }
+  .gate-card .sub { font-size: 14px; color: var(--ink2); margin-bottom: 1.5rem; }
   .gate-field label {
-    display: block;
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--text3);
-    margin-bottom: 8px;
-    letter-spacing: 0.02em;
+    display: block; font-size: 12px; font-weight: 500;
+    color: var(--ink3); margin-bottom: 8px;
   }
   .gate-field input {
-    width: 100%;
-    height: 50px;
-    padding: 0 18px;
-    font-size: 16px;
-    font-family: inherit;
-    background: var(--bg-pure);
-    border: 1px solid var(--line-strong);
-    border-radius: var(--radius);
-    color: var(--text);
-    outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
+    width: 100%; height: 48px; padding: 0 16px;
+    font-size: 16px; font-family: inherit;
+    border: 1px solid var(--line); border-radius: var(--r);
+    background: var(--white); outline: none;
   }
   .gate-field input:focus {
-    border-color: rgba(0,0,0,0.25);
-    box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.04);
+    border-color: rgba(17,17,19,0.2);
+    box-shadow: 0 0 0 3px rgba(17,17,19,0.05);
   }
   .gate-remember {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin: 16px 0 1.75rem;
-    font-size: 14px;
-    color: var(--text2);
+    display: flex; align-items: center; gap: 8px;
+    margin: 14px 0 1.25rem; font-size: 13px; color: var(--ink2);
     cursor: pointer;
   }
-  .gate-remember input { accent-color: var(--accent); width: 17px; height: 17px; }
-
   .btn-enter {
-    width: 100%;
-    height: 50px;
-    font-size: 15px;
-    font-weight: 600;
-    font-family: inherit;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    background: var(--accent);
-    color: #fff;
-    border: none;
-    border-radius: var(--pill);
-    cursor: pointer;
-    transition: transform 0.15s, opacity 0.2s;
+    width: 100%; height: 48px;
+    font-size: 15px; font-weight: 600; font-family: inherit;
+    background: var(--ink); color: #fff;
+    border: none; border-radius: var(--r);
+    cursor: pointer; transition: opacity 0.2s;
   }
-  .btn-enter:hover { opacity: 0.88; }
-  .btn-enter:active { transform: scale(0.98); }
-  .btn-enter:disabled { opacity: 0.45; cursor: not-allowed; }
-
+  .btn-enter:hover { opacity: 0.85; }
+  .btn-enter:disabled { opacity: 0.4; cursor: not-allowed; }
   .gate-error {
-    margin-top: 14px;
-    padding: 12px 16px;
-    font-size: 13px;
-    color: var(--danger);
-    background: var(--danger-bg);
-    border-radius: var(--radius);
-    display: none;
-    line-height: 1.5;
+    margin-top: 12px; padding: 11px 14px; font-size: 13px;
+    color: var(--danger); background: var(--danger-bg);
+    border-radius: var(--r); display: none;
   }
   .gate-error.visible { display: block; }
-  .gate-hint {
-    margin-top: 1.5rem;
-    font-size: 12px;
-    color: var(--text3);
-    text-align: center;
-  }
+  .gate-hint { margin-top: 1rem; font-size: 11px; color: var(--ink3); text-align: center; }
 
   /* —— 主应用 —— */
-  #app { display: none; position: relative; z-index: 1; }
-  #app.visible { display: block; }
+  #app { display: none; position: relative; z-index: 1; min-height: 100vh; }
+  #app.visible { display: flex; flex-direction: column; }
 
   .site-header {
-    position: sticky;
-    top: 0;
-    z-index: 50;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 14px 28px;
+    position: sticky; top: 0; z-index: 50;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 max(20px, env(safe-area-inset-right)) 0 max(20px, env(safe-area-inset-left));
+    height: 52px;
     border-bottom: 1px solid var(--line);
   }
   .logo {
-    font-size: 14px;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--text);
+    font-family: var(--serif);
+    font-size: 15px; font-weight: 600;
+    letter-spacing: -0.02em;
   }
+  .logo em { font-style: normal; color: var(--ink3); font-weight: 500; }
   .btn-logout {
-    font-size: 13px;
-    font-weight: 500;
-    font-family: inherit;
-    color: var(--text2);
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 8px 0;
-    border-bottom: 1px solid transparent;
-    transition: color 0.2s, border-color 0.2s;
+    font-size: 13px; color: var(--ink2); background: none; border: none;
+    cursor: pointer; font-family: inherit; padding: 6px 12px;
+    border-radius: 8px; transition: background 0.2s;
   }
-  .btn-logout:hover {
-    color: var(--text);
-    border-bottom-color: var(--text);
-  }
+  .btn-logout:hover { background: rgba(0,0,0,0.04); color: var(--ink); }
 
-  .page {
-    max-width: 820px;
-    margin: 0 auto;
-    padding: 0 28px 5rem;
-    position: relative;
-    z-index: 1;
+  .hero-compact {
+    max-width: 1120px; margin: 0 auto;
+    padding: 2.5rem 24px 1.5rem;
+    width: 100%;
   }
-
-  .hero {
-    text-align: center;
-    padding: clamp(3rem, 8vw, 5.5rem) 0 clamp(2rem, 5vw, 3rem);
+  .hero-compact .eyebrow {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--ink3); margin-bottom: 0.75rem;
   }
-  .hero-tag {
-    display: inline-block;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--text3);
-    margin-bottom: 1.25rem;
-  }
-  .hero h1 {
-    font-size: clamp(2.25rem, 5.5vw, 3.5rem);
+  .hero-compact h1 {
+    font-family: var(--serif);
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
     font-weight: 700;
-    letter-spacing: -0.04em;
-    line-height: 1.08;
-    margin-bottom: 1rem;
-    color: var(--text);
+    letter-spacing: -0.03em;
+    line-height: 1.2;
+    max-width: 16em;
+    margin-bottom: 0.75rem;
   }
-  .hero p {
-    font-size: clamp(1rem, 2vw, 1.125rem);
-    font-weight: 400;
-    color: var(--text2);
-    max-width: 480px;
-    margin: 0 auto;
-    line-height: 1.65;
+  .hero-compact .desc {
+    font-size: 15px; color: var(--ink2);
+    max-width: 36em; line-height: 1.75;
   }
+  .hero-stats {
+    display: flex; flex-wrap: wrap; gap: 1.5rem 2.5rem;
+    margin-top: 1.5rem; padding-top: 1.25rem;
+    border-top: 1px solid var(--line);
+  }
+  .stat-item strong {
+    display: block; font-size: 22px; font-weight: 700;
+    letter-spacing: -0.03em; font-family: var(--serif);
+  }
+  .stat-item span { font-size: 12px; color: var(--ink3); }
 
   .sync-bar {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 13px;
-    color: var(--text2);
-    margin-bottom: 2rem;
-    padding: 12px 18px;
-    border-radius: var(--radius);
+    max-width: 1120px; margin: 0 auto 1rem;
+    width: calc(100% - 48px);
+    display: flex; align-items: center; gap: 8px;
+    font-size: 12px; color: var(--ink3);
+    padding: 10px 14px; border-radius: var(--r);
   }
-  .sync-dot {
-    width: 7px; height: 7px;
-    border-radius: 50%;
-    background: var(--text3);
-    flex-shrink: 0;
-  }
-  .sync-dot.ok { background: var(--success); }
+  .sync-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ink3); }
+  .sync-dot.ok { background: var(--ok); }
   .sync-dot.err { background: var(--danger); }
 
-  .tabs-wrap {
-    margin-bottom: 1.75rem;
-    padding: 5px;
-    border-radius: var(--pill);
-    overflow-x: auto;
-    scrollbar-width: none;
+  .workspace {
+    max-width: 1120px; margin: 0 auto 4rem;
+    padding: 0 24px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    align-items: start;
   }
-  .tabs-wrap::-webkit-scrollbar { display: none; }
-  .tabs { display: flex; gap: 4px; min-width: min-content; }
-  .tab {
-    padding: 9px 20px;
-    font-size: 13px;
-    font-weight: 500;
-    font-family: inherit;
-    color: var(--text2);
-    background: transparent;
-    border: none;
-    border-radius: var(--pill);
-    cursor: pointer;
-    white-space: nowrap;
-    transition: all 0.25s ease;
-  }
-  .tab:hover:not(.active) {
-    color: var(--text);
-    background: rgba(255,255,255,0.6);
-  }
-  .tab.active {
-    color: var(--text);
-    background: var(--bg-pure);
-    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  @media (min-width: 900px) {
+    .workspace { grid-template-columns: 260px 1fr; gap: 1.5rem; }
   }
 
-  .panel { display: none; animation: rise 0.45s ease; }
-  .panel.active { display: block; }
-  @keyframes rise {
-    from { opacity: 0; transform: translateY(16px); }
+  .module-nav {
+    border-radius: var(--r-lg);
+    padding: 12px;
+    position: sticky; top: 68px;
+  }
+  .module-nav-title {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--ink3);
+    padding: 8px 12px 10px;
+  }
+  .module-item {
+    display: block; width: 100%; text-align: left;
+    padding: 12px 12px 12px 14px;
+    border: none; border-radius: var(--r);
+    background: transparent; cursor: pointer;
+    font-family: inherit; transition: background 0.2s;
+    border-left: 3px solid transparent;
+  }
+  .module-item:hover { background: rgba(255,255,255,0.65); }
+  .module-item.active {
+    background: var(--white);
+    box-shadow: var(--shadow);
+    border-left-color: var(--ink);
+  }
+  .module-item.active.cat-product { border-left-color: var(--product); }
+  .module-item.active.cat-ops { border-left-color: var(--ops); }
+  .module-item .mi-cat {
+    font-size: 10px; font-weight: 600; letter-spacing: 0.06em;
+    text-transform: uppercase; margin-bottom: 4px;
+  }
+  .module-item.cat-product .mi-cat { color: var(--product); }
+  .module-item.cat-ops .mi-cat { color: var(--ops); }
+  .module-item .mi-label {
+    font-size: 14px; font-weight: 600; color: var(--ink);
+    line-height: 1.35; display: block;
+  }
+  .module-item .mi-desc {
+    font-size: 11px; color: var(--ink3); margin-top: 4px;
+    line-height: 1.4; display: block;
+  }
+
+  .train-main { min-width: 0; }
+
+  .module-head {
+    margin-bottom: 1.25rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .module-head .mh-cat {
+    display: inline-block;
+    font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+    padding: 4px 10px; border-radius: 6px; margin-bottom: 8px;
+  }
+  .module-head .mh-cat.product { background: var(--product-soft); color: var(--product); }
+  .module-head .mh-cat.ops { background: var(--ops-soft); color: var(--ops); }
+  .module-head h2 {
+    font-family: var(--serif);
+    font-size: 1.5rem; font-weight: 700;
+    letter-spacing: -0.02em; margin-bottom: 6px;
+  }
+  .module-head p { font-size: 14px; color: var(--ink2); line-height: 1.6; }
+
+  .panel { display: none; }
+  .panel.active { display: block; animation: fadeIn 0.35s ease; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
     to { opacity: 1; transform: translateY(0); }
   }
 
-  .scenario-card {
-    padding: 1.75rem 2rem;
-    border-radius: var(--radius-lg);
-    margin-bottom: 1.5rem;
+  .case-card {
+    border-radius: var(--r-lg);
+    margin-bottom: 1.25rem;
+    overflow: hidden;
   }
-  .scenario-label {
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--text3);
-    margin-bottom: 12px;
+  .case-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--line);
+    background: rgba(255,255,255,0.4);
   }
-  .scenario-text {
-    font-size: 17px;
-    font-weight: 400;
-    line-height: 1.7;
-    letter-spacing: -0.01em;
-    color: var(--text);
+  .case-head span {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--ink3);
+  }
+  .btn-refresh {
+    font-size: 12px; font-weight: 500; color: var(--ink2);
+    background: none; border: none; cursor: pointer;
+    font-family: inherit; padding: 4px 8px; border-radius: 6px;
+  }
+  .btn-refresh:hover { background: rgba(0,0,0,0.05); color: var(--ink); }
+  .case-body {
+    padding: 1.5rem 1.75rem;
+    font-size: 16px; line-height: 1.8;
+    letter-spacing: 0.01em;
+    color: var(--ink);
   }
 
-  .field-label {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--text2);
-    margin-bottom: 10px;
+  .work-block { margin-bottom: 1.25rem; }
+  .work-block .wb-label {
+    font-size: 13px; font-weight: 600; color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .work-block .wb-hint {
+    font-size: 12px; color: var(--ink3); margin-bottom: 10px; line-height: 1.5;
   }
   textarea {
-    width: 100%;
-    min-height: 128px;
-    padding: 18px 20px;
-    font-size: 15px;
-    font-family: inherit;
-    line-height: 1.65;
-    background: var(--bg-pure);
-    color: var(--text);
-    border: 1px solid var(--line-strong);
-    border-radius: var(--radius-lg);
-    resize: vertical;
-    outline: none;
-    box-shadow: inset 0 1px 2px rgba(0,0,0,0.02);
+    width: 100%; min-height: 140px;
+    padding: 16px 18px;
+    font-size: 15px; font-family: inherit;
+    line-height: 1.7; color: var(--ink);
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    resize: vertical; outline: none;
     transition: border-color 0.2s, box-shadow 0.2s;
   }
   textarea:focus {
-    border-color: rgba(0,0,0,0.2);
-    box-shadow: 0 0 0 4px rgba(0,0,0,0.04);
+    border-color: rgba(17,17,19,0.18);
+    box-shadow: 0 0 0 4px rgba(17,17,19,0.04);
   }
-  textarea::placeholder { color: var(--text3); }
+  textarea::placeholder { color: var(--ink3); }
 
-  .btn-row {
-    display: flex;
-    gap: 14px;
-    margin-top: 1.35rem;
-    flex-wrap: wrap;
-    align-items: center;
-  }
+  .btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 0.5rem; }
   .btn-primary {
-    height: 46px;
-    padding: 0 32px;
-    font-size: 13px;
-    font-weight: 600;
-    font-family: inherit;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    background: var(--accent);
-    color: #fff;
-    border: none;
-    border-radius: var(--pill);
-    cursor: pointer;
-    transition: opacity 0.2s, transform 0.15s;
+    height: 44px; padding: 0 26px;
+    font-size: 14px; font-weight: 600; font-family: inherit;
+    background: var(--ink); color: #fff;
+    border: none; border-radius: var(--r);
+    cursor: pointer; transition: opacity 0.2s;
   }
-  .btn-primary:hover { opacity: 0.9; }
-  .btn-primary:active { transform: scale(0.98); }
+  .btn-primary:hover { opacity: 0.88; }
   .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
 
-  .btn-ghost {
-    height: 46px;
-    padding: 0 28px;
-    font-size: 13px;
-    font-weight: 600;
-    font-family: inherit;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--text);
-    background: transparent;
-    border: 1px solid var(--line-strong);
-    border-radius: var(--pill);
-    cursor: pointer;
-    transition: background 0.2s, border-color 0.2s;
-  }
-  .btn-ghost:hover {
-    background: rgba(255,255,255,0.8);
-    border-color: rgba(0,0,0,0.18);
-  }
-
-  .response-area {
-    margin-top: 1.5rem;
-    border-radius: var(--radius-lg);
+  .feedback-card {
+    margin-top: 1.25rem;
+    border-radius: var(--r-lg);
     overflow: hidden;
     display: none;
-    animation: rise 0.35s ease;
   }
-  .response-area.visible { display: block; }
-  .response-header {
-    padding: 14px 22px;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--text3);
+  .feedback-card.visible { display: block; }
+  .feedback-head {
+    padding: 12px 20px;
+    font-size: 11px; font-weight: 600; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--ink3);
     border-bottom: 1px solid var(--line);
+    display: flex; align-items: center; gap: 8px;
   }
-  .response-body {
-    padding: 1.75rem 2rem;
-    font-size: 15px;
-    line-height: 1.75;
-    white-space: pre-wrap;
-    color: var(--text);
+  .feedback-head::before {
+    content: ''; width: 6px; height: 6px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--product), var(--ops));
+  }
+  .feedback-body {
+    padding: 1.5rem 1.75rem;
+    font-size: 15px; line-height: 1.85;
+    white-space: pre-wrap; color: var(--ink);
   }
 
-  .dots { display: inline-flex; gap: 6px; padding: 10px 0; }
+  .dots { display: inline-flex; gap: 5px; padding: 8px 0; }
   .dots span {
-    width: 7px; height: 7px; border-radius: 50%;
-    background: var(--text3);
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--ink3);
     animation: pulse 1.2s ease-in-out infinite;
   }
   .dots span:nth-child(2) { animation-delay: 0.15s; }
@@ -469,98 +406,120 @@
   @keyframes pulse { 0%,80%,100%{opacity:0.2} 40%{opacity:1} }
 
   .loading-main {
-    text-align: center;
-    padding: 5rem 1rem;
-    color: var(--text2);
-    font-size: 15px;
+    text-align: center; padding: 4rem 1rem;
+    color: var(--ink2); font-size: 14px;
   }
 
   .footer {
-    margin-top: 4rem;
-    font-size: 12px;
-    color: var(--text3);
-    text-align: center;
+    text-align: center; padding: 2rem 24px 3rem;
+    font-size: 12px; color: var(--ink3);
+  }
+
+  @media (max-width: 899px) {
+    .module-nav {
+      position: static;
+      display: flex; flex-wrap: nowrap; overflow-x: auto;
+      gap: 8px; padding: 10px;
+      scrollbar-width: none;
+    }
+    .module-nav-title { display: none; }
+    .module-item {
+      flex: 0 0 auto; min-width: 140px;
+      border-left: none !important;
+      border-top: 3px solid transparent;
+    }
+    .module-item.active { border-top-color: var(--ink); }
+    .module-item.active.cat-product { border-top-color: var(--product); }
+    .module-item.active.cat-ops { border-top-color: var(--ops); }
+    .module-item .mi-desc { display: none; }
+    .module-head { display: none; }
   }
 </style>
 </head>
 <body>
 
 <div class="bg-scene" aria-hidden="true">
-  <svg class="wave-layer-1" viewBox="0 0 1440 900" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
-    <path d="M-80 420C180 280 380 120 720 200C1060 280 1280 480 1520 360L1520 900L-80 900Z" fill="url(#g1)" opacity="0.9"/>
-    <path d="M-80 520C220 400 480 320 760 400C1040 480 1200 600 1520 500L1520 900L-80 900Z" fill="url(#g2)" opacity="0.7"/>
+  <svg viewBox="0 0 1440 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M-60 380C200 260 420 180 720 260C1020 340 1240 480 1500 400L1500 800L-60 800Z" fill="url(#wg1)"/>
+    <path d="M-60 500C240 420 500 360 800 420C1100 480 1280 560 1500 480L1500 800L-60 800Z" fill="url(#wg2)" opacity="0.6"/>
     <defs>
-      <linearGradient id="g1" x1="720" y1="120" x2="720" y2="900" gradientUnits="userSpaceOnUse">
-        <stop stop-color="#ffffff"/>
-        <stop offset="0.5" stop-color="#e8ecf2"/>
-        <stop offset="1" stop-color="#d8dee8"/>
-      </linearGradient>
-      <linearGradient id="g2" x1="400" y1="300" x2="1100" y2="900" gradientUnits="userSpaceOnUse">
-        <stop stop-color="#ffffff" stop-opacity="0.95"/>
-        <stop offset="1" stop-color="#c5cdd9" stop-opacity="0.6"/>
-      </linearGradient>
-    </defs>
-  </svg>
-  <svg class="wave-layer-2" viewBox="0 0 1440 900" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
-    <path d="M-100 600C200 500 500 380 800 450C1100 520 1300 650 1540 580" stroke="rgba(0,0,0,0.04)" stroke-width="1.5" fill="none"/>
-    <path d="M-100 480C280 360 600 280 900 340C1200 400 1350 520 1540 440" stroke="rgba(255,255,255,0.9)" stroke-width="2" fill="none"/>
-    <path d="M-80 380C240 260 520 180 820 240C1120 300 1280 400 1520 320L1520 0L-80 0Z" fill="url(#g3)" opacity="0.5"/>
-    <defs>
-      <linearGradient id="g3" x1="720" y1="0" x2="720" y2="500" gradientUnits="userSpaceOnUse">
-        <stop stop-color="#ffffff"/>
-        <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
-      </linearGradient>
+      <linearGradient id="wg1" x1="720" y1="180" x2="720" y2="800"><stop stop-color="#fff"/><stop offset="1" stop-color="#e4e8ee"/></linearGradient>
+      <linearGradient id="wg2" x1="400" y1="400" x2="1000" y2="800"><stop stop-color="#fff" stop-opacity="0.9"/><stop offset="1" stop-color="#d5dbe3" stop-opacity="0.5"/></linearGradient>
     </defs>
   </svg>
 </div>
 
 <div id="gate">
-  <div class="gate-wrap">
-    <div class="gate-card glass-strong">
-      <div class="gate-logo">Ops Trainer</div>
-      <h1>运营思维训练器</h1>
-      <p class="sub">请输入访问码后进入。访问码由站长发放，仅用于身份校验。</p>
+  <div class="gate-layout">
+    <div class="gate-intro glass">
+      <p class="eyebrow">Ops · Product Thinking</p>
+      <h1>训练运营思维<br/>与产品思维</h1>
+      <p class="lead">不是教你写文案、做海报，而是面对真实业务困境时——如何拆解问题、做判断、讲清决策逻辑。</p>
+      <ul class="pillar-list">
+        <li>用户需求与 Jobs-to-be-Done</li>
+        <li>业务决策、数据异常与增长拆解</li>
+        <li>竞品战略、留存分层与危机判断</li>
+        <li>AI 导师点评，纠正思维盲区</li>
+      </ul>
+    </div>
+    <div class="gate-card glass">
+      <h2>进入训练场</h2>
+      <p class="sub">请输入访问码。由站长发放，仅用于身份校验。</p>
       <div class="gate-field">
         <label for="gateCode">访问码</label>
-        <input type="password" id="gateCode" placeholder="请输入访问码" autocomplete="off" />
+        <input type="password" id="gateCode" placeholder="请输入" autocomplete="off" />
       </div>
       <label class="gate-remember">
         <input type="checkbox" id="gateRemember" checked />
         7 天内免重复输入
       </label>
-      <button class="btn-enter" id="gateBtn" type="button">进入</button>
+      <button class="btn-enter" id="gateBtn" type="button">开始训练</button>
       <div class="gate-error" id="gateError"></div>
-      <p class="gate-hint">白色主题 v3.1 · 没有访问码请联系站长</p>
+      <p class="gate-hint">v3.2 · 运营 · 产品思维</p>
     </div>
   </div>
 </div>
 
 <div id="app">
   <header class="site-header glass">
-    <div class="logo">Ops Trainer</div>
+    <div class="logo">思维训练 <em>/ Ops · Product</em></div>
     <button class="btn-logout" type="button" id="logoutBtn">退出</button>
   </header>
 
-  <div class="page">
-    <section class="hero">
-      <div class="hero-tag">AI · 运营实战</div>
-      <h1>训练你的<br/>运营判断力</h1>
-      <p>真实业务场景，AI 导师式点评。在思考里成长，而不只是生成答案。</p>
-    </section>
-
-    <div class="sync-bar glass" id="syncBar">
-      <span class="sync-dot" id="syncDot"></span>
-      <span id="syncText">正在加载场景数据…</span>
+  <section class="hero-compact">
+    <p class="eyebrow">Judgment over generation</p>
+    <h1>在真实场景里，练运营与产品的判断力。</h1>
+    <p class="desc">每个模块对应一类职场高频困境。先独立作答，再获得 AI 导师的结构化点评——帮你建立可复用的思维框架，而不是标准答案。</p>
+    <div class="hero-stats">
+      <div class="stat-item"><strong id="statModules">8</strong><span>训练模块</span></div>
+      <div class="stat-item"><strong>Case</strong><span>随机业务场景</span></div>
+      <div class="stat-item"><strong>AI</strong><span>导师式点评</span></div>
     </div>
+  </section>
 
-    <div id="mainContent" class="loading-main">加载中…</div>
-
-    <footer class="footer">运营思维训练器 · 仅供学习使用</footer>
+  <div class="sync-bar glass" id="syncBar">
+    <span class="sync-dot" id="syncDot"></span>
+    <span id="syncText">正在加载…</span>
   </div>
+
+  <div id="mainContent" class="loading-main" style="max-width:1120px;margin:0 auto;padding:0 24px">加载训练模块…</div>
+
+  <footer class="footer">运营 · 产品思维训练器 · 仅供学习使用</footer>
 </div>
 
 <script>
 const GITHUB_TOPICS_URL = '';
+
+const TOPIC_META = {
+  user:       { cat: 'product', catLabel: '产品思维', desc: '区分表面反馈与核心需求' },
+  decision:   { cat: 'ops',     catLabel: '运营思维', desc: '在约束下做可辩护的决策' },
+  data:       { cat: 'ops',     catLabel: '运营思维', desc: '结构化排查数据异常' },
+  competitor: { cat: 'product', catLabel: '产品思维', desc: '看透竞品动作的战略意图' },
+  growth:     { cat: 'ops',     catLabel: '运营思维', desc: '用 AARRR 找对增长杠杆' },
+  retention:  { cat: 'ops',     catLabel: '运营思维', desc: '分层运营，而非一刀切' },
+  content:    { cat: 'ops',     catLabel: '运营思维', desc: '传播力与机制设计诊断' },
+  crisis:     { cat: 'ops',     catLabel: '运营思维', desc: '危机判断与回应框架' }
+};
 
 const CODE_KEY = 'ops-access-code';
 const SESSION_UNTIL_KEY = 'ops-session-until';
@@ -568,12 +527,17 @@ const REMEMBER_DAYS = 7;
 
 let accessCode = '';
 let TOPICS = [];
+let activeTopicId = '';
 
 const gate = document.getElementById('gate');
 const app = document.getElementById('app');
 const gateCode = document.getElementById('gateCode');
 const gateBtn = document.getElementById('gateBtn');
 const gateError = document.getElementById('gateError');
+
+function meta(id) {
+  return TOPIC_META[id] || { cat: 'ops', catLabel: '运营思维', desc: '' };
+}
 
 function topicsUrl() {
   const base = GITHUB_TOPICS_URL.trim() || 'topics.json';
@@ -593,18 +557,13 @@ function showGateError(msg) {
   gateError.textContent = msg;
   gateError.classList.add('visible');
 }
-
 function hideGateError() {
   gateError.classList.remove('visible');
 }
 
-function getSessionUntil() {
-  const v = localStorage.getItem(SESSION_UNTIL_KEY);
-  return v ? Number(v) : 0;
-}
-
 function isSessionValid() {
-  return Date.now() < getSessionUntil();
+  const v = localStorage.getItem(SESSION_UNTIL_KEY);
+  return v ? Date.now() < Number(v) : false;
 }
 
 function clearSession() {
@@ -637,30 +596,14 @@ function authHeaders(code) {
 async function verifyCode(code) {
   const headers = authHeaders(code);
   const payload = JSON.stringify({ action: 'verify', accessCode: code });
-
-  let res = await fetch('/api/verify', {
-    method: 'POST',
-    headers: { 'X-Access-Code': code }
-  });
-
+  let res = await fetch('/api/verify', { method: 'POST', headers: { 'X-Access-Code': code } });
   if (res.status === 404 || res.status === 400) {
     res = await fetch('/api/chat', { method: 'POST', headers, body: payload });
   }
-
   const data = await res.json().catch(() => ({}));
   if (res.ok && data.ok) return { ok: true };
-  if (res.status === 401) {
-    return { ok: false, msg: '访问码无效，请与 Vercel 环境变量 ACCESS_CODE 完全一致（区分大小写）' };
-  }
-  if (res.status === 404) {
-    return { ok: false, msg: 'API 未部署。请在 Vercel Redeploy 并确认有 api/chat.js' };
-  }
-  if (res.status === 400) {
-    return { ok: false, msg: (data.error || '请求被拒绝') + ' — 请重新部署最新代码' };
-  }
-  if (res.status === 500) {
-    return { ok: false, msg: data.error || '请在 Vercel 配置 ACCESS_CODE 后 Redeploy' };
-  }
+  if (res.status === 401) return { ok: false, msg: '访问码无效，请与 Vercel 中 ACCESS_CODE 一致' };
+  if (res.status === 500) return { ok: false, msg: data.error || '请配置 ACCESS_CODE' };
   return { ok: false, msg: data.error || '验证失败（HTTP ' + res.status + '）' };
 }
 
@@ -670,10 +613,7 @@ async function tryEnter(code, remember) {
   hideGateError();
   try {
     const result = await verifyCode(code);
-    if (!result.ok) {
-      showGateError(result.msg);
-      return false;
-    }
+    if (!result.ok) { showGateError(result.msg); return false; }
     accessCode = code;
     sessionStorage.setItem(CODE_KEY, accessCode);
     if (remember) {
@@ -684,69 +624,90 @@ async function tryEnter(code, remember) {
     await loadTopicsAndRender();
     return true;
   } catch (e) {
-    showGateError('无法连接验证服务：' + e.message);
+    showGateError('无法连接服务：' + e.message);
     return false;
   } finally {
     gateBtn.disabled = false;
-    gateBtn.textContent = '进入';
+    gateBtn.textContent = '开始训练';
   }
 }
 
 async function loadTopics() {
-  const url = topicsUrl();
-  const res = await fetch(url, { cache: 'no-store' });
-  if (!res.ok) throw new Error('加载 topics 失败：HTTP ' + res.status);
+  const res = await fetch(topicsUrl(), { cache: 'no-store' });
+  if (!res.ok) throw new Error('HTTP ' + res.status);
   const data = await res.json();
-  if (!Array.isArray(data.topics) || data.topics.length === 0) {
-    throw new Error('topics.json 格式错误');
-  }
+  if (!Array.isArray(data.topics) || !data.topics.length) throw new Error('topics 格式错误');
   return data.topics;
 }
 
-async function loadTopicsAndRender() {
-  try {
-    TOPICS = await loadTopics();
-    const src = GITHUB_TOPICS_URL.trim() ? 'GitHub' : '本地';
-    setSyncStatus(true, '已同步 · ' + src + ' · ' + TOPICS.length + ' 个训练模块');
-    renderTopics();
-  } catch (e) {
-    setSyncStatus(false, '场景加载失败：' + e.message);
-    document.getElementById('mainContent').innerHTML =
-      '<p style="color:var(--danger);text-align:center;padding:2rem">无法加载训练场景，请检查 topics.json。</p>';
-  }
+function updateModuleHead(id) {
+  const t = getTopic(id);
+  const m = meta(id);
+  const head = document.getElementById('moduleHead');
+  if (!head || !t) return;
+  head.innerHTML = `
+    <span class="mh-cat ${m.cat}">${m.catLabel}</span>
+    <h2>${escapeHtml(t.label)}</h2>
+    <p>${escapeHtml(m.desc)}</p>
+  `;
 }
 
 function renderTopics() {
   const main = document.getElementById('mainContent');
-  main.innerHTML = '<div class="tabs-wrap glass"><div class="tabs" id="tabs"></div></div><div id="panels"></div>';
-  const tabs = document.getElementById('tabs');
+  const statEl = document.getElementById('statModules');
+  if (statEl) statEl.textContent = String(TOPICS.length);
+
+  main.innerHTML = `
+    <div class="workspace">
+      <nav class="module-nav glass" id="moduleNav">
+        <div class="module-nav-title">训练模块</div>
+      </nav>
+      <div class="train-main">
+        <div class="module-head" id="moduleHead"></div>
+        <div id="panels"></div>
+      </div>
+    </div>
+  `;
+
+  const nav = document.getElementById('moduleNav');
   const panels = document.getElementById('panels');
 
   TOPICS.forEach((t, i) => {
-    const tab = document.createElement('button');
-    tab.className = 'tab' + (i === 0 ? ' active' : '');
-    tab.textContent = t.label;
-    tab.type = 'button';
-    tab.onclick = () => switchTab(t.id, tab);
-    tabs.appendChild(tab);
+    const m = meta(t.id);
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'module-item cat-' + m.cat + (i === 0 ? ' active' : '');
+    btn.dataset.id = t.id;
+    btn.innerHTML = `
+      <span class="mi-cat">${escapeHtml(m.catLabel)}</span>
+      <span class="mi-label">${escapeHtml(t.label)}</span>
+      <span class="mi-desc">${escapeHtml(m.desc)}</span>
+    `;
+    btn.onclick = () => switchTab(t.id, btn);
+    nav.appendChild(btn);
 
     const panel = document.createElement('div');
     panel.className = 'panel' + (i === 0 ? ' active' : '');
     panel.id = 'panel-' + t.id;
     panel.innerHTML = `
-      <div class="scenario-card glass">
-        <div class="scenario-label">场景</div>
-        <div class="scenario-text" id="scenario-${t.id}"></div>
+      <article class="case-card glass">
+        <div class="case-head">
+          <span>业务场景</span>
+          <button type="button" class="btn-refresh" data-reload="${t.id}">换一题</button>
+        </div>
+        <div class="case-body" id="scenario-${t.id}"></div>
+      </article>
+      <div class="work-block">
+        <div class="wb-label">你的分析</div>
+        <div class="wb-hint">${escapeHtml(t.fieldLabel)}</div>
+        <textarea id="answer-${t.id}" placeholder="${escapeAttr(t.placeholder)}"></textarea>
       </div>
-      <div class="field-label">${escapeHtml(t.fieldLabel)}</div>
-      <textarea id="answer-${t.id}" placeholder="${escapeAttr(t.placeholder)}"></textarea>
       <div class="btn-row">
-        <button class="btn-primary" id="btn-${t.id}" type="button">提交分析</button>
-        <button class="btn-ghost" type="button" data-reload="${t.id}">换一个场景</button>
+        <button class="btn-primary" id="btn-${t.id}" type="button">提交 · 获取 AI 点评</button>
       </div>
-      <div class="response-area glass" id="resp-${t.id}">
-        <div class="response-header">AI 点评</div>
-        <div class="response-body" id="resp-body-${t.id}"></div>
+      <div class="feedback-card glass" id="resp-${t.id}">
+        <div class="feedback-head">AI 导师点评</div>
+        <div class="feedback-body" id="resp-body-${t.id}"></div>
       </div>
     `;
     panels.appendChild(panel);
@@ -754,6 +715,21 @@ function renderTopics() {
     document.getElementById('btn-' + t.id).onclick = () => submitAnswer(t.id);
     loadScenario(t.id);
   });
+
+  activeTopicId = TOPICS[0].id;
+  updateModuleHead(activeTopicId);
+}
+
+async function loadTopicsAndRender() {
+  try {
+    TOPICS = await loadTopics();
+    setSyncStatus(true, '已就绪 · ' + TOPICS.length + ' 个模块');
+    renderTopics();
+  } catch (e) {
+    setSyncStatus(false, '加载失败：' + e.message);
+    document.getElementById('mainContent').innerHTML =
+      '<p style="color:var(--danger);text-align:center;padding:3rem">无法加载场景数据</p>';
+  }
 }
 
 function escapeHtml(s) {
@@ -768,31 +744,27 @@ function getTopic(id) {
 }
 
 function switchTab(id, el) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  activeTopicId = id;
+  document.querySelectorAll('.module-item').forEach(n => n.classList.remove('active'));
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   el.classList.add('active');
   document.getElementById('panel-' + id).classList.add('active');
+  updateModuleHead(id);
 }
 
 function loadScenario(id) {
   const t = getTopic(id);
-  const list = t.scenarios;
-  const idx = Math.floor(Math.random() * list.length);
-  document.getElementById('scenario-' + id).textContent = list[idx];
+  const idx = Math.floor(Math.random() * t.scenarios.length);
+  document.getElementById('scenario-' + id).textContent = t.scenarios[idx];
   document.getElementById('answer-' + id).value = '';
-  document.getElementById('resp-' + id).classList.remove('visible');
+  const resp = document.getElementById('resp-' + id);
+  if (resp) resp.classList.remove('visible');
 }
 
 async function submitAnswer(id) {
-  if (!accessCode) {
-    lockApp();
-    return;
-  }
+  if (!accessCode) { lockApp(); return; }
   const answer = document.getElementById('answer-' + id).value.trim();
-  if (!answer) {
-    alert('请先写下你的分析');
-    return;
-  }
+  if (!answer) { alert('请先写下你的分析'); return; }
 
   const t = getTopic(id);
   const scenario = document.getElementById('scenario-' + id).textContent;
@@ -801,7 +773,7 @@ async function submitAnswer(id) {
   const respBody = document.getElementById('resp-body-' + id);
 
   btn.disabled = true;
-  btn.textContent = '分析中…';
+  btn.textContent = '点评生成中…';
   respArea.classList.add('visible');
   respBody.innerHTML = '<div class="dots"><span></span><span></span><span></span></div>';
 
@@ -824,16 +796,16 @@ async function submitAnswer(id) {
       respBody.textContent = '访问码已失效，请重新登录。';
       setTimeout(() => { clearSession(); lockApp(); }, 2000);
     } else if (res.status === 429) {
-      respBody.textContent = data.error || '今日使用次数已达上限，明天再来吧。';
+      respBody.textContent = data.error || '今日次数已达上限';
     } else {
-      respBody.textContent = '请求失败：' + (data.error || ('HTTP ' + res.status));
+      respBody.textContent = '请求失败：' + (data.error || res.status);
     }
   } catch (e) {
     respBody.textContent = '网络错误：' + e.message;
   }
 
   btn.disabled = false;
-  btn.textContent = '提交分析';
+  btn.textContent = '提交 · 获取 AI 点评';
 }
 
 async function bootstrap() {
@@ -842,27 +814,16 @@ async function bootstrap() {
     if (!code) { showGateError('请输入访问码'); return; }
     tryEnter(code, document.getElementById('gateRemember').checked);
   };
-  gateCode.addEventListener('keydown', e => {
-    if (e.key === 'Enter') gateBtn.click();
-  });
-  document.getElementById('logoutBtn').onclick = () => {
-    clearSession();
-    lockApp();
-  };
+  gateCode.addEventListener('keydown', e => { if (e.key === 'Enter') gateBtn.click(); });
+  document.getElementById('logoutBtn').onclick = () => { clearSession(); lockApp(); };
 
   const remembered = localStorage.getItem(CODE_KEY);
   if (remembered && isSessionValid()) {
     gateCode.value = remembered;
-    const ok = await tryEnter(remembered, true);
-    if (ok) return;
+    if (await tryEnter(remembered, true)) return;
   }
-
   const sessionCode = sessionStorage.getItem(CODE_KEY);
-  if (sessionCode) {
-    const ok = await tryEnter(sessionCode, false);
-    if (ok) return;
-  }
-
+  if (sessionCode && await tryEnter(sessionCode, false)) return;
   lockApp();
 }
 
