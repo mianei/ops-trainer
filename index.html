@@ -58,6 +58,7 @@
     --sticky-top: 76px;
     --sidebar-w: 200px;
     --sidebar-gap: 20px;
+    --workspace-h: calc(100vh - var(--sticky-top) - 20px);
     --sans: -apple-system, BlinkMacSystemFont, 'SF Pro SC', 'SF Pro Text', 'Helvetica Neue', 'Noto Sans SC', sans-serif;
   }
 
@@ -429,9 +430,6 @@
     font-size: 12px; color: var(--ink3);
     padding: 12px 16px; border-radius: var(--r-lg);
     margin-bottom: 1rem;
-    background: var(--frost-strong);
-    border: 1px solid var(--frost-border);
-    box-shadow: var(--shadow-sm), var(--inset-hi);
   }
   .sync-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ink3); }
   .sync-dot.ok { background: var(--ok); }
@@ -440,7 +438,7 @@
   .workspace-shell {
     border-radius: var(--r-xl);
     padding: 20px;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
     overflow: visible;
     background: var(--frost-strong);
     border: 1px solid var(--frost-border);
@@ -452,31 +450,41 @@
     grid-template-columns: 1fr;
     gap: 1rem;
     align-items: start;
-    overflow: visible;
   }
   @media (min-width: 900px) {
+    .workspace-shell {
+      position: sticky;
+      top: var(--sticky-top);
+      z-index: 30;
+      max-height: var(--workspace-h);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
     .workspace {
       grid-template-columns: var(--sidebar-w) minmax(0, 1fr);
       gap: var(--sidebar-gap);
-    }
-    .workspace-side-col {
-      width: var(--sidebar-w);
-      min-height: 1px;
-    }
-    .workspace-aside-spacer {
-      display: none;
-      width: 100%;
-    }
-    .workspace-aside-spacer.is-active {
-      display: block;
+      flex: 1;
+      min-height: 0;
+      align-items: stretch;
+      overflow: hidden;
     }
     .workspace-aside {
-      width: var(--sidebar-w);
-      max-height: calc(100vh - var(--sticky-top) - 24px);
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
     }
-    .workspace-aside.is-pinned {
-      position: fixed;
-      z-index: 40;
+    .train-main {
+      min-height: 0;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(0,0,0,0.12) transparent;
+    }
+    .train-main::-webkit-scrollbar { width: 5px; }
+    .train-main::-webkit-scrollbar-thumb {
+      background: rgba(0,0,0,0.1);
+      border-radius: 4px;
     }
   }
 
@@ -484,14 +492,18 @@
     border-radius: var(--r-xl);
     padding: 8px;
     flex-shrink: 0;
-    background: rgba(255, 255, 255, 0.88);
+    background: var(--frost);
+    backdrop-filter: var(--blur-md);
+    -webkit-backdrop-filter: var(--blur-md);
     border: 1px solid var(--frost-border);
     box-shadow: var(--inset-hi), 0 4px 20px rgba(0, 0, 0, 0.04);
   }
   @media (min-width: 900px) {
     .module-nav {
       width: 100%;
-      max-height: calc(100vh - var(--sticky-top) - 24px);
+      flex: 1;
+      min-height: 0;
+      max-height: none;
       overflow-y: auto;
       overflow-x: hidden;
       overscroll-behavior: contain;
@@ -507,8 +519,10 @@
   .nav-group-details {
     border-radius: var(--r-md);
     margin-bottom: 6px;
-    background: rgba(255, 255, 255, 0.45);
-    border: 1px solid rgba(255, 255, 255, 0.55);
+    background: rgba(255, 255, 255, 0.28);
+    backdrop-filter: var(--blur-sm);
+    -webkit-backdrop-filter: var(--blur-sm);
+    border: 1px solid rgba(255, 255, 255, 0.45);
   }
   .nav-group-details summary {
     list-style: none;
@@ -598,7 +612,6 @@
   .train-main {
     min-width: 0;
     flex: 1;
-    overflow: visible;
   }
 
   .module-head {
@@ -874,8 +887,12 @@
       border-left: none !important;
       border-top: 3px solid transparent;
     }
-    .train-main { max-height: none; overflow: visible; }
-    .workspace-aside.is-pinned { position: static; top: auto; left: auto; }
+    .train-main { max-height: none; overflow: visible; margin-left: 0; }
+    .workspace-shell {
+      position: static;
+      max-height: none;
+      overflow: visible;
+    }
     .module-item.active { border-top-color: var(--ink); }
     .module-item.active.cat-product { border-top-color: var(--product); }
     .module-item.active.cat-ops { border-top-color: var(--ops); }
@@ -969,7 +986,7 @@
     </div>
   </section>
 
-  <div class="sync-bar" id="syncBar">
+  <div class="sync-bar surface" id="syncBar">
     <span class="sync-dot" id="syncDot"></span>
     <span id="syncText">正在加载…</span>
   </div>
@@ -1257,6 +1274,7 @@ function syncNavAccordion(topicId) {
 
 function renderTopics() {
   const main = document.getElementById('mainContent');
+  main.classList.remove('loading-main');
   const { product, ops, ordered } = topicsByCategory();
   const topicById = topicMap();
   const statP = document.getElementById('statProduct');
@@ -1273,12 +1291,9 @@ function renderTopics() {
   main.innerHTML = `
     <div class="workspace-shell">
       <div class="workspace">
-        <div class="workspace-side-col">
-          <div class="workspace-aside-spacer" aria-hidden="true"></div>
-          <aside class="workspace-aside" aria-label="训练模块">
-            <nav class="module-nav" id="moduleNav"></nav>
-          </aside>
-        </div>
+        <aside class="workspace-aside" aria-label="训练模块">
+          <nav class="module-nav" id="moduleNav"></nav>
+        </aside>
         <div class="train-main">
           <div class="module-head" id="moduleHead"></div>
           <div id="panels"></div>
@@ -1345,69 +1360,6 @@ function renderTopics() {
   activeTopicId = ordered[0].id;
   syncNavAccordion(activeTopicId);
   updateModuleHead(activeTopicId);
-  initWorkspaceRail();
-}
-
-/** 仅在工作台滚入视口后钉住侧栏，避免盖住顶部 Hero */
-function initWorkspaceRail() {
-  const mq = window.matchMedia('(min-width: 900px)');
-  const shell = document.querySelector('.workspace-shell');
-  const aside = document.querySelector('.workspace-aside');
-  const spacer = document.querySelector('.workspace-aside-spacer');
-  if (!shell || !aside || !spacer) return;
-
-  if (aside._railBound) return;
-  aside._railBound = true;
-
-  let raf = 0;
-  const shellPad = 20;
-
-  function stickyTop() {
-    const v = getComputedStyle(document.documentElement).getPropertyValue('--sticky-top').trim();
-    return parseFloat(v) || 76;
-  }
-
-  function update() {
-    if (!mq.matches) {
-      aside.classList.remove('is-pinned');
-      spacer.classList.remove('is-active');
-      aside.style.top = aside.style.left = '';
-      return;
-    }
-
-    const top = stickyTop();
-    const rect = shell.getBoundingClientRect();
-    const asideH = aside.offsetHeight;
-    const shouldPin = rect.top <= top && rect.bottom > top + asideH;
-
-    if (shouldPin) {
-      aside.classList.add('is-pinned');
-      spacer.classList.add('is-active');
-      spacer.style.height = asideH + 'px';
-      aside.style.top = top + 'px';
-      aside.style.left = (rect.left + shellPad) + 'px';
-    } else {
-      aside.classList.remove('is-pinned');
-      spacer.classList.remove('is-active');
-      spacer.style.height = '';
-      aside.style.top = aside.style.left = '';
-    }
-  }
-
-  function schedule() {
-    if (raf) return;
-    raf = requestAnimationFrame(() => { raf = 0; update(); });
-  }
-
-  window.addEventListener('scroll', schedule, { passive: true });
-  window.addEventListener('resize', schedule);
-  mq.addEventListener('change', schedule);
-  if (typeof ResizeObserver !== 'undefined') {
-    const ro = new ResizeObserver(schedule);
-    ro.observe(shell);
-    ro.observe(aside);
-  }
-  schedule();
 }
 
 async function loadTopicsAndRender() {
