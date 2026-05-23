@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- ops-trainer v4.6 · SaaS wave layout -->
+<!-- ops-trainer v4.5 · SaaS wave layout -->
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8" />
@@ -55,7 +55,8 @@
     --r-lg: 20px;
     --r-xl: 28px;
     --max: 1080px;
-    --sticky-top: 20px;
+    --sticky-top: 76px;
+    --workspace-h: calc(100vh - var(--sticky-top) - 20px);
     --sidebar-w: 200px;
     --sidebar-gap: 20px;
     --sans: -apple-system, BlinkMacSystemFont, 'SF Pro SC', 'SF Pro Text', 'Helvetica Neue', 'Noto Sans SC', sans-serif;
@@ -412,13 +413,28 @@
     align-items: start;
   }
   @media (min-width: 900px) {
+    #app.visible .page-wrap {
+      display: flex;
+      flex-direction: column;
+      min-height: calc(100vh - var(--sticky-top));
+    }
+    #app.visible #mainContent:not(.loading-main) {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+    }
     .workspace-shell {
       position: sticky;
       top: var(--sticky-top);
-      max-height: calc(100vh - var(--sticky-top) - 20px);
+      z-index: 35;
+      flex: 1;
+      min-height: var(--workspace-h);
+      max-height: var(--workspace-h);
       display: flex;
       flex-direction: column;
       overflow: hidden;
+      margin-bottom: 0;
     }
     .workspace {
       display: grid;
@@ -427,6 +443,7 @@
       flex: 1;
       min-height: 0;
       overflow: hidden;
+      align-items: stretch;
     }
     .workspace-aside {
       position: static;
@@ -434,11 +451,13 @@
       overflow: hidden;
       display: flex;
       flex-direction: column;
+      height: 100%;
     }
     .train-main {
-      min-height: 0;
-      overflow-y: auto;
       margin-left: 0;
+      min-height: 0;
+      height: 100%;
+      overflow-y: auto;
       overscroll-behavior: contain;
       scrollbar-width: thin;
       scrollbar-color: rgba(0,0,0,0.12) transparent;
@@ -465,6 +484,7 @@
       flex: 1;
       min-height: 0;
       width: 100%;
+      height: 100%;
       overflow-y: auto;
       overflow-x: hidden;
       overscroll-behavior: contain;
@@ -821,6 +841,15 @@
   }
 
   @media (max-width: 899px) {
+    #app.visible .page-wrap {
+      display: block;
+      min-height: 0;
+    }
+    #app.visible #mainContent:not(.loading-main) {
+      flex: none;
+      min-height: 0;
+      display: block;
+    }
     .workspace { max-height: none; min-height: 0; display: grid; }
     .workspace-aside {
       position: static;
@@ -950,7 +979,7 @@
 
   <div id="mainContent" class="loading-main">加载训练模块…</div>
 
-  <footer class="footer">运营 · 产品思维训练器 · 仅供学习使用 · <span id="buildTag">v4.6</span></footer>
+  <footer class="footer">运营 · 产品思维训练器 · 仅供学习使用 · <span id="buildTag">v4.5</span></footer>
   </div>
 </div>
 
