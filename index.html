@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- ops-trainer v4.0 · SaaS wave layout -->
+<!-- ops-trainer v4.5 · SaaS wave layout -->
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8" />
@@ -55,10 +55,9 @@
     --r-lg: 20px;
     --r-xl: 28px;
     --max: 1080px;
-    --sticky-top: 76px;
+    --sticky-top: 20px;
     --sidebar-w: 200px;
     --sidebar-gap: 20px;
-    --workspace-h: calc(100vh - var(--sticky-top) - 20px);
     --sans: -apple-system, BlinkMacSystemFont, 'SF Pro SC', 'SF Pro Text', 'Helvetica Neue', 'Noto Sans SC', sans-serif;
   }
 
@@ -173,7 +172,7 @@
     border-color: rgba(255, 255, 255, 0.85);
   }
   @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-    .glass, .surface, .surface-card, .btn-frost, .site-header, .btn-logout {
+    .glass, .surface, .surface-card, .btn-frost {
       background: rgba(255, 255, 255, 0.94);
     }
   }
@@ -330,45 +329,6 @@
   #app { display: none; position: relative; z-index: 1; min-height: 100vh; }
   #app.visible { display: flex; flex-direction: column; }
 
-  .site-header {
-    position: sticky; top: 12px; z-index: 50;
-    display: flex; align-items: center; justify-content: space-between;
-    max-width: var(--max); width: calc(100% - 48px); margin: 0 auto;
-    padding: 10px 14px 10px 20px;
-    min-height: 48px;
-    border-radius: 980px;
-    margin-top: 16px;
-    background: var(--frost);
-    backdrop-filter: var(--blur-md);
-    -webkit-backdrop-filter: var(--blur-md);
-    border: 1px solid var(--frost-border);
-    box-shadow: var(--shadow-sm), var(--inset-hi);
-  }
-  .logo {
-    font-size: 14px; font-weight: 600; letter-spacing: -0.02em;
-    color: var(--ink);
-  }
-  .logo em {
-    font-style: normal; color: var(--ink3); font-weight: 500;
-    margin-left: 6px;
-  }
-  .btn-logout {
-    font-size: 13px; font-weight: 500; color: var(--ink2);
-    background: rgba(255, 255, 255, 0.35);
-    backdrop-filter: var(--blur-sm);
-    -webkit-backdrop-filter: var(--blur-sm);
-    border: 1px solid rgba(255, 255, 255, 0.55);
-    cursor: pointer; font-family: inherit;
-    padding: 7px 16px; border-radius: 980px;
-    box-shadow: var(--inset-hi);
-    transition: background 0.25s, color 0.2s, border-color 0.25s;
-  }
-  .btn-logout:hover {
-    background: rgba(255, 255, 255, 0.55);
-    color: var(--ink);
-    border-color: rgba(255, 255, 255, 0.75);
-  }
-
   .page-wrap {
     position: relative; z-index: 1;
     max-width: var(--max); margin: 0 auto;
@@ -455,28 +415,30 @@
     .workspace-shell {
       position: sticky;
       top: var(--sticky-top);
-      z-index: 30;
-      max-height: var(--workspace-h);
+      max-height: calc(100vh - var(--sticky-top) - 20px);
       display: flex;
       flex-direction: column;
       overflow: hidden;
     }
     .workspace {
+      display: grid;
       grid-template-columns: var(--sidebar-w) minmax(0, 1fr);
       gap: var(--sidebar-gap);
       flex: 1;
       min-height: 0;
-      align-items: stretch;
       overflow: hidden;
     }
     .workspace-aside {
+      position: static;
       min-height: 0;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
     }
     .train-main {
       min-height: 0;
       overflow-y: auto;
+      margin-left: 0;
       overscroll-behavior: contain;
       scrollbar-width: thin;
       scrollbar-color: rgba(0,0,0,0.12) transparent;
@@ -500,10 +462,9 @@
   }
   @media (min-width: 900px) {
     .module-nav {
-      width: 100%;
       flex: 1;
       min-height: 0;
-      max-height: none;
+      width: 100%;
       overflow-y: auto;
       overflow-x: hidden;
       overscroll-behavior: contain;
@@ -891,6 +852,7 @@
     .workspace-shell {
       position: static;
       max-height: none;
+      display: block;
       overflow: visible;
     }
     .module-item.active { border-top-color: var(--ink); }
@@ -905,7 +867,6 @@
     .feature-grid { grid-template-columns: 1fr; }
     .gate-grid { grid-template-columns: 1fr; }
     .page-wrap { padding: 0 16px 2rem; }
-    .site-header { width: calc(100% - 32px); margin-top: 8px; }
     .workspace-shell { padding: 12px; }
   }
 </style>
