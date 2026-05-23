@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- ops-trainer v4.5 · SaaS wave layout -->
+<!-- ops-trainer v4.6 · SaaS wave layout -->
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8" />
@@ -928,10 +928,6 @@
 
 <div id="app">
   <div class="page-wrap">
-  <header class="site-header">
-    <div class="logo">思维训练<em> · 产运</em></div>
-    <button class="btn-logout" type="button" id="logoutBtn">退出</button>
-  </header>
 
   <section class="hero-compact">
     <div class="hero-copy">
@@ -954,7 +950,7 @@
 
   <div id="mainContent" class="loading-main">加载训练模块…</div>
 
-  <footer class="footer">运营 · 产品思维训练器 · 仅供学习使用 · <span id="buildTag">v4.5</span></footer>
+  <footer class="footer">运营 · 产品思维训练器 · 仅供学习使用 · <span id="buildTag">v4.6</span></footer>
   </div>
 </div>
 
@@ -1581,7 +1577,6 @@ async function bootstrap() {
     tryEnter(code, document.getElementById('gateRemember').checked);
   };
   gateCode.addEventListener('keydown', e => { if (e.key === 'Enter') gateBtn.click(); });
-  document.getElementById('logoutBtn').onclick = () => { clearSession(); lockApp(); };
 
   const remembered = localStorage.getItem(CODE_KEY);
   if (remembered && isSessionValid()) {
