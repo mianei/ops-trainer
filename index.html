@@ -401,32 +401,49 @@
   .hero-compact {
     position: relative;
     padding: 2.25rem 0 1.5rem;
-    max-width: 640px;
+    max-width: 720px;
     isolation: isolate;
   }
+  .hero-eyebrow-row {
+    display: flex;
+    align-items: center;
+    gap: clamp(12px, 3vw, 28px);
+    margin-bottom: 0.85rem;
+    min-height: 96px;
+  }
+  .hero-eyebrow-row .eyebrow {
+    flex: 0 0 auto;
+    margin-bottom: 0;
+    line-height: 1.3;
+  }
   .hero-waveform {
-    position: absolute;
+    position: relative;
     z-index: 0;
-    top: 0.15rem;
-    left: 52%;
-    width: clamp(150px, 36vw, 320px);
-    height: 76px;
+    flex: 1 1 auto;
+    min-width: 140px;
+    max-width: min(480px, 58vw);
+    height: 96px;
     pointer-events: none;
-    opacity: 0.58;
-    -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.25) 22%, rgba(0, 0, 0, 0.88) 58%, rgba(0, 0, 0, 0.45) 100%);
-    mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.25) 22%, rgba(0, 0, 0, 0.88) 58%, rgba(0, 0, 0, 0.45) 100%);
+    opacity: 0.68;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.35) 12%, rgba(0, 0, 0, 0.92) 42%, rgba(0, 0, 0, 0.55) 100%);
+    mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.35) 12%, rgba(0, 0, 0, 0.92) 42%, rgba(0, 0, 0, 0.55) 100%);
   }
   .hero-copy {
     position: relative;
     z-index: 1;
   }
   @media (max-width: 720px) {
+    .hero-eyebrow-row {
+      flex-wrap: wrap;
+      min-height: 0;
+      gap: 0.35rem 0.75rem;
+      margin-bottom: 0.75rem;
+    }
     .hero-waveform {
-      left: 48%;
-      width: clamp(120px, 42vw, 200px);
-      height: 56px;
-      top: 0;
-      opacity: 0.36;
+      flex: 1 1 100%;
+      max-width: none;
+      height: 80px;
+      opacity: 0.52;
     }
   }
   .hero-compact::before {
@@ -1005,10 +1022,12 @@
   <div class="page-wrap">
 
   <section class="hero-compact">
-    <canvas id="heroWaveform" class="hero-waveform" aria-hidden="true"></canvas>
     <div class="hero-copy">
       <p class="hero-brand" aria-label="MindTraining"><span class="hb-mind">Mind</span><span class="hb-train">Training</span></p>
-      <p class="eyebrow">Judgment over generation</p>
+      <div class="hero-eyebrow-row">
+        <p class="eyebrow">Judgment over generation</p>
+        <canvas id="heroWaveform" class="hero-waveform" aria-hidden="true"></canvas>
+      </div>
       <h1>在真实场景里，练运营与产品的判断力。</h1>
       <p class="desc">先独立作答，再获 AI 结构化点评，并可继续追问导师。</p>
     </div>
@@ -1021,7 +1040,7 @@
 
   <div id="mainContent" class="loading-main">加载训练模块…</div>
 
-  <footer class="footer"><span class="footer-brand" aria-label="MindTraining"><span class="hb-mind">Mind</span><span class="hb-train">Training</span></span> · 仅供学习使用 · <span id="buildTag">v4.21</span></footer>
+  <footer class="footer"><span class="footer-brand" aria-label="MindTraining"><span class="hb-mind">Mind</span><span class="hb-train">Training</span></span> · 仅供学习使用 · <span id="buildTag">v4.22</span></footer>
   </div>
 </div>
 
@@ -1723,11 +1742,11 @@ function initHeroWaveform() {
     resize();
     ctx.clearRect(0, 0, cw, ch);
     const rect = canvas.getBoundingClientRect();
-    const BAR = Math.max(22, Math.floor(cw / 6.5));
+    const BAR = Math.max(36, Math.floor(cw / 5.2));
     const step = cw / BAR;
-    const barW = step * 0.4;
-    const midY = ch * 0.54;
-    const bandH = ch * 0.88;
+    const barW = step * 0.42;
+    const midY = ch * 0.52;
+    const bandH = ch * 0.92;
     const mx = mouse.x - rect.left;
     const my = mouse.y - rect.top;
 
@@ -1735,18 +1754,18 @@ function initHeroWaveform() {
       const x = i * step + (step - barW) / 2;
       const cx = x + barW / 2;
       const phase = i * 0.42;
-      let amp = 0.16 + 0.84 * Math.pow(Math.abs(Math.sin(tick * 0.032 + phase)), 1.28);
-      amp *= 0.5 + 0.5 * Math.sin(i * 0.24 + tick * 0.014);
+      let amp = 0.18 + 0.82 * Math.pow(Math.abs(Math.sin(tick * 0.028 + phase)), 1.35);
+      amp *= 0.55 + 0.45 * Math.sin(i * 0.22 + tick * 0.012);
       const dist = Math.hypot(mx - cx, my - midY);
-      const boost = Math.max(0, 1 - dist / Math.max(120, cw * 0.45));
-      amp = Math.min(1, amp + boost * 0.75);
-      const barH = 6 + bandH * amp * 0.58;
+      const boost = Math.max(0, 1 - dist / Math.max(140, cw * 0.38));
+      amp = Math.min(1, amp + boost * 0.85);
+      const barH = 8 + bandH * amp * 0.62;
       const y = midY - barH / 2;
       const g = ctx.createLinearGradient(x, y, x, y + barH);
-      g.addColorStop(0, 'rgba(74, 224, 173, 0.06)');
-      g.addColorStop(0.4, 'rgba(50, 213, 152, 0.38)');
-      g.addColorStop(0.75, 'rgba(38, 194, 129, 0.52)');
-      g.addColorStop(1, 'rgba(38, 194, 129, 0.1)');
+      g.addColorStop(0, 'rgba(74, 224, 173, 0.08)');
+      g.addColorStop(0.35, 'rgba(50, 213, 152, 0.42)');
+      g.addColorStop(0.7, 'rgba(38, 194, 129, 0.55)');
+      g.addColorStop(1, 'rgba(38, 194, 129, 0.12)');
       ctx.fillStyle = g;
       roundRect(x, y, barW, barH, barW / 2);
       ctx.fill();
