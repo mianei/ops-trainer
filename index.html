@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- ops-trainer v4.5 · SaaS wave layout -->
+<!-- ops-trainer v4.6 · SaaS wave layout -->
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8" />
@@ -55,8 +55,6 @@
     --r-lg: 20px;
     --r-xl: 28px;
     --max: 1080px;
-    --sticky-top: 76px;
-    --workspace-h: calc(100vh - var(--sticky-top) - 20px);
     --sidebar-w: 200px;
     --sidebar-gap: 20px;
     --sans: -apple-system, BlinkMacSystemFont, 'SF Pro SC', 'SF Pro Text', 'Helvetica Neue', 'Noto Sans SC', sans-serif;
@@ -413,59 +411,17 @@
     align-items: start;
   }
   @media (min-width: 900px) {
-    #app.visible .page-wrap {
-      display: flex;
-      flex-direction: column;
-      min-height: calc(100vh - var(--sticky-top));
-    }
-    #app.visible #mainContent:not(.loading-main) {
-      flex: 1;
-      min-height: 0;
-      display: flex;
-      flex-direction: column;
-    }
-    .workspace-shell {
-      position: sticky;
-      top: var(--sticky-top);
-      z-index: 35;
-      flex: 1;
-      min-height: var(--workspace-h);
-      max-height: var(--workspace-h);
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      margin-bottom: 0;
-    }
     .workspace {
       display: grid;
       grid-template-columns: var(--sidebar-w) minmax(0, 1fr);
       gap: var(--sidebar-gap);
-      flex: 1;
-      min-height: 0;
-      overflow: hidden;
-      align-items: stretch;
+      align-items: start;
     }
     .workspace-aside {
       position: static;
-      min-height: 0;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      height: 100%;
     }
     .train-main {
-      margin-left: 0;
-      min-height: 0;
-      height: 100%;
-      overflow-y: auto;
-      overscroll-behavior: contain;
-      scrollbar-width: thin;
-      scrollbar-color: rgba(0,0,0,0.12) transparent;
-    }
-    .train-main::-webkit-scrollbar { width: 5px; }
-    .train-main::-webkit-scrollbar-thumb {
-      background: rgba(0,0,0,0.1);
-      border-radius: 4px;
+      overflow: visible;
     }
   }
 
@@ -481,20 +437,7 @@
   }
   @media (min-width: 900px) {
     .module-nav {
-      flex: 1;
-      min-height: 0;
       width: 100%;
-      height: 100%;
-      overflow-y: auto;
-      overflow-x: hidden;
-      overscroll-behavior: contain;
-      scrollbar-width: thin;
-      scrollbar-color: rgba(0,0,0,0.15) transparent;
-    }
-    .module-nav::-webkit-scrollbar { width: 4px; }
-    .module-nav::-webkit-scrollbar-thumb {
-      background: rgba(0,0,0,0.12);
-      border-radius: 4px;
     }
   }
   .nav-group-details {
@@ -841,16 +784,7 @@
   }
 
   @media (max-width: 899px) {
-    #app.visible .page-wrap {
-      display: block;
-      min-height: 0;
-    }
-    #app.visible #mainContent:not(.loading-main) {
-      flex: none;
-      min-height: 0;
-      display: block;
-    }
-    .workspace { max-height: none; min-height: 0; display: grid; }
+    .workspace { display: grid; }
     .workspace-aside {
       position: static;
       max-height: none;
@@ -877,13 +811,7 @@
       border-left: none !important;
       border-top: 3px solid transparent;
     }
-    .train-main { max-height: none; overflow: visible; margin-left: 0; }
-    .workspace-shell {
-      position: static;
-      max-height: none;
-      display: block;
-      overflow: visible;
-    }
+    .train-main { overflow: visible; }
     .module-item.active { border-top-color: var(--ink); }
     .module-item.active.cat-product { border-top-color: var(--product); }
     .module-item.active.cat-ops { border-top-color: var(--ops); }
@@ -917,7 +845,7 @@
   </svg>
   <div class="bg-blob bg-blob-1"></div>
   <div class="bg-blob bg-blob-2"></div>
-</div>
+  </div>
 
 <div id="gate">
   <header class="gate-topbar">
@@ -934,7 +862,7 @@
         <div class="feature-mini"><strong>运营思维</strong><span>增长 · 数据 · 策略 · 行业案例</span></div>
         <div class="feature-mini"><strong>500+ 原创题</strong><span>按飞书面经结构划分</span></div>
         <div class="feature-mini"><strong>AI 导师</strong><span>点评 + 多轮追问</span></div>
-      </div>
+    </div>
     </div>
     <div class="gate-card surface">
       <h2>进入训练场</h2>
@@ -953,7 +881,7 @@
     </div>
     </div>
   </div>
-</div>
+  </div>
 
 <div id="app">
   <div class="page-wrap">
@@ -979,7 +907,7 @@
 
   <div id="mainContent" class="loading-main">加载训练模块…</div>
 
-  <footer class="footer">运营 · 产品思维训练器 · 仅供学习使用 · <span id="buildTag">v4.5</span></footer>
+  <footer class="footer">运营 · 产品思维训练器 · 仅供学习使用 · <span id="buildTag">v4.6</span></footer>
   </div>
 </div>
 
@@ -1306,7 +1234,7 @@ function renderTopics() {
           <div class="case-head">
             <span>业务场景</span>
             <button type="button" class="btn-refresh" data-reload="${t.id}">换一题</button>
-          </div>
+      </div>
           <div class="case-body" id="scenario-${t.id}"></div>
         </article>
         <div class="surface-card work-card">
@@ -1317,9 +1245,9 @@ function renderTopics() {
           </div>
         </div>
         <div class="surface-card surface-card--flat action-card">
-          <div class="btn-row">
+      <div class="btn-row">
             <button class="btn-primary" id="btn-${t.id}" type="button">提交 · 获取 AI 点评</button>
-          </div>
+      </div>
         </div>
         <div class="surface-card feedback-card" id="resp-${t.id}">
           <div class="feedback-head">AI 导师点评</div>
