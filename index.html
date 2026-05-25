@@ -90,6 +90,12 @@
     height: clamp(300px, 44vh, 480px);
     background: linear-gradient(180deg, #ffffff 0%, #fafdfc 58%, #f3f8f6 100%);
     z-index: 1;
+    will-change: transform;
+    animation: horizonSway 16s ease-in-out infinite;
+  }
+  @keyframes horizonSway {
+    0%, 100% { transform: translate3d(0, 0, 0) scaleY(1); }
+    50% { transform: translate3d(0, -10px, 0) scaleY(1.012); }
   }
   #gate .bg-sky-cap { clip-path: url(#horizonClipGate); }
   #app .bg-sky-cap { clip-path: url(#horizonClipApp); }
@@ -98,32 +104,38 @@
     opacity: 0.82;
     will-change: transform;
     z-index: 0;
+    animation: wavePan 28s ease-in-out infinite;
   }
   .bg-wave-mid {
     transform-origin: 55% 85%;
-    animation: waveDriftMid 19s ease-in-out infinite;
+    animation: waveDriftMid 14s ease-in-out infinite;
   }
   .bg-wave-back {
     transform-origin: 50% 80%;
-    animation: waveDriftBack 22s ease-in-out infinite;
+    animation: waveDriftBack 18s ease-in-out infinite;
   }
   .bg-wave-front {
     transform-origin: 40% 90%;
-    animation: waveDriftFront 16s ease-in-out infinite;
+    animation: waveDriftFront 11s ease-in-out infinite;
+  }
+  @keyframes wavePan {
+    0%, 100% { transform: translate3d(0, 0, 0); }
+    50% { transform: translate3d(-5%, 0, 0); }
   }
   @keyframes waveDriftMid {
     0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-    40% { transform: translate3d(2%, -1.5%, 0) scale(1.015); }
-    70% { transform: translate3d(-1.5%, 1%, 0) scale(0.995); }
+    25% { transform: translate3d(4%, -3%, 0) scale(1.025); }
+    50% { transform: translate3d(-3%, 2.5%, 0) scale(0.985); }
+    75% { transform: translate3d(2%, -1.5%, 0) scale(1.015); }
   }
   @keyframes waveDriftBack {
     0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-    33% { transform: translate3d(-2.5%, 1.5%, 0) scale(1.02); }
-    66% { transform: translate3d(1.5%, -1%, 0) scale(0.99); }
+    33% { transform: translate3d(-5%, 2.5%, 0) scale(1.03); }
+    66% { transform: translate3d(3.5%, -2%, 0) scale(0.98); }
   }
   @keyframes waveDriftFront {
     0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-    50% { transform: translate3d(3%, -2%, 0) scale(1.03); }
+    50% { transform: translate3d(6%, -3.5%, 0) scale(1.04); }
   }
   .bg-blob {
     position: absolute; border-radius: 50%; filter: blur(80px);
@@ -157,7 +169,7 @@
     50% { transform: translate(40px, -20px) scale(1.05); }
   }
   @media (prefers-reduced-motion: reduce) {
-    .bg-wave-mid, .bg-wave-back, .bg-wave-front, .bg-blob-1, .bg-blob-2, .bg-blob-3 { animation: none; }
+    .bg-wave-svg, .bg-sky-cap, .bg-wave-mid, .bg-wave-back, .bg-wave-front, .bg-blob-1, .bg-blob-2, .bg-blob-3 { animation: none; }
   }
 
   .frost-base {
@@ -247,7 +259,7 @@
   }
   .gate-intro .lead {
     font-size: 17px; color: var(--ink2); line-height: 1.55;
-    max-width: 28em; margin-bottom: 2rem;
+    max-width: 28em; margin-bottom: 0;
   }
   .gate-actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
   .btn-ghost {
@@ -255,24 +267,6 @@
     background: none; border: none; cursor: default;
     font-family: inherit; padding: 0;
   }
-  .feature-grid {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
-    margin-top: 2rem;
-  }
-  .feature-mini {
-    padding: 16px 18px; border-radius: var(--r-lg);
-    background: var(--frost);
-    backdrop-filter: var(--blur-sm);
-    -webkit-backdrop-filter: var(--blur-sm);
-    border: 1px solid var(--frost-border);
-    box-shadow: var(--inset-hi), 0 2px 12px rgba(0, 0, 0, 0.03);
-  }
-  .feature-mini strong {
-    display: block; font-size: 13px; font-weight: 600;
-    margin-bottom: 4px; letter-spacing: -0.01em;
-  }
-  .feature-mini span { font-size: 12px; color: var(--ink3); line-height: 1.45; }
-
   .gate-card {
     padding: 2rem; border-radius: var(--r-xl);
     background: var(--frost-solid);
@@ -954,7 +948,6 @@
     .module-head h2 { font-size: 1.25rem; }
     .hero-compact { padding: 1.5rem 0 1rem; }
     .hero-copy h1 { font-size: 1.5rem; }
-    .feature-grid { grid-template-columns: 1fr; }
     .gate-grid { grid-template-columns: 1fr; }
     .page-wrap { padding: 0 16px 2rem; }
     .workspace-shell { padding: 12px; }
@@ -993,12 +986,6 @@
       <p class="hero-brand" aria-label="MindTraining"><span class="hb-mind">Mind</span><span class="hb-train">Training</span></p>
       <h1>在真实场景里，<br/>练产品与运营的判断力</h1>
       <p class="lead">不是标准答案背诵，而是独立分析、获得 AI 结构化点评，并继续追问深化——建立可复用的思维框架。</p>
-      <div class="feature-grid">
-        <div class="feature-mini"><strong>产品思维</strong><span>需求 · 功能 · 交互 · 面经开放题</span></div>
-        <div class="feature-mini"><strong>运营思维</strong><span>增长 · 数据 · 策略 · 行业案例</span></div>
-        <div class="feature-mini"><strong>500+ 原创题</strong><span>按飞书面经结构划分</span></div>
-        <div class="feature-mini"><strong>AI 导师</strong><span>点评 + 多轮追问</span></div>
-    </div>
     </div>
     <div class="gate-card surface">
       <h2>进入训练场</h2>
@@ -1065,7 +1052,7 @@
 
   <div id="mainContent" class="loading-main">加载训练模块…</div>
 
-  <footer class="footer"><span class="footer-brand" aria-label="MindTraining"><span class="hb-mind">Mind</span><span class="hb-train">Training</span></span> · 仅供学习使用 · <span id="buildTag">v4.28</span></footer>
+  <footer class="footer"><span class="footer-brand" aria-label="MindTraining"><span class="hb-mind">Mind</span><span class="hb-train">Training</span></span> · 仅供学习使用 · <span id="buildTag">v4.29</span></footer>
   </div>
 </div>
 
