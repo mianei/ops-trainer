@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- ops-trainer v4.9 · SaaS wave layout -->
+<!-- ops-trainer v4.10 · SaaS wave layout -->
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8" />
@@ -895,9 +895,9 @@
     </div>
     <div class="stat-grid">
       <div class="stat-card"><strong id="statProduct">3</strong><span>产品思维 · <em id="statProductQ">0</em> 题</span></div>
-      <div class="stat-card"><strong id="statOps">5</strong><span>运营思维 · <em id="statOpsQ">0</em> 题</span></div>
+      <div class="stat-card"><strong id="statOps">4</strong><span>运营思维 · <em id="statOpsQ">0</em> 题</span></div>
       <div class="stat-card"><strong id="statInterview">2</strong><span>面试通用 · <em id="statInterviewQ">0</em> 题</span></div>
-      <div class="stat-card"><strong id="statTotal">10</strong><span>训练模块</span></div>
+      <div class="stat-card"><strong id="statTotal">9</strong><span>训练模块</span></div>
       <div class="stat-card"><strong>AI</strong><span>点评 + 追问</span></div>
     </div>
   </section>
@@ -909,7 +909,7 @@
 
   <div id="mainContent" class="loading-main">加载训练模块…</div>
 
-  <footer class="footer">运营 · 产品思维训练器 · 仅供学习使用 · <span id="buildTag">v4.9</span></footer>
+  <footer class="footer">运营 · 产品思维训练器 · 仅供学习使用 · <span id="buildTag">v4.10</span></footer>
   </div>
 </div>
 
@@ -942,9 +942,8 @@ const CURRICULUM = {
     { label: '竞品与产品判断', id: 'competitor', poolIds: ['competitor', 'iv-pm'], desc: '战略意图 · 需求真伪' }
   ],
   ops: [
-    { label: '经营与决策', id: 'decision', poolIds: ['decision', 'data'], desc: '资源取舍 · 数据排查' },
+    { label: '经营与决策', id: 'decision', poolIds: ['decision', 'data', 'content', 'crisis'], desc: '决策 · 数据 · 传播 · 舆情' },
     { label: '增长与留存', id: 'growth', poolIds: ['growth', 'retention'], desc: 'AARRR · 用户分层' },
-    { label: '传播与舆情', id: 'content', poolIds: ['content', 'crisis'], desc: '活动机制 · 危机回应' },
     { label: '产运策略', id: 'iv-ops', poolIds: ['iv-ops', 'iv-open'], desc: '增长商业化 · 平台博弈' },
     { label: '行业商业', id: 'biz-platform', poolIds: ['biz-platform', 'biz-vertical', 'biz-monetize', 'map-ride', 'map-local'], desc: '平台 · 垂直 · 出行与本地生活' }
   ],
