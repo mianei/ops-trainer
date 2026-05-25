@@ -82,23 +82,31 @@
     overflow: hidden;
   }
   #gate .bg-scene { min-height: 100%; }
-  .bg-sky-cap {
+  .bg-horizon-svg {
     position: absolute;
     top: 0;
     left: -10%;
     width: 120%;
     height: clamp(300px, 44vh, 480px);
-    background: linear-gradient(180deg, #ffffff 0%, #fafdfc 58%, #f3f8f6 100%);
     z-index: 1;
+    pointer-events: none;
     will-change: transform;
-    animation: horizonSway 16s ease-in-out infinite;
+    animation: horizonPan 28s ease-in-out infinite;
   }
-  @keyframes horizonSway {
+  .bg-horizon-svg path {
+    transform-box: fill-box;
+    transform-origin: 50% 100%;
+    animation: horizonPathSway 14s ease-in-out infinite;
+  }
+  @keyframes horizonPan {
+    0%, 100% { transform: translate3d(0, 0, 0); }
+    50% { transform: translate3d(-5%, 0, 0); }
+  }
+  @keyframes horizonPathSway {
     0%, 100% { transform: translate3d(0, 0, 0) scaleY(1); }
-    50% { transform: translate3d(0, -10px, 0) scaleY(1.012); }
+    33% { transform: translate3d(2%, -2%, 0) scaleY(1.018); }
+    66% { transform: translate3d(-2%, 1.5%, 0) scaleY(0.985); }
   }
-  #gate .bg-sky-cap { clip-path: url(#horizonClipGate); }
-  #app .bg-sky-cap { clip-path: url(#horizonClipApp); }
   .bg-wave-svg {
     position: absolute; width: 140%; left: -20%; top: 24%;
     opacity: 0.82;
@@ -169,7 +177,7 @@
     50% { transform: translate(40px, -20px) scale(1.05); }
   }
   @media (prefers-reduced-motion: reduce) {
-    .bg-wave-svg, .bg-sky-cap, .bg-wave-mid, .bg-wave-back, .bg-wave-front, .bg-blob-1, .bg-blob-2, .bg-blob-3 { animation: none; }
+    .bg-horizon-svg, .bg-horizon-svg path, .bg-wave-svg, .bg-wave-mid, .bg-wave-back, .bg-wave-front, .bg-blob-1, .bg-blob-2, .bg-blob-3 { animation: none; }
   }
 
   .frost-base {
@@ -958,14 +966,19 @@
 
 <div id="gate">
   <div class="bg-scene" aria-hidden="true">
-    <svg width="0" height="0" aria-hidden="true" focusable="false">
+    <svg class="bg-horizon-svg" viewBox="0 0 1440 480" preserveAspectRatio="none" aria-hidden="true">
       <defs>
-        <clipPath id="horizonClipGate" clipPathUnits="objectBoundingBox">
-          <path d="M0,0 H1 V0.73 C0.87,0.94 0.67,0.67 0.5,0.81 C0.33,0.98 0.13,0.70 0,0.78 V0 Z"/>
-        </clipPath>
+        <linearGradient id="skyCapGradGate" x1="0" y1="0" x2="0" y2="480" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#ffffff"/>
+          <stop offset="0.58" stop-color="#fafdfc"/>
+          <stop offset="1" stop-color="#f3f8f6"/>
+        </linearGradient>
       </defs>
+      <path fill="url(#skyCapGradGate)" d="M0,0 H1440 V350 C1253,451 965,322 720,389 C475,470 187,336 0,374 V0 Z">
+        <animate attributeName="d" dur="16s" repeatCount="indefinite" calcMode="spline" keyTimes="0; 0.33; 0.66; 1" keySplines="0.42 0 0.58 1; 0.42 0 0.58 1; 0.42 0 0.58 1"
+          values="M0,0 H1440 V350 C1253,451 965,322 720,389 C475,470 187,336 0,374 V0 Z;M0,0 H1440 V335 C1230,430 980,345 720,365 C470,455 200,350 0,390 V0 Z;M0,0 H1440 V368 C1275,472 940,298 720,410 C490,485 170,318 0,358 V0 Z;M0,0 H1440 V350 C1253,451 965,322 720,389 C475,470 187,336 0,374 V0 Z"/>
+      </path>
     </svg>
-    <div class="bg-sky-cap"></div>
     <svg class="bg-wave-svg" viewBox="0 0 1440 900" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       <defs>
         <linearGradient id="gwg0" x1="0" y1="280" x2="1440" y2="900" gradientUnits="userSpaceOnUse"><stop stop-color="#eef8f4" stop-opacity="0.85"/><stop offset="0.5" stop-color="#e8f4ff" stop-opacity="0.7"/><stop offset="1" stop-color="#dde8f5" stop-opacity="0.45"/></linearGradient>
@@ -1008,14 +1021,19 @@
 
 <div id="app">
   <div class="bg-scene" aria-hidden="true">
-    <svg width="0" height="0" aria-hidden="true" focusable="false">
+    <svg class="bg-horizon-svg" viewBox="0 0 1440 480" preserveAspectRatio="none" aria-hidden="true">
       <defs>
-        <clipPath id="horizonClipApp" clipPathUnits="objectBoundingBox">
-          <path d="M0,0 H1 V0.73 C0.87,0.94 0.67,0.67 0.5,0.81 C0.33,0.98 0.13,0.70 0,0.78 V0 Z"/>
-        </clipPath>
+        <linearGradient id="skyCapGradApp" x1="0" y1="0" x2="0" y2="480" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#ffffff"/>
+          <stop offset="0.58" stop-color="#fafdfc"/>
+          <stop offset="1" stop-color="#f3f8f6"/>
+        </linearGradient>
       </defs>
+      <path fill="url(#skyCapGradApp)" d="M0,0 H1440 V350 C1253,451 965,322 720,389 C475,470 187,336 0,374 V0 Z">
+        <animate attributeName="d" dur="16s" repeatCount="indefinite" calcMode="spline" keyTimes="0; 0.33; 0.66; 1" keySplines="0.42 0 0.58 1; 0.42 0 0.58 1; 0.42 0 0.58 1"
+          values="M0,0 H1440 V350 C1253,451 965,322 720,389 C475,470 187,336 0,374 V0 Z;M0,0 H1440 V335 C1230,430 980,345 720,365 C470,455 200,350 0,390 V0 Z;M0,0 H1440 V368 C1275,472 940,298 720,410 C490,485 170,318 0,358 V0 Z;M0,0 H1440 V350 C1253,451 965,322 720,389 C475,470 187,336 0,374 V0 Z"/>
+      </path>
     </svg>
-    <div class="bg-sky-cap"></div>
     <svg class="bg-wave-svg" viewBox="0 0 1440 900" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       <defs>
         <linearGradient id="awg0" x1="0" y1="280" x2="1440" y2="900" gradientUnits="userSpaceOnUse"><stop stop-color="#eef8f4" stop-opacity="0.85"/><stop offset="0.5" stop-color="#e8f4ff" stop-opacity="0.7"/><stop offset="1" stop-color="#dde8f5" stop-opacity="0.45"/></linearGradient>
@@ -1052,7 +1070,7 @@
 
   <div id="mainContent" class="loading-main">加载训练模块…</div>
 
-  <footer class="footer"><span class="footer-brand" aria-label="MindTraining"><span class="hb-mind">Mind</span><span class="hb-train">Training</span></span> · 仅供学习使用 · <span id="buildTag">v4.29</span></footer>
+  <footer class="footer"><span class="footer-brand" aria-label="MindTraining"><span class="hb-mind">Mind</span><span class="hb-train">Training</span></span> · 仅供学习使用 · <span id="buildTag">v4.30</span></footer>
   </div>
 </div>
 
@@ -1724,6 +1742,11 @@ async function submitAnswer(id) {
 }
 
 
+function initHorizonWave() {
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  document.querySelectorAll('.bg-horizon-svg animate').forEach(el => el.remove());
+}
+
 function initHeroWaveform() {
   const canvas = document.getElementById('heroWaveform');
   if (!canvas || canvas.dataset.ready === '1') return;
@@ -1813,6 +1836,7 @@ function initHeroWaveform() {
 
 
 async function bootstrap() {
+  initHorizonWave();
   const btnExit = document.getElementById('btnExit');
   if (btnExit) btnExit.onclick = logoutApp;
   gateBtn.onclick = () => {
