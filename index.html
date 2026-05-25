@@ -1070,7 +1070,7 @@
 
   <div id="mainContent" class="loading-main">加载训练模块…</div>
 
-  <footer class="footer"><span class="footer-brand" aria-label="MindTraining"><span class="hb-mind">Mind</span><span class="hb-train">Training</span></span> · 仅供学习使用 · <span id="buildTag">v4.30</span></footer>
+  <footer class="footer"><span class="footer-brand" aria-label="MindTraining"><span class="hb-mind">Mind</span><span class="hb-train">Training</span></span> · 仅供学习使用 · <span id="buildTag">v4.31</span></footer>
   </div>
 </div>
 
@@ -1178,10 +1178,16 @@ function topicsUrl() {
 }
 
 function setSyncStatus(ok, text) {
+  const bar = document.getElementById('syncBar');
   const dot = document.getElementById('syncDot');
   const txt = document.getElementById('syncText');
-  if (!dot || !txt) return;
-  dot.className = 'sync-dot ' + (ok ? 'ok' : 'err');
+  if (!bar || !dot || !txt) return;
+  if (ok) {
+    bar.hidden = true;
+    return;
+  }
+  bar.hidden = false;
+  dot.className = 'sync-dot err';
   txt.textContent = text;
 }
 
@@ -1457,7 +1463,7 @@ function renderTopics() {
 async function loadTopicsAndRender() {
   try {
     TOPICS = await loadTopics();
-    setSyncStatus(true, '已就绪 · ' + TOPICS.length + ' 模块 · ' + totalScenarios() + ' 道题');
+    setSyncStatus(true);
     renderTopics();
   } catch (e) {
     setSyncStatus(false, '加载失败：' + e.message);
