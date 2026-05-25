@@ -22,8 +22,13 @@
     --line-strong: rgba(0, 0, 0, 0.1);
     --accent: #0071e3;
     --accent-soft: rgba(0, 113, 227, 0.08);
-    --product: #30d158;
-    --product-soft: rgba(48, 209, 88, 0.12);
+    --product: #26c281;
+    --product-soft: rgba(38, 194, 129, 0.12);
+    --btn-green-top: #4ae0ad;
+    --btn-green-mid: #32d598;
+    --btn-green-base: #26c281;
+    --btn-green-lip: #1e9e68;
+    --btn-green-glow: rgba(38, 194, 129, 0.38);
     --ops: #0066cc;
     --ops-soft: rgba(0, 102, 204, 0.08);
     --interview: #5e5ce6;
@@ -304,42 +309,56 @@
     border-radius: 980px;
     cursor: pointer;
     position: relative;
-    background: linear-gradient(180deg, #6ee787 0%, #34d058 45%, #22a84a 100%);
+    background: linear-gradient(
+      180deg,
+      var(--btn-green-top) 0%,
+      var(--btn-green-mid) 38%,
+      var(--btn-green-base) 100%
+    );
     box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.55),
-      inset 0 -1px 0 rgba(0, 0, 0, 0.12),
-      0 4px 0 #16803c,
-      0 8px 22px rgba(48, 209, 88, 0.42);
-    transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+      inset 0 1px 0 rgba(255, 255, 255, 0.48),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.08),
+      0 5px 0 var(--btn-green-lip),
+      0 10px 24px var(--btn-green-glow);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
   }
   .btn-enter { width: 100%; height: 48px; }
   .btn-enter:hover, .btn-primary:hover {
-    filter: brightness(1.05);
+    background: linear-gradient(
+      180deg,
+      #55e6b8 0%,
+      #3adba2 38%,
+      #2bcc8a 100%
+    );
     transform: translateY(-1px);
     box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.62),
-      inset 0 -1px 0 rgba(0, 0, 0, 0.1),
-      0 5px 0 #16803c,
-      0 12px 28px rgba(48, 209, 88, 0.48);
+      inset 0 1px 0 rgba(255, 255, 255, 0.55),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.06),
+      0 6px 0 var(--btn-green-lip),
+      0 14px 30px rgba(38, 194, 129, 0.44);
   }
   .btn-enter:active, .btn-primary:active {
-    transform: translateY(3px);
-    filter: brightness(0.97);
+    transform: translateY(4px);
+    background: linear-gradient(
+      180deg,
+      var(--btn-green-mid) 0%,
+      var(--btn-green-base) 55%,
+      #22b078 100%
+    );
     box-shadow:
-      inset 0 2px 6px rgba(0, 0, 0, 0.2),
-      inset 0 1px 0 rgba(255, 255, 255, 0.35),
-      0 1px 0 #16803c,
-      0 4px 14px rgba(48, 209, 88, 0.32);
+      inset 0 2px 5px rgba(0, 0, 0, 0.18),
+      inset 0 1px 0 rgba(255, 255, 255, 0.28),
+      0 1px 0 var(--btn-green-lip),
+      0 5px 16px rgba(38, 194, 129, 0.28);
   }
   .btn-enter:disabled, .btn-primary:disabled {
-    opacity: 0.5;
+    opacity: 0.52;
     cursor: not-allowed;
     transform: none;
-    filter: none;
     box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.35),
-      0 2px 0 #16803c,
-      0 4px 12px rgba(48, 209, 88, 0.2);
+      inset 0 1px 0 rgba(255, 255, 255, 0.3),
+      0 3px 0 var(--btn-green-lip),
+      0 6px 14px rgba(38, 194, 129, 0.18);
   }
   .gate-error {
     margin-top: 12px; padding: 11px 14px; font-size: 13px;
@@ -933,7 +952,7 @@
 
   <div id="mainContent" class="loading-main">加载训练模块…</div>
 
-  <footer class="footer">运营 · 产品思维训练器 · 仅供学习使用 · <span id="buildTag">v4.12</span></footer>
+  <footer class="footer">运营 · 产品思维训练器 · 仅供学习使用 · <span id="buildTag">v4.13</span></footer>
   </div>
 </div>
 
