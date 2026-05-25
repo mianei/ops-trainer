@@ -77,14 +77,11 @@
   }
 
   .bg-scene {
-    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    position: absolute; inset: 0; z-index: 0; pointer-events: none;
     background: linear-gradient(148deg, #ffffff 0%, #f6faf8 32%, #eef6f2 55%, #e8f0fb 78%, #e4ebf8 100%);
     overflow: hidden;
   }
-  .bg-waveform {
-    position: absolute; inset: 0; width: 100%; height: 100%;
-    pointer-events: none; opacity: 0.92;
-  }
+  #gate .bg-scene { min-height: 100%; }
   .bg-wave-svg {
     position: absolute; width: 140%; left: -20%; top: -18%;
     opacity: 0.95;
@@ -405,6 +402,32 @@
     position: relative;
     padding: 2.25rem 0 1.5rem;
     max-width: 640px;
+    isolation: isolate;
+  }
+  .hero-waveform {
+    position: absolute;
+    z-index: 0;
+    top: 0.15rem;
+    left: 52%;
+    width: clamp(150px, 36vw, 320px);
+    height: 76px;
+    pointer-events: none;
+    opacity: 0.58;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.25) 22%, rgba(0, 0, 0, 0.88) 58%, rgba(0, 0, 0, 0.45) 100%);
+    mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.25) 22%, rgba(0, 0, 0, 0.88) 58%, rgba(0, 0, 0, 0.45) 100%);
+  }
+  .hero-copy {
+    position: relative;
+    z-index: 1;
+  }
+  @media (max-width: 720px) {
+    .hero-waveform {
+      left: 48%;
+      width: clamp(120px, 42vw, 200px);
+      height: 56px;
+      top: 0;
+      opacity: 0.36;
+    }
   }
   .hero-compact::before {
     content: '';
@@ -895,47 +918,23 @@
 </head>
 <body>
 
-<div class="bg-scene" aria-hidden="true">
-  <canvas id="bgWaveform" class="bg-waveform"></canvas>
-  <svg class="bg-wave-svg" viewBox="0 0 1440 900" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    <defs>
-      <linearGradient id="wg0" x1="0" y1="200" x2="1440" y2="900" gradientUnits="userSpaceOnUse">
-        <stop stop-color="#f0faf5" stop-opacity="0.9"/>
-        <stop offset="0.45" stop-color="#e8f4ff" stop-opacity="0.75"/>
-        <stop offset="1" stop-color="#dde8f5" stop-opacity="0.5"/>
-      </linearGradient>
-      <linearGradient id="wg1" x1="720" y1="80" x2="720" y2="900">
-        <stop stop-color="#ffffff" stop-opacity="0.95"/>
-        <stop offset="0.55" stop-color="#e4f8ef"/>
-        <stop offset="1" stop-color="#d4ebe8" stop-opacity="0.85"/>
-      </linearGradient>
-      <linearGradient id="wg2" x1="200" y1="300" x2="1200" y2="900">
-        <stop stop-color="#eef8f4" stop-opacity="0.92"/>
-        <stop offset="0.5" stop-color="#e4f0fa" stop-opacity="0.7"/>
-        <stop offset="1" stop-color="#d8e4f5" stop-opacity="0.45"/>
-      </linearGradient>
-      <linearGradient id="wg3" x1="400" y1="480" x2="1100" y2="900">
-        <stop stop-color="#ffffff" stop-opacity="0.55"/>
-        <stop offset="1" stop-color="#c8ecd8" stop-opacity="0.35"/>
-      </linearGradient>
-    </defs>
-    <g class="bg-wave-back">
-      <path d="M-80 320C180 200 380 140 680 220C980 300 1180 420 1520 340L1520 900L-80 900Z" fill="url(#wg0)"/>
-      <path d="M-60 400C220 280 460 200 760 280C1060 360 1260 460 1500 380L1500 900L-60 900Z" fill="url(#wg1)"/>
-    </g>
-    <g class="bg-wave-mid">
-      <path d="M-60 460C280 380 520 320 820 380C1120 440 1300 520 1500 440L1500 900L-60 900Z" fill="url(#wg2)" opacity="0.72"/>
-    </g>
-    <g class="bg-wave-front">
-      <path d="M-60 560C260 480 540 420 840 480C1140 540 1320 620 1500 540L1500 900L-60 900Z" fill="url(#wg3)" opacity="0.7"/>
-    </g>
-  </svg>
-  <div class="bg-blob bg-blob-1"></div>
-  <div class="bg-blob bg-blob-2"></div>
-  <div class="bg-blob bg-blob-3"></div>
-  </div>
-
 <div id="gate">
+  <div class="bg-scene" aria-hidden="true">
+    <svg class="bg-wave-svg" viewBox="0 0 1440 900" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <linearGradient id="gwg0" x1="0" y1="200" x2="1440" y2="900" gradientUnits="userSpaceOnUse"><stop stop-color="#f0faf5" stop-opacity="0.9"/><stop offset="0.45" stop-color="#e8f4ff" stop-opacity="0.75"/><stop offset="1" stop-color="#dde8f5" stop-opacity="0.5"/></linearGradient>
+        <linearGradient id="gwg1" x1="720" y1="80" x2="720" y2="900"><stop stop-color="#ffffff" stop-opacity="0.95"/><stop offset="0.55" stop-color="#e4f8ef"/><stop offset="1" stop-color="#d4ebe8" stop-opacity="0.85"/></linearGradient>
+        <linearGradient id="gwg2" x1="200" y1="300" x2="1200" y2="900"><stop stop-color="#eef8f4" stop-opacity="0.92"/><stop offset="0.5" stop-color="#e4f0fa" stop-opacity="0.7"/><stop offset="1" stop-color="#d8e4f5" stop-opacity="0.45"/></linearGradient>
+        <linearGradient id="gwg3" x1="400" y1="480" x2="1100" y2="900"><stop stop-color="#ffffff" stop-opacity="0.55"/><stop offset="1" stop-color="#c8ecd8" stop-opacity="0.35"/></linearGradient>
+      </defs>
+      <g class="bg-wave-back"><path d="M-80 320C180 200 380 140 680 220C980 300 1180 420 1520 340L1520 900L-80 900Z" fill="url(#gwg0)"/><path d="M-60 400C220 280 460 200 760 280C1060 360 1260 460 1500 380L1500 900L-60 900Z" fill="url(#gwg1)"/></g>
+      <g class="bg-wave-mid"><path d="M-60 460C280 380 520 320 820 380C1120 440 1300 520 1500 440L1500 900L-60 900Z" fill="url(#gwg2)" opacity="0.72"/></g>
+      <g class="bg-wave-front"><path d="M-60 560C260 480 540 420 840 480C1140 540 1320 620 1500 540L1500 900L-60 900Z" fill="url(#gwg3)" opacity="0.7"/></g>
+    </svg>
+    <div class="bg-blob bg-blob-1"></div>
+    <div class="bg-blob bg-blob-2"></div>
+    <div class="bg-blob bg-blob-3"></div>
+  </div>
   <header class="gate-topbar">
     <div class="brand">思维训练<em> · 产运</em></div>
   </header>
@@ -972,9 +971,26 @@
   </div>
 
 <div id="app">
+  <div class="bg-scene" aria-hidden="true">
+    <svg class="bg-wave-svg" viewBox="0 0 1440 900" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <linearGradient id="awg0" x1="0" y1="200" x2="1440" y2="900" gradientUnits="userSpaceOnUse"><stop stop-color="#f0faf5" stop-opacity="0.9"/><stop offset="0.45" stop-color="#e8f4ff" stop-opacity="0.75"/><stop offset="1" stop-color="#dde8f5" stop-opacity="0.5"/></linearGradient>
+        <linearGradient id="awg1" x1="720" y1="80" x2="720" y2="900"><stop stop-color="#ffffff" stop-opacity="0.95"/><stop offset="0.55" stop-color="#e4f8ef"/><stop offset="1" stop-color="#d4ebe8" stop-opacity="0.85"/></linearGradient>
+        <linearGradient id="awg2" x1="200" y1="300" x2="1200" y2="900"><stop stop-color="#eef8f4" stop-opacity="0.92"/><stop offset="0.5" stop-color="#e4f0fa" stop-opacity="0.7"/><stop offset="1" stop-color="#d8e4f5" stop-opacity="0.45"/></linearGradient>
+        <linearGradient id="awg3" x1="400" y1="480" x2="1100" y2="900"><stop stop-color="#ffffff" stop-opacity="0.55"/><stop offset="1" stop-color="#c8ecd8" stop-opacity="0.35"/></linearGradient>
+      </defs>
+      <g class="bg-wave-back"><path d="M-80 320C180 200 380 140 680 220C980 300 1180 420 1520 340L1520 900L-80 900Z" fill="url(#awg0)"/><path d="M-60 400C220 280 460 200 760 280C1060 360 1260 460 1500 380L1500 900L-60 900Z" fill="url(#awg1)"/></g>
+      <g class="bg-wave-mid"><path d="M-60 460C280 380 520 320 820 380C1120 440 1300 520 1500 440L1500 900L-60 900Z" fill="url(#awg2)" opacity="0.72"/></g>
+      <g class="bg-wave-front"><path d="M-60 560C260 480 540 420 840 480C1140 540 1320 620 1500 540L1500 900L-60 900Z" fill="url(#awg3)" opacity="0.7"/></g>
+    </svg>
+    <div class="bg-blob bg-blob-1"></div>
+    <div class="bg-blob bg-blob-2"></div>
+    <div class="bg-blob bg-blob-3"></div>
+  </div>
   <div class="page-wrap">
 
   <section class="hero-compact">
+    <canvas id="heroWaveform" class="hero-waveform" aria-hidden="true"></canvas>
     <div class="hero-copy">
       <p class="hero-brand" aria-label="MindTraining"><span class="hb-mind">Mind</span><span class="hb-train">Training</span></p>
       <p class="eyebrow">Judgment over generation</p>
@@ -990,7 +1006,7 @@
 
   <div id="mainContent" class="loading-main">加载训练模块…</div>
 
-  <footer class="footer">运营 · 产品思维训练器 · 仅供学习使用 · <span id="buildTag">v4.19</span></footer>
+  <footer class="footer">运营 · 产品思维训练器 · 仅供学习使用 · <span id="buildTag">v4.20</span></footer>
   </div>
 </div>
 
@@ -1128,6 +1144,7 @@ function clearSession() {
 function unlockApp() {
   gate.classList.add('hidden');
   app.classList.add('visible');
+  initHeroWaveform();
 }
 
 function lockApp() {
@@ -1655,21 +1672,24 @@ async function submitAnswer(id) {
 }
 
 
-function initBgWaveform() {
-  const canvas = document.getElementById('bgWaveform');
-  if (!canvas) return;
+function initHeroWaveform() {
+  const canvas = document.getElementById('heroWaveform');
+  if (!canvas || canvas.dataset.ready === '1') return;
+  canvas.dataset.ready = '1';
   const ctx = canvas.getContext('2d');
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
   let mouse = { x: -9999, y: -9999 };
   let tick = 0;
-  const BAR = 56;
+  let cw = 0;
+  let ch = 0;
 
   function resize() {
-    canvas.width = Math.floor(window.innerWidth * dpr);
-    canvas.height = Math.floor(window.innerHeight * dpr);
-    canvas.style.width = window.innerWidth + 'px';
-    canvas.style.height = window.innerHeight + 'px';
+    const rect = canvas.getBoundingClientRect();
+    cw = Math.max(1, rect.width);
+    ch = Math.max(1, rect.height);
+    canvas.width = Math.floor(cw * dpr);
+    canvas.height = Math.floor(ch * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
 
@@ -1685,63 +1705,58 @@ function initBgWaveform() {
   }
 
   function draw() {
-    const w = window.innerWidth;
-    const h = window.innerHeight;
-    ctx.clearRect(0, 0, w, h);
-
-    const bandTop = Math.max(72, h * 0.1);
-    const bandH = Math.min(200, h * 0.24);
-    const pad = Math.max(24, w * 0.06);
-    const bandW = w - pad * 2;
-    const step = bandW / BAR;
-    const barW = step * 0.42;
-    const midY = bandTop + bandH * 0.55;
+    resize();
+    ctx.clearRect(0, 0, cw, ch);
+    const rect = canvas.getBoundingClientRect();
+    const BAR = Math.max(22, Math.floor(cw / 6.5));
+    const step = cw / BAR;
+    const barW = step * 0.4;
+    const midY = ch * 0.54;
+    const bandH = ch * 0.88;
+    const mx = mouse.x - rect.left;
+    const my = mouse.y - rect.top;
 
     for (let i = 0; i < BAR; i++) {
-      const x = pad + i * step + (step - barW) / 2;
+      const x = i * step + (step - barW) / 2;
       const cx = x + barW / 2;
-      const phase = i * 0.38;
-      let amp = 0.18 + 0.82 * Math.pow(Math.abs(Math.sin(tick * 0.028 + phase)), 1.35);
-      amp *= 0.55 + 0.45 * Math.sin(i * 0.22 + tick * 0.012);
-
-      const dx = mouse.x - cx;
-      const dy = mouse.y - midY;
-      const dist = Math.hypot(dx, dy);
-      const boost = Math.max(0, 1 - dist / 260);
-      amp = Math.min(1, amp + boost * 0.9);
-
-      const barH = 10 + bandH * amp * 0.62;
+      const phase = i * 0.42;
+      let amp = 0.16 + 0.84 * Math.pow(Math.abs(Math.sin(tick * 0.032 + phase)), 1.28);
+      amp *= 0.5 + 0.5 * Math.sin(i * 0.24 + tick * 0.014);
+      const dist = Math.hypot(mx - cx, my - midY);
+      const boost = Math.max(0, 1 - dist / Math.max(120, cw * 0.45));
+      amp = Math.min(1, amp + boost * 0.75);
+      const barH = 6 + bandH * amp * 0.58;
       const y = midY - barH / 2;
       const g = ctx.createLinearGradient(x, y, x, y + barH);
-      g.addColorStop(0, 'rgba(74, 224, 173, 0.08)');
-      g.addColorStop(0.35, 'rgba(50, 213, 152, 0.42)');
-      g.addColorStop(0.7, 'rgba(38, 194, 129, 0.55)');
-      g.addColorStop(1, 'rgba(38, 194, 129, 0.12)');
+      g.addColorStop(0, 'rgba(74, 224, 173, 0.06)');
+      g.addColorStop(0.4, 'rgba(50, 213, 152, 0.38)');
+      g.addColorStop(0.75, 'rgba(38, 194, 129, 0.52)');
+      g.addColorStop(1, 'rgba(38, 194, 129, 0.1)');
       ctx.fillStyle = g;
       roundRect(x, y, barW, barH, barW / 2);
       ctx.fill();
-
-      if (boost > 0.08) {
-        ctx.fillStyle = 'rgba(255, 255, 255, ' + (boost * 0.35).toFixed(3) + ')';
-        roundRect(x + 1, y + 1, Math.max(1, barW - 2), Math.max(2, barH * 0.35), barW / 2);
-        ctx.fill();
-      }
     }
-
     tick += 1;
     if (!reduced) requestAnimationFrame(draw);
   }
 
-  window.addEventListener('resize', resize, { passive: true });
-  document.addEventListener('mousemove', (e) => { mouse.x = e.clientX; mouse.y = e.clientY; }, { passive: true });
-  document.addEventListener('touchmove', (e) => {
+  window.addEventListener('mousemove', (e) => { mouse.x = e.clientX; mouse.y = e.clientY; }, { passive: true });
+  window.addEventListener('touchmove', (e) => {
     if (e.touches[0]) { mouse.x = e.touches[0].clientX; mouse.y = e.touches[0].clientY; }
   }, { passive: true });
-  document.addEventListener('mouseleave', () => { mouse.x = -9999; mouse.y = -9999; });
-  resize();
+  if (typeof ResizeObserver !== 'undefined') new ResizeObserver(resize).observe(canvas);
+  else window.addEventListener('resize', resize, { passive: true });
   tick = reduced ? 36 : 0;
-  if (reduced) draw();
-  else requestAnimationFrame(draw);
+  function boot() {
+    resize();
+    if (canvas.getBoundingClientRect().width < 2) {
+      requestAnimationFrame(boot);
+      return;
+    }
+    if (reduced) draw();
+    else requestAnimationFrame(draw);
+  }
+  boot();
 }
 
 
@@ -1763,7 +1778,6 @@ async function bootstrap() {
   lockApp();
 }
 
-initBgWaveform();
 bootstrap();
 </script>
 </body>
