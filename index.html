@@ -972,7 +972,7 @@
 
   <div id="mainContent" class="loading-main">加载训练模块…</div>
 
-  <footer class="footer">运营 · 产品思维训练器 · 仅供学习使用 · <span id="buildTag">v4.16</span></footer>
+  <footer class="footer">运营 · 产品思维训练器 · 仅供学习使用 · <span id="buildTag">v4.17</span></footer>
   </div>
 </div>
 
@@ -1442,6 +1442,25 @@ function pickScenarios(topic) {
   return topic.scenarios || [];
 }
 
+function answerHintForScenario(scenarioText, fallback) {
+  if (!scenarioText) return fallback || '请阅读上方场景，结构化写出你的分析。';
+  const body = scenarioText.replace(/^【[^】]+】\s*/, '').trim();
+  const ask = body.match(/请[^。；？]+[。；？]?/);
+  if (ask) return ask[0].replace(/[。；]$/, '') + '。';
+  const q = body.match(/[^。；]*？/);
+  if (q) return '请回答：' + q[0].trim();
+  if (/面试官问：/.test(body)) {
+    const part = body.split(/[。；]/)[0];
+    return part + '。';
+  }
+  if (/：[^：]{10,}/.test(body) && !body.includes('？') && !/请|如何|怎么|面试官/.test(body)) {
+    const idx = body.indexOf('：');
+    const head = body.slice(0, idx);
+  return '请围绕「' + head + '」按要求作答：' + body.slice(idx + 1).replace(/[。.]$/, '') + '。';
+  }
+  return fallback || '请阅读上方场景，写出你的分析思路、依据与可验证的下一步。';
+}
+
 function loadScenario(id) {
   const t = getTopic(id);
   const pool = pickScenarios(t);
@@ -1450,7 +1469,10 @@ function loadScenario(id) {
     return;
   }
   const idx = Math.floor(Math.random() * pool.length);
-  document.getElementById('scenario-' + id).textContent = pool[idx];
+  const scenario = pool[idx];
+  document.getElementById('scenario-' + id).textContent = scenario;
+  const hintEl = document.querySelector('#panel-' + id + ' .wb-hint');
+  if (hintEl) hintEl.textContent = answerHintForScenario(scenario, t.fieldLabel);
   document.getElementById('answer-' + id).value = '';
   const resp = document.getElementById('resp-' + id);
   if (resp) resp.classList.remove('visible');
