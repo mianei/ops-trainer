@@ -501,13 +501,33 @@
   .sync-dot.err { background: var(--danger); }
 
   .workspace-shell {
-    border-radius: var(--r-xl);
+    border-radius: var(--r-xl) var(--r-xl) 0 0;
     padding: 20px;
-    margin-bottom: 1rem;
+    margin-bottom: 0;
     overflow: visible;
     background: var(--frost-strong);
     border: 1px solid var(--frost-border);
+    border-bottom: none;
     box-shadow: var(--shadow-sm), var(--inset-hi);
+  }
+  .section-wave {
+    width: 100%;
+    height: clamp(40px, 5.5vw, 58px);
+    margin: -1px 0 0.75rem;
+    line-height: 0;
+    pointer-events: none;
+    filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.03));
+  }
+  .section-wave svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .section-wave path {
+    fill: rgba(255, 255, 255, 0.78);
+    stroke: rgba(255, 255, 255, 0.65);
+    stroke-width: 1;
+    vector-effect: non-scaling-stroke;
   }
   .workspace {
     width: 100%;
@@ -1040,7 +1060,13 @@
 
   <div id="mainContent" class="loading-main">加载训练模块…</div>
 
-  <footer class="footer"><span class="footer-brand" aria-label="MindTraining"><span class="hb-mind">Mind</span><span class="hb-train">Training</span></span> · 仅供学习使用 · <span id="buildTag">v4.22</span></footer>
+  <div class="section-wave" aria-hidden="true">
+    <svg viewBox="0 0 1440 58" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M-40,0 H1480 V58 C1280,16 1040,54 720,28 C420,4 180,50 -40,20 Z"/>
+    </svg>
+  </div>
+
+  <footer class="footer"><span class="footer-brand" aria-label="MindTraining"><span class="hb-mind">Mind</span><span class="hb-train">Training</span></span> · 仅供学习使用 · <span id="buildTag">v4.23</span></footer>
   </div>
 </div>
 
