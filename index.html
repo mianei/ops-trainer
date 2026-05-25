@@ -78,14 +78,26 @@
 
   .bg-scene {
     position: absolute; inset: 0; z-index: 0; pointer-events: none;
-    background: linear-gradient(148deg, #ffffff 0%, #f6faf8 32%, #eef6f2 55%, #e8f0fb 78%, #e4ebf8 100%);
+    background: linear-gradient(180deg, #e8f2fa 0%, #e4ebf8 45%, #dde8f5 100%);
     overflow: hidden;
   }
   #gate .bg-scene { min-height: 100%; }
+  .bg-sky-cap {
+    position: absolute;
+    top: 0;
+    left: -10%;
+    width: 120%;
+    height: clamp(300px, 44vh, 480px);
+    background: linear-gradient(180deg, #ffffff 0%, #fafdfc 58%, #f3f8f6 100%);
+    z-index: 1;
+  }
+  #gate .bg-sky-cap { clip-path: url(#horizonClipGate); }
+  #app .bg-sky-cap { clip-path: url(#horizonClipApp); }
   .bg-wave-svg {
-    position: absolute; width: 140%; left: -20%; top: -18%;
-    opacity: 0.95;
+    position: absolute; width: 140%; left: -20%; top: 24%;
+    opacity: 0.82;
     will-change: transform;
+    z-index: 0;
   }
   .bg-wave-mid {
     transform-origin: 55% 85%;
@@ -526,33 +538,13 @@
   .sync-dot.err { background: var(--danger); }
 
   .workspace-shell {
-    border-radius: var(--r-xl) var(--r-xl) 0 0;
+    border-radius: var(--r-xl);
     padding: 20px;
-    margin-bottom: 0;
+    margin-bottom: 1rem;
     overflow: visible;
     background: var(--frost-strong);
     border: 1px solid var(--frost-border);
-    border-bottom: none;
     box-shadow: var(--shadow-sm), var(--inset-hi);
-  }
-  .section-wave {
-    width: 100%;
-    height: clamp(40px, 5.5vw, 58px);
-    margin: -1px 0 0.75rem;
-    line-height: 0;
-    pointer-events: none;
-    filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.03));
-  }
-  .section-wave svg {
-    width: 100%;
-    height: 100%;
-    display: block;
-  }
-  .section-wave path {
-    fill: rgba(255, 255, 255, 0.78);
-    stroke: rgba(255, 255, 255, 0.65);
-    stroke-width: 1;
-    vector-effect: non-scaling-stroke;
   }
   .workspace {
     width: 100%;
@@ -997,16 +989,23 @@
 
 <div id="gate">
   <div class="bg-scene" aria-hidden="true">
+    <svg width="0" height="0" aria-hidden="true" focusable="false">
+      <defs>
+        <clipPath id="horizonClipGate" clipPathUnits="objectBoundingBox">
+          <path d="M0,0 H1 V0.73 C0.87,0.94 0.67,0.67 0.5,0.81 C0.33,0.98 0.13,0.70 0,0.78 V0 Z"/>
+        </clipPath>
+      </defs>
+    </svg>
+    <div class="bg-sky-cap"></div>
     <svg class="bg-wave-svg" viewBox="0 0 1440 900" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       <defs>
-        <linearGradient id="gwg0" x1="0" y1="200" x2="1440" y2="900" gradientUnits="userSpaceOnUse"><stop stop-color="#f0faf5" stop-opacity="0.9"/><stop offset="0.45" stop-color="#e8f4ff" stop-opacity="0.75"/><stop offset="1" stop-color="#dde8f5" stop-opacity="0.5"/></linearGradient>
-        <linearGradient id="gwg1" x1="720" y1="80" x2="720" y2="900"><stop stop-color="#ffffff" stop-opacity="0.95"/><stop offset="0.55" stop-color="#e4f8ef"/><stop offset="1" stop-color="#d4ebe8" stop-opacity="0.85"/></linearGradient>
+        <linearGradient id="gwg0" x1="0" y1="280" x2="1440" y2="900" gradientUnits="userSpaceOnUse"><stop stop-color="#eef8f4" stop-opacity="0.85"/><stop offset="0.5" stop-color="#e8f4ff" stop-opacity="0.7"/><stop offset="1" stop-color="#dde8f5" stop-opacity="0.45"/></linearGradient>
         <linearGradient id="gwg2" x1="200" y1="300" x2="1200" y2="900"><stop stop-color="#eef8f4" stop-opacity="0.92"/><stop offset="0.5" stop-color="#e4f0fa" stop-opacity="0.7"/><stop offset="1" stop-color="#d8e4f5" stop-opacity="0.45"/></linearGradient>
-        <linearGradient id="gwg3" x1="400" y1="480" x2="1100" y2="900"><stop stop-color="#ffffff" stop-opacity="0.55"/><stop offset="1" stop-color="#c8ecd8" stop-opacity="0.35"/></linearGradient>
+        <linearGradient id="gwg3" x1="400" y1="480" x2="1100" y2="900"><stop stop-color="#ffffff" stop-opacity="0.45"/><stop offset="1" stop-color="#c8ecd8" stop-opacity="0.3"/></linearGradient>
       </defs>
-      <g class="bg-wave-back"><path d="M-80 320C180 200 380 140 680 220C980 300 1180 420 1520 340L1520 900L-80 900Z" fill="url(#gwg0)"/><path d="M-60 400C220 280 460 200 760 280C1060 360 1260 460 1500 380L1500 900L-60 900Z" fill="url(#gwg1)"/></g>
+      <g class="bg-wave-back"><path d="M-80 380C180 280 380 220 680 300C980 380 1180 480 1520 400L1520 900L-80 900Z" fill="url(#gwg0)"/></g>
       <g class="bg-wave-mid"><path d="M-60 460C280 380 520 320 820 380C1120 440 1300 520 1500 440L1500 900L-60 900Z" fill="url(#gwg2)" opacity="0.72"/></g>
-      <g class="bg-wave-front"><path d="M-60 560C260 480 540 420 840 480C1140 540 1320 620 1500 540L1500 900L-60 900Z" fill="url(#gwg3)" opacity="0.7"/></g>
+      <g class="bg-wave-front"><path d="M-60 560C260 480 540 420 840 480C1140 540 1320 620 1500 540L1500 900L-60 900Z" fill="url(#gwg3)" opacity="0.65"/></g>
     </svg>
     <div class="bg-blob bg-blob-1"></div>
     <div class="bg-blob bg-blob-2"></div>
@@ -1049,16 +1048,23 @@
 
 <div id="app">
   <div class="bg-scene" aria-hidden="true">
+    <svg width="0" height="0" aria-hidden="true" focusable="false">
+      <defs>
+        <clipPath id="horizonClipApp" clipPathUnits="objectBoundingBox">
+          <path d="M0,0 H1 V0.73 C0.87,0.94 0.67,0.67 0.5,0.81 C0.33,0.98 0.13,0.70 0,0.78 V0 Z"/>
+        </clipPath>
+      </defs>
+    </svg>
+    <div class="bg-sky-cap"></div>
     <svg class="bg-wave-svg" viewBox="0 0 1440 900" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       <defs>
-        <linearGradient id="awg0" x1="0" y1="200" x2="1440" y2="900" gradientUnits="userSpaceOnUse"><stop stop-color="#f0faf5" stop-opacity="0.9"/><stop offset="0.45" stop-color="#e8f4ff" stop-opacity="0.75"/><stop offset="1" stop-color="#dde8f5" stop-opacity="0.5"/></linearGradient>
-        <linearGradient id="awg1" x1="720" y1="80" x2="720" y2="900"><stop stop-color="#ffffff" stop-opacity="0.95"/><stop offset="0.55" stop-color="#e4f8ef"/><stop offset="1" stop-color="#d4ebe8" stop-opacity="0.85"/></linearGradient>
+        <linearGradient id="awg0" x1="0" y1="280" x2="1440" y2="900" gradientUnits="userSpaceOnUse"><stop stop-color="#eef8f4" stop-opacity="0.85"/><stop offset="0.5" stop-color="#e8f4ff" stop-opacity="0.7"/><stop offset="1" stop-color="#dde8f5" stop-opacity="0.45"/></linearGradient>
         <linearGradient id="awg2" x1="200" y1="300" x2="1200" y2="900"><stop stop-color="#eef8f4" stop-opacity="0.92"/><stop offset="0.5" stop-color="#e4f0fa" stop-opacity="0.7"/><stop offset="1" stop-color="#d8e4f5" stop-opacity="0.45"/></linearGradient>
-        <linearGradient id="awg3" x1="400" y1="480" x2="1100" y2="900"><stop stop-color="#ffffff" stop-opacity="0.55"/><stop offset="1" stop-color="#c8ecd8" stop-opacity="0.35"/></linearGradient>
+        <linearGradient id="awg3" x1="400" y1="480" x2="1100" y2="900"><stop stop-color="#ffffff" stop-opacity="0.45"/><stop offset="1" stop-color="#c8ecd8" stop-opacity="0.3"/></linearGradient>
       </defs>
-      <g class="bg-wave-back"><path d="M-80 320C180 200 380 140 680 220C980 300 1180 420 1520 340L1520 900L-80 900Z" fill="url(#awg0)"/><path d="M-60 400C220 280 460 200 760 280C1060 360 1260 460 1500 380L1500 900L-60 900Z" fill="url(#awg1)"/></g>
+      <g class="bg-wave-back"><path d="M-80 380C180 280 380 220 680 300C980 380 1180 480 1520 400L1520 900L-80 900Z" fill="url(#awg0)"/></g>
       <g class="bg-wave-mid"><path d="M-60 460C280 380 520 320 820 380C1120 440 1300 520 1500 440L1500 900L-60 900Z" fill="url(#awg2)" opacity="0.72"/></g>
-      <g class="bg-wave-front"><path d="M-60 560C260 480 540 420 840 480C1140 540 1320 620 1500 540L1500 900L-60 900Z" fill="url(#awg3)" opacity="0.7"/></g>
+      <g class="bg-wave-front"><path d="M-60 560C260 480 540 420 840 480C1140 540 1320 620 1500 540L1500 900L-60 900Z" fill="url(#awg3)" opacity="0.65"/></g>
     </svg>
     <div class="bg-blob bg-blob-1"></div>
     <div class="bg-blob bg-blob-2"></div>
@@ -1086,13 +1092,7 @@
 
   <div id="mainContent" class="loading-main">加载训练模块…</div>
 
-  <div class="section-wave" aria-hidden="true">
-    <svg viewBox="0 0 1440 58" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M-40,0 H1480 V58 C1280,16 1040,54 720,28 C420,4 180,50 -40,20 Z"/>
-    </svg>
-  </div>
-
-  <footer class="footer"><span class="footer-brand" aria-label="MindTraining"><span class="hb-mind">Mind</span><span class="hb-train">Training</span></span> · 仅供学习使用 · <span id="buildTag">v4.25</span></footer>
+  <footer class="footer"><span class="footer-brand" aria-label="MindTraining"><span class="hb-mind">Mind</span><span class="hb-train">Training</span></span> · 仅供学习使用 · <span id="buildTag">v4.26</span></footer>
   </div>
 </div>
 
