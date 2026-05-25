@@ -392,6 +392,31 @@
   #app { display: none; position: relative; z-index: 1; min-height: 100vh; }
   #app.visible { display: flex; flex-direction: column; }
 
+  .btn-exit {
+    position: fixed;
+    top: max(14px, env(safe-area-inset-top));
+    right: max(18px, env(safe-area-inset-right));
+    z-index: 20;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink2);
+    padding: 8px 16px;
+    border-radius: 980px;
+    cursor: pointer;
+    background: var(--frost);
+    backdrop-filter: var(--blur-sm);
+    -webkit-backdrop-filter: var(--blur-sm);
+    border: 1px solid var(--frost-border);
+    box-shadow: var(--inset-hi), 0 2px 10px rgba(0, 0, 0, 0.04);
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+  .btn-exit:hover {
+    color: var(--ink);
+    background: var(--frost-strong);
+    border-color: rgba(255, 255, 255, 0.85);
+  }
+
   .page-wrap {
     position: relative; z-index: 1;
     max-width: var(--max); margin: 0 auto;
@@ -1039,6 +1064,7 @@
     <div class="bg-blob bg-blob-2"></div>
     <div class="bg-blob bg-blob-3"></div>
   </div>
+  <button type="button" class="btn-exit" id="btnExit" aria-label="退出训练">退出</button>
   <div class="page-wrap">
 
   <section class="hero-compact">
@@ -1066,7 +1092,7 @@
     </svg>
   </div>
 
-  <footer class="footer"><span class="footer-brand" aria-label="MindTraining"><span class="hb-mind">Mind</span><span class="hb-train">Training</span></span> · 仅供学习使用 · <span id="buildTag">v4.24</span></footer>
+  <footer class="footer"><span class="footer-brand" aria-label="MindTraining"><span class="hb-mind">Mind</span><span class="hb-train">Training</span></span> · 仅供学习使用 · <span id="buildTag">v4.25</span></footer>
   </div>
 </div>
 
@@ -1199,6 +1225,12 @@ function clearSession() {
   sessionStorage.removeItem(CODE_KEY);
   localStorage.removeItem(CODE_KEY);
   localStorage.removeItem(SESSION_UNTIL_KEY);
+}
+
+function logoutApp() {
+  clearSession();
+  Object.keys(mentorSessions).forEach(k => delete mentorSessions[k]);
+  lockApp();
 }
 
 function unlockApp() {
@@ -1821,6 +1853,8 @@ function initHeroWaveform() {
 
 
 async function bootstrap() {
+  const btnExit = document.getElementById('btnExit');
+  if (btnExit) btnExit.onclick = logoutApp;
   gateBtn.onclick = () => {
     const code = gateCode.value.trim();
     if (!code) { showGateError('请输入访问码'); return; }
