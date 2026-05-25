@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- ops-trainer v4.8 · SaaS wave layout -->
+<!-- ops-trainer v4.9 · SaaS wave layout -->
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8" />
@@ -464,6 +464,10 @@
     background: var(--product-soft); color: var(--product);
   }
   .nav-group.cat-ops .nav-group-head { color: var(--ops); }
+  .nav-group.cat-interview .nav-group-head { color: var(--interview); }
+  .nav-group.cat-interview .nav-summary-count {
+    background: var(--interview-soft); color: var(--interview);
+  }
   .nav-group .nav-summary-count {
     font-size: 10px;
     font-weight: 600;
@@ -811,6 +815,7 @@
     .module-item.active { border-top-color: var(--ink); }
     .module-item.active.cat-product { border-top-color: var(--product); }
     .module-item.active.cat-ops { border-top-color: var(--ops); }
+    .module-item.active.cat-interview { border-top-color: var(--interview); }
     .module-item .mi-desc { display: none; }
     .module-head { margin-bottom: 1rem; padding-bottom: 0.75rem; }
     .module-head h2 { font-size: 1.25rem; }
@@ -889,8 +894,9 @@
       <p class="desc">先独立作答，再获 AI 结构化点评，并可继续追问导师。</p>
     </div>
     <div class="stat-grid">
-      <div class="stat-card"><strong id="statProduct">4</strong><span>产品思维 · <em id="statProductQ">0</em> 题</span></div>
-      <div class="stat-card"><strong id="statOps">6</strong><span>运营思维 · <em id="statOpsQ">0</em> 题</span></div>
+      <div class="stat-card"><strong id="statProduct">3</strong><span>产品思维 · <em id="statProductQ">0</em> 题</span></div>
+      <div class="stat-card"><strong id="statOps">5</strong><span>运营思维 · <em id="statOpsQ">0</em> 题</span></div>
+      <div class="stat-card"><strong id="statInterview">2</strong><span>面试通用 · <em id="statInterviewQ">0</em> 题</span></div>
       <div class="stat-card"><strong id="statTotal">10</strong><span>训练模块</span></div>
       <div class="stat-card"><strong>AI</strong><span>点评 + 追问</span></div>
     </div>
@@ -903,7 +909,7 @@
 
   <div id="mainContent" class="loading-main">加载训练模块…</div>
 
-  <footer class="footer">运营 · 产品思维训练器 · 仅供学习使用 · <span id="buildTag">v4.8</span></footer>
+  <footer class="footer">运营 · 产品思维训练器 · 仅供学习使用 · <span id="buildTag">v4.9</span></footer>
   </div>
 </div>
 
@@ -933,16 +939,18 @@ const CURRICULUM = {
   product: [
     { label: '用户需求挖掘', id: 'user', desc: '表面反馈 vs 核心需求' },
     { label: '功能与交互', id: 'feature', poolIds: ['feature', 'interaction'], desc: '方案取舍 · 信息架构' },
-    { label: '竞品与产品判断', id: 'competitor', poolIds: ['competitor', 'iv-pm'], desc: '战略意图 · 需求真伪' },
-    { label: '面试 · 产品实操', id: 'prod-open', poolIds: ['prod-open', 'iv-skills'], desc: '设计开放题 · PM 方法' }
+    { label: '竞品与产品判断', id: 'competitor', poolIds: ['competitor', 'iv-pm'], desc: '战略意图 · 需求真伪' }
   ],
   ops: [
     { label: '经营与决策', id: 'decision', poolIds: ['decision', 'data'], desc: '资源取舍 · 数据排查' },
     { label: '增长与留存', id: 'growth', poolIds: ['growth', 'retention'], desc: 'AARRR · 用户分层' },
     { label: '传播与舆情', id: 'content', poolIds: ['content', 'crisis'], desc: '活动机制 · 危机回应' },
-    { label: '求职表达', id: 'iv-exp', poolIds: ['iv-exp', 'iv-self', 'iv-career', 'iv-misc'], desc: 'STAR · 自我认知 · 规划动机' },
     { label: '产运策略', id: 'iv-ops', poolIds: ['iv-ops', 'iv-open'], desc: '增长商业化 · 平台博弈' },
     { label: '行业商业', id: 'biz-platform', poolIds: ['biz-platform', 'biz-vertical', 'biz-monetize', 'map-ride', 'map-local'], desc: '平台 · 垂直 · 出行与本地生活' }
+  ],
+  interview: [
+    { label: '面试 · 产品实操', id: 'prod-open', poolIds: ['prod-open', 'iv-skills'], desc: '设计开放题 · PM 方法' },
+    { label: '求职表达', id: 'iv-exp', poolIds: ['iv-exp', 'iv-self', 'iv-career', 'iv-misc'], desc: 'STAR · 优势困难 · 规划动机' }
   ]
 };
 
@@ -954,7 +962,16 @@ function buildNavMeta() {
   const map = new Map();
   CURRICULUM.product.forEach(m => map.set(m.id, m));
   CURRICULUM.ops.forEach(m => map.set(m.id, m));
+  CURRICULUM.interview.forEach(m => map.set(m.id, m));
   return map;
+}
+
+function navCategory(id) {
+  if (CURRICULUM.interview.some(m => m.id === id)) {
+    return { cat: 'interview', catLabel: '面试通用问题' };
+  }
+  const t = getTopic(id);
+  return meta(t);
 }
 let NAV_META = null;
 
@@ -990,7 +1007,8 @@ function topicsByCategory() {
   const map = topicMap();
   const product = CURRICULUM.product.map(m => map.get(m.id)).filter(Boolean);
   const ops = CURRICULUM.ops.map(m => map.get(m.id)).filter(Boolean);
-  return { product, ops, ordered: [...product, ...ops] };
+  const interview = CURRICULUM.interview.map(m => map.get(m.id)).filter(Boolean);
+  return { product, ops, interview, ordered: [...product, ...ops, ...interview] };
 }
 
 function topicsUrl() {
@@ -1141,18 +1159,18 @@ function totalScenarios() {
 function updateModuleHead(id) {
   const t = getTopic(id);
   const mod = getNavModule(id);
-  const m = meta(id);
+  const m = navCategory(id);
   const head = document.getElementById('moduleHead');
   if (!head || !t) return;
   head.innerHTML = `
     <span class="mh-cat ${m.cat}">${m.catLabel}</span>
     <h2>${escapeHtml(mod ? mod.label : t.label)}</h2>
-    <p>${escapeHtml(mod ? mod.desc : m.desc)}</p>
+    <p>${escapeHtml(mod ? mod.desc : (t.desc || ''))}</p>
   `;
 }
 
-function appendModuleBtn(parent, t, mod, isActive) {
-  const m = meta(t);
+function appendModuleBtn(parent, t, mod, isActive, navCat) {
+  const m = navCat || meta(t);
   const btn = document.createElement('button');
   btn.type = 'button';
   btn.className = 'module-item cat-' + m.cat + (isActive ? ' active' : '');
@@ -1169,6 +1187,7 @@ function appendModuleBtn(parent, t, mod, isActive) {
 function renderNavGroup(nav, cat, catLabel, modules, topicById, firstActiveRef) {
   const topics = modules.map(m => topicById.get(m.id)).filter(Boolean);
   const q = modules.reduce((n, m) => n + countModuleScenarios(m, topicById), 0);
+  const navMeta = { cat, catLabel };
   const group = document.createElement('div');
   group.className = 'nav-group cat-' + cat;
   const head = document.createElement('div');
@@ -1180,7 +1199,7 @@ function renderNavGroup(nav, cat, catLabel, modules, topicById, firstActiveRef) 
   modules.forEach(mod => {
     const t = topicById.get(mod.id);
     if (!t) return;
-    appendModuleBtn(body, t, mod, firstActiveRef.value);
+    appendModuleBtn(body, t, mod, firstActiveRef.value, navMeta);
     if (firstActiveRef.value) firstActiveRef.value = false;
   });
   group.appendChild(body);
@@ -1192,19 +1211,24 @@ function renderTopics() {
   NAV_META = buildNavMeta();
   const main = document.getElementById('mainContent');
   main.classList.remove('loading-main');
-  const { product, ops, ordered } = topicsByCategory();
+  const { product, ops, interview, ordered } = topicsByCategory();
   const topicById = topicMap();
   const statP = document.getElementById('statProduct');
   const statO = document.getElementById('statOps');
+  const statI = document.getElementById('statInterview');
   const statPQ = document.getElementById('statProductQ');
   const statOQ = document.getElementById('statOpsQ');
+  const statIQ = document.getElementById('statInterviewQ');
   const statTotal = document.getElementById('statTotal');
   const productQ = CURRICULUM.product.reduce((n, m) => n + countModuleScenarios(m, topicById), 0);
   const opsQ = CURRICULUM.ops.reduce((n, m) => n + countModuleScenarios(m, topicById), 0);
+  const interviewQ = CURRICULUM.interview.reduce((n, m) => n + countModuleScenarios(m, topicById), 0);
   if (statP) statP.textContent = String(CURRICULUM.product.length);
   if (statO) statO.textContent = String(CURRICULUM.ops.length);
+  if (statI) statI.textContent = String(CURRICULUM.interview.length);
   if (statPQ) statPQ.textContent = String(productQ);
   if (statOQ) statOQ.textContent = String(opsQ);
+  if (statIQ) statIQ.textContent = String(interviewQ);
   if (statTotal) statTotal.textContent = String(ordered.length);
 
   main.innerHTML = `
@@ -1226,6 +1250,7 @@ function renderTopics() {
   const firstActiveRef = { value: true };
   renderNavGroup(nav, 'product', '产品思维', CURRICULUM.product, topicById, firstActiveRef);
   renderNavGroup(nav, 'ops', '运营思维', CURRICULUM.ops, topicById, firstActiveRef);
+  renderNavGroup(nav, 'interview', '面试通用问题', CURRICULUM.interview, topicById, firstActiveRef);
 
   let firstActive = true;
   ordered.forEach((t) => {
