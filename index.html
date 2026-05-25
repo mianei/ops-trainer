@@ -400,27 +400,20 @@
   .hero-brand {
     font-family: 'Syne', var(--sans);
     font-size: clamp(2.25rem, 5.5vw, 3.35rem);
+    line-height: 1;
+    margin-bottom: 1.1rem;
+    letter-spacing: -0.04em;
+    white-space: nowrap;
+  }
+  .hero-brand .hb-mind {
     font-weight: 800;
     letter-spacing: -0.045em;
-    line-height: 0.95;
-    margin-bottom: 1.1rem;
-    color: transparent;
-    background: linear-gradient(
-      118deg,
-      #141416 0%,
-      #2a2a2e 42%,
-      #1a9668 78%,
-      var(--btn-green-mid) 100%
-    );
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: #141416;
   }
-  .hero-brand em {
-    font-style: normal;
+  .hero-brand .hb-train {
     font-weight: 700;
     letter-spacing: -0.02em;
-    opacity: 0.92;
+    color: var(--btn-green-base);
   }
   .hero-copy .eyebrow {
     font-size: 12px; font-weight: 600; color: var(--accent);
@@ -958,7 +951,7 @@
 
   <section class="hero-compact">
     <div class="hero-copy">
-      <p class="hero-brand" aria-label="MindTraining">Mind<em>Training</em></p>
+      <p class="hero-brand" aria-label="MindTraining"><span class="hb-mind">Mind</span><span class="hb-train">Training</span></p>
       <p class="eyebrow">Judgment over generation</p>
       <h1>在真实场景里，练运营与产品的判断力。</h1>
       <p class="desc">先独立作答，再获 AI 结构化点评，并可继续追问导师。</p>
@@ -979,7 +972,7 @@
 
   <div id="mainContent" class="loading-main">加载训练模块…</div>
 
-  <footer class="footer">运营 · 产品思维训练器 · 仅供学习使用 · <span id="buildTag">v4.15</span></footer>
+  <footer class="footer">运营 · 产品思维训练器 · 仅供学习使用 · <span id="buildTag">v4.16</span></footer>
   </div>
 </div>
 
