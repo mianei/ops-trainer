@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- ops-trainer v4.7 · SaaS wave layout -->
+<!-- ops-trainer v4.8 · SaaS wave layout -->
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8" />
@@ -440,18 +440,16 @@
       width: 100%;
     }
   }
-  .nav-group-details {
+  .nav-group {
     border-radius: var(--r-md);
-    margin-bottom: 6px;
+    margin-bottom: 8px;
     background: rgba(255, 255, 255, 0.28);
     backdrop-filter: var(--blur-sm);
     -webkit-backdrop-filter: var(--blur-sm);
     border: 1px solid rgba(255, 255, 255, 0.45);
   }
-  .nav-group-details summary {
-    list-style: none;
-    cursor: pointer;
-    padding: 8px 10px;
+  .nav-group-head {
+    padding: 8px 10px 4px;
     font-size: 11px;
     font-weight: 700;
     letter-spacing: 0.06em;
@@ -459,22 +457,21 @@
     align-items: center;
     justify-content: space-between;
     user-select: none;
+    pointer-events: none;
   }
-  .nav-group-details summary::-webkit-details-marker { display: none; }
-  .nav-group-details.cat-product summary { color: var(--product); }
-  .nav-group-details.cat-product .nav-summary-count {
+  .nav-group.cat-product .nav-group-head { color: var(--product); }
+  .nav-group.cat-product .nav-summary-count {
     background: var(--product-soft); color: var(--product);
   }
-  .nav-group-details.cat-ops summary { color: var(--ops); }
-  .nav-group-details .nav-summary-count {
+  .nav-group.cat-ops .nav-group-head { color: var(--ops); }
+  .nav-group .nav-summary-count {
     font-size: 10px;
     font-weight: 600;
     padding: 2px 6px;
     border-radius: 5px;
     background: rgba(0,0,0,0.06);
   }
-  .nav-group-details:not([open]) .nav-group-body { display: none; }
-  .nav-group-body { padding: 2px 4px 6px; }
+  .nav-group-body { padding: 2px 4px 8px; }
   .module-nav-title {
     font-size: 10px; font-weight: 600; letter-spacing: 0.08em;
     text-transform: uppercase; color: var(--ink3);
@@ -797,14 +794,13 @@
       gap: 8px; padding: 10px;
       scrollbar-width: none;
     }
-    .nav-group-details {
+    .nav-group {
       display: contents;
       background: transparent;
+      border: none;
     }
-    .nav-group-details summary { display: none; }
-    .nav-group-body {
-      display: contents;
-    }
+    .nav-group-head { display: none; }
+    .nav-group-body { display: contents; }
     .module-nav-title { display: none; }
     .module-item {
       flex: 0 0 auto; min-width: 120px;
@@ -907,7 +903,7 @@
 
   <div id="mainContent" class="loading-main">加载训练模块…</div>
 
-  <footer class="footer">运营 · 产品思维训练器 · 仅供学习使用 · <span id="buildTag">v4.7</span></footer>
+  <footer class="footer">运营 · 产品思维训练器 · 仅供学习使用 · <span id="buildTag">v4.8</span></footer>
   </div>
 </div>
 
@@ -1173,12 +1169,12 @@ function appendModuleBtn(parent, t, mod, isActive) {
 function renderNavGroup(nav, cat, catLabel, modules, topicById, firstActiveRef) {
   const topics = modules.map(m => topicById.get(m.id)).filter(Boolean);
   const q = modules.reduce((n, m) => n + countModuleScenarios(m, topicById), 0);
-  const details = document.createElement('details');
-  details.className = 'nav-group-details cat-' + cat;
-  details.open = firstActiveRef.value;
-  const summary = document.createElement('summary');
-  summary.innerHTML = `${escapeHtml(catLabel)}<span class="nav-summary-count">${modules.length} 模块</span>`;
-  details.appendChild(summary);
+  const group = document.createElement('div');
+  group.className = 'nav-group cat-' + cat;
+  const head = document.createElement('div');
+  head.className = 'nav-group-head';
+  head.innerHTML = `${escapeHtml(catLabel)}<span class="nav-summary-count">${modules.length} 模块</span>`;
+  group.appendChild(head);
   const body = document.createElement('div');
   body.className = 'nav-group-body';
   modules.forEach(mod => {
@@ -1187,18 +1183,9 @@ function renderNavGroup(nav, cat, catLabel, modules, topicById, firstActiveRef) 
     appendModuleBtn(body, t, mod, firstActiveRef.value);
     if (firstActiveRef.value) firstActiveRef.value = false;
   });
-  details.appendChild(body);
-  nav.appendChild(details);
+  group.appendChild(body);
+  nav.appendChild(group);
   return { topics, q };
-}
-
-function syncNavAccordion(topicId) {
-  const t = getTopic(topicId);
-  if (!t) return;
-  const cat = meta(t).cat;
-  document.querySelectorAll('.nav-group-details').forEach(el => {
-    el.open = el.classList.contains('cat-' + cat);
-  });
 }
 
 function renderTopics() {
@@ -1290,7 +1277,6 @@ function renderTopics() {
   });
 
   activeTopicId = ordered[0].id;
-  syncNavAccordion(activeTopicId);
   updateModuleHead(activeTopicId);
 }
 
@@ -1327,7 +1313,6 @@ function switchTab(id, el) {
     if (btn) btn.classList.add('active');
   }
   document.getElementById('panel-' + id).classList.add('active');
-  syncNavAccordion(id);
   updateModuleHead(id);
   const head = document.getElementById('moduleHead');
   if (head) head.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
