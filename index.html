@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- ops-trainer v4.6 · SaaS wave layout -->
+<!-- ops-trainer v4.7 · SaaS wave layout -->
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8" />
@@ -893,9 +893,9 @@
       <p class="desc">先独立作答，再获 AI 结构化点评，并可继续追问导师。</p>
     </div>
     <div class="stat-grid">
-      <div class="stat-card"><strong id="statProduct">7</strong><span>产品思维 · <em id="statProductQ">0</em> 题</span></div>
-      <div class="stat-card"><strong id="statOps">16</strong><span>运营思维 · <em id="statOpsQ">0</em> 题</span></div>
-      <div class="stat-card"><strong id="statTotal">23</strong><span>训练模块</span></div>
+      <div class="stat-card"><strong id="statProduct">4</strong><span>产品思维 · <em id="statProductQ">0</em> 题</span></div>
+      <div class="stat-card"><strong id="statOps">6</strong><span>运营思维 · <em id="statOpsQ">0</em> 题</span></div>
+      <div class="stat-card"><strong id="statTotal">10</strong><span>训练模块</span></div>
       <div class="stat-card"><strong>AI</strong><span>点评 + 追问</span></div>
     </div>
   </section>
@@ -907,7 +907,7 @@
 
   <div id="mainContent" class="loading-main">加载训练模块…</div>
 
-  <footer class="footer">运营 · 产品思维训练器 · 仅供学习使用 · <span id="buildTag">v4.6</span></footer>
+  <footer class="footer">运营 · 产品思维训练器 · 仅供学习使用 · <span id="buildTag">v4.7</span></footer>
   </div>
 </div>
 
@@ -930,27 +930,42 @@ const gateCode = document.getElementById('gateCode');
 const gateBtn = document.getElementById('gateBtn');
 const gateError = document.getElementById('gateError');
 
-/** 按飞书《产运岗｜面经》知识库划分的侧栏结构（仅产品 / 运营两大板块） */
+/**
+ * 侧栏精简模块：每项对应一个训练入口，poolIds 合并同类题库（题目不删，随机池更大）
+ */
 const CURRICULUM = {
   product: [
-    { section: '基础 · 需求与洞察', ids: ['user'] },
-    { section: '基础 · 功能与体验', ids: ['feature', 'interaction'] },
-    { section: '基础 · 竞品判断', ids: ['competitor'] },
-    { section: '面经 · 产品与需求', ids: ['iv-pm'] },
-    { section: '面经 · PM 实操方法', ids: ['iv-skills'] },
-    { section: '面经 · 产品设计开放题', ids: ['prod-open'] }
+    { label: '用户需求挖掘', id: 'user', desc: '表面反馈 vs 核心需求' },
+    { label: '功能与交互', id: 'feature', poolIds: ['feature', 'interaction'], desc: '方案取舍 · 信息架构' },
+    { label: '竞品与产品判断', id: 'competitor', poolIds: ['competitor', 'iv-pm'], desc: '战略意图 · 需求真伪' },
+    { label: '面试 · 产品实操', id: 'prod-open', poolIds: ['prod-open', 'iv-skills'], desc: '设计开放题 · PM 方法' }
   ],
   ops: [
-    { section: '基础 · 决策与数据', ids: ['decision', 'data'] },
-    { section: '基础 · 增长与留存', ids: ['growth', 'retention'] },
-    { section: '基础 · 传播与危机', ids: ['content', 'crisis'] },
-    { section: '面经 · 求职表达 Q1–9', ids: ['iv-exp', 'iv-self', 'iv-career', 'iv-misc'] },
-    { section: '面经 · 产运深度 Q19–81', ids: ['iv-ops'] },
-    { section: '面经 · 平台商业策略', ids: ['iv-open'] },
-    { section: '面经 · 十大业务分析', ids: ['biz-platform', 'biz-vertical', 'biz-monetize'] },
-    { section: '面经 · 地图·出行·本地生活', ids: ['map-ride', 'map-local'] }
+    { label: '经营与决策', id: 'decision', poolIds: ['decision', 'data'], desc: '资源取舍 · 数据排查' },
+    { label: '增长与留存', id: 'growth', poolIds: ['growth', 'retention'], desc: 'AARRR · 用户分层' },
+    { label: '传播与舆情', id: 'content', poolIds: ['content', 'crisis'], desc: '活动机制 · 危机回应' },
+    { label: '求职表达', id: 'iv-exp', poolIds: ['iv-exp', 'iv-self', 'iv-career', 'iv-misc'], desc: 'STAR · 自我认知 · 规划动机' },
+    { label: '产运策略', id: 'iv-ops', poolIds: ['iv-ops', 'iv-open'], desc: '增长商业化 · 平台博弈' },
+    { label: '行业商业', id: 'biz-platform', poolIds: ['biz-platform', 'biz-vertical', 'biz-monetize', 'map-ride', 'map-local'], desc: '平台 · 垂直 · 出行与本地生活' }
   ]
 };
+
+function curriculumPoolIds(mod) {
+  return mod.poolIds || [mod.id];
+}
+
+function buildNavMeta() {
+  const map = new Map();
+  CURRICULUM.product.forEach(m => map.set(m.id, m));
+  CURRICULUM.ops.forEach(m => map.set(m.id, m));
+  return map;
+}
+let NAV_META = null;
+
+function getNavModule(id) {
+  if (!NAV_META) NAV_META = buildNavMeta();
+  return NAV_META.get(id);
+}
 
 function meta(topicOrId) {
   const t = typeof topicOrId === 'string' ? getTopic(topicOrId) : topicOrId;
@@ -968,16 +983,17 @@ function countScenarios(list) {
   return list.reduce((n, t) => n + (t.scenarios?.length || 0), 0);
 }
 
+function countModuleScenarios(mod, map) {
+  return curriculumPoolIds(mod).reduce((n, id) => {
+    const t = map.get(id);
+    return n + (t?.scenarios?.length || 0);
+  }, 0);
+}
+
 function topicsByCategory() {
   const map = topicMap();
-  const product = CURRICULUM.product.flatMap(s => s.ids.map(id => map.get(id)).filter(Boolean));
-  const ops = CURRICULUM.ops.flatMap(s => s.ids.map(id => map.get(id)).filter(Boolean));
-  const inCurriculum = new Set([...product, ...ops].map(t => t.id));
-  const extra = TOPICS.filter(t => !inCurriculum.has(t.id));
-  extra.forEach(t => {
-    if (meta(t).cat === 'product') product.push(t);
-    else ops.push(t);
-  });
+  const product = CURRICULUM.product.map(m => map.get(m.id)).filter(Boolean);
+  const ops = CURRICULUM.ops.map(m => map.get(m.id)).filter(Boolean);
   return { product, ops, ordered: [...product, ...ops] };
 }
 
@@ -1128,49 +1144,48 @@ function totalScenarios() {
 
 function updateModuleHead(id) {
   const t = getTopic(id);
+  const mod = getNavModule(id);
   const m = meta(id);
   const head = document.getElementById('moduleHead');
   if (!head || !t) return;
   head.innerHTML = `
     <span class="mh-cat ${m.cat}">${m.catLabel}</span>
-    <h2>${escapeHtml(t.label)}</h2>
-    <p>${escapeHtml(m.desc)}</p>
+    <h2>${escapeHtml(mod ? mod.label : t.label)}</h2>
+    <p>${escapeHtml(mod ? mod.desc : m.desc)}</p>
   `;
 }
 
-function appendModuleBtn(parent, t, isActive) {
+function appendModuleBtn(parent, t, mod, isActive) {
   const m = meta(t);
   const btn = document.createElement('button');
   btn.type = 'button';
   btn.className = 'module-item cat-' + m.cat + (isActive ? ' active' : '');
   btn.dataset.id = t.id;
   btn.innerHTML = `
-    <span class="mi-label">${escapeHtml(t.label)}</span>
-    <span class="mi-desc">${escapeHtml(m.desc)}</span>
+    <span class="mi-label">${escapeHtml(mod.label)}</span>
+    <span class="mi-desc">${escapeHtml(mod.desc)}</span>
   `;
   btn.onclick = () => switchTab(t.id, btn);
   parent.appendChild(btn);
   return btn;
 }
 
-function renderNavGroup(nav, cat, catLabel, sections, topicById, firstActiveRef) {
-  const topics = sections.flatMap(s => s.ids.map(id => topicById.get(id)).filter(Boolean));
-  const q = countScenarios(topics);
+function renderNavGroup(nav, cat, catLabel, modules, topicById, firstActiveRef) {
+  const topics = modules.map(m => topicById.get(m.id)).filter(Boolean);
+  const q = modules.reduce((n, m) => n + countModuleScenarios(m, topicById), 0);
   const details = document.createElement('details');
   details.className = 'nav-group-details cat-' + cat;
   details.open = firstActiveRef.value;
   const summary = document.createElement('summary');
-  summary.innerHTML = `${escapeHtml(catLabel)}<span class="nav-summary-count">${topics.length} 模块</span>`;
+  summary.innerHTML = `${escapeHtml(catLabel)}<span class="nav-summary-count">${modules.length} 模块</span>`;
   details.appendChild(summary);
   const body = document.createElement('div');
   body.className = 'nav-group-body';
-  sections.forEach(sec => {
-    sec.ids.forEach(id => {
-      const t = topicById.get(id);
-      if (!t) return;
-      appendModuleBtn(body, t, firstActiveRef.value);
-      if (firstActiveRef.value) firstActiveRef.value = false;
-    });
+  modules.forEach(mod => {
+    const t = topicById.get(mod.id);
+    if (!t) return;
+    appendModuleBtn(body, t, mod, firstActiveRef.value);
+    if (firstActiveRef.value) firstActiveRef.value = false;
   });
   details.appendChild(body);
   nav.appendChild(details);
@@ -1187,6 +1202,7 @@ function syncNavAccordion(topicId) {
 }
 
 function renderTopics() {
+  NAV_META = buildNavMeta();
   const main = document.getElementById('mainContent');
   main.classList.remove('loading-main');
   const { product, ops, ordered } = topicsByCategory();
@@ -1196,10 +1212,12 @@ function renderTopics() {
   const statPQ = document.getElementById('statProductQ');
   const statOQ = document.getElementById('statOpsQ');
   const statTotal = document.getElementById('statTotal');
-  if (statP) statP.textContent = String(product.length);
-  if (statO) statO.textContent = String(ops.length);
-  if (statPQ) statPQ.textContent = String(countScenarios(product));
-  if (statOQ) statOQ.textContent = String(countScenarios(ops));
+  const productQ = CURRICULUM.product.reduce((n, m) => n + countModuleScenarios(m, topicById), 0);
+  const opsQ = CURRICULUM.ops.reduce((n, m) => n + countModuleScenarios(m, topicById), 0);
+  if (statP) statP.textContent = String(CURRICULUM.product.length);
+  if (statO) statO.textContent = String(CURRICULUM.ops.length);
+  if (statPQ) statPQ.textContent = String(productQ);
+  if (statOQ) statOQ.textContent = String(opsQ);
   if (statTotal) statTotal.textContent = String(ordered.length);
 
   main.innerHTML = `
@@ -1315,26 +1333,41 @@ function switchTab(id, el) {
   if (head) head.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
-function pickScenarios(topic) {
-  const list = topic.scenarios || [];
-  const id = topic.id || '';
-  if (id === 'prod-open') {
-    const pd = list.filter(s => typeof s === 'string' && s.includes('【面试·产品设计·'));
+function filterScenarioPool(navId, list) {
+  if (navId === 'prod-open') {
+    const pd = list.filter(s => typeof s === 'string' && (s.includes('【面试·产品设计·') || s.includes('【面试·')));
     return pd.length ? pd : list;
   }
-  if (id.startsWith('iv-')) {
+  if (navId === 'iv-exp' || navId.startsWith('iv-')) {
     const iv = list.filter(s => typeof s === 'string' && s.includes('【面试·'));
     return iv.length ? iv : list;
   }
-  if (id.startsWith('biz-')) {
-    const bz = list.filter(s => typeof s === 'string' && s.includes('【业务分析·'));
+  if (navId === 'biz-platform' || navId.startsWith('biz-') || navId.startsWith('map-')) {
+    const bz = list.filter(s => typeof s === 'string' && (s.includes('【业务分析·') || s.includes('【地图·')));
     return bz.length ? bz : list;
   }
-  if (id.startsWith('map-')) {
-    const mp = list.filter(s => typeof s === 'string' && s.includes('【地图·'));
-    return mp.length ? mp : list;
-  }
   return list;
+}
+
+function scenariosForNavModule(navId) {
+  const mod = getNavModule(navId);
+  if (!mod) {
+    const t = getTopic(navId);
+    return t?.scenarios || [];
+  }
+  let list = [];
+  curriculumPoolIds(mod).forEach(id => {
+    const t = getTopic(id);
+    if (t?.scenarios?.length) list.push(...t.scenarios);
+  });
+  return filterScenarioPool(navId, list);
+}
+
+function pickScenarios(topic) {
+  const navId = topic.id || '';
+  const pooled = scenariosForNavModule(navId);
+  if (pooled.length) return pooled;
+  return topic.scenarios || [];
 }
 
 function loadScenario(id) {
