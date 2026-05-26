@@ -33,6 +33,8 @@
 
 题目数据位于 `topics.json` 及配套的 `scenarios-*.json`、`topics-*.json` 文件。
 
+**框架与定义** 在 `knowledge.json`，App 内 **知识库** Tab 阅读，不当作练习题。内容规范见 [docs/content-audit.md](./docs/content-audit.md)。
+
 ## Windows 桌面版
 
 `desktop/` 目录提供基于 Electron 的 Windows 便携版（`.exe`），窗口内加载已部署的线上站点，需保持网络连接。
@@ -49,26 +51,40 @@
 
 | 变量 | 说明 |
 |------|------|
-| `ACCESS_USERS` | **多人账号**，格式 `zhangsan:码1,lisi:码2` 或 JSON `{"zhangsan":"码1"}` |
-| `ACCESS_CODE` | 未配置 `ACCESS_USERS` 时的单一访问码（账号可留空） |
-| `UPSTASH_REDIS_REST_URL` | **答题记录**与限流（记录功能必需） |
+| `REGISTER_INVITE_CODE` | **注册邀请码**（全员共用，发给朋友即可；用户自选用户名/密码） |
+| `UPSTASH_REDIS_REST_URL` | **注册账号 + 答题记录**与限流（注册与记录必需） |
 | `UPSTASH_REDIS_REST_TOKEN` | Upstash Token |
+| `ACCESS_USERS` | 可选，站长预分配账号 `zhangsan:码1,lisi:码2` |
+| `ACCESS_CODE` | 可选，未开注册时的单一访问码（用户名可留空）；也可兼作邀请码 fallback |
+| `AUTH_PEPPER` | 可选，密码哈希盐（默认用邀请码） |
 | `DEEPSEEK_API_KEY` | DeepSeek API Key（推荐） |
 | `DEEPSEEK_MODEL` | 可选，默认 `deepseek-chat` |
 | `ANTHROPIC_API_KEY` | Claude API Key（与 DeepSeek 二选一） |
 | `ANTHROPIC_MODEL` | 可选 |
 | `AI_PROVIDER` | 可选，`deepseek` 或 `anthropic` |
-| `UPSTASH_REDIS_REST_URL` | 可选，限流 |
-| `UPSTASH_REDIS_REST_TOKEN` | 可选 |
 | `DAILY_LIMIT_PER_IP` | 可选 |
 | `DAILY_TOTAL_LIMIT` | 可选 |
 
 3. 修改环境变量后需重新部署（Redeploy）
 
-### 一人一号与答题记录
+### 自助注册（推荐）
 
-- 在 Vercel 配置 `ACCESS_USERS`，为每位朋友分配独立账号与访问码
-- 配置 [Upstash Redis](https://upstash.com) 并填入 `UPSTASH_REDIS_*`，系统会按「账号 + 模块」保存近期作答
+你**不用**逐个填账号，只需：
+
+1. 在 [Upstash](https://upstash.com) 建一个 Redis，把 URL/Token 填进 Vercel
+2. 设置 **`REGISTER_INVITE_CODE`**，例如 `mind2025`（这一串发给朋友，大家共用）
+3. Redeploy
+
+朋友打开站点 → **注册** → 自己取用户名、设密码、填邀请码 → 即可练题，作答按用户名保存。
+
+### 站长预分配（可选）
+
+- 配置 `ACCESS_USERS` 仍可手动指定账号密码（与注册用户并存）
+- 仅 `ACCESS_CODE` 时：登录页用户名可留空，只填密码（单人模式）
+
+### 答题记录
+
+- 配置 Upstash 后，系统按「用户名 + 模块」保存近期作答
 - 再次在本模块作答时，AI 点评会自动增加 **「思维成长」** 小节：对照你最近几次作答（不必同一道题），看是否想到更多、想得更深
 
 请勿将密钥写入代码或提交至仓库；`.env` 已列入 `.gitignore`。

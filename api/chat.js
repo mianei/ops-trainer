@@ -164,7 +164,7 @@ export default async function handler(req) {
   const userId = getHeader(req, 'x-user-id') || body.userId || '';
   const code = getHeader(req, 'x-access-code') || body.accessCode || '';
 
-  const auth = verifyUserCredentials(userId, code);
+  const auth = await verifyUserCredentials(userId, code);
   if (!auth.ok) {
     return json({ error: auth.error }, auth.status);
   }

@@ -71,27 +71,116 @@ export function multiUserMode() {
   return users.size > 1 || (users.size === 1 && !users.has('default'));
 }
 
-export function verifyUserCredentials(userIdRaw, codeRaw) {
+export function getRegisterInviteCode() {
+  return (process.env.REGISTER_INVITE_CODE || process.env.ACCESS_CODE || '').trim();
+}
+
+export function registrationAllowed() {
+  return historyEnabled() && Boolean(getRegisterInviteCode());
+}
+
+export function validateUsername(userIdRaw) {
+  const s = String(userIdRaw || '').trim();
+  if (s.length < 2 || s.length > 24) return null;
+  if (!/^[a-zA-Z0-9_]+$/.test(s)) return null;
+  return s;
+}
+
+export async function hashPassword(password) {
+  const pepper = (process.env.AUTH_PEPPER || getRegisterInviteCode() || 'ops-trainer').trim();
+  const data = new TextEncoder().encode(`${pepper}:${password}`);
+  const buf = await crypto.subtle.digest('SHA-256', data);
+  return Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, '0')).join('');
+}
+
+function accountKey(usernameLower) {
+  return `ops:acct:${usernameLower}`;
+}
+
+export async function lookupRegisteredUser(userId) {
+  if (!historyEnabled()) return null;
+  const uid = String(userId || '').trim();
+  if (!uid) return null;
+  const raw = await upstashCall(['GET', accountKey(uid.toLowerCase())]);
+  if (!raw) return null;
+  try {
+    const obj = JSON.parse(raw);
+    return obj && obj.id && obj.hash ? obj : null;
+  } catch {
+    return null;
+  }
+}
+
+export async function registerUser(userIdRaw, passwordRaw, inviteRaw) {
+  if (!registrationAllowed()) {
+    return {
+      ok: false,
+      error: '注册未开放：请在 Vercel 配置 Upstash Redis 与 REGISTER_INVITE_CODE',
+      status: 503
+    };
+  }
+  const userId = validateUsername(userIdRaw);
+  if (!userId) {
+    return { ok: false, error: '用户名 2–24 位，仅字母、数字、下划线', status: 400 };
+  }
+  const password = String(passwordRaw || '');
+  if (password.length < 6) {
+    return { ok: false, error: '密码至少 6 位', status: 400 };
+  }
+  const invite = String(inviteRaw || '').trim();
+  const expected = getRegisterInviteCode();
+  if (!invite || invite !== expected) {
+    return { ok: false, error: '邀请码无效', status: 401 };
+  }
+  const envUsers = parseAccessUsers();
+  if (envUsers.has(userId.toLowerCase())) {
+    return { ok: false, error: '该用户名已被占用', status: 409 };
+  }
+  const hash = await hashPassword(password);
+  const record = JSON.stringify({ id: userId, hash });
+  const setOk = await upstashCall(['SET', accountKey(userId.toLowerCase()), record, 'NX']);
+  if (setOk !== 'OK') {
+    return { ok: false, error: '用户名已被占用', status: 409 };
+  }
+  return { ok: true, userId };
+}
+
+export async function verifyUserCredentials(userIdRaw, codeRaw) {
   const users = parseAccessUsers();
-  if (users.size === 0) {
-    return { ok: false, error: '服务端未配置 ACCESS_USERS 或 ACCESS_CODE', status: 500 };
+  if (users.size === 0 && !historyEnabled()) {
+    return { ok: false, error: '服务端未配置 REGISTER_INVITE_CODE 或 ACCESS_CODE', status: 500 };
   }
   const code = String(codeRaw || '').trim();
   if (!code) {
-    return { ok: false, error: '缺少访问码', status: 401 };
+    return { ok: false, error: '请输入密码', status: 401 };
   }
 
   let userId = String(userIdRaw || '').trim();
   if (!userId) {
-    if (users.has('default')) userId = 'default';
-    else return { ok: false, error: '请输入账号', status: 401 };
+    if (users.has('default')) {
+      const entry = users.get('default');
+      if (entry.pass === code) return { ok: true, userId: 'default' };
+      return { ok: false, error: '密码无效', status: 401 };
+    }
+    return { ok: false, error: '请输入用户名', status: 401 };
   }
 
-  const entry = users.get(userId.toLowerCase());
-  if (!entry || entry.pass !== code) {
-    return { ok: false, error: '账号或访问码无效', status: 401 };
+  const envEntry = users.get(userId.toLowerCase());
+  if (envEntry && envEntry.pass === code) {
+    return { ok: true, userId: envEntry.id };
   }
-  return { ok: true, userId: entry.id };
+
+  const reg = await lookupRegisteredUser(userId);
+  if (reg) {
+    const hash = await hashPassword(code);
+    if (reg.hash === hash) return { ok: true, userId: reg.id };
+    return { ok: false, error: '用户名或密码无效', status: 401 };
+  }
+
+  if (users.size === 0) {
+    return { ok: false, error: '用户名或密码无效', status: 401 };
+  }
+  return { ok: false, error: '用户名或密码无效', status: 401 };
 }
 
 export async function upstashCall(command) {

@@ -311,7 +311,52 @@
     font-size: 22px; font-weight: 700; letter-spacing: -0.02em;
     margin-bottom: 8px;
   }
-  .gate-card .sub { font-size: 15px; color: var(--ink2); margin-bottom: 1.75rem; line-height: 1.5; }
+  .gate-card .sub { font-size: 15px; color: var(--ink2); margin-bottom: 1.25rem; line-height: 1.5; }
+  .gate-tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 1.25rem;
+    padding: 4px;
+    border-radius: var(--r-lg);
+    background: rgba(255, 255, 255, 0.4);
+    border: 1px solid var(--frost-border);
+  }
+  .gate-tab {
+    flex: 1;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 12px;
+    border: none;
+    border-radius: var(--r);
+    background: transparent;
+    color: var(--ink2);
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+  }
+  .gate-tab.active {
+    background: #fff;
+    color: var(--ink);
+    box-shadow: var(--shadow-sm), var(--inset-hi);
+  }
+  .gate-panel { display: none; }
+  .gate-panel.active { display: block; }
+  .btn-register {
+    width: 100%;
+    margin-top: 0;
+    padding: 14px 20px;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    border: 1px solid var(--frost-border);
+    border-radius: var(--r-lg);
+    background: rgba(255, 255, 255, 0.55);
+    color: var(--ink);
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-register:hover { background: rgba(255, 255, 255, 0.85); }
+  .btn-register:disabled { opacity: 0.6; cursor: not-allowed; }
   .gate-field label {
     display: block; font-size: 12px; font-weight: 500;
     color: var(--ink3); margin-bottom: 8px;
@@ -567,6 +612,96 @@
     background: var(--frost-strong);
     border: 1px solid var(--frost-border);
     box-shadow: var(--shadow-sm), var(--inset-hi);
+  }
+  .workspace-mode-bar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 1.25rem;
+    padding: 4px;
+    border-radius: var(--r-lg);
+    background: rgba(255, 255, 255, 0.35);
+    border: 1px solid var(--frost-border);
+    width: fit-content;
+    max-width: 100%;
+  }
+  .mode-btn {
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 18px;
+    border: none;
+    border-radius: var(--r);
+    background: transparent;
+    color: var(--ink2);
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+  }
+  .mode-btn.active {
+    background: #fff;
+    color: var(--ink);
+    box-shadow: var(--shadow-sm), var(--inset-hi);
+  }
+  .knowledge-intro {
+    font-size: 14px;
+    color: var(--ink2);
+    line-height: 1.55;
+    margin-bottom: 1.25rem;
+    max-width: 40em;
+  }
+  .knowledge-section {
+    margin-bottom: 1.75rem;
+  }
+  .knowledge-section h3 {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink3);
+    margin-bottom: 0.75rem;
+  }
+  .knowledge-section.cat-product h3 { color: var(--product); }
+  .knowledge-section.cat-ops h3 { color: var(--ops); }
+  .knowledge-section.cat-interview h3 { color: var(--interview); }
+  .knowledge-grid {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 720px) {
+    .knowledge-grid { grid-template-columns: 1fr 1fr; }
+  }
+  .knowledge-card {
+    padding: 1rem 1.15rem;
+    border-radius: var(--r-lg);
+    background: rgba(255, 255, 255, 0.72);
+    border: 1px solid var(--frost-border);
+    box-shadow: var(--inset-hi);
+  }
+  .knowledge-card h4 {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 0.35rem;
+    letter-spacing: -0.02em;
+  }
+  .knowledge-card .kc-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 0.65rem;
+  }
+  .knowledge-card .kc-tag {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 6px;
+    background: rgba(0, 0, 0, 0.05);
+    color: var(--ink3);
+  }
+  .knowledge-card .kc-body {
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--ink2);
+    white-space: pre-wrap;
   }
   .workspace {
     width: 100%;
@@ -1186,22 +1321,47 @@
     </div>
     <div class="gate-card surface">
       <h2>进入训练场</h2>
-      <p class="sub">每人一个账号与访问码，作答会保存；换题再练时对照近期思路是否在进步。</p>
-      <div class="gate-field">
-        <label for="gateUser">账号</label>
-        <input type="text" id="gateUser" placeholder="站长分配的用户名" autocomplete="username" autocapitalize="off" />
+      <p class="sub">注册后自选用户名与密码，作答会保存；换题再练时对照近期思路是否在进步。</p>
+      <div class="gate-tabs" role="tablist">
+        <button type="button" class="gate-tab active" data-gate="login" role="tab" aria-selected="true">登录</button>
+        <button type="button" class="gate-tab" data-gate="register" role="tab" aria-selected="false">注册</button>
       </div>
-      <div class="gate-field">
-        <label for="gateCode">访问码</label>
-        <input type="password" id="gateCode" placeholder="请输入" autocomplete="current-password" />
+      <div class="gate-panel active" id="gatePanelLogin" role="tabpanel">
+        <div class="gate-field">
+          <label for="gateUser">用户名</label>
+          <input type="text" id="gateUser" placeholder="注册时自己取的名字" autocomplete="username" autocapitalize="off" />
+        </div>
+        <div class="gate-field">
+          <label for="gateCode">密码</label>
+          <input type="password" id="gateCode" placeholder="请输入密码" autocomplete="current-password" />
+        </div>
+        <label class="gate-remember">
+          <input type="checkbox" id="gateRemember" checked />
+          7 天内免重复输入
+        </label>
+        <button class="btn-enter" id="gateBtn" type="button">开始训练</button>
       </div>
-      <label class="gate-remember">
-        <input type="checkbox" id="gateRemember" checked />
-        7 天内免重复输入
-      </label>
-      <button class="btn-enter" id="gateBtn" type="button">开始训练</button>
+      <div class="gate-panel" id="gatePanelRegister" role="tabpanel" hidden>
+        <div class="gate-field">
+          <label for="regUser">用户名</label>
+          <input type="text" id="regUser" placeholder="2–24 位，字母/数字/下划线" autocomplete="username" autocapitalize="off" />
+        </div>
+        <div class="gate-field">
+          <label for="regPass">密码</label>
+          <input type="password" id="regPass" placeholder="至少 6 位" autocomplete="new-password" />
+        </div>
+        <div class="gate-field">
+          <label for="regPass2">确认密码</label>
+          <input type="password" id="regPass2" placeholder="再输入一次" autocomplete="new-password" />
+        </div>
+        <div class="gate-field">
+          <label for="regInvite">邀请码</label>
+          <input type="text" id="regInvite" placeholder="向站长获取，全员共用" autocomplete="off" />
+        </div>
+        <button class="btn-register" id="regBtn" type="button">注册并进入</button>
+      </div>
       <div class="gate-error" id="gateError"></div>
-      <p class="gate-hint">仅配置单一访问码时可留空账号 · 请用 Safari / Chrome 打开</p>
+      <p class="gate-hint">首次使用请注册 · 仅站长预分配账号时可留空用户名（单一访问码模式）</p>
     </div>
     </div>
   </div>
@@ -1259,7 +1419,7 @@
 
   <div id="mainContent" class="loading-main">加载训练模块…</div>
 
-  <footer class="footer"><span class="footer-brand" aria-label="MindTraining"><span class="hb-mind">Mind</span><span class="hb-train">Training</span></span> · 仅供学习使用 · <a class="footer-link" href="/download">下载 · 开源</a> · <a class="footer-link" href="https://github.com/mianei/ops-trainer" target="_blank" rel="noopener noreferrer">GitHub</a> · <span id="buildTag">v4.37</span></footer>
+  <footer class="footer"><span class="footer-brand" aria-label="MindTraining"><span class="hb-mind">Mind</span><span class="hb-train">Training</span></span> · 仅供学习使用 · <a class="footer-link" href="/download">下载 · 开源</a> · <a class="footer-link" href="https://github.com/mianei/ops-trainer" target="_blank" rel="noopener noreferrer">GitHub</a> · <span id="buildTag">v4.39</span></footer>
   </div>
 </div>
 
@@ -1273,6 +1433,8 @@ const REMEMBER_DAYS = 7;
 
 let accessCode = '';
 let userAccountId = '';
+let workspaceMode = 'train';
+let KNOWLEDGE = [];
 let TOPICS = [];
 let activeTopicId = '';
 /** @type {Record<string, { scenario: string, answer: string, feedback: string, history: {q:string,a:string}[] }>} */
@@ -1284,6 +1446,30 @@ const gateCode = document.getElementById('gateCode');
 const gateUser = document.getElementById('gateUser');
 const gateBtn = document.getElementById('gateBtn');
 const gateError = document.getElementById('gateError');
+const regBtn = document.getElementById('regBtn');
+const regUser = document.getElementById('regUser');
+const regPass = document.getElementById('regPass');
+const regPass2 = document.getElementById('regPass2');
+const regInvite = document.getElementById('regInvite');
+
+function setGateTab(mode) {
+  document.querySelectorAll('.gate-tab').forEach(btn => {
+    const on = btn.dataset.gate === mode;
+    btn.classList.toggle('active', on);
+    btn.setAttribute('aria-selected', on ? 'true' : 'false');
+  });
+  const loginPanel = document.getElementById('gatePanelLogin');
+  const regPanel = document.getElementById('gatePanelRegister');
+  if (loginPanel) {
+    loginPanel.classList.toggle('active', mode === 'login');
+    loginPanel.hidden = mode !== 'login';
+  }
+  if (regPanel) {
+    regPanel.classList.toggle('active', mode === 'register');
+    regPanel.hidden = mode !== 'register';
+  }
+  hideGateError();
+}
 
 /**
  * 侧栏精简模块：每项对应一个训练入口，poolIds 合并同类题库（题目不删，随机池更大）
@@ -1467,9 +1653,34 @@ async function verifyCode(userId, code) {
   if (res.ok && data.ok) {
     return { ok: true, userId: data.userId || userId || 'default' };
   }
-  if (res.status === 401) return { ok: false, msg: data.error || '账号或访问码无效' };
-  if (res.status === 500) return { ok: false, msg: data.error || '请配置 ACCESS_USERS 或 ACCESS_CODE' };
+  if (res.status === 401) return { ok: false, msg: data.error || '用户名或密码无效' };
+  if (res.status === 500) return { ok: false, msg: data.error || '请配置 REGISTER_INVITE_CODE 或 ACCESS_CODE' };
   return { ok: false, msg: data.error || '验证失败（HTTP ' + res.status + '）' };
+}
+
+async function registerAccount(username, password, invite) {
+  regBtn.disabled = true;
+  regBtn.textContent = '注册中…';
+  hideGateError();
+  try {
+    const res = await fetch('/api/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password, inviteCode: invite })
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || !data.ok) {
+      showGateError(data.error || '注册失败（HTTP ' + res.status + '）');
+      return false;
+    }
+    return await tryEnter(data.userId || username, password, document.getElementById('gateRemember').checked);
+  } catch (e) {
+    showGateError('无法连接服务：' + e.message);
+    return false;
+  } finally {
+    regBtn.disabled = false;
+    regBtn.textContent = '注册并进入';
+  }
 }
 
 async function tryEnter(userId, code, remember) {
@@ -1600,6 +1811,68 @@ function renderNavGroup(nav, cat, catLabel, modules, topicById, firstActiveRef) 
   return { topics, q };
 }
 
+function modeBarHtml() {
+  return `<div class="workspace-mode-bar" role="tablist" aria-label="练习与知识库">
+    <button type="button" class="mode-btn${workspaceMode === 'train' ? ' active' : ''}" data-mode="train" role="tab" aria-selected="${workspaceMode === 'train'}">练习</button>
+    <button type="button" class="mode-btn${workspaceMode === 'knowledge' ? ' active' : ''}" data-mode="knowledge" role="tab" aria-selected="${workspaceMode === 'knowledge'}">知识库</button>
+  </div>`;
+}
+
+function bindModeBar() {
+  document.querySelectorAll('.mode-btn').forEach(btn => {
+    btn.onclick = () => setWorkspaceMode(btn.dataset.mode);
+  });
+}
+
+function setWorkspaceMode(mode) {
+  if (mode !== 'train' && mode !== 'knowledge') return;
+  workspaceMode = mode;
+  if (mode === 'knowledge') renderKnowledgeView();
+  else renderTopics();
+}
+
+async function loadKnowledge() {
+  if (KNOWLEDGE.length) return KNOWLEDGE;
+  const res = await fetch('knowledge.json?t=' + Date.now(), { cache: 'no-store' });
+  if (!res.ok) throw new Error('无法加载 knowledge.json');
+  const data = await res.json();
+  KNOWLEDGE = Array.isArray(data.sections) ? data.sections : [];
+  return KNOWLEDGE;
+}
+
+function renderKnowledgeMarkdownish(text) {
+  return escapeHtml(text)
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\n/g, '<br/>');
+}
+
+function renderKnowledgeView() {
+  const main = document.getElementById('mainContent');
+  main.classList.remove('loading-main');
+  const sectionsHtml = KNOWLEDGE.map(sec => {
+    const cards = (sec.cards || []).map(card => `
+      <article class="knowledge-card">
+        <h4>${escapeHtml(card.title)}</h4>
+        <div class="kc-tags">${(card.tags || []).map(t => `<span class="kc-tag">${escapeHtml(t)}</span>`).join('')}</div>
+        <div class="kc-body">${renderKnowledgeMarkdownish(card.body || '')}</div>
+      </article>
+    `).join('');
+    return `<section class="knowledge-section cat-${escapeHtml(sec.cat || 'ops')}">
+      <h3>${escapeHtml(sec.title)}</h3>
+      <div class="knowledge-grid">${cards}</div>
+    </section>`;
+  }).join('');
+
+  main.innerHTML = `
+    <div class="workspace-shell">
+      ${modeBarHtml()}
+      <p class="knowledge-intro">这里是框架与定义，供阅读记忆。<strong>不需要提交作答</strong>；要练手请切回「练习」。</p>
+      ${sectionsHtml || '<p style="color:var(--ink3)">暂无知识条目</p>'}
+    </div>
+  `;
+  bindModeBar();
+}
+
 function renderTopics() {
   NAV_META = buildNavMeta();
   const main = document.getElementById('mainContent');
@@ -1608,6 +1881,7 @@ function renderTopics() {
   const topicById = topicMap();
   main.innerHTML = `
     <div class="workspace-shell">
+      ${modeBarHtml()}
       <div class="workspace">
         <aside class="workspace-aside" aria-label="训练模块">
           <nav class="module-nav" id="moduleNav"></nav>
@@ -1679,13 +1953,16 @@ function renderTopics() {
   activeTopicId = ordered[0].id;
   updateModuleHead(activeTopicId);
   setupMobileModuleNav(ordered);
+  bindModeBar();
 }
 
 async function loadTopicsAndRender() {
   try {
     TOPICS = await loadTopics();
+    await loadKnowledge();
     setSyncStatus(true);
-    renderTopics();
+    if (workspaceMode === 'knowledge') renderKnowledgeView();
+    else renderTopics();
   } catch (e) {
     setSyncStatus(false, '加载失败：' + e.message);
     document.getElementById('mainContent').innerHTML =
@@ -2141,14 +2418,31 @@ async function bootstrap() {
   initHorizonWave();
   const btnExit = document.getElementById('btnExit');
   if (btnExit) btnExit.onclick = logoutApp;
+  document.querySelectorAll('.gate-tab').forEach(btn => {
+    btn.onclick = () => setGateTab(btn.dataset.gate);
+  });
   gateBtn.onclick = () => {
     const code = gateCode.value.trim();
     const userId = gateUser ? gateUser.value.trim() : '';
-    if (!code) { showGateError('请输入访问码'); return; }
+    if (!code) { showGateError('请输入密码'); return; }
     tryEnter(userId, code, document.getElementById('gateRemember').checked);
   };
+  if (regBtn) {
+    regBtn.onclick = () => {
+      const username = regUser ? regUser.value.trim() : '';
+      const pass = regPass ? regPass.value : '';
+      const pass2 = regPass2 ? regPass2.value : '';
+      const invite = regInvite ? regInvite.value.trim() : '';
+      if (!username) { showGateError('请输入用户名'); return; }
+      if (pass.length < 6) { showGateError('密码至少 6 位'); return; }
+      if (pass !== pass2) { showGateError('两次密码不一致'); return; }
+      if (!invite) { showGateError('请输入邀请码'); return; }
+      registerAccount(username, pass, invite);
+    };
+  }
   gateCode.addEventListener('keydown', e => { if (e.key === 'Enter') gateBtn.click(); });
   if (gateUser) gateUser.addEventListener('keydown', e => { if (e.key === 'Enter') gateBtn.click(); });
+  if (regPass2) regPass2.addEventListener('keydown', e => { if (e.key === 'Enter' && regBtn) regBtn.click(); });
 
   const remembered = localStorage.getItem(CODE_KEY);
   const rememberedUser = localStorage.getItem(USER_ID_KEY) || '';
