@@ -649,7 +649,14 @@
     max-width: 40em;
   }
   .knowledge-section {
-    margin-bottom: 1.75rem;
+    margin-bottom: 2rem;
+  }
+  .knowledge-section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 0.85rem;
   }
   .knowledge-section h3 {
     font-size: 13px;
@@ -657,25 +664,101 @@
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--ink3);
-    margin-bottom: 0.75rem;
+    margin-bottom: 0;
+  }
+  .knowledge-counter {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink3);
+    font-variant-numeric: tabular-nums;
   }
   .knowledge-section.cat-product h3 { color: var(--product); }
   .knowledge-section.cat-ops h3 { color: var(--ops); }
   .knowledge-section.cat-interview h3 { color: var(--interview); }
-  .knowledge-grid {
-    display: grid;
-    gap: 12px;
-    grid-template-columns: 1fr;
+  .knowledge-stack-stage {
+    position: relative;
+    margin-bottom: 12px;
+    min-height: 160px;
+    transition: height 0.25s ease;
   }
-  @media (min-width: 720px) {
-    .knowledge-grid { grid-template-columns: 1fr 1fr; }
-  }
-  .knowledge-card {
-    padding: 1rem 1.15rem;
+  .knowledge-stack-stage .knowledge-card {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    padding: 1.15rem 1.25rem;
     border-radius: var(--r-lg);
-    background: rgba(255, 255, 255, 0.72);
+    background: rgba(255, 255, 255, 0.88);
     border: 1px solid var(--frost-border);
-    box-shadow: var(--inset-hi);
+    box-shadow: var(--shadow-sm), var(--inset-hi);
+    transition: transform 0.32s cubic-bezier(0.34, 1.2, 0.64, 1), opacity 0.28s ease;
+    transform-origin: top center;
+    will-change: transform, opacity;
+  }
+  .knowledge-card.stack-active {
+    z-index: 3;
+    transform: translateY(0) scale(1);
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .knowledge-card.stack-behind-1 {
+    z-index: 2;
+    transform: translateY(12px) scale(0.975);
+    opacity: 0.72;
+    pointer-events: none;
+  }
+  .knowledge-card.stack-behind-2 {
+    z-index: 1;
+    transform: translateY(24px) scale(0.95);
+    opacity: 0.45;
+    pointer-events: none;
+  }
+  .knowledge-card.stack-gone {
+    z-index: 0;
+    transform: translateX(-28px) scale(0.94);
+    opacity: 0;
+    pointer-events: none;
+  }
+  .knowledge-stack-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+  .kc-nav {
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 14px;
+    border-radius: var(--r);
+    border: 1px solid var(--frost-border);
+    background: rgba(255, 255, 255, 0.65);
+    color: var(--ink2);
+    cursor: pointer;
+    transition: background 0.2s, opacity 0.2s;
+  }
+  .kc-nav:hover:not(:disabled) { background: #fff; color: var(--ink); }
+  .kc-nav:disabled { opacity: 0.38; cursor: not-allowed; }
+  .kc-dots {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    min-width: 48px;
+    justify-content: center;
+  }
+  .kc-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.12);
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.2s;
+  }
+  .kc-dot.active {
+    background: var(--btn-green-base);
+    transform: scale(1.25);
   }
   .knowledge-card h4 {
     font-size: 15px;
@@ -1419,7 +1502,7 @@
 
   <div id="mainContent" class="loading-main">加载训练模块…</div>
 
-  <footer class="footer"><span class="footer-brand" aria-label="MindTraining"><span class="hb-mind">Mind</span><span class="hb-train">Training</span></span> · 仅供学习使用 · <a class="footer-link" href="/download">下载 · 开源</a> · <a class="footer-link" href="https://github.com/mianei/ops-trainer" target="_blank" rel="noopener noreferrer">GitHub</a> · <span id="buildTag">v4.39</span></footer>
+  <footer class="footer"><span class="footer-brand" aria-label="MindTraining"><span class="hb-mind">Mind</span><span class="hb-train">Training</span></span> · 仅供学习使用 · <a class="footer-link" href="/download">下载 · 开源</a> · <a class="footer-link" href="https://github.com/mianei/ops-trainer" target="_blank" rel="noopener noreferrer">GitHub</a> · <span id="buildTag">v4.40</span></footer>
   </div>
 </div>
 
@@ -1846,31 +1929,114 @@ function renderKnowledgeMarkdownish(text) {
     .replace(/\n/g, '<br/>');
 }
 
+function knowledgeCardHtml(card, index) {
+  return `<article class="knowledge-card" data-kc-index="${index}">
+    <h4>${escapeHtml(card.title)}</h4>
+    <div class="kc-tags">${(card.tags || []).map(t => `<span class="kc-tag">${escapeHtml(t)}</span>`).join('')}</div>
+    <div class="kc-body">${renderKnowledgeMarkdownish(card.body || '')}</div>
+  </article>`;
+}
+
+function updateKnowledgeStack(stackEl, index) {
+  const cards = stackEl.querySelectorAll('.knowledge-card');
+  const total = cards.length;
+  if (!total) return;
+  const i = Math.max(0, Math.min(index, total - 1));
+  stackEl.dataset.kcActive = String(i);
+  cards.forEach((card, ci) => {
+    card.classList.remove('stack-active', 'stack-behind-1', 'stack-behind-2', 'stack-gone');
+    if (ci < i) card.classList.add('stack-gone');
+    else if (ci === i) card.classList.add('stack-active');
+    else if (ci === i + 1) card.classList.add('stack-behind-1');
+    else if (ci === i + 2) card.classList.add('stack-behind-2');
+    else card.classList.add('stack-gone');
+  });
+  const stage = stackEl.querySelector('.knowledge-stack-stage');
+  const active = cards[i];
+  if (stage && active) {
+    stage.style.height = (active.offsetHeight + (i < total - 1 ? 28 : 0)) + 'px';
+  }
+  const section = stackEl.closest('.knowledge-section');
+  const counter = section && section.querySelector('.knowledge-counter');
+  if (counter) counter.textContent = (i + 1) + ' / ' + total;
+  const prev = stackEl.querySelector('.kc-nav.prev');
+  const next = stackEl.querySelector('.kc-nav.next');
+  if (prev) prev.disabled = i <= 0;
+  if (next) next.disabled = i >= total - 1;
+  stackEl.querySelectorAll('.kc-dot').forEach((dot, di) => {
+    dot.classList.toggle('active', di === i);
+  });
+}
+
+function bindKnowledgeStacks() {
+  document.querySelectorAll('.knowledge-stack').forEach(stackEl => {
+    const total = stackEl.querySelectorAll('.knowledge-card').length;
+    let index = 0;
+    const go = (next) => {
+      index = Math.max(0, Math.min(next, total - 1));
+      updateKnowledgeStack(stackEl, index);
+    };
+    stackEl.querySelector('.kc-nav.prev')?.addEventListener('click', () => go(index - 1));
+    stackEl.querySelector('.kc-nav.next')?.addEventListener('click', () => go(index + 1));
+    stackEl.querySelectorAll('.kc-dot').forEach(dot => {
+      dot.addEventListener('click', () => go(Number(dot.dataset.index)));
+    });
+    let touchX = 0;
+    const stage = stackEl.querySelector('.knowledge-stack-stage');
+    if (stage) {
+      stage.addEventListener('touchstart', e => { touchX = e.changedTouches[0].clientX; }, { passive: true });
+      stage.addEventListener('touchend', e => {
+        const dx = e.changedTouches[0].clientX - touchX;
+        if (Math.abs(dx) < 40) return;
+        if (dx < 0) go(index + 1);
+        else go(index - 1);
+      }, { passive: true });
+    }
+    updateKnowledgeStack(stackEl, 0);
+  });
+}
+
+function reflowKnowledgeStacks() {
+  document.querySelectorAll('.knowledge-stack').forEach(stackEl => {
+    updateKnowledgeStack(stackEl, Number(stackEl.dataset.kcActive || 0));
+  });
+}
+
 function renderKnowledgeView() {
   const main = document.getElementById('mainContent');
   main.classList.remove('loading-main');
   const sectionsHtml = KNOWLEDGE.map(sec => {
-    const cards = (sec.cards || []).map(card => `
-      <article class="knowledge-card">
-        <h4>${escapeHtml(card.title)}</h4>
-        <div class="kc-tags">${(card.tags || []).map(t => `<span class="kc-tag">${escapeHtml(t)}</span>`).join('')}</div>
-        <div class="kc-body">${renderKnowledgeMarkdownish(card.body || '')}</div>
-      </article>
-    `).join('');
+    const cardList = sec.cards || [];
+    const cards = cardList.map((card, i) => knowledgeCardHtml(card, i)).join('');
+    const dots = cardList.map((_, i) =>
+      `<button type="button" class="kc-dot${i === 0 ? ' active' : ''}" data-index="${i}" aria-label="第 ${i + 1} 张"></button>`
+    ).join('');
+    const total = cardList.length;
     return `<section class="knowledge-section cat-${escapeHtml(sec.cat || 'ops')}">
-      <h3>${escapeHtml(sec.title)}</h3>
-      <div class="knowledge-grid">${cards}</div>
+      <div class="knowledge-section-head">
+        <h3>${escapeHtml(sec.title)}</h3>
+        <span class="knowledge-counter">${total ? '1 / ' + total : ''}</span>
+      </div>
+      <div class="knowledge-stack" data-section-id="${escapeHtml(sec.id || '')}">
+        <div class="knowledge-stack-stage">${cards || '<p style="color:var(--ink3);position:relative">暂无条目</p>'}</div>
+        ${total > 1 ? `<div class="knowledge-stack-nav">
+          <button type="button" class="kc-nav prev" disabled aria-label="上一张">← 上一张</button>
+          <div class="kc-dots">${dots}</div>
+          <button type="button" class="kc-nav next" aria-label="下一张">下一张 →</button>
+        </div>` : ''}
+      </div>
     </section>`;
   }).join('');
 
   main.innerHTML = `
     <div class="workspace-shell">
       ${modeBarHtml()}
-      <p class="knowledge-intro">这里是框架与定义，供阅读记忆。<strong>不需要提交作答</strong>；要练手请切回「练习」。</p>
+      <p class="knowledge-intro">框架与定义供阅读记忆，<strong>不需要提交作答</strong>。左右切换或滑动翻看卡片；要练手请切回「练习」。</p>
       ${sectionsHtml || '<p style="color:var(--ink3)">暂无知识条目</p>'}
     </div>
   `;
   bindModeBar();
+  bindKnowledgeStacks();
 }
 
 function renderTopics() {
@@ -2416,6 +2582,7 @@ function initHeroWaveform() {
 async function bootstrap() {
   initMobile();
   initHorizonWave();
+  window.addEventListener('resize', reflowKnowledgeStacks);
   const btnExit = document.getElementById('btnExit');
   if (btnExit) btnExit.onclick = logoutApp;
   document.querySelectorAll('.gate-tab').forEach(btn => {
