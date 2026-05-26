@@ -1,19 +1,22 @@
-# 密钥和本地配置，切勿上传
-api token.txt
-ds api claude.txt
+# 密钥和本地配置
 .env
 .env.*
+*token*.txt
+*api*.txt
 
-# 本地文档（勿上传 GitHub）
+# 旧版 / 草稿（勿再提交）
+ops-trainer.html
+ops-trainer.jsx
+Tablet.png
 *.docx
 *.xlsx
 
-# 系统文件
+# 系统与工具
 .DS_Store
 Thumbs.db
-
 .vercel
-
-# Desktop (Electron)
 desktop/node_modules/
 desktop/dist/
+
+# 本地维护笔记（可选保留在本地）
+题库*.md
