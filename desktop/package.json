@@ -1,0 +1,40 @@
+{
+  "name": "mindtraining-desktop",
+  "version": "1.0.0",
+  "description": "MindTraining 桌面壳（个人用，加载线上训练站）",
+  "main": "main.js",
+  "author": "mianei",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "build:win": "electron-builder --win portable --x64"
+  },
+  "devDependencies": {
+    "electron": "^33.2.0",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "app.mindtraining.desktop",
+    "productName": "MindTraining",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "portable",
+          "arch": ["x64"]
+        }
+      ],
+      "artifactName": "MindTraining-${version}-Windows-portable.${ext}"
+    },
+    "portable": {
+      "artifactName": "MindTraining-${version}-Windows-portable.${ext}"
+    }
+  }
+}

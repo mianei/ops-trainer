@@ -8,6 +8,25 @@
 | **下载 / 开源说明** | https://ops-trainer.vercel.app/download |
 | **GitHub 仓库** | https://github.com/mianei/ops-trainer |
 | **下载源码 ZIP** | https://github.com/mianei/ops-trainer/archive/refs/heads/main.zip |
+| **Windows 桌面版** | [Releases](https://github.com/mianei/ops-trainer/releases)（见 `desktop/` 目录说明） |
+
+---
+
+## 桌面版（仅个人用 · 免费）
+
+在 `desktop/` 目录用 Electron 打包，生成 **单个 `.exe`**，仍连接线上 Vercel，**不用买签名证书**（自用可忽略 Windows 安全提示）。
+
+**本机打包：**
+
+```bash
+cd desktop
+npm install
+npm run build:win
+```
+
+**GitHub 自动打包：** 推送标签 `desktop-v1.0.0` 后，Actions 会把 `.exe` 附到 [Releases](https://github.com/mianei/ops-trainer/releases)。
+
+详见 [desktop/README.md](./desktop/README.md)。
 
 ---
 
