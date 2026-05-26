@@ -927,6 +927,12 @@
     text-align: center; padding: 2rem 24px 3rem;
     font-size: 12px; color: var(--ink3);
   }
+  .footer-link {
+    color: var(--ink2);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  }
+  .footer-link:hover { color: var(--accent); border-bottom-color: var(--accent); }
   .footer-brand {
     font-family: var(--sans-en);
     font-size: 13px;
@@ -1218,7 +1224,7 @@
 
   <div id="mainContent" class="loading-main">加载训练模块…</div>
 
-  <footer class="footer"><span class="footer-brand" aria-label="MindTraining"><span class="hb-mind">Mind</span><span class="hb-train">Training</span></span> · 仅供学习使用 · <span id="buildTag">v4.33</span></footer>
+  <footer class="footer"><span class="footer-brand" aria-label="MindTraining"><span class="hb-mind">Mind</span><span class="hb-train">Training</span></span> · 仅供学习使用 · <a class="footer-link" href="/download">下载 · 开源</a> · <a class="footer-link" href="https://github.com/mianei/ops-trainer" target="_blank" rel="noopener noreferrer">GitHub</a> · <span id="buildTag">v4.35</span></footer>
   </div>
 </div>
 

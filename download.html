@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>MindTraining · 下载与开源</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0a0a0b;
+    --card: #141416;
+    --card-hover: #1a1a1e;
+    --border: rgba(255,255,255,0.08);
+    --border-active: rgba(38, 194, 129, 0.55);
+    --ink: #f5f5f7;
+    --ink2: #a1a1a6;
+    --green: #26c281;
+    --sans: 'PingFang SC', 'Microsoft YaHei', -apple-system, sans-serif;
+  }
+  html, body {
+    min-height: 100vh;
+    min-height: 100dvh;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; }
+  .wrap {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: max(20px, env(safe-area-inset-top)) 20px max(40px, env(safe-area-inset-bottom));
+  }
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 3rem;
+    font-size: 14px;
+  }
+  .brand {
+    font-family: 'Syne', var(--sans);
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+  }
+  .brand .t { font-family: 'Outfit', var(--sans); font-weight: 700; color: var(--green); }
+  .back { color: var(--ink2); transition: color 0.2s; }
+  .back:hover { color: var(--ink); }
+  .hero {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+    margin-bottom: 2.5rem;
+  }
+  .hero-icon {
+    flex-shrink: 0;
+    width: 72px;
+    height: 72px;
+    border-radius: 20px;
+    background: linear-gradient(145deg, rgba(38,194,129,0.25), rgba(38,194,129,0.08));
+    border: 1px solid rgba(38,194,129,0.3);
+    display: grid;
+    place-items: center;
+    font-size: 32px;
+  }
+  .hero h1 {
+    font-size: clamp(1.5rem, 5vw, 2rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.2;
+    margin-bottom: 0.65rem;
+  }
+  .hero p {
+    color: var(--ink2);
+    font-size: 15px;
+    line-height: 1.55;
+  }
+  .note {
+    font-size: 13px;
+    color: var(--ink2);
+    margin-bottom: 1rem;
+  }
+  .grid {
+    display: grid;
+    gap: 12px;
+  }
+  @media (min-width: 560px) {
+    .grid { grid-template-columns: 1fr 1fr; }
+    .grid .card-primary { grid-column: 1 / -1; }
+  }
+  .card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 18px;
+    border-radius: 14px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    transition: background 0.2s, border-color 0.2s, transform 0.15s;
+  }
+  .card:hover {
+    background: var(--card-hover);
+    border-color: rgba(255,255,255,0.14);
+    transform: translateY(-1px);
+  }
+  .card.active {
+    border-color: var(--border-active);
+    box-shadow: 0 0 0 1px rgba(38,194,129,0.15);
+  }
+  .card-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.06);
+    display: grid;
+    place-items: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .card-body { flex: 1; min-width: 0; }
+  .card-body strong {
+    display: block;
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+  .card-body span {
+    font-size: 12px;
+    color: var(--ink2);
+  }
+  .card-arrow {
+    color: var(--ink2);
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .steps {
+    margin-top: 2.5rem;
+    padding: 1.25rem 1.35rem;
+    border-radius: 14px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+  }
+  .steps h2 {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--ink2);
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+  }
+  .steps ol {
+    padding-left: 1.2rem;
+    color: var(--ink2);
+    font-size: 14px;
+    line-height: 1.7;
+  }
+  .steps li { margin-bottom: 0.35rem; }
+  .steps a { color: var(--green); text-decoration: underline; text-underline-offset: 2px; }
+  .footer {
+    margin-top: 2.5rem;
+    text-align: center;
+    font-size: 12px;
+    color: var(--ink2);
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <div class="brand">Mind<span class="t">Training</span></div>
+    <a class="back" href="/">← 返回训练场</a>
+  </header>
+
+  <section class="hero">
+    <div class="hero-icon" aria-hidden="true">🧠</div>
+    <div>
+      <h1>这是网页应用，不是安装包</h1>
+      <p>MindTraining 在浏览器里打开就能用，不需要像 Voicebox 那样下载 .msi / .dmg。源码已放在 GitHub 上开源，开发者可以下载代码自己部署。</p>
+    </div>
+  </section>
+
+  <p class="note">选择一种方式开始使用 ↓</p>
+
+  <div class="grid">
+    <a class="card card-primary active" href="https://ops-trainer.vercel.app" id="cardOnline">
+      <div class="card-icon">🌐</div>
+      <div class="card-body">
+        <strong>在线使用（推荐）</strong>
+        <span>打开网址 → 输入访问码 → 开始训练</span>
+      </div>
+      <span class="card-arrow">→</span>
+    </a>
+    <a class="card" href="https://github.com/mianei/ops-trainer/archive/refs/heads/main.zip" download>
+      <div class="card-icon">📦</div>
+      <div class="card-body">
+        <strong>下载源码 ZIP</strong>
+        <span>解压后可本地预览或自己部署</span>
+      </div>
+      <span class="card-arrow">↓</span>
+    </a>
+    <a class="card" href="https://github.com/mianei/ops-trainer" target="_blank" rel="noopener noreferrer">
+      <div class="card-icon">⭐</div>
+      <div class="card-body">
+        <strong>GitHub 开源仓库</strong>
+        <span>查看代码 · Fork · Star</span>
+      </div>
+      <span class="card-arrow">↗</span>
+    </a>
+  </div>
+
+  <section class="steps">
+    <h2>GitHub 开源 · 3 步搞定</h2>
+    <ol>
+      <li>打开 <a href="https://github.com/mianei/ops-trainer/settings" target="_blank" rel="noopener">仓库 Settings</a>，确认是 <strong>Public</strong>（公开），别人才能看到和下载</li>
+      <li>代码已在仓库里；别人点绿色 <strong>Code → Download ZIP</strong> 就能下载</li>
+      <li>（可选）在 <a href="https://github.com/mianei/ops-trainer/releases/new" target="_blank" rel="noopener">Releases</a> 发一个版本号如 <strong>v4.34</strong>，更像正式「发版」</li>
+    </ol>
+  </section>
+
+  <p class="footer">MIT 开源 · 仅供学习使用</p>
+</div>
+<script>
+(function () {
+  var p = new URLSearchParams(location.search).get('from');
+  if (p === 'online') {
+    document.getElementById('cardOnline').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+})();
+</script>
+</body>
+</html>
