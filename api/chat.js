@@ -1,20 +1,18 @@
 export const config = { runtime: 'edge' };
 
-function json(body, status = 200) {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { 'content-type': 'application/json; charset=utf-8' }
-  });
-}
-
-function getHeader(req, name) {
-  const h = req.headers;
-  if (!h) return null;
-  if (typeof h.get === 'function') return h.get(name);
-  const lower = name.toLowerCase();
-  const val = h[lower] ?? h[name];
-  return Array.isArray(val) ? val[0] : val ?? null;
-}
+import {
+  json,
+  getHeader,
+  readJsonBody,
+  verifyUserCredentials,
+  historyEnabled,
+  loadTopicAttempts,
+  priorSameScenario,
+  saveAttempt,
+  HISTORY_PROMPT_SUFFIX,
+  formatPriorForPrompt,
+  upstashCall
+} from './lib/store.js';
 
 function getClientIp(req) {
   const xff = getHeader(req, 'x-forwarded-for');
@@ -22,40 +20,8 @@ function getClientIp(req) {
   return getHeader(req, 'x-real-ip') || 'unknown';
 }
 
-async function readJsonBody(req) {
-  if (typeof req.json === 'function') {
-    try {
-      return await req.json();
-    } catch {
-      return null;
-    }
-  }
-  if (typeof req.text === 'function') {
-    try {
-      const raw = await req.text();
-      return raw ? JSON.parse(raw) : {};
-    } catch {
-      return null;
-    }
-  }
-  return {};
-}
-
 function todayKey() {
   return new Date().toISOString().slice(0, 10);
-}
-
-async function upstashCall(command) {
-  const url = process.env.UPSTASH_REDIS_REST_URL;
-  const token = process.env.UPSTASH_REDIS_REST_TOKEN;
-  if (!url || !token) return null;
-
-  const res = await fetch(`${url}/${command.map(encodeURIComponent).join('/')}`, {
-    headers: { Authorization: `Bearer ${token}` }
-  });
-  if (!res.ok) return null;
-  const data = await res.json();
-  return data.result;
 }
 
 async function checkAndIncrLimit(ip) {
@@ -85,10 +51,8 @@ async function checkAndIncrLimit(ip) {
   return { ok: true, ipCount, totalCount };
 }
 
-/** 优先 DeepSeek，其次 Anthropic；也可用 AI_PROVIDER=deepseek|anthropic 指定 */
 function getLlmConfig() {
   const provider = (process.env.AI_PROVIDER || '').trim().toLowerCase();
-
   const deepseekKey = process.env.DEEPSEEK_API_KEY?.trim();
   const anthropicKey = process.env.ANTHROPIC_API_KEY?.trim();
 
@@ -118,9 +82,7 @@ function getLlmConfig() {
     };
   }
 
-  return {
-    error: '请在 Vercel 配置 DEEPSEEK_API_KEY（推荐）或 ANTHROPIC_API_KEY'
-  };
+  return { error: '请在 Vercel 配置 DEEPSEEK_API_KEY（推荐）或 ANTHROPIC_API_KEY' };
 }
 
 const FOLLOWUP_SYSTEM_SUFFIX =
@@ -150,7 +112,7 @@ async function callDeepSeek(cfg, systemPrompt, userContent, multiTurn) {
     },
     body: JSON.stringify({
       model: cfg.model,
-      max_tokens: 1000,
+      max_tokens: 1200,
       messages: buildChatMessages(systemPrompt, userContent, multiTurn)
     })
   });
@@ -167,7 +129,7 @@ async function callDeepSeek(cfg, systemPrompt, userContent, multiTurn) {
 async function callAnthropic(cfg, systemPrompt, userContent, multiTurn) {
   const sys = systemPrompt + (multiTurn ? FOLLOWUP_SYSTEM_SUFFIX : '');
   const messages = multiTurn
-    ? multiTurn.filter(m => m.role === 'user' || m.role === 'assistant')
+    ? multiTurn.filter((m) => m.role === 'user' || m.role === 'assistant')
     : [{ role: 'user', content: userContent }];
 
   const res = await fetch('https://api.anthropic.com/v1/messages', {
@@ -179,7 +141,7 @@ async function callAnthropic(cfg, systemPrompt, userContent, multiTurn) {
     },
     body: JSON.stringify({
       model: cfg.model,
-      max_tokens: 1000,
+      max_tokens: 1200,
       system: sys,
       messages
     })
@@ -198,19 +160,17 @@ export default async function handler(req) {
     return json({ error: 'Method not allowed' }, 405);
   }
 
-  const expected = (process.env.ACCESS_CODE || '').trim();
-  if (!expected) {
-    return json({ error: '服务端未配置 ACCESS_CODE' }, 500);
-  }
-
   const body = (await readJsonBody(req)) || {};
-  const provided = ((getHeader(req, 'x-access-code') || body.accessCode || '') + '').trim();
-  if (!provided || provided !== expected) {
-    return json({ error: '访问码无效' }, 401);
+  const userId = getHeader(req, 'x-user-id') || body.userId || '';
+  const code = getHeader(req, 'x-access-code') || body.accessCode || '';
+
+  const auth = verifyUserCredentials(userId, code);
+  if (!auth.ok) {
+    return json({ error: auth.error }, auth.status);
   }
 
   if (body?.action === 'verify') {
-    return json({ ok: true });
+    return json({ ok: true, userId: auth.userId });
   }
 
   const llm = getLlmConfig();
@@ -220,6 +180,7 @@ export default async function handler(req) {
 
   const mode = body?.mode === 'followup' ? 'followup' : 'review';
   const { systemPrompt, scenario, answer } = body || {};
+  const topicId = body.topicId || body.topic || '';
 
   if (!systemPrompt || !scenario) {
     return json({ error: '参数缺失' }, 400);
@@ -227,6 +188,9 @@ export default async function handler(req) {
 
   let userContent = '';
   let multiTurn = null;
+  let reviewSystemPrompt = systemPrompt;
+  let attemptNumber = 1;
+  let comparedWith = 0;
 
   if (mode === 'followup') {
     const { priorFeedback, question, history } = body;
@@ -249,10 +213,7 @@ export default async function handler(req) {
     }
 
     multiTurn = [
-      {
-        role: 'user',
-        content: `业务场景：${scenario}\n\n学员初答：${answer}`
-      },
+      { role: 'user', content: `业务场景：${scenario}\n\n学员初答：${answer}` },
       { role: 'assistant', content: priorFeedback }
     ];
     for (const h of history) {
@@ -268,7 +229,21 @@ export default async function handler(req) {
     if (typeof answer !== 'string' || answer.length > 4000) {
       return json({ error: '答案过长或格式错误' }, 400);
     }
-    userContent = `业务场景：${scenario}\n\n我的分析：${answer}`;
+
+    if (historyEnabled() && topicId) {
+      const all = await loadTopicAttempts(auth.userId, topicId);
+      const prior = priorSameScenario(all, scenario);
+      comparedWith = prior.length;
+      attemptNumber = prior.length + 1;
+      if (prior.length) {
+        reviewSystemPrompt = systemPrompt + HISTORY_PROMPT_SUFFIX;
+        userContent = `业务场景：${scenario}\n\n我的分析：${answer}${formatPriorForPrompt(prior)}`;
+      } else {
+        userContent = `业务场景：${scenario}\n\n我的分析：${answer}`;
+      }
+    } else {
+      userContent = `业务场景：${scenario}\n\n我的分析：${answer}`;
+    }
   }
 
   const ip = getClientIp(req);
@@ -283,13 +258,27 @@ export default async function handler(req) {
   try {
     const result =
       llm.provider === 'deepseek'
-        ? await callDeepSeek(llm, systemPrompt, userContent, multiTurn)
-        : await callAnthropic(llm, systemPrompt, userContent, multiTurn);
+        ? await callDeepSeek(llm, reviewSystemPrompt, userContent, multiTurn)
+        : await callAnthropic(llm, reviewSystemPrompt, userContent, multiTurn);
 
     if (result.error) {
       return json({ error: result.error }, result.status || 502);
     }
-    return json({ text: result.text });
+
+    if (mode === 'review' && historyEnabled() && topicId) {
+      await saveAttempt(auth.userId, topicId, {
+        scenario,
+        answer,
+        feedback: result.text
+      });
+    }
+
+    return json({
+      text: result.text,
+      attemptNumber,
+      comparedWith,
+      historyEnabled: historyEnabled()
+    });
   } catch (e) {
     return json({ error: '上游调用失败：' + e.message }, 502);
   }

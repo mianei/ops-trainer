@@ -49,7 +49,10 @@
 
 | 变量 | 说明 |
 |------|------|
-| `ACCESS_CODE` | 访问码 |
+| `ACCESS_USERS` | **多人账号**，格式 `zhangsan:码1,lisi:码2` 或 JSON `{"zhangsan":"码1"}` |
+| `ACCESS_CODE` | 未配置 `ACCESS_USERS` 时的单一访问码（账号可留空） |
+| `UPSTASH_REDIS_REST_URL` | **答题记录**与限流（记录功能必需） |
+| `UPSTASH_REDIS_REST_TOKEN` | Upstash Token |
 | `DEEPSEEK_API_KEY` | DeepSeek API Key（推荐） |
 | `DEEPSEEK_MODEL` | 可选，默认 `deepseek-chat` |
 | `ANTHROPIC_API_KEY` | Claude API Key（与 DeepSeek 二选一） |
@@ -61,6 +64,12 @@
 | `DAILY_TOTAL_LIMIT` | 可选 |
 
 3. 修改环境变量后需重新部署（Redeploy）
+
+### 一人一号与答题记录
+
+- 在 Vercel 配置 `ACCESS_USERS`，为每位朋友分配独立账号与访问码
+- 配置 [Upstash Redis](https://upstash.com) 并填入 `UPSTASH_REDIS_*`，系统会按「账号 + 模块 + 同一道题」保存作答
+- 再次作答同一道题时，AI 点评会自动增加 **「与上次相比」** 小节（不打分，仅对比进步）
 
 请勿将密钥写入代码或提交至仓库；`.env` 已列入 `.gitignore`。
 

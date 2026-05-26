@@ -401,6 +401,26 @@
   }
   .gate-error.visible { display: block; }
   .gate-hint { margin-top: 1rem; font-size: 11px; color: var(--ink3); text-align: center; }
+  .user-badge {
+    position: fixed;
+    top: max(14px, env(safe-area-inset-top));
+    left: max(18px, env(safe-area-inset-left));
+    z-index: 20;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink3);
+    padding: 8px 14px;
+    border-radius: 980px;
+    background: var(--frost);
+    border: 1px solid var(--frost-border);
+    box-shadow: var(--inset-hi);
+  }
+  .review-meta {
+    font-size: 12px;
+    color: var(--ink3);
+    margin-bottom: 0.75rem;
+    line-height: 1.5;
+  }
 
   /* —— 主应用 —— */
   #app { display: none; position: relative; z-index: 1; min-height: 100vh; }
@@ -1084,6 +1104,16 @@
       padding: 10px 14px;
       font-size: 14px;
     }
+    .user-badge {
+      top: max(10px, env(safe-area-inset-top));
+      left: max(12px, env(safe-area-inset-left));
+      font-size: 11px;
+      padding: 8px 12px;
+      max-width: 42vw;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
     .case-body,
     .feedback-body,
     .fu-msg {
@@ -1156,10 +1186,14 @@
     </div>
     <div class="gate-card surface">
       <h2>进入训练场</h2>
-      <p class="sub">请输入访问码。由站长发放，仅用于身份校验。</p>
+      <p class="sub">每人一个账号与访问码，作答记录保存在云端，同题再练时会对比进步。</p>
+      <div class="gate-field">
+        <label for="gateUser">账号</label>
+        <input type="text" id="gateUser" placeholder="站长分配的用户名" autocomplete="username" autocapitalize="off" />
+      </div>
       <div class="gate-field">
         <label for="gateCode">访问码</label>
-        <input type="password" id="gateCode" placeholder="请输入" autocomplete="off" />
+        <input type="password" id="gateCode" placeholder="请输入" autocomplete="current-password" />
       </div>
       <label class="gate-remember">
         <input type="checkbox" id="gateRemember" checked />
@@ -1167,7 +1201,7 @@
       </label>
       <button class="btn-enter" id="gateBtn" type="button">开始训练</button>
       <div class="gate-error" id="gateError"></div>
-      <p class="gate-hint">请用 Safari / Chrome 打开 · 微信内请「在浏览器打开」</p>
+      <p class="gate-hint">仅配置单一访问码时可留空账号 · 请用 Safari / Chrome 打开</p>
     </div>
     </div>
   </div>
@@ -1203,6 +1237,7 @@
     <div class="bg-blob bg-blob-3"></div>
   </div>
   <button type="button" class="btn-exit" id="btnExit" aria-label="退出训练">退出</button>
+  <div class="user-badge" id="userBadge" hidden></div>
   <div class="page-wrap">
 
   <section class="hero-compact">
@@ -1224,7 +1259,7 @@
 
   <div id="mainContent" class="loading-main">加载训练模块…</div>
 
-  <footer class="footer"><span class="footer-brand" aria-label="MindTraining"><span class="hb-mind">Mind</span><span class="hb-train">Training</span></span> · 仅供学习使用 · <a class="footer-link" href="/download">下载 · 开源</a> · <a class="footer-link" href="https://github.com/mianei/ops-trainer" target="_blank" rel="noopener noreferrer">GitHub</a> · <span id="buildTag">v4.35</span></footer>
+  <footer class="footer"><span class="footer-brand" aria-label="MindTraining"><span class="hb-mind">Mind</span><span class="hb-train">Training</span></span> · 仅供学习使用 · <a class="footer-link" href="/download">下载 · 开源</a> · <a class="footer-link" href="https://github.com/mianei/ops-trainer" target="_blank" rel="noopener noreferrer">GitHub</a> · <span id="buildTag">v4.36</span></footer>
   </div>
 </div>
 
@@ -1232,10 +1267,12 @@
 const GITHUB_TOPICS_URL = '';
 
 const CODE_KEY = 'ops-access-code';
+const USER_ID_KEY = 'ops-user-id';
 const SESSION_UNTIL_KEY = 'ops-session-until';
 const REMEMBER_DAYS = 7;
 
 let accessCode = '';
+let userAccountId = '';
 let TOPICS = [];
 let activeTopicId = '';
 /** @type {Record<string, { scenario: string, answer: string, feedback: string, history: {q:string,a:string}[] }>} */
@@ -1244,6 +1281,7 @@ const mentorSessions = {};
 const gate = document.getElementById('gate');
 const app = document.getElementById('app');
 const gateCode = document.getElementById('gateCode');
+const gateUser = document.getElementById('gateUser');
 const gateBtn = document.getElementById('gateBtn');
 const gateError = document.getElementById('gateError');
 
@@ -1362,9 +1400,25 @@ function isSessionValid() {
 
 function clearSession() {
   accessCode = '';
+  userAccountId = '';
   sessionStorage.removeItem(CODE_KEY);
+  sessionStorage.removeItem(USER_ID_KEY);
   localStorage.removeItem(CODE_KEY);
+  localStorage.removeItem(USER_ID_KEY);
   localStorage.removeItem(SESSION_UNTIL_KEY);
+  const badge = document.getElementById('userBadge');
+  if (badge) badge.hidden = true;
+}
+
+function updateUserBadge() {
+  const badge = document.getElementById('userBadge');
+  if (!badge) return;
+  if (userAccountId && userAccountId !== 'default') {
+    badge.textContent = userAccountId;
+    badge.hidden = false;
+  } else {
+    badge.hidden = true;
+  }
 }
 
 function logoutApp() {
@@ -1376,6 +1430,7 @@ function logoutApp() {
 function unlockApp() {
   gate.classList.add('hidden');
   app.classList.add('visible');
+  updateUserBadge();
   if (!document.documentElement.classList.contains('is-mobile')) {
     initHeroWaveform();
   }
@@ -1385,45 +1440,52 @@ function lockApp() {
   gate.classList.remove('hidden');
   app.classList.remove('visible');
   gateCode.value = '';
+  if (gateUser) gateUser.value = '';
   hideGateError();
 }
 
-function authHeaders(code) {
+function authHeaders() {
   return {
     'Content-Type': 'application/json',
-    'X-Access-Code': code
+    'X-Access-Code': accessCode,
+    'X-User-Id': userAccountId || sessionStorage.getItem(USER_ID_KEY) || ''
   };
 }
 
-async function verifyCode(code) {
+async function verifyCode(userId, code) {
   const headers = {
     'Content-Type': 'application/json',
     'X-Access-Code': code,
-    'X-Verify-Only': '1'
+    'X-User-Id': userId || ''
   };
-  const payload = JSON.stringify({ action: 'verify', accessCode: code });
-  let res = await fetch('/api/verify', { method: 'POST', headers: { 'X-Access-Code': code } });
+  const payload = JSON.stringify({ action: 'verify', accessCode: code, userId: userId || '' });
+  let res = await fetch('/api/verify', { method: 'POST', headers, body: payload });
   if (res.status === 404 || res.status === 400) {
     res = await fetch('/api/chat', { method: 'POST', headers, body: payload });
   }
   const data = await res.json().catch(() => ({}));
-  if (res.ok && data.ok) return { ok: true };
-  if (res.status === 401) return { ok: false, msg: '访问码无效，请与 Vercel 中 ACCESS_CODE 一致' };
-  if (res.status === 500) return { ok: false, msg: data.error || '请配置 ACCESS_CODE' };
+  if (res.ok && data.ok) {
+    return { ok: true, userId: data.userId || userId || 'default' };
+  }
+  if (res.status === 401) return { ok: false, msg: data.error || '账号或访问码无效' };
+  if (res.status === 500) return { ok: false, msg: data.error || '请配置 ACCESS_USERS 或 ACCESS_CODE' };
   return { ok: false, msg: data.error || '验证失败（HTTP ' + res.status + '）' };
 }
 
-async function tryEnter(code, remember) {
+async function tryEnter(userId, code, remember) {
   gateBtn.disabled = true;
   gateBtn.textContent = '验证中…';
   hideGateError();
   try {
-    const result = await verifyCode(code);
+    const result = await verifyCode(userId, code);
     if (!result.ok) { showGateError(result.msg); return false; }
     accessCode = code;
+    userAccountId = result.userId;
     sessionStorage.setItem(CODE_KEY, accessCode);
+    sessionStorage.setItem(USER_ID_KEY, userAccountId);
     if (remember) {
       localStorage.setItem(CODE_KEY, accessCode);
+      localStorage.setItem(USER_ID_KEY, userAccountId);
       localStorage.setItem(SESSION_UNTIL_KEY, String(Date.now() + REMEMBER_DAYS * 86400000));
     }
     unlockApp();
@@ -1848,10 +1910,11 @@ async function submitFollowUp(id) {
   try {
     const res = await fetch('/api/chat', {
       method: 'POST',
-      headers: authHeaders(accessCode),
+      headers: authHeaders(),
       body: JSON.stringify({
         accessCode,
-        topic: id,
+        userId: userAccountId,
+        topicId: id,
         mode: 'followup',
         systemPrompt: t.systemPrompt,
         scenario: session.scenario,
@@ -1907,10 +1970,11 @@ async function submitAnswer(id) {
   try {
     const res = await fetch('/api/chat', {
       method: 'POST',
-      headers: authHeaders(accessCode),
+      headers: authHeaders(),
       body: JSON.stringify({
         accessCode,
-        topic: id,
+        userId: userAccountId,
+        topicId: id,
         systemPrompt: t.systemPrompt,
         scenario,
         answer
@@ -1930,7 +1994,15 @@ async function submitAnswer(id) {
       return;
     }
     if (res.ok && data.text) {
-      respBody.textContent = data.text;
+      let metaHtml = '';
+      if (data.historyEnabled !== false) {
+        if (data.attemptNumber > 1) {
+          metaHtml = `<p class="review-meta">本题第 ${data.attemptNumber} 次作答 · 已与此前 ${data.comparedWith} 次同题回答对比</p>`;
+        } else {
+          metaHtml = '<p class="review-meta">已记录本次作答 · 下次遇到同一道题会对比你的进步</p>';
+        }
+      }
+      respBody.innerHTML = metaHtml + escapeHtml(data.text).replace(/\n/g, '<br/>');
       mentorSessions[id] = { scenario, answer, feedback: data.text, history: [] };
       enableFollowUp(id);
     } else if (res.status === 401) {
@@ -2071,18 +2143,23 @@ async function bootstrap() {
   if (btnExit) btnExit.onclick = logoutApp;
   gateBtn.onclick = () => {
     const code = gateCode.value.trim();
+    const userId = gateUser ? gateUser.value.trim() : '';
     if (!code) { showGateError('请输入访问码'); return; }
-    tryEnter(code, document.getElementById('gateRemember').checked);
+    tryEnter(userId, code, document.getElementById('gateRemember').checked);
   };
   gateCode.addEventListener('keydown', e => { if (e.key === 'Enter') gateBtn.click(); });
+  if (gateUser) gateUser.addEventListener('keydown', e => { if (e.key === 'Enter') gateBtn.click(); });
 
   const remembered = localStorage.getItem(CODE_KEY);
+  const rememberedUser = localStorage.getItem(USER_ID_KEY) || '';
   if (remembered && isSessionValid()) {
     gateCode.value = remembered;
-    if (await tryEnter(remembered, true)) return;
+    if (gateUser) gateUser.value = rememberedUser;
+    if (await tryEnter(rememberedUser, remembered, true)) return;
   }
   const sessionCode = sessionStorage.getItem(CODE_KEY);
-  if (sessionCode && await tryEnter(sessionCode, false)) return;
+  const sessionUser = sessionStorage.getItem(USER_ID_KEY) || '';
+  if (sessionCode && await tryEnter(sessionUser, sessionCode, false)) return;
   lockApp();
 }
 
