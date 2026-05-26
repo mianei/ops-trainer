@@ -7,7 +7,7 @@ import {
   verifyUserCredentials,
   historyEnabled,
   loadTopicAttempts,
-  priorSameScenario,
+  priorRecentAttempts,
   saveAttempt,
   HISTORY_PROMPT_SUFFIX,
   formatPriorForPrompt,
@@ -232,9 +232,9 @@ export default async function handler(req) {
 
     if (historyEnabled() && topicId) {
       const all = await loadTopicAttempts(auth.userId, topicId);
-      const prior = priorSameScenario(all, scenario);
+      const prior = priorRecentAttempts(all, 3);
       comparedWith = prior.length;
-      attemptNumber = prior.length + 1;
+      attemptNumber = all.length + 1;
       if (prior.length) {
         reviewSystemPrompt = systemPrompt + HISTORY_PROMPT_SUFFIX;
         userContent = `业务场景：${scenario}\n\n我的分析：${answer}${formatPriorForPrompt(prior)}`;

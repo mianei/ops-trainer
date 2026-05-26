@@ -129,9 +129,10 @@ export async function loadTopicAttempts(userId, topicId) {
   }
 }
 
-export function priorSameScenario(attempts, scenario, limit = 3) {
-  if (!scenario) return [];
-  return attempts.filter((a) => a.scenario === scenario).slice(-limit);
+/** 本模块内最近若干次作答（不限是否同一道题），用于对比思维深度 */
+export function priorRecentAttempts(attempts, limit = 3) {
+  if (!attempts.length) return [];
+  return attempts.slice(-limit);
 }
 
 export async function saveAttempt(userId, topicId, record) {
@@ -149,17 +150,18 @@ export async function saveAttempt(userId, topicId, record) {
 }
 
 export const HISTORY_PROMPT_SUFFIX =
-  '\n\n若用户消息中包含「以往同题作答」，请在常规点评之后增加一小节「与上次相比」（约 80–120 字）：' +
-  '对比结构、洞察深度、可执行性上的变化；肯定进步、指出仍可加强处。不要打分、不要排名、不要用数字评级。' +
-  '若没有以往作答或场景不同，则不要写该小节。';
+  '\n\n若用户消息中包含「以往作答记录」，请在常规点评之后增加一小节「思维成长」（约 80–120 字）：' +
+  '对照该学员在本模块的近期作答（题目可以不同），看本次是否想到更多角度、更深一层或更可执行的细节，思路是否更结构化。' +
+  '点出具体进步与仍可加强处。不要打分、不要排名、不要用数字评级。若没有以往记录，则不要写该小节。';
 
 export function formatPriorForPrompt(prior) {
   if (!prior.length) return '';
   const blocks = prior.map((p, i) => {
-    const ans = String(p.answer || '').slice(0, 1200);
-    const fb = String(p.feedback || '').slice(0, 600);
+    const scene = String(p.scenario || '').slice(0, 200);
+    const ans = String(p.answer || '').slice(0, 1000);
+    const fb = String(p.feedback || '').slice(0, 400);
     const when = p.at ? p.at.slice(0, 10) : '';
-    return `【第 ${i + 1} 次 · ${when}】\n作答：${ans}\n当时点评摘要：${fb}`;
+    return `【近期第 ${i + 1} 次 · ${when}】\n当时题目：${scene}\n作答：${ans}\n当时点评摘要：${fb}`;
   });
-  return '\n\n---\n以往同题作答（供对比，勿大段复述）：\n' + blocks.join('\n\n');
+  return '\n\n---\n以往在本模块的作答记录（题目可能不同，供对比思维是否越答越好）：\n' + blocks.join('\n\n');
 }

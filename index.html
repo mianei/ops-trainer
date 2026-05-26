@@ -1186,7 +1186,7 @@
     </div>
     <div class="gate-card surface">
       <h2>进入训练场</h2>
-      <p class="sub">每人一个账号与访问码，作答记录保存在云端，同题再练时会对比进步。</p>
+      <p class="sub">每人一个账号与访问码，作答会保存；换题再练时对照近期思路是否在进步。</p>
       <div class="gate-field">
         <label for="gateUser">账号</label>
         <input type="text" id="gateUser" placeholder="站长分配的用户名" autocomplete="username" autocapitalize="off" />
@@ -1259,7 +1259,7 @@
 
   <div id="mainContent" class="loading-main">加载训练模块…</div>
 
-  <footer class="footer"><span class="footer-brand" aria-label="MindTraining"><span class="hb-mind">Mind</span><span class="hb-train">Training</span></span> · 仅供学习使用 · <a class="footer-link" href="/download">下载 · 开源</a> · <a class="footer-link" href="https://github.com/mianei/ops-trainer" target="_blank" rel="noopener noreferrer">GitHub</a> · <span id="buildTag">v4.36</span></footer>
+  <footer class="footer"><span class="footer-brand" aria-label="MindTraining"><span class="hb-mind">Mind</span><span class="hb-train">Training</span></span> · 仅供学习使用 · <a class="footer-link" href="/download">下载 · 开源</a> · <a class="footer-link" href="https://github.com/mianei/ops-trainer" target="_blank" rel="noopener noreferrer">GitHub</a> · <span id="buildTag">v4.37</span></footer>
   </div>
 </div>
 
@@ -1996,10 +1996,10 @@ async function submitAnswer(id) {
     if (res.ok && data.text) {
       let metaHtml = '';
       if (data.historyEnabled !== false) {
-        if (data.attemptNumber > 1) {
-          metaHtml = `<p class="review-meta">本题第 ${data.attemptNumber} 次作答 · 已与此前 ${data.comparedWith} 次同题回答对比</p>`;
+        if (data.comparedWith > 0) {
+          metaHtml = `<p class="review-meta">已对照本模块最近 ${data.comparedWith} 次作答 · 点评中含「思维成长」</p>`;
         } else {
-          metaHtml = '<p class="review-meta">已记录本次作答 · 下次遇到同一道题会对比你的进步</p>';
+          metaHtml = '<p class="review-meta">已记录本次作答 · 下次在本模块答题时会对比思路是否在进步</p>';
         }
       }
       respBody.innerHTML = metaHtml + escapeHtml(data.text).replace(/\n/g, '<br/>');
