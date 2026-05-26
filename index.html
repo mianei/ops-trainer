@@ -3,12 +3,24 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5, viewport-fit=cover" />
+<script>
+(function () {
+  var mq = window.matchMedia('(max-width: 899px), (hover: none) and (pointer: coarse)');
+  function apply() { document.documentElement.classList.toggle('is-mobile', mq.matches); }
+  apply();
+  if (mq.addEventListener) mq.addEventListener('change', apply);
+  else if (mq.addListener) mq.addListener(apply);
+})();
+</script>
 <meta name="color-scheme" content="light" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
 <title>MindTraining · 产运思维训练</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Outfit:wght@600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Outfit:wght@600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" media="(min-width: 900px)" />
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -63,17 +75,29 @@
     --max: 1080px;
     --sidebar-w: 200px;
     --sidebar-gap: 20px;
-    --sans: -apple-system, BlinkMacSystemFont, 'SF Pro SC', 'SF Pro Text', 'Helvetica Neue', 'Noto Sans SC', sans-serif;
+    --sans: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'HarmonyOS Sans SC', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --sans-en: 'Syne', 'Outfit', var(--sans);
   }
 
-  html { font-size: 16px; }
+  html {
+    font-size: 16px;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+  html, body {
+    overflow-x: hidden;
+    max-width: 100%;
+  }
   body {
     font-family: var(--sans);
     background: var(--bg);
     color: var(--ink);
     min-height: 100vh;
+    min-height: 100dvh;
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
+    word-break: break-word;
+    overflow-wrap: anywhere;
   }
 
   .bg-scene {
@@ -473,7 +497,7 @@
     z-index: -1;
   }
   .hero-brand {
-    font-family: 'Syne', var(--sans);
+    font-family: var(--sans-en);
     font-size: clamp(2.25rem, 5.5vw, 3.35rem);
     line-height: 1.12;
     margin-bottom: 1.1rem;
@@ -904,7 +928,7 @@
     font-size: 12px; color: var(--ink3);
   }
   .footer-brand {
-    font-family: 'Syne', var(--sans);
+    font-family: var(--sans-en);
     font-size: 13px;
     letter-spacing: -0.03em;
     vertical-align: baseline;
@@ -920,45 +944,162 @@
   }
 
   @media (max-width: 899px) {
-    .workspace { display: grid; }
+    .bg-horizon-svg,
+    .bg-wave-svg,
+    .bg-horizon-svg path,
+    .bg-wave-mid,
+    .bg-wave-back,
+    .bg-wave-front {
+      animation: none !important;
+    }
+    .bg-horizon-svg {
+      left: 0;
+      width: 100%;
+      height: clamp(220px, 38vh, 360px);
+    }
+    .bg-wave-svg {
+      left: 0;
+      width: 100%;
+      top: 18%;
+      opacity: 0.65;
+    }
+    .glass, .surface, .surface-card, .gate-card, .workspace-shell,
+    .module-nav, .case-head, .btn-frost, .btn-exit, .btn-refresh {
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+    }
+    .gate-card, .workspace-shell, .module-nav, .surface-card {
+      background: rgba(255, 255, 255, 0.94);
+    }
+    .hero-eyebrow-row { display: none; }
+    .hero-compact::before { display: none; }
+    .hero-compact { padding: 0.75rem 0 0.5rem; max-width: none; }
+    .hero-brand {
+      white-space: normal;
+      font-size: clamp(1.65rem, 7vw, 2.1rem);
+      margin-bottom: 0.65rem;
+      font-family: var(--sans);
+    }
+    .hero-brand .hb-mind,
+    .hero-brand .hb-train,
+    .gate-intro .hero-brand,
+    .gate-intro .hero-brand .hb-mind,
+    .gate-intro .hero-brand .hb-train {
+      font-family: var(--sans);
+      letter-spacing: -0.02em;
+    }
+    .hero-copy h1 {
+      font-size: clamp(1.2rem, 5.2vw, 1.45rem);
+      line-height: 1.2;
+      margin-bottom: 0.5rem;
+    }
+    .hero-copy .desc { font-size: 14px; line-height: 1.55; }
+    #gate {
+      padding-top: max(12px, env(safe-area-inset-top));
+      padding-bottom: max(1.25rem, env(safe-area-inset-bottom));
+    }
+    .gate-layout {
+      align-items: flex-start;
+      padding: 1rem 0 2rem;
+    }
+    .gate-intro h1 { font-size: clamp(1.45rem, 6.2vw, 1.85rem); }
+    .gate-intro .lead { font-size: 15px; }
+    .gate-card { padding: 1.35rem 1.25rem; }
+    .workspace { display: flex; flex-direction: column; gap: 0.75rem; }
     .workspace-aside {
       position: static;
       max-height: none;
+      width: 100%;
+      min-width: 0;
     }
-    .module-nav {
-      position: static;
-      width: auto;
-      max-height: none;
-      display: flex; flex-wrap: nowrap; overflow-x: auto;
-      gap: 8px; padding: 10px;
-      scrollbar-width: none;
+    .mobile-module-select {
+      display: block;
+      width: 100%;
+      margin: 0 0 10px;
+      padding: 12px 40px 12px 14px;
+      font-size: 16px;
+      font-family: inherit;
+      font-weight: 600;
+      color: var(--ink);
+      border: 1px solid var(--line-strong);
+      border-radius: var(--r-lg);
+      background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%236e6e73' d='M1 1l5 5 5-5'/%3E%3C/svg%3E") no-repeat right 14px center;
+      appearance: none;
+      -webkit-appearance: none;
+      box-shadow: var(--shadow-sm);
     }
-    .nav-group {
-      display: contents;
-      background: transparent;
-      border: none;
-    }
-    .nav-group-head { display: none; }
-    .nav-group-body { display: contents; }
-    .module-nav-title { display: none; }
-    .module-item {
-      flex: 0 0 auto; min-width: 120px;
-      border-left: none !important;
-      border-top: 3px solid transparent;
-    }
-    .train-main { overflow: visible; }
-    .module-item.active { border-top-color: var(--ink); }
-    .module-item.active.cat-product { border-top-color: var(--product); }
-    .module-item.active.cat-ops { border-top-color: var(--ops); }
-    .module-item.active.cat-interview { border-top-color: var(--interview); }
-    .module-item .mi-desc { display: none; }
-    .module-head { margin-bottom: 1rem; padding-bottom: 0.75rem; }
-    .module-head h2 { font-size: 1.25rem; }
-    .hero-compact { padding: 1.5rem 0 1rem; }
-    .hero-copy h1 { font-size: 1.5rem; }
+    .module-nav { display: none; }
+    .module-head { margin-bottom: 0.85rem; padding-bottom: 0.65rem; }
+    .module-head h2 { font-size: 1.15rem; line-height: 1.25; }
+    .module-head p { font-size: 13px; line-height: 1.5; }
+    .train-main { overflow: visible; min-width: 0; width: 100%; }
     .gate-grid { grid-template-columns: 1fr; }
-    .page-wrap { padding: 0 16px 2rem; }
-    .workspace-shell { padding: 12px; }
+    .page-wrap {
+      padding: max(44px, calc(env(safe-area-inset-top) + 32px)) 12px max(1.5rem, env(safe-area-inset-bottom)) 12px;
+    }
+    .workspace-shell {
+      padding: 8px;
+      border-radius: var(--r-lg);
+      margin-bottom: 0.75rem;
+      overflow: hidden;
+    }
+    .case-head {
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 12px 14px;
+    }
+    .case-body {
+      padding: 1rem 1.1rem;
+      font-size: 15px;
+      line-height: 1.75;
+    }
+    .work-card { padding: 14px; }
+    .action-card { padding: 14px; }
+    .feedback-body { padding: 1rem 1.1rem; font-size: 15px; }
+    .followup-wrap { padding: 0 12px; }
+    .followup-compose { padding: 0 12px 16px; }
+    .followup-thread { max-height: min(50vh, 320px); }
+    .fu-msg { max-width: 100%; }
+    textarea,
+    .followup-compose textarea,
+    .gate-field input {
+      font-size: 16px;
+    }
+    .btn-primary, .btn-enter, .btn-exit, .btn-refresh, .btn-followup {
+      min-height: 44px;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn-exit {
+      top: max(10px, env(safe-area-inset-top));
+      right: max(12px, env(safe-area-inset-right));
+      padding: 10px 14px;
+      font-size: 14px;
+    }
+    .case-body,
+    .feedback-body,
+    .fu-msg {
+      word-break: break-word;
+      overflow-wrap: break-word;
+    }
+    .btn-row { flex-direction: column; }
+    .btn-row .btn-primary { width: 100%; }
+    .footer { padding: 1.25rem 12px max(1.5rem, env(safe-area-inset-bottom)); font-size: 11px; }
+    .footer-brand, .footer-brand .hb-mind, .footer-brand .hb-train {
+      font-family: var(--sans);
+    }
+  }
+
+  .mobile-module-select { display: none; }
+
+  @media (min-width: 900px) {
+    .module-nav { display: block; }
+  }
+
+  @media (max-width: 380px) {
+    .module-item { min-width: 92px; }
+    .module-item .mi-label { font-size: 11px; }
+    .gate-card h2 { font-size: 1.15rem; }
   }
 </style>
 </head>
@@ -1070,7 +1211,7 @@
 
   <div id="mainContent" class="loading-main">加载训练模块…</div>
 
-  <footer class="footer"><span class="footer-brand" aria-label="MindTraining"><span class="hb-mind">Mind</span><span class="hb-train">Training</span></span> · 仅供学习使用 · <span id="buildTag">v4.31</span></footer>
+  <footer class="footer"><span class="footer-brand" aria-label="MindTraining"><span class="hb-mind">Mind</span><span class="hb-train">Training</span></span> · 仅供学习使用 · <span id="buildTag">v4.32</span></footer>
   </div>
 </div>
 
@@ -1220,7 +1361,9 @@ function logoutApp() {
 function unlockApp() {
   gate.classList.add('hidden');
   app.classList.add('visible');
-  initHeroWaveform();
+  if (!document.documentElement.classList.contains('is-mobile')) {
+    initHeroWaveform();
+  }
 }
 
 function lockApp() {
@@ -1458,6 +1601,7 @@ function renderTopics() {
 
   activeTopicId = ordered[0].id;
   updateModuleHead(activeTopicId);
+  setupMobileModuleNav(ordered);
 }
 
 async function loadTopicsAndRender() {
@@ -1492,10 +1636,44 @@ function switchTab(id, el) {
     const btn = document.querySelector('.module-item[data-id="' + id + '"]');
     if (btn) btn.classList.add('active');
   }
+  const mobileSel = document.getElementById('mobileModuleSelect');
+  if (mobileSel && mobileSel.value !== id) mobileSel.value = id;
   document.getElementById('panel-' + id).classList.add('active');
   updateModuleHead(id);
   const head = document.getElementById('moduleHead');
   if (head) head.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function setupMobileModuleNav(ordered) {
+  const aside = document.querySelector('.workspace-aside');
+  const nav = document.getElementById('moduleNav');
+  if (!aside || !nav) return;
+  const existing = document.getElementById('mobileModuleSelect');
+  const isMobile = window.matchMedia('(max-width: 899px)').matches;
+  if (!isMobile) {
+    if (existing) existing.remove();
+    return;
+  }
+  let select = existing;
+  if (!select) {
+    select = document.createElement('select');
+    select.id = 'mobileModuleSelect';
+    select.className = 'mobile-module-select';
+    select.setAttribute('aria-label', '选择训练模块');
+    aside.insertBefore(select, nav);
+    select.addEventListener('change', () => {
+      switchTab(select.value, null);
+    });
+  }
+  select.innerHTML = '';
+  ordered.forEach(t => {
+    const mod = getNavModule(t.id);
+    const opt = document.createElement('option');
+    opt.value = t.id;
+    opt.textContent = mod ? mod.label : t.label;
+    if (t.id === activeTopicId) opt.selected = true;
+    select.appendChild(opt);
+  });
 }
 
 function filterScenarioPool(navId, list) {
@@ -1748,6 +1926,25 @@ async function submitAnswer(id) {
 }
 
 
+function initMobile() {
+  const mq = window.matchMedia('(max-width: 899px), (hover: none) and (pointer: coarse)');
+  const apply = () => {
+    document.documentElement.classList.toggle('is-mobile', mq.matches);
+    if (TOPICS.length) {
+      const { ordered } = topicsByCategory();
+      setupMobileModuleNav(ordered);
+    }
+  };
+  apply();
+  if (mq.addEventListener) mq.addEventListener('change', apply);
+  else mq.addListener(apply);
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(apply, 180);
+  });
+}
+
 function initHorizonWave() {
   if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   document.querySelectorAll('.bg-horizon-svg animate').forEach(el => el.remove());
@@ -1842,6 +2039,7 @@ function initHeroWaveform() {
 
 
 async function bootstrap() {
+  initMobile();
   initHorizonWave();
   const btnExit = document.getElementById('btnExit');
   if (btnExit) btnExit.onclick = logoutApp;
