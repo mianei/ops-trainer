@@ -20,7 +20,7 @@
 <title>MindTraining · 产运思维训练</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Outfit:wght@600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" media="(min-width: 900px)" />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Outfit:wght@600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" />
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -978,15 +978,6 @@
       white-space: normal;
       font-size: clamp(1.65rem, 7vw, 2.1rem);
       margin-bottom: 0.65rem;
-      font-family: var(--sans);
-    }
-    .hero-brand .hb-mind,
-    .hero-brand .hb-train,
-    .gate-intro .hero-brand,
-    .gate-intro .hero-brand .hb-mind,
-    .gate-intro .hero-brand .hb-train {
-      font-family: var(--sans);
-      letter-spacing: -0.02em;
     }
     .hero-copy h1 {
       font-size: clamp(1.2rem, 5.2vw, 1.45rem);
@@ -1012,6 +1003,14 @@
       width: 100%;
       min-width: 0;
     }
+    .mobile-module-label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: var(--ink3);
+      margin-bottom: 6px;
+    }
     .mobile-module-select {
       display: block;
       width: 100%;
@@ -1023,7 +1022,10 @@
       color: var(--ink);
       border: 1px solid var(--line-strong);
       border-radius: var(--r-lg);
-      background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%236e6e73' d='M1 1l5 5 5-5'/%3E%3C/svg%3E") no-repeat right 14px center;
+      background-color: #fff;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%236e6e73' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
       appearance: none;
       -webkit-appearance: none;
       box-shadow: var(--shadow-sm);
@@ -1085,12 +1087,17 @@
     .btn-row { flex-direction: column; }
     .btn-row .btn-primary { width: 100%; }
     .footer { padding: 1.25rem 12px max(1.5rem, env(safe-area-inset-bottom)); font-size: 11px; }
-    .footer-brand, .footer-brand .hb-mind, .footer-brand .hb-train {
-      font-family: var(--sans);
-    }
   }
 
+  .sync-bar.sync-bar--hidden { display: none !important; }
+
   .mobile-module-select { display: none; }
+  .mobile-module-label { display: none; }
+
+  @media (max-width: 899px) {
+    .mobile-module-select { display: block; }
+    .mobile-module-label { display: block; }
+  }
 
   @media (min-width: 900px) {
     .module-nav { display: block; }
@@ -1211,7 +1218,7 @@
 
   <div id="mainContent" class="loading-main">加载训练模块…</div>
 
-  <footer class="footer"><span class="footer-brand" aria-label="MindTraining"><span class="hb-mind">Mind</span><span class="hb-train">Training</span></span> · 仅供学习使用 · <span id="buildTag">v4.32</span></footer>
+  <footer class="footer"><span class="footer-brand" aria-label="MindTraining"><span class="hb-mind">Mind</span><span class="hb-train">Training</span></span> · 仅供学习使用 · <span id="buildTag">v4.33</span></footer>
   </div>
 </div>
 
@@ -1325,9 +1332,11 @@ function setSyncStatus(ok, text) {
   if (!bar || !dot || !txt) return;
   if (ok) {
     bar.hidden = true;
+    bar.classList.add('sync-bar--hidden');
     return;
   }
   bar.hidden = false;
+  bar.classList.remove('sync-bar--hidden');
   dot.className = 'sync-dot err';
   txt.textContent = text;
 }
@@ -1649,10 +1658,21 @@ function setupMobileModuleNav(ordered) {
   const nav = document.getElementById('moduleNav');
   if (!aside || !nav) return;
   const existing = document.getElementById('mobileModuleSelect');
-  const isMobile = window.matchMedia('(max-width: 899px)').matches;
+  const isMobile = window.matchMedia('(max-width: 899px), (hover: none) and (pointer: coarse)').matches;
   if (!isMobile) {
     if (existing) existing.remove();
+    const label = document.getElementById('mobileModuleLabel');
+    if (label) label.remove();
     return;
+  }
+  let label = document.getElementById('mobileModuleLabel');
+  if (!label) {
+    label = document.createElement('label');
+    label.id = 'mobileModuleLabel';
+    label.className = 'mobile-module-label';
+    label.htmlFor = 'mobileModuleSelect';
+    label.textContent = '切换训练模块';
+    aside.insertBefore(label, nav);
   }
   let select = existing;
   if (!select) {
