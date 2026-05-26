@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>MindTraining · 下载与开源</title>
+<title>MindTraining · 获取与下载</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
@@ -62,7 +62,7 @@
     height: 72px;
     border-radius: 20px;
     background: linear-gradient(145deg, rgba(38,194,129,0.25), rgba(38,194,129,0.08));
-    border: 1px solid rgba(38,194,129,0.3);
+    border: 1px solid rgba(38, 194, 129, 0.3);
     display: grid;
     place-items: center;
     font-size: 32px;
@@ -150,14 +150,13 @@
     letter-spacing: 0.04em;
     color: var(--ink2);
     margin-bottom: 1rem;
-    text-transform: uppercase;
   }
-  .steps ol {
-    padding-left: 1.2rem;
+  .steps p, .steps ul {
     color: var(--ink2);
     font-size: 14px;
     line-height: 1.7;
   }
+  .steps ul { padding-left: 1.2rem; margin-top: 0.5rem; }
   .steps li { margin-bottom: 0.35rem; }
   .steps a { color: var(--green); text-decoration: underline; text-underline-offset: 2px; }
   .footer {
@@ -178,66 +177,58 @@
   <section class="hero">
     <div class="hero-icon" aria-hidden="true">🧠</div>
     <div>
-      <h1>这是网页应用，不是安装包</h1>
-      <p>MindTraining 在浏览器里打开就能用，不需要像 Voicebox 那样下载 .msi / .dmg。源码已放在 GitHub 上开源，开发者可以下载代码自己部署。</p>
+      <h1>获取 MindTraining</h1>
+      <p>产运思维训练平台，支持浏览器直接使用，也可下载 Windows 便携版或源码自行部署。使用 AI 点评功能需联网。</p>
     </div>
   </section>
 
-  <p class="note">选择一种方式开始使用 ↓</p>
+  <p class="note">请选择获取方式</p>
 
   <div class="grid">
-    <a class="card card-primary active" href="https://ops-trainer.vercel.app" id="cardOnline">
+    <a class="card card-primary active" href="https://ops-trainer.vercel.app">
       <div class="card-icon">🌐</div>
       <div class="card-body">
-        <strong>在线使用（推荐）</strong>
-        <span>打开网址 → 输入访问码 → 开始训练</span>
+        <strong>在线训练</strong>
+        <span>浏览器打开 · 输入访问码 · 开始练习</span>
       </div>
       <span class="card-arrow">→</span>
     </a>
     <a class="card" href="https://github.com/mianei/ops-trainer/releases" target="_blank" rel="noopener noreferrer">
       <div class="card-icon">🖥️</div>
       <div class="card-body">
-        <strong>Windows 桌面版（个人用）</strong>
-        <span>Releases 下载 .exe · 免安装便携版</span>
+        <strong>Windows 桌面版</strong>
+        <span>GitHub Releases · 便携 exe · 需联网</span>
       </div>
       <span class="card-arrow">↓</span>
     </a>
     <a class="card" href="https://github.com/mianei/ops-trainer/archive/refs/heads/main.zip" download>
       <div class="card-icon">📦</div>
       <div class="card-body">
-        <strong>下载源码 ZIP</strong>
-        <span>解压后可本地预览或自己部署</span>
+        <strong>源码包（ZIP）</strong>
+        <span>完整项目代码 · 可 Fork 与自行部署</span>
       </div>
       <span class="card-arrow">↓</span>
     </a>
     <a class="card" href="https://github.com/mianei/ops-trainer" target="_blank" rel="noopener noreferrer">
       <div class="card-icon">⭐</div>
       <div class="card-body">
-        <strong>GitHub 开源仓库</strong>
-        <span>查看代码 · Fork · Star</span>
+        <strong>GitHub 仓库</strong>
+        <span>MIT 开源 · 阅读文档与参与贡献</span>
       </div>
       <span class="card-arrow">↗</span>
     </a>
   </div>
 
   <section class="steps">
-    <h2>GitHub 开源 · 3 步搞定</h2>
-    <ol>
-      <li>打开 <a href="https://github.com/mianei/ops-trainer/settings" target="_blank" rel="noopener">仓库 Settings</a>，确认是 <strong>Public</strong>（公开），别人才能看到和下载</li>
-      <li>代码已在仓库里；别人点绿色 <strong>Code → Download ZIP</strong> 就能下载</li>
-      <li>（可选）在 <a href="https://github.com/mianei/ops-trainer/releases/new" target="_blank" rel="noopener">Releases</a> 发一个版本号如 <strong>v4.34</strong>，更像正式「发版」</li>
-    </ol>
+    <h2>说明</h2>
+    <p>MindTraining 以 Web 应用为主：日常练习推荐直接使用在线地址。桌面版为 Electron 封装，内容与线上一致。</p>
+    <ul>
+      <li>源码下载：仓库页 <strong>Code → Download ZIP</strong>，或见 <a href="https://github.com/mianei/ops-trainer/blob/main/README.md" target="_blank" rel="noopener">README</a> 部署说明</li>
+      <li>桌面版：在 <a href="https://github.com/mianei/ops-trainer/releases" target="_blank" rel="noopener">Releases</a> 查找 <code>Windows-portable</code> 附件</li>
+    </ul>
   </section>
 
-  <p class="footer">MIT 开源 · 仅供学习使用</p>
+  <p class="footer">MIT License · 仅供学习使用</p>
 </div>
-<script>
-(function () {
-  var p = new URLSearchParams(location.search).get('from');
-  if (p === 'online') {
-    document.getElementById('cardOnline').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }
-})();
-</script>
 </body>
 </html>

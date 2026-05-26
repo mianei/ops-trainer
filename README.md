@@ -1,127 +1,83 @@
-# MindTraining · 产运思维训练
+# MindTraining
 
-开源的产运思维训练 Web 应用：场景题练习 + AI 结构化点评 + 多轮追问。
+产运思维训练 Web 应用：在真实业务场景中练习产品与运营判断，支持独立作答、AI 结构化点评与多轮追问。
 
-| | 链接 |
+## 链接
+
+| | |
 |---|---|
-| **在线使用** | https://ops-trainer.vercel.app |
-| **下载 / 开源说明** | https://ops-trainer.vercel.app/download |
-| **GitHub 仓库** | https://github.com/mianei/ops-trainer |
-| **下载源码 ZIP** | https://github.com/mianei/ops-trainer/archive/refs/heads/main.zip |
-| **Windows 桌面版** | [Releases](https://github.com/mianei/ops-trainer/releases)（见 `desktop/` 目录说明） |
+| 在线训练 | https://ops-trainer.vercel.app |
+| 下载与说明 | https://ops-trainer.vercel.app/download |
+| 源码仓库 | https://github.com/mianei/ops-trainer |
+| 版本发布 | https://github.com/mianei/ops-trainer/releases |
 
----
+## 功能
 
-## 桌面版（仅个人用 · 免费）
+- 按产品 / 运营 / 面试等模块组织的场景题库
+- 先作答、后点评的训练流程
+- 基于大模型的结构化反馈与追问
+- 访问码门禁（由部署方配置）
+- 响应式布局，支持桌面与移动端浏览器
 
-在 `desktop/` 目录用 Electron 打包，生成 **单个 `.exe`**，仍连接线上 Vercel，**不用买签名证书**（自用可忽略 Windows 安全提示）。
+## 使用方式
 
-**本机打包：**
+### 学员
 
-```bash
-cd desktop
-npm install
-npm run build:win
-```
+在浏览器打开 [在线训练地址](https://ops-trainer.vercel.app)，输入部署方提供的访问码即可开始。
 
-**GitHub 自动打包：** 推送标签 `desktop-v1.0.0` 后，Actions 会把 `.exe` 附到 [Releases](https://github.com/mianei/ops-trainer/releases)。
+### 开发者
 
-详见 [desktop/README.md](./desktop/README.md)。
+1. 克隆或 [下载源码 ZIP](https://github.com/mianei/ops-trainer/archive/refs/heads/main.zip)
+2. 按下方「部署」章节配置环境变量并部署到 Vercel（或兼容平台）
+3. 本地调试可执行 `npx vercel dev`
 
----
+题目数据位于 `topics.json` 及配套的 `scenarios-*.json`、`topics-*.json` 文件。
 
-## 一句话说清楚
+## Windows 桌面版
 
-**MindTraining 是网页，不是安装包。**  
-学员打开网址就能用；开发者从 GitHub 下载源码，可以自己部署一份。
+`desktop/` 目录提供基于 Electron 的 Windows 便携版（`.exe`），窗口内加载已部署的线上站点，需保持网络连接。
 
-Voicebox 那种 Windows `.msi` / macOS `.dmg` 是**桌面软件**才需要的。本项目不需要打包安装程序。
+- **下载**：在 [Releases](https://github.com/mianei/ops-trainer/releases) 获取 `MindTraining-*-Windows-portable.exe`
+- **构建说明**：见 [desktop/README.md](./desktop/README.md)
 
----
+## 部署
 
-## 我已经在 GitHub 上了吗？
+本项目为静态前端 + Serverless API（`/api/verify`、`/api/chat`），推荐使用 [Vercel](https://vercel.com) 部署。纯 GitHub Pages 无法运行 API 路由。
 
-**是的。** 仓库地址：https://github.com/mianei/ops-trainer  
-
-你平时 `git push` 就是在更新 GitHub 上的代码。别人打开这个链接就能看到项目。
-
-### 确认仓库是「公开」的
-
-1. 打开 https://github.com/mianei/ops-trainer/settings  
-2. 拉到最下面 **Danger Zone**  
-3. 如果是 Private，点 **Change visibility → Make public**
-
-公开后，全世界都能看代码、下载 ZIP、Fork 你的项目。
-
----
-
-## 别人怎么「下载」？
-
-### 学员（只想练习）
-
-把在线链接发过去就行：
-
-```
-https://ops-trainer.vercel.app
-```
-
-### 开发者（想要源码）
-
-**方式 A：下载 ZIP（最简单）**
-
-1. 打开 https://github.com/mianei/ops-trainer  
-2. 点绿色 **Code** 按钮  
-3. 选 **Download ZIP**  
-4. 解压后按下方「本地预览」操作  
-
-**方式 B：发正式版本（可选）**
-
-1. 打开 https://github.com/mianei/ops-trainer/releases/new  
-2. 版本号填 `v4.35`（和页脚 buildTag 一致即可）  
-3. 点 **Publish release**  
-4. GitHub 会自动附上 Source code 压缩包  
-
----
-
-## 和 Voicebox 下载页的区别
-
-| | Voicebox | MindTraining |
-|---|---|---|
-| 形态 | 桌面软件，要安装 | **浏览器网页** |
-| GitHub 上放什么 | `.msi` / `.dmg` 安装包 + 源码 | **源码**（HTML + JSON 题库 + API） |
-| 用户怎么用 | 下载 → 安装 → 打开 App | 打开网址 → 输入访问码 |
-| 你需要做什么 | 打包各平台安装程序 | 代码 push 到 GitHub，Vercel 自动更新线上 |
-
----
-
-## 部署（Vercel + GitHub）
-
-1. 代码在 GitHub 仓库  
-2. [Vercel](https://vercel.com) 导入该仓库并部署  
-3. 在 Vercel **Settings → Environment Variables** 配置：
+1. 将仓库导入 Vercel
+2. 在 **Settings → Environment Variables** 配置：
 
 | 变量 | 说明 |
 |------|------|
-| `ACCESS_CODE` | 访问码（用户进门时输入） |
+| `ACCESS_CODE` | 访问码 |
 | `DEEPSEEK_API_KEY` | DeepSeek API Key（推荐） |
-| `ANTHROPIC_API_KEY` | Claude API Key（二选一） |
+| `DEEPSEEK_MODEL` | 可选，默认 `deepseek-chat` |
+| `ANTHROPIC_API_KEY` | Claude API Key（与 DeepSeek 二选一） |
+| `ANTHROPIC_MODEL` | 可选 |
+| `AI_PROVIDER` | 可选，`deepseek` 或 `anthropic` |
+| `UPSTASH_REDIS_REST_URL` | 可选，限流 |
+| `UPSTASH_REDIS_REST_TOKEN` | 可选 |
+| `DAILY_LIMIT_PER_IP` | 可选 |
+| `DAILY_TOTAL_LIMIT` | 可选 |
 
-**注意：** 密钥只放 Vercel 环境变量，不要写进代码、不要 commit。`.env` 已在 `.gitignore` 里。
+3. 修改环境变量后需重新部署（Redeploy）
 
-改完环境变量后，在 Deployments 里 **Redeploy** 一次才生效。
+请勿将密钥写入代码或提交至仓库；`.env` 已列入 `.gitignore`。
 
-**说明：** 纯 GitHub Pages 只能托管静态页面，无法运行 `/api/verify` 和 `/api/chat`。AI 点评必须在 Vercel（或同类平台）上运行。
+### 从 GitHub 拉取题库（可选）
 
----
+在 `index.html` 中配置：
 
-## 本地预览
-
-```bash
-npx vercel dev
+```javascript
+const GITHUB_TOPICS_URL = 'https://raw.githubusercontent.com/<user>/<repo>/main/topics.json';
 ```
 
----
+留空则使用站点同目录下的 `topics.json`。
+
+## 发布版本
+
+在 GitHub **Releases** 创建标签可附带源码压缩包。桌面版由标签 `desktop-v*` 触发 Actions 自动构建 Windows 便携包。
 
 ## 许可证
 
-[MIT License](./LICENSE) — 可自由使用、修改、再分发。
+[MIT License](./LICENSE)
