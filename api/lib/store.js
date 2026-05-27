@@ -231,7 +231,9 @@ export async function saveAttempt(userId, topicId, record) {
     scenario: record.scenario,
     answer: record.answer,
     feedback: record.feedback,
-    at: record.at || new Date().toISOString()
+    at: record.at || new Date().toISOString(),
+    rubricAvg: record.rubricAvg ?? null,
+    dimensions: record.dimensions ?? null
   });
   const trimmed = list.slice(-MAX_ATTEMPTS_PER_TOPIC);
   const ok = await upstashCall(['SET', historyKey(userId, topicId), JSON.stringify(trimmed)]);

@@ -13,6 +13,14 @@ import {
   formatPriorForPrompt,
   upstashCall
 } from './lib/store.js';
+import { ragEnabled, retrieveRagContext } from './lib/rag.js';
+import {
+  structuredReviewEnabled,
+  STRUCTURED_REVIEW_SUFFIX,
+  parseStructuredReview,
+  reviewToPlainText
+} from './lib/review-format.js';
+import { resolveSystemPrompt } from './lib/prompt-route.js';
 
 function getClientIp(req) {
   const xff = getHeader(req, 'x-forwarded-for');
@@ -103,18 +111,22 @@ function buildChatMessages(systemPrompt, userContent, multiTurn) {
   return messages;
 }
 
-async function callDeepSeek(cfg, systemPrompt, userContent, multiTurn) {
+async function callDeepSeek(cfg, systemPrompt, userContent, multiTurn, jsonMode) {
+  const body = {
+    model: cfg.model,
+    max_tokens: 1600,
+    messages: buildChatMessages(systemPrompt, userContent, multiTurn)
+  };
+  if (jsonMode) {
+    body.response_format = { type: 'json_object' };
+  }
   const res = await fetch(`${cfg.baseUrl}/chat/completions`, {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
       authorization: `Bearer ${cfg.apiKey}`
     },
-    body: JSON.stringify({
-      model: cfg.model,
-      max_tokens: 1200,
-      messages: buildChatMessages(systemPrompt, userContent, multiTurn)
-    })
+    body: JSON.stringify(body)
   });
   const data = await res.json();
   if (!res.ok) {
@@ -124,6 +136,104 @@ async function callDeepSeek(cfg, systemPrompt, userContent, multiTurn) {
   const text = data?.choices?.[0]?.message?.content;
   if (!text) return { error: 'DeepSeek 返回为空', status: 502 };
   return { text };
+}
+
+function streamEnabled(body, mode) {
+  return body.stream === true && mode === 'review' && (process.env.STREAM_ENABLED || '1').trim() !== '0';
+}
+
+async function streamDeepSeek(cfg, systemPrompt, userContent, onDone) {
+  const res = await fetch(`${cfg.baseUrl}/chat/completions`, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      authorization: `Bearer ${cfg.apiKey}`
+    },
+    body: JSON.stringify({
+      model: cfg.model,
+      max_tokens: 1600,
+      stream: true,
+      messages: buildChatMessages(systemPrompt, userContent, null)
+    })
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    const msg = data?.error?.message || 'DeepSeek 流式错误';
+    return { error: msg, status: res.status };
+  }
+  const encoder = new TextEncoder();
+  const decoder = new TextDecoder();
+  const stream = new ReadableStream({
+    async start(controller) {
+      let buffer = '';
+      let fullText = '';
+      try {
+        const reader = res.body.getReader();
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split('\n');
+          buffer = lines.pop() || '';
+          for (const line of lines) {
+            const trimmed = line.trim();
+            if (!trimmed.startsWith('data:')) continue;
+            const payload = trimmed.slice(5).trim();
+            if (payload === '[DONE]') continue;
+            try {
+              const json = JSON.parse(payload);
+              const delta = json.choices?.[0]?.delta?.content;
+              if (delta) {
+                fullText += delta;
+                controller.enqueue(encoder.encode(JSON.stringify({ type: 'delta', text: delta }) + '\n'));
+              }
+            } catch {
+              /* skip */
+            }
+          }
+        }
+        const meta = await onDone(fullText);
+        controller.enqueue(encoder.encode(JSON.stringify({ type: 'done', ...meta }) + '\n'));
+        controller.close();
+      } catch (e) {
+        controller.enqueue(encoder.encode(JSON.stringify({ type: 'error', error: e.message }) + '\n'));
+        controller.close();
+      }
+    }
+  });
+  return new Response(stream, {
+    headers: {
+      'Content-Type': 'application/x-ndjson; charset=utf-8',
+      'Cache-Control': 'no-cache'
+    }
+  });
+}
+
+function buildTopicMapFromBody(body) {
+  const map = new Map();
+  const list = body.topicPrompts;
+  if (Array.isArray(list)) {
+    for (const t of list) {
+      if (t?.id && t?.systemPrompt) map.set(t.id, { systemPrompt: t.systemPrompt });
+    }
+  }
+  return map;
+}
+
+function finalizeReviewText(rawText, useStructured) {
+  if (!useStructured) return { text: rawText, structured: null, rubricAvg: null, dimensions: null };
+  const parsed = parseStructuredReview(rawText);
+  if (!parsed.ok) return { text: rawText, structured: null, rubricAvg: null, dimensions: null };
+  const dims = parsed.review.dimensions || [];
+  const rubricAvg = dims.length
+    ? Math.round((dims.reduce((s, d) => s + d.score, 0) / dims.length) * 10) / 10
+    : null;
+  return {
+    text: reviewToPlainText(parsed.review),
+    structured: parsed.review,
+    rubricAvg,
+    dimensions: dims
+  };
 }
 
 async function callAnthropic(cfg, systemPrompt, userContent, multiTurn) {
@@ -255,29 +365,92 @@ export default async function handler(req) {
     return json({ error: '今日全站使用量已达上限，请明天再来。' }, 429);
   }
 
+  let ragRefs = [];
+  if (ragEnabled()) {
+    const origin = new URL(req.url).origin;
+    const ragQuery =
+      mode === 'followup'
+        ? { scenario, answer, topicId, question: body.question || '' }
+        : { scenario, answer, topicId };
+    const rag = await retrieveRagContext(origin, ragQuery);
+    if (rag.context) {
+      reviewSystemPrompt += rag.context;
+      ragRefs = rag.chunks.map((c) => c.title);
+    }
+  }
+
+  const topicMap = buildTopicMapFromBody(body);
+  if (mode === 'review' && topicMap.size > 0) {
+    reviewSystemPrompt = resolveSystemPrompt(scenario, reviewSystemPrompt, topicMap);
+  }
+
+  const useStructured = mode === 'review' && structuredReviewEnabled();
+  if (useStructured) {
+    reviewSystemPrompt += STRUCTURED_REVIEW_SUFFIX;
+  }
+
+  const wantStream = streamEnabled(body, mode) && llm.provider === 'deepseek';
+
+  if (wantStream) {
+    const streamed = await streamDeepSeek(llm, reviewSystemPrompt, userContent, async (fullText) => {
+      const fin = finalizeReviewText(fullText, useStructured);
+      if (historyEnabled() && topicId) {
+        await saveAttempt(auth.userId, topicId, {
+          scenario,
+          answer,
+          feedback: fin.text,
+          rubricAvg: fin.rubricAvg,
+          dimensions: fin.dimensions
+        });
+      }
+      return {
+        text: fin.text,
+        structured: fin.structured,
+        rubricAvg: fin.rubricAvg,
+        attemptNumber,
+        comparedWith,
+        historyEnabled: historyEnabled(),
+        ragEnabled: ragEnabled(),
+        ragRefs
+      };
+    });
+    if (streamed instanceof Response) return streamed;
+    if (streamed?.error) return json({ error: streamed.error }, streamed.status || 502);
+  }
+
   try {
+    const jsonMode = useStructured && llm.provider === 'deepseek';
     const result =
       llm.provider === 'deepseek'
-        ? await callDeepSeek(llm, reviewSystemPrompt, userContent, multiTurn)
+        ? await callDeepSeek(llm, reviewSystemPrompt, userContent, multiTurn, jsonMode)
         : await callAnthropic(llm, reviewSystemPrompt, userContent, multiTurn);
 
     if (result.error) {
       return json({ error: result.error }, result.status || 502);
     }
 
+    const fin =
+      mode === 'review' ? finalizeReviewText(result.text, useStructured) : { text: result.text, structured: null, rubricAvg: null, dimensions: null };
+
     if (mode === 'review' && historyEnabled() && topicId) {
       await saveAttempt(auth.userId, topicId, {
         scenario,
         answer,
-        feedback: result.text
+        feedback: fin.text,
+        rubricAvg: fin.rubricAvg,
+        dimensions: fin.dimensions
       });
     }
 
     return json({
-      text: result.text,
+      text: fin.text,
+      structured: fin.structured,
+      rubricAvg: fin.rubricAvg,
       attemptNumber,
       comparedWith,
-      historyEnabled: historyEnabled()
+      historyEnabled: historyEnabled(),
+      ragEnabled: ragEnabled(),
+      ragRefs
     });
   } catch (e) {
     return json({ error: '上游调用失败：' + e.message }, 502);

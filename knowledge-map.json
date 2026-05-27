@@ -1,0 +1,23 @@
+{
+  "readingByNav": {
+    "feature": ["problem-hypothesis-metric", "surface-vs-core", "ia-four"],
+    "competitor": ["competitor-analysis", "true-demand-three"],
+    "decision": ["goal-path-resource-risk", "ota-hotel-modes", "ecom-revenue-formula"],
+    "growth": ["aarrr", "ota-cross-sell", "rfm-basics"],
+    "iv-ops": ["community-triangle", "aarrr", "cac-ltv"],
+    "biz-platform": ["super-app-logic", "cac-ltv", "aigc-product"],
+    "prod-open": ["problem-hypothesis-metric", "ia-four", "moments-not-home"],
+    "iv-exp": ["star-full", "project-intro", "star-pressure"]
+  },
+  "readingByTopic": {
+    "user": ["true-demand-three", "surface-vs-core"],
+    "decision": ["goal-path-resource-risk"],
+    "data": ["data-anomaly-debug"],
+    "growth": ["aarrr", "rfm-basics"],
+    "retention": ["rfm-basics", "retention-value", "cohort-read"],
+    "content": ["aida-hook", "community-four-roles"],
+    "interaction": ["ia-four", "fitts-law"],
+    "crisis": ["crisis-response-frame"],
+    "competitor": ["competitor-analysis"]
+  }
+}

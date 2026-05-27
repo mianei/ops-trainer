@@ -786,6 +786,94 @@
     color: var(--ink2);
     white-space: pre-wrap;
   }
+  .reading-tip {
+    margin: 0 0 12px;
+    padding: 12px 14px;
+    border-radius: var(--r-lg);
+    background: rgba(255, 255, 255, 0.55);
+    border: 1px dashed var(--frost-border);
+    font-size: 13px;
+    color: var(--ink2);
+    line-height: 1.55;
+  }
+  .reading-tip strong { color: var(--ink); }
+  .reading-tip .read-links { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 8px; }
+  .read-chip {
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--frost-border);
+    background: #fff;
+    color: var(--btn-green-base);
+    cursor: pointer;
+  }
+  .read-chip:hover { background: rgba(255,255,255,0.95); }
+  .rubric-block { margin-bottom: 1rem; }
+  .rubric-summary { font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 0.75rem; line-height: 1.5; }
+  .rubric-dim { margin-bottom: 10px; }
+  .rubric-dim-head { display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+  .rubric-bar { height: 6px; border-radius: 3px; background: rgba(0,0,0,0.06); overflow: hidden; }
+  .rubric-bar span { display: block; height: 100%; background: var(--btn-green-base); border-radius: 3px; }
+  .rubric-dim p { font-size: 13px; color: var(--ink2); margin-top: 4px; line-height: 1.5; }
+  .rubric-lists { font-size: 13px; color: var(--ink2); line-height: 1.6; margin-top: 0.75rem; }
+  .rubric-lists h5 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink3); margin: 0.5rem 0 0.25rem; }
+  .stream-status { font-size: 14px; color: var(--ink2); }
+  .btn-history {
+    position: fixed;
+    top: 14px;
+    right: 88px;
+    z-index: 50;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 8px 12px;
+    border-radius: var(--r);
+    border: 1px solid var(--frost-border);
+    background: var(--frost-strong);
+    color: var(--ink2);
+    cursor: pointer;
+    backdrop-filter: var(--blur-md);
+  }
+  .history-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    background: rgba(15, 18, 22, 0.35);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+  }
+  .history-modal.open { display: flex; }
+  .history-panel {
+    width: min(520px, 100%);
+    max-height: min(80vh, 640px);
+    overflow: auto;
+    border-radius: var(--r-xl);
+    background: #fff;
+    border: 1px solid var(--frost-border);
+    box-shadow: var(--shadow-sm);
+    padding: 1.25rem;
+  }
+  .history-panel h3 { font-size: 1.1rem; margin-bottom: 0.75rem; }
+  .history-item {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--frost-border);
+    font-size: 13px;
+    color: var(--ink2);
+    line-height: 1.5;
+  }
+  .history-item strong { color: var(--ink); }
+  .history-close {
+    float: right;
+    border: none;
+    background: transparent;
+    font-size: 18px;
+    cursor: pointer;
+    color: var(--ink3);
+  }
   .workspace {
     width: 100%;
     display: grid;
@@ -1479,6 +1567,7 @@
     <div class="bg-blob bg-blob-2"></div>
     <div class="bg-blob bg-blob-3"></div>
   </div>
+  <button type="button" class="btn-history" id="btnHistory" hidden>我的成长</button>
   <button type="button" class="btn-exit" id="btnExit" aria-label="退出训练">退出</button>
   <div class="user-badge" id="userBadge" hidden></div>
   <div class="page-wrap">
@@ -1502,7 +1591,15 @@
 
   <div id="mainContent" class="loading-main">加载训练模块…</div>
 
-  <footer class="footer"><span class="footer-brand" aria-label="MindTraining"><span class="hb-mind">Mind</span><span class="hb-train">Training</span></span> · 仅供学习使用 · <a class="footer-link" href="/download">下载 · 开源</a> · <a class="footer-link" href="https://github.com/mianei/ops-trainer" target="_blank" rel="noopener noreferrer">GitHub</a> · <span id="buildTag">v4.40</span></footer>
+  <footer class="footer"><span class="footer-brand" aria-label="MindTraining"><span class="hb-mind">Mind</span><span class="hb-train">Training</span></span> · 仅供学习使用 · <a class="footer-link" href="/download">下载 · 开源</a> · <a class="footer-link" href="https://github.com/mianei/ops-trainer" target="_blank" rel="noopener noreferrer">GitHub</a> · <span id="buildTag">v4.42</span></footer>
+  </div>
+</div>
+
+<div class="history-modal" id="historyModal" aria-hidden="true">
+  <div class="history-panel" role="dialog" aria-labelledby="historyTitle">
+    <button type="button" class="history-close" id="historyClose" aria-label="关闭">×</button>
+    <h3 id="historyTitle">思维成长记录</h3>
+    <div id="historyBody"><p style="color:var(--ink3)">加载中…</p></div>
   </div>
 </div>
 
@@ -1518,6 +1615,7 @@ let accessCode = '';
 let userAccountId = '';
 let workspaceMode = 'train';
 let KNOWLEDGE = [];
+let KNOWLEDGE_MAP = { readingByNav: {}, readingByTopic: {} };
 let TOPICS = [];
 let activeTopicId = '';
 /** @type {Record<string, { scenario: string, answer: string, feedback: string, history: {q:string,a:string}[] }>} */
@@ -1700,6 +1798,8 @@ function unlockApp() {
   gate.classList.add('hidden');
   app.classList.add('visible');
   updateUserBadge();
+  const btnHist = document.getElementById('btnHistory');
+  if (btnHist) btnHist.hidden = false;
   if (!document.documentElement.classList.contains('is-mobile')) {
     initHeroWaveform();
   }
@@ -1923,6 +2023,148 @@ async function loadKnowledge() {
   return KNOWLEDGE;
 }
 
+async function loadKnowledgeMap() {
+  try {
+    const res = await fetch('knowledge-map.json?t=' + Date.now(), { cache: 'no-store' });
+    if (res.ok) KNOWLEDGE_MAP = await res.json();
+  } catch (_) { /* optional */ }
+}
+
+function knowledgeCardById(cardId) {
+  for (const sec of KNOWLEDGE) {
+    for (const c of sec.cards || []) {
+      if (c.id === cardId) return { ...c, sectionTitle: sec.title };
+    }
+  }
+  return null;
+}
+
+function resolveSystemPrompt(scenario, fallbackPrompt) {
+  const text = String(scenario || '');
+  const tag = text.match(/^【([^·】]+)·([^】]+)】/);
+  const map = topicMap();
+  if (tag) {
+    const industry = tag[1];
+    const kind = tag[2].split('·')[0];
+    const industryMap = {
+      OTA: { 需求: 'user', 决策: 'decision', 数据: 'data', 竞品: 'competitor', 增长: 'growth', 功能: 'feature', 危机: 'crisis', 开放: 'iv-open' },
+      电商: { 需求: 'user', 决策: 'decision', 数据: 'data', 竞品: 'competitor', 增长: 'growth', 功能: 'feature', 危机: 'crisis' },
+      社区: { 需求: 'user', 决策: 'decision', 数据: 'data', 竞品: 'competitor', 增长: 'growth', 功能: 'feature', 危机: 'crisis' },
+      即时零售: { 需求: 'user', 决策: 'decision', 数据: 'data' }
+    };
+    const topicId = industryMap[industry]?.[kind];
+    const tp = topicId && map.get(topicId);
+    if (tp?.systemPrompt) return tp.systemPrompt;
+  }
+  if (/^【面试/.test(text) || /面试题/.test(text)) {
+    const pm = map.get('iv-pm');
+    if (pm?.systemPrompt) return pm.systemPrompt;
+  }
+  return fallbackPrompt;
+}
+
+function readingIdsForNav(navId, scenario) {
+  const ids = [...(KNOWLEDGE_MAP.readingByNav?.[navId] || [])];
+  const tag = String(scenario || '').match(/^【([^·]+)/);
+  if (tag) {
+    const extra = { OTA: ['ota-hotel-modes', 'ota-cross-sell'], 电商: ['ecom-shelf-vs-content'], 社区: ['community-triangle'] };
+    (extra[tag[1]] || []).forEach(id => { if (!ids.includes(id)) ids.push(id); });
+  }
+  return ids.slice(0, 3);
+}
+
+function updateReadingTip(navId, scenario) {
+  const el = document.getElementById('reading-' + navId);
+  if (!el) return;
+  const ids = readingIdsForNav(navId, scenario);
+  const cards = ids.map(knowledgeCardById).filter(Boolean);
+  if (!cards.length) { el.innerHTML = ''; el.style.display = 'none'; return; }
+  el.style.display = 'block';
+  const chips = cards.map(c =>
+    `<button type="button" class="read-chip" data-card="${escapeAttr(c.id)}">${escapeHtml(c.title)}</button>`
+  ).join('');
+  el.innerHTML = `<strong>作答前建议先看</strong>（1 分钟）：${chips}<div class="read-links"></div>`;
+  el.querySelectorAll('.read-chip').forEach(btn => {
+    btn.onclick = () => {
+      workspaceMode = 'knowledge';
+      renderKnowledgeView();
+      setTimeout(() => {
+        const card = document.querySelector(`.knowledge-card[data-kc-index]`);
+        if (card) card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 80);
+    };
+  });
+}
+
+function renderStructuredReview(review, metaHtml) {
+  if (!review || !review.summary) return metaHtml + escapeHtml(review?.text || '').replace(/\n/g, '<br/>');
+  let html = metaHtml + `<div class="rubric-block"><p class="rubric-summary">${escapeHtml(review.summary)}</p>`;
+  (review.dimensions || []).forEach(d => {
+    const pct = Math.round((d.score / 5) * 100);
+    html += `<div class="rubric-dim"><div class="rubric-dim-head"><span>${escapeHtml(d.name)}</span><span>${d.score}/5</span></div><div class="rubric-bar"><span style="width:${pct}%"></span></div><p>${escapeHtml(d.comment)}</p></div>`;
+  });
+  html += '<div class="rubric-lists">';
+  if (review.strengths?.length) html += `<h5>亮点</h5><p>${review.strengths.map(s => escapeHtml(s)).join(' · ')}</p>`;
+  if (review.gaps?.length) html += `<h5>待加强</h5><p>${review.gaps.map(s => escapeHtml(s)).join(' · ')}</p>`;
+  if (review.actions?.length) html += `<h5>建议行动</h5><p>${review.actions.map(s => escapeHtml(s)).join(' · ')}</p>`;
+  if (review.growth) html += `<h5>思维成长</h5><p>${escapeHtml(review.growth)}</p>`;
+  html += '</div></div>';
+  return html;
+}
+
+function reviewMetaHtml(data) {
+  let metaHtml = '';
+  if (data.historyEnabled !== false) {
+    if (data.comparedWith > 0) {
+      metaHtml = `<p class="review-meta">已对照本模块最近 ${data.comparedWith} 次作答</p>`;
+    } else {
+      metaHtml = '<p class="review-meta">已记录本次作答 · 下次会对比思路是否在进步</p>';
+    }
+  }
+  if (data.rubricAvg) metaHtml += `<p class="review-meta">综合 ${data.rubricAvg}/5</p>`;
+  if (data.ragRefs?.length) metaHtml += `<p class="review-meta">RAG：${escapeHtml(data.ragRefs.join('、'))}</p>`;
+  return metaHtml;
+}
+
+function topicPromptsPayload() {
+  return TOPICS.map(t => ({ id: t.id, systemPrompt: t.systemPrompt }));
+}
+
+async function openHistoryModal() {
+  const modal = document.getElementById('historyModal');
+  const body = document.getElementById('historyBody');
+  if (!modal || !body) return;
+  modal.classList.add('open');
+  modal.setAttribute('aria-hidden', 'false');
+  body.innerHTML = '<p style="color:var(--ink3)">加载中…</p>';
+  try {
+    const res = await fetch('/api/history', {
+      method: 'POST',
+      headers: authHeaders(),
+      body: JSON.stringify({ accessCode, userId: userAccountId, topicIds: TOPICS.map(t => t.id) })
+    });
+    const data = await res.json();
+    if (!res.ok || !data.timeline?.length) {
+      body.innerHTML = '<p style="color:var(--ink3)">暂无记录。提交分析后会出现在这里。</p>';
+      return;
+    }
+    body.innerHTML = data.timeline.map(item => {
+      const label = getTopic(item.topicId)?.label || item.topicId;
+      const when = item.at ? item.at.slice(0, 16).replace('T', ' ') : '';
+      const score = item.rubricAvg ? ` · ${item.rubricAvg}/5` : '';
+      const scene = String(item.scenario || '').slice(0, 60);
+      return `<div class="history-item"><strong>${escapeHtml(label)}</strong>${escapeHtml(score)}<br/><span>${escapeHtml(when)}</span><br/>${escapeHtml(scene)}…</div>`;
+    }).join('');
+  } catch (e) {
+    body.innerHTML = '<p style="color:var(--danger)">加载失败：' + escapeHtml(e.message) + '</p>';
+  }
+}
+
+function closeHistoryModal() {
+  const modal = document.getElementById('historyModal');
+  if (modal) { modal.classList.remove('open'); modal.setAttribute('aria-hidden', 'true'); }
+}
+
 function renderKnowledgeMarkdownish(text) {
   return escapeHtml(text)
     .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
@@ -1930,7 +2172,7 @@ function renderKnowledgeMarkdownish(text) {
 }
 
 function knowledgeCardHtml(card, index) {
-  return `<article class="knowledge-card" data-kc-index="${index}">
+  return `<article class="knowledge-card" data-kc-index="${index}" data-card-id="${escapeAttr(card.id || '')}">
     <h4>${escapeHtml(card.title)}</h4>
     <div class="kc-tags">${(card.tags || []).map(t => `<span class="kc-tag">${escapeHtml(t)}</span>`).join('')}</div>
     <div class="kc-body">${renderKnowledgeMarkdownish(card.body || '')}</div>
@@ -2082,6 +2324,7 @@ function renderTopics() {
       </div>
           <div class="case-body" id="scenario-${t.id}"></div>
         </article>
+        <div class="reading-tip" id="reading-${t.id}" style="display:none"></div>
         <div class="surface-card work-card">
           <div class="work-block">
             <div class="wb-label">你的分析</div>
@@ -2126,6 +2369,7 @@ async function loadTopicsAndRender() {
   try {
     TOPICS = await loadTopics();
     await loadKnowledge();
+    await loadKnowledgeMap();
     setSyncStatus(true);
     if (workspaceMode === 'knowledge') renderKnowledgeView();
     else renderTopics();
@@ -2273,6 +2517,7 @@ function loadScenario(id) {
   const idx = Math.floor(Math.random() * pool.length);
   const scenario = pool[idx];
   document.getElementById('scenario-' + id).textContent = scenario;
+  updateReadingTip(id, scenario);
   const hintEl = document.querySelector('#panel-' + id + ' .wb-hint');
   if (hintEl) hintEl.textContent = answerHintForScenario(scenario, t.fieldLabel);
   document.getElementById('answer-' + id).value = '';
@@ -2404,58 +2649,82 @@ async function submitAnswer(id) {
   const btn = document.getElementById('btn-' + id);
   const respArea = document.getElementById('resp-' + id);
   const respBody = document.getElementById('resp-body-' + id);
+  const systemPrompt = resolveSystemPrompt(scenario, t.systemPrompt);
 
   btn.disabled = true;
   btn.textContent = '点评生成中…';
   respArea.classList.add('visible');
-  respBody.innerHTML = '<div class="dots"><span></span><span></span><span></span></div>';
+  respBody.innerHTML = '<p class="stream-status">正在生成结构化点评…</p>';
+
+  const payload = {
+    accessCode,
+    userId: userAccountId,
+    topicId: id,
+    stream: true,
+    systemPrompt,
+    scenario,
+    answer,
+    topicPrompts: topicPromptsPayload()
+  };
 
   try {
     const res = await fetch('/api/chat', {
       method: 'POST',
       headers: authHeaders(),
-      body: JSON.stringify({
-        accessCode,
-        userId: userAccountId,
-        topicId: id,
-        systemPrompt: t.systemPrompt,
-        scenario,
-        answer
-      })
+      body: JSON.stringify(payload)
     });
-    let data = {};
-    const raw = await res.text();
-    try {
-      data = raw ? JSON.parse(raw) : {};
-    } catch {
-      respBody.textContent = '服务端返回格式异常，请稍后重试';
-      return;
-    }
+    const ctype = res.headers.get('content-type') || '';
 
-    if (data.ok && !data.text) {
-      respBody.textContent = '请求被误判为验证接口，请刷新页面后重试。若仍失败请重新部署最新 index.html。';
-      return;
-    }
-    if (res.ok && data.text) {
-      let metaHtml = '';
-      if (data.historyEnabled !== false) {
-        if (data.comparedWith > 0) {
-          metaHtml = `<p class="review-meta">已对照本模块最近 ${data.comparedWith} 次作答 · 点评中含「思维成长」</p>`;
-        } else {
-          metaHtml = '<p class="review-meta">已记录本次作答 · 下次在本模块答题时会对比思路是否在进步</p>';
+    if (ctype.includes('ndjson') && res.body) {
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let buf = '';
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buf += decoder.decode(value, { stream: true });
+        const lines = buf.split('\n');
+        buf = lines.pop() || '';
+        for (const line of lines) {
+          if (!line.trim()) continue;
+          let evt;
+          try { evt = JSON.parse(line); } catch { continue; }
+          if (evt.type === 'done') {
+            const metaHtml = reviewMetaHtml(evt);
+            respBody.innerHTML = evt.structured
+              ? renderStructuredReview(evt.structured, metaHtml)
+              : metaHtml + escapeHtml(evt.text || '').replace(/\n/g, '<br/>');
+            mentorSessions[id] = { scenario, answer, feedback: evt.text, history: [] };
+            enableFollowUp(id);
+          } else if (evt.type === 'error') {
+            respBody.textContent = evt.error || '生成失败';
+            clearMentorSession(id);
+          }
         }
       }
-      respBody.innerHTML = metaHtml + escapeHtml(data.text).replace(/\n/g, '<br/>');
-      mentorSessions[id] = { scenario, answer, feedback: data.text, history: [] };
-      enableFollowUp(id);
-    } else if (res.status === 401) {
-      respBody.textContent = '访问码已失效，请重新登录。';
-      setTimeout(() => { clearSession(); lockApp(); }, 2000);
-    } else if (res.status === 429) {
-      respBody.textContent = data.error || '今日次数已达上限';
     } else {
-      respBody.textContent = data.error || ('请求失败（HTTP ' + res.status + '）');
-      clearMentorSession(id);
+      let data = {};
+      const raw = await res.text();
+      try { data = raw ? JSON.parse(raw) : {}; } catch {
+        respBody.textContent = '服务端返回格式异常';
+        return;
+      }
+      if (res.ok && data.text) {
+        const metaHtml = reviewMetaHtml(data);
+        respBody.innerHTML = data.structured
+          ? renderStructuredReview(data.structured, metaHtml)
+          : metaHtml + escapeHtml(data.text).replace(/\n/g, '<br/>');
+        mentorSessions[id] = { scenario, answer, feedback: data.text, history: [] };
+        enableFollowUp(id);
+      } else if (res.status === 401) {
+        respBody.textContent = '登录已失效，请重新登录。';
+        setTimeout(() => { clearSession(); lockApp(); }, 2000);
+      } else if (res.status === 429) {
+        respBody.textContent = data.error || '今日次数已达上限';
+      } else {
+        respBody.textContent = data.error || ('请求失败（HTTP ' + res.status + '）');
+        clearMentorSession(id);
+      }
     }
   } catch (e) {
     respBody.textContent = '网络错误：' + e.message;
@@ -2585,6 +2854,12 @@ async function bootstrap() {
   window.addEventListener('resize', reflowKnowledgeStacks);
   const btnExit = document.getElementById('btnExit');
   if (btnExit) btnExit.onclick = logoutApp;
+  const btnHistory = document.getElementById('btnHistory');
+  const historyClose = document.getElementById('historyClose');
+  const historyModal = document.getElementById('historyModal');
+  if (btnHistory) btnHistory.onclick = openHistoryModal;
+  if (historyClose) historyClose.onclick = closeHistoryModal;
+  if (historyModal) historyModal.onclick = (e) => { if (e.target === historyModal) closeHistoryModal(); };
   document.querySelectorAll('.gate-tab').forEach(btn => {
     btn.onclick = () => setGateTab(btn.dataset.gate);
   });
