@@ -16,7 +16,10 @@ const cases = [
   { scenario: '【OTA·决策】代理模式 vs 批发', topicId: 'decision', expect: ['ota-hotel-modes'] },
   { scenario: '【电商·数据】GMV涨利润降', topicId: 'data', expect: ['data-anomaly-debug', 'ecom-search-rank'] },
   { scenario: '【社区·决策】商业化不可能三角', topicId: 'iv-ops', expect: ['community-triangle'] },
-  { scenario: '朋友圈为什么不做首屏', topicId: 'feature', expect: ['moments-not-home'] }
+  { scenario: '【知乎·决策】盐选故事会', topicId: 'decision', expect: ['zhihu-salt-tradeoff'] },
+  { scenario: '【小红书·数据】CES高GMV低', topicId: 'data', expect: ['community-ces', 'xhs-decision-engine'] },
+  { scenario: '【抖音·决策】本地推 vs 补贴', topicId: 'decision', expect: ['douyin-local-push', 'douyin-vs-meituan'] },
+  { scenario: '【AI·数据】RAG采纳率下降', topicId: 'iv-pm', expect: ['aigc-rag-debug-layers'] }
 ];
 
 let pass = 0;

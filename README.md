@@ -107,7 +107,9 @@
 - **流式生成**：DeepSeek 点评 NDJSON 流式返回
 - **场景 prompt 路由**：`【OTA·决策】` 类题自动匹配对应模块 systemPrompt
 
-评测脚本：`node scripts/eval-golden.js` · 扩充知识：`node scripts/expand-knowledge.js`
+扩充知识：`node scripts/expand-knowledge.js` · `node scripts/expand-knowledge-platforms.js`
+
+**v4.43** 新增知乎/小红书/抖音/AIGC 专题：`scenarios-platform-content.json`（38 题）+ 知识库 **80** 张卡。
 
 请勿将密钥写入代码或提交至仓库；`.env` 已列入 `.gitignore`。
 

@@ -11,24 +11,30 @@ const TOPIC_CARD_BOOST = {
   competitor: ['competitor-analysis', 'ota-oligopoly', 'ota-booking-diff'],
   crisis: ['crisis-response-frame', 'crisis-time-window', 'community-aigc'],
   content: ['aida-hook', 'social-currency', 'community-four-roles'],
-  'iv-pm': ['true-demand-three', 'problem-hypothesis-metric', 'ab-test-basics'],
-  'iv-ops': ['community-triangle', 'aarrr', 'cac-ltv'],
+  'iv-pm': ['circles-framework', 'query-tagging-framework', 'aigc-eval-dims', 'aigc-rag-debug-layers'],
+  'iv-ops': ['xhs-creator-tier', 'xhs-vs-douyin-creator', 'zhihu-creator-ops', 'community-triangle'],
   'iv-open': ['star-pressure', 'crisis-response-frame'],
   'iv-skills': ['star-full', 'competitor-analysis', 'priority-rice'],
-  'iv-exp': ['star-full', 'project-intro', 'star-pressure'],
-  'biz-platform': ['super-app-logic', 'cac-ltv', 'aigc-product'],
-  'biz-vertical': ['ecom-shelf-vs-content', 'community-triangle', 'ota-oligopoly'],
-  'biz-monetize': ['cac-ltv', 'aigc-product', 'community-triangle'],
+  'iv-exp': ['star-full', 'prep-framework', 'quantify-resume'],
+  'biz-platform': ['zhihu-qa-vs-content', 'prep-framework', 'super-app-logic'],
+  'biz-vertical': ['xhs-decision-engine', 'douyin-local-loop', 'community-triangle'],
+  'biz-monetize': ['zhihu-salt-tradeoff', 'aigc-eval-dims', 'douyin-local-push'],
   'map-ride': ['ride-supply-demand', 'goal-path-resource-risk'],
-  'map-local': ['local-o2o-triangle', 'short-video-local-life'],
-  'prod-open': ['ia-four', 'moments-not-home', 'problem-hypothesis-metric']
+  'map-local': ['local-o2o-triangle', 'douyin-local-loop'],
+  'prod-open': ['circles-framework', 'ai-agent-boundary', 'moments-not-home'],
+  content: ['xhs-note-structure', 'aida-hook', 'social-currency']
 };
 
 const INDUSTRY_TAG_BOOST = {
   OTA: ['ota-hotel-modes', 'ota-cross-sell', 'ota-oligopoly'],
   电商: ['ecom-shelf-vs-content', 'ecom-revenue-formula', 'ecom-refund-risk'],
   社区: ['community-triangle', 'community-ces', 'community-bilibili-metrics'],
-  即时零售: ['instant-grid', 'instant-vs-ecom', 'retail-three-eras']
+  即时零售: ['instant-grid', 'instant-vs-ecom', 'retail-three-eras'],
+  知乎: ['zhihu-qa-vs-content', 'zhihu-salt-tradeoff', 'zhihu-creator-ops'],
+  小红书: ['xhs-decision-engine', 'xhs-note-structure', 'community-ces'],
+  抖音: ['douyin-local-loop', 'douyin-vs-meituan', 'douyin-poi-ia'],
+  AI: ['aigc-rag-debug-layers', 'aigc-eval-dims', 'query-tagging-framework'],
+  创作者运营: ['xhs-creator-tier', 'xhs-vs-douyin-creator', 'zhihu-creator-ops']
 };
 
 const TOPIC_CAT_BOOST = {

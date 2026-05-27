@@ -1591,7 +1591,7 @@
 
   <div id="mainContent" class="loading-main">加载训练模块…</div>
 
-  <footer class="footer"><span class="footer-brand" aria-label="MindTraining"><span class="hb-mind">Mind</span><span class="hb-train">Training</span></span> · 仅供学习使用 · <a class="footer-link" href="/download">下载 · 开源</a> · <a class="footer-link" href="https://github.com/mianei/ops-trainer" target="_blank" rel="noopener noreferrer">GitHub</a> · <span id="buildTag">v4.42</span></footer>
+  <footer class="footer"><span class="footer-brand" aria-label="MindTraining"><span class="hb-mind">Mind</span><span class="hb-train">Training</span></span> · 仅供学习使用 · <a class="footer-link" href="/download">下载 · 开源</a> · <a class="footer-link" href="https://github.com/mianei/ops-trainer" target="_blank" rel="noopener noreferrer">GitHub</a> · <span id="buildTag">v4.43</span></footer>
   </div>
 </div>
 
@@ -1921,7 +1921,8 @@ async function loadTopics() {
     'scenarios-interview-ops.json',
     'scenarios-interview-open.json',
     'scenarios-interview-biz.json',
-    'scenarios-industry-map.json'
+    'scenarios-industry-map.json',
+    'scenarios-platform-content.json'
   ]) {
     try {
       const ex = await fetch(file + '?t=' + Date.now(), { cache: 'no-store' });
@@ -2050,11 +2051,23 @@ function resolveSystemPrompt(scenario, fallbackPrompt) {
       OTA: { 需求: 'user', 决策: 'decision', 数据: 'data', 竞品: 'competitor', 增长: 'growth', 功能: 'feature', 危机: 'crisis', 开放: 'iv-open' },
       电商: { 需求: 'user', 决策: 'decision', 数据: 'data', 竞品: 'competitor', 增长: 'growth', 功能: 'feature', 危机: 'crisis' },
       社区: { 需求: 'user', 决策: 'decision', 数据: 'data', 竞品: 'competitor', 增长: 'growth', 功能: 'feature', 危机: 'crisis' },
-      即时零售: { 需求: 'user', 决策: 'decision', 数据: 'data' }
+      即时零售: { 需求: 'user', 决策: 'decision', 数据: 'data' },
+      知乎: { 需求: 'user', 决策: 'decision', 数据: 'data', 增长: 'growth', 竞品: 'competitor', 功能: 'feature', 危机: 'crisis', 传播: 'content' },
+      小红书: { 需求: 'user', 决策: 'decision', 数据: 'data', 增长: 'growth', 竞品: 'competitor', 功能: 'feature', 危机: 'crisis', 传播: 'content' },
+      抖音: { 需求: 'user', 决策: 'decision', 数据: 'data', 增长: 'growth', 竞品: 'competitor', 功能: 'feature', 危机: 'crisis', 传播: 'content' },
+      AI: { 数据: 'data', 功能: 'feature' }
     };
     const topicId = industryMap[industry]?.[kind];
     const tp = topicId && map.get(topicId);
     if (tp?.systemPrompt) return tp.systemPrompt;
+  }
+  if (/^【AI PM/.test(text) || /^【AI·/.test(text)) {
+    const pm = map.get('iv-pm');
+    if (pm?.systemPrompt) return pm.systemPrompt;
+  }
+  if (/^【创作者运营/.test(text)) {
+    const ops = map.get('iv-ops');
+    if (ops?.systemPrompt) return ops.systemPrompt;
   }
   if (/^【面试/.test(text) || /面试题/.test(text)) {
     const pm = map.get('iv-pm');
@@ -2067,7 +2080,7 @@ function readingIdsForNav(navId, scenario) {
   const ids = [...(KNOWLEDGE_MAP.readingByNav?.[navId] || [])];
   const tag = String(scenario || '').match(/^【([^·]+)/);
   if (tag) {
-    const extra = { OTA: ['ota-hotel-modes', 'ota-cross-sell'], 电商: ['ecom-shelf-vs-content'], 社区: ['community-triangle'] };
+    const extra = { OTA: ['ota-hotel-modes', 'ota-cross-sell'], 电商: ['ecom-shelf-vs-content'], 社区: ['community-triangle'], 知乎: ['zhihu-qa-vs-content'], 小红书: ['xhs-decision-engine'], 抖音: ['douyin-local-loop'] };
     (extra[tag[1]] || []).forEach(id => { if (!ids.includes(id)) ids.push(id); });
   }
   return ids.slice(0, 3);
