@@ -46,7 +46,7 @@ const newSections = [
     title: '社区 / 内容平台',
     cat: 'ops',
     cards: [
-      { id: 'community-triangle', title: '商业化不可能三角', tags: ['社区', '商业'], body: '**规模 · 氛围 · 变现效率** 难同时最优。\n\n分析产品取舍时先声明牺牲哪一角、用什么指标守护氛围。' },
+      { id: 'community-triangle', title: '社区商业化权衡（常称「不可能三角」）', tags: ['社区', '商业'], body: '行业常用启发式：规模增长 · 社区调性 · 商业化效率难同时最优。分析时声明优先保哪两角、牺牲哪一角，并写护栏指标。' },
       { id: 'community-ces', title: '小红书 CES 排序逻辑', tags: ['社区', '数据'], body: 'CES 综合点赞/收藏/评论/分享/关注，强调 **有用与深度互动** 而非纯曝光。\n\n收藏高、点赞低可能偏「干货」而非标题党。' },
       { id: 'community-evolution', title: '社区 1.0→3.0', tags: ['社区', '增长'], body: '1.0 BBS → 2.0 关注流与圈层 → 3.0 算法兴趣分发。\n\n停滞时查：供给质量、分发效率、入圈门槛哪段卡住。' },
       { id: 'community-bilibili-metrics', title: 'B 站互动权重', tags: ['社区', 'B站'], body: '完播 > 投币 > 收藏 > 点赞 > 弹幕。\n\n标题党：点击高、完播低 → 降权/限流，并看 UP 历史质量。' },

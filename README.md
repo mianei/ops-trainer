@@ -17,7 +17,7 @@
 - 先作答、后点评的训练流程
 - 基于大模型的结构化反馈与追问
 - 访问码门禁（由部署方配置）
-- 响应式布局，支持桌面与移动端浏览器
+- 训练智能体：输入目标或「明天面 XX 岗位」，自动编排读卡→练题；**Demo** 支持 LLM 仿真出题（见 [Agent 路线图](docs/agent-roadmap.md)）
 
 ## 使用方式
 
@@ -107,9 +107,9 @@
 - **流式生成**：DeepSeek 点评 NDJSON 流式返回
 - **场景 prompt 路由**：`【OTA·决策】` 类题自动匹配对应模块 systemPrompt
 
-扩充知识：`node scripts/expand-knowledge.js` · `node scripts/expand-knowledge-platforms.js`
+扩充知识：`node scripts/expand-knowledge-web.js` · `node scripts/expand-knowledge-web-batch2.js`
 
-**v4.43** 新增知乎/小红书/抖音/AIGC 专题：`scenarios-platform-content.json`（38 题）+ 知识库 **80** 张卡。
+**v4.45** 面经第二批 +12 知识卡：`scenarios-web-curated-batch2.json`（+37 题，面经合计 **85** 题）· 知识库 **108** 张卡。
 
 请勿将密钥写入代码或提交至仓库；`.env` 已列入 `.gitignore`。
 

@@ -1,0 +1,71 @@
+/**
+ * 生成 scenarios-sql-practice.json（仅 sql 键）
+ * node scripts/gen-scenarios-sql.js
+ */
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const out = path.join(__dirname, '../scenarios-sql-practice.json');
+
+const scenarios = [
+  // 基础 10
+  '【SQL·基础】表 `event_log(user_id, event, dt)` 记录用户行为。请写 SQL：统计 2025-05-20 当天打开 App 的 DAU（去重用户数）。',
+  '【SQL·基础】表 `user_register(user_id, channel, register_date)`。请写 SQL：查询昨日各渠道新增用户数，按人数降序。',
+  '【SQL·基础】同上注册表。请写 SQL：找出 register_date 在 2025-05-01 至 2025-05-07 之间、渠道为 `sem` 的用户数。',
+  '【SQL·基础】`orders(order_id, user_id, amount, pay_time)` 已支付订单 pay_time 非空。请写 SQL：统计 2025-05 月总 GMV（amount 求和）。',
+  '【SQL·基础】`event_log` 中 event=`page_view`。请写 SQL：统计某页面 `page_id=\'home\'` 在指定日期的 PV（不去重）与 UV（去重 user_id）。',
+  '【SQL·基础】请解释：`COUNT(*)` 与 `COUNT(DISTINCT user_id)` 在算 DAU 时差别是什么？各在什么场景会算错？',
+  '【SQL·基础】表含字段 `dt`（日期分区）。为什么查询时建议先写 `WHERE dt = ...` 再 JOIN？用业务语言说明。',
+  '【SQL·基础】`users(user_id, city)`。请写 SQL：列出用户数 Top 5 的城市（只统计 status=\'active\' 的用户）。',
+  '【SQL·基础】`event_log` 有脏数据：同一 user_id 同一天重复上报 `app_open`。算 DAU 时应如何处理？写出思路或 SQL 要点。',
+  '【SQL·基础】请写 SQL：从 `event_log` 筛出最近 7 天至少打开过 3 天的用户人数（提示：可先按 user_id+dt 去重再计数）。',
+  // 分组 10
+  '【SQL·分组】`event_log(user_id, event, dt, app_version)`。请写 SQL：按 app_version 统计昨日各版本的活跃用户数。',
+  '【SQL·分组】`orders(user_id, category, amount, pay_date)`。请写 SQL：按 category 统计上周各品类订单数与 GMV，仅已支付。',
+  '【SQL·分组】`push_send(user_id, campaign_id, send_time, is_click)`。请写 SQL：按 campaign_id 计算点击率（点击用户数/触达用户数）。',
+  '【SQL·分组】`user_register(channel, register_date)`。请写 SQL：按周（register_date 所在周）统计新增用户趋势（近 8 周）。',
+  '【SQL·分组】`event_log` 中 event=`add_cart`。请写 SQL：按小时统计某日加购次数，用于判断高峰时段。',
+  '【SQL·分组】`HAVING` 与 `WHERE` 区别？举例：筛出「昨日活跃用户数 > 1000」的渠道，应写在哪个子句？',
+  '【SQL·分组】`orders`。请写 SQL：找出昨日客单价（GMV/下单人数）高于全站均值 50% 以上的渠道（假设 orders 有 channel 字段）。',
+  '【SQL·分组】`ab_experiment(user_id, exp_id, variant, enter_date)`。请写 SQL：各 variant 的进组用户数（某日 enter_date）。',
+  '【SQL·分组】`content_feed(user_id, content_id, action, dt)` action 为 show/click。请写 SQL：按 content_id 计算 CTR（click/show），show 至少 100 次才展示。',
+  '【SQL·分组】多指标：按渠道同时输出新增用户数、次日仍活跃用户数（可先分步说明，再写 SQL 框架）。',
+  // 关联 8
+  '【SQL·关联】`users(user_id, channel)` 与 `orders(user_id, order_id, amount)`。请写 SQL：各渠道用户的付费率（付费用户数/注册或活跃用户数，说明分母口径）。',
+  '【SQL·关联】`user_register` LEFT JOIN 昨日 `event_log` 活跃。请写 SQL：计算各渠道「注册且次日活跃」用户数（用于粗看渠道质量）。',
+  '【SQL·关联】`products(product_id, name)` INNER JOIN `orders(product_id, ...)`。请写 SQL：销量 Top 10 商品名称与件数。',
+  '【SQL·关联】解释 INNER JOIN 与 LEFT JOIN：要「保留所有注册用户，看是否购买」用哪种？为什么？',
+  '【SQL·关联】`users` 与 `user_profile(user_id, age_group)`。请写 SQL：各 age_group 的 DAU（需关联 event_log），无画像用户算 unknown。',
+  '【SQL·关联】一对多导致指标重复：orders 一行一单，join 订单明细表时 COUNT 用户会膨胀。如何避免？说一种写法（DISTINCT 或子查询）。',
+  '【SQL·关联】`campaign` 表与 `orders` 通过 `utm_campaign` 关联。请写 SQL：某活动带来的订单数与 GMV（注意只统计活动期内下单）。',
+  '【SQL·关联】三表：`users` + `membership(user_id, level)` + `orders`。请写 SQL：各会员等级的人均 GMV（上周）。',
+  // 留存 8
+  '【SQL·留存】`user_register(register_date)` + `event_log(dt, event)`。请写 SQL 思路：计算 5 月 20 日新增用户的次日留存率。',
+  '【SQL·留存】用 WITH 子句（CTE）写：新增 cohort 与 D+7 活跃 cohort，输出 7 日留存率公式。',
+  '【SQL·留存】留存分析为什么要「按注册日 cohort」而不是只看全站 DAU？用运营语言回答。',
+  '【SQL·留存】`event_log` 只有活跃无注册表时，如何用「首次活跃日」作为 cohort 起点？说步骤即可。',
+  '【SQL·留存】请写 SQL：对比两个渠道 reg_channel=A/B 的 7 日留存（同注册周用户）。',
+  '【SQL·留存】「活跃」定义为当日有 `purchase` 或 `app_open`。写留存时 event 过滤应放在 JOIN 还是 WHERE？',
+  '【SQL·留存】若 D+1 留存突然跌 10pt，SQL 排查会先拆哪 3 个维度？（不写业务故事，写分析维度）',
+  '【SQL·留存】简答：滚动 7 日留存与「按日 cohort 的 D+7 留存」有何不同？各适合什么场景？',
+  // 业务 9
+  '【SQL·业务】漏斗：`show`→`click`→`add_cart`→`pay` 四事件在同一张 `event_log`。请写 SQL 思路：按日输出各步 UV 与步间转化率。',
+  '【SQL·业务】活动表 `activity(user_id, join_time)` 与订单表。请写 SQL：参与活动用户在活动后 7 日内下单人数与 GMV。',
+  '【SQL·业务】`push` 触达后 24h 内是否下单。请写 SQL 框架：关联 send 与 orders，注意时间窗口。',
+  '【SQL·业务】DAU 环比跌 15%，已有分渠道 DAU SQL 结果。请写：你还会补哪 2 条 SQL 验证「是某渠道掉量还是全渠道」？',
+  '【SQL·业务】复购：定义「30 天内购买 ≥2 次」的用户数。`orders(pay_date, user_id)` 请写 SQL 或分步逻辑。',
+  '【SQL·业务】RFM 简化：仅用 `orders` 算每个 user 的最近购买日、购买次数。请写 SQL 产出三列（user_id, last_pay_date, order_cnt）。',
+  '【SQL·业务】AB 实验：对照组/实验组各 1 万用户，指标为付费率。除 SQL 算付费率外，还要汇报什么口径信息避免误导？',
+  '【SQL·业务】表 `daily_metrics(dt, dau, orders, gmv)` 已聚合。请写 SQL：找出 dau 连续 3 天环比下降的日期（可用自连接或窗口，也可描述思路）。',
+  '【SQL·业务】运营要「昨日新用户首单均价」。涉及 register 与 orders。请写 SQL 并说明 join 键与时间对齐注意点。'
+];
+
+if (scenarios.length < 40 || scenarios.length > 55) {
+  console.error('count', scenarios.length);
+  process.exit(1);
+}
+
+fs.writeFileSync(out, JSON.stringify({ sql: scenarios }, null, 2) + '\n', 'utf8');
+console.log('wrote', scenarios.length, 'scenarios to', out);

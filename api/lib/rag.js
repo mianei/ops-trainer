@@ -1,28 +1,31 @@
-/** @typedef {{ id: string, title: string, section: string, sectionId: string, cat: string, tags: string[], text: string }} RagChunk */
+/** @typedef {{ id: string, title: string, section: string, sectionId: string, cat: string, tags: string[], text: string, sourceUrl?: string, sourceLabel?: string, ragKind?: string }} RagChunk */
 
 const TOPIC_CARD_BOOST = {
   user: ['true-demand-three', 'surface-vs-core', 'problem-hypothesis-metric', 'ecom-shelf-vs-content', 'ota-demand-shift'],
   feature: ['problem-hypothesis-metric', 'surface-vs-core', 'ia-four', 'fitts-law'],
   interaction: ['ia-four', 'fitts-law', 'problem-hypothesis-metric'],
-  decision: ['goal-path-resource-risk', 'ota-hotel-modes', 'ecom-revenue-formula', 'ecom-category-strategy'],
-  data: ['data-anomaly-debug', 'cohort-read', 'ecom-search-rank'],
-  growth: ['aarrr', 'ota-cross-sell', 'ecom-subsidy-fission'],
+  decision: ['goal-path-resource-risk', 'priority-rice', 'ota-hotel-modes', 'ecom-revenue-formula'],
+  data: ['guide-data-four-questions', 'sql-select-where', 'sql-group-by', 'data-anomaly-debug', 'impact-coefficient', 'metric-selection-chain', 'renhuochang-analysis', 'cohort-read'],
+  sql: ['sql-why-ops', 'sql-select-where', 'sql-group-by', 'sql-join-left', 'sql-retention-simple', 'sql-ops-tips'],
+  growth: ['guide-aarrr-leaks', 'guide-acquisition-channels', 'aarrr', 'metric-selection-chain', 'ota-cross-sell', 'ecom-subsidy-fission'],
   retention: ['rfm-basics', 'retention-value', 'cohort-read'],
-  competitor: ['competitor-analysis', 'ota-oligopoly', 'ota-booking-diff'],
+  competitor: ['competitor-four-layers', 'competitor-analysis', 'ota-oligopoly'],
   crisis: ['crisis-response-frame', 'crisis-time-window', 'community-aigc'],
-  content: ['aida-hook', 'social-currency', 'community-four-roles'],
-  'iv-pm': ['circles-framework', 'query-tagging-framework', 'aigc-eval-dims', 'aigc-rag-debug-layers'],
-  'iv-ops': ['xhs-creator-tier', 'xhs-vs-douyin-creator', 'zhihu-creator-ops', 'community-triangle'],
+  content: ['ops-plan-5w1h', 'activity-review-loop', 'aida-hook', 'social-currency'],
+  'iv-pm': ['circles-framework', 'ai-project-four-steps', 'true-demand-three', 'llm-output-constraints'],
+  'iv-ops': ['guide-resume-ops-story', 'guide-user-tier-recall', 'activity-review-loop', 'renhuochang-analysis', 'analysis-to-action', 'aarrr'],
   'iv-open': ['star-pressure', 'crisis-response-frame'],
-  'iv-skills': ['star-full', 'competitor-analysis', 'priority-rice'],
-  'iv-exp': ['star-full', 'prep-framework', 'quantify-resume'],
-  'biz-platform': ['zhihu-qa-vs-content', 'prep-framework', 'super-app-logic'],
-  'biz-vertical': ['xhs-decision-engine', 'douyin-local-loop', 'community-triangle'],
-  'biz-monetize': ['zhihu-salt-tradeoff', 'aigc-eval-dims', 'douyin-local-push'],
+  'iv-skills': ['fermi-estimation', 'competitor-four-layers', 'priority-rice', 'competitor-analysis'],
+  'iv-exp': ['starr-framework', 'star-full', 'quantify-resume'],
+  'iv-self': ['starr-framework', 'prep-framework', 'star-pressure'],
+  'iv-career': ['self-intro-four', 'career-stages'],
+  'iv-misc': ['interview-reverse-q', 'scqa-framework'],
+  'biz-platform': ['super-app-logic', 'gmv-decomposition', 'scqa-framework'],
+  'biz-vertical': ['renhuochang-analysis', 'community-triangle', 'churn-layer-ops'],
+  'biz-monetize': ['arpu-ltv-dau', 'north-star-guardrails', 'aigc-eval-dims'],
   'map-ride': ['ride-supply-demand', 'goal-path-resource-risk'],
-  'map-local': ['local-o2o-triangle', 'douyin-local-loop'],
-  'prod-open': ['circles-framework', 'ai-agent-boundary', 'moments-not-home'],
-  content: ['xhs-note-structure', 'aida-hook', 'social-currency']
+  'map-local': ['local-o2o-triangle'],
+  'prod-open': ['circles-framework', 'ai-agent-boundary', 'moments-not-home']
 };
 
 const INDUSTRY_TAG_BOOST = {
@@ -30,11 +33,8 @@ const INDUSTRY_TAG_BOOST = {
   电商: ['ecom-shelf-vs-content', 'ecom-revenue-formula', 'ecom-refund-risk'],
   社区: ['community-triangle', 'community-ces', 'community-bilibili-metrics'],
   即时零售: ['instant-grid', 'instant-vs-ecom', 'retail-three-eras'],
-  知乎: ['zhihu-qa-vs-content', 'zhihu-salt-tradeoff', 'zhihu-creator-ops'],
-  小红书: ['xhs-decision-engine', 'xhs-note-structure', 'community-ces'],
-  抖音: ['douyin-local-loop', 'douyin-vs-meituan', 'douyin-poi-ia'],
-  AI: ['aigc-rag-debug-layers', 'aigc-eval-dims', 'query-tagging-framework'],
-  创作者运营: ['xhs-creator-tier', 'xhs-vs-douyin-creator', 'zhihu-creator-ops']
+  面经: ['starr-framework', 'prep-framework', 'guide-resume-ops-story', 'metric-selection-chain', 'competitor-four-layers'],
+  SQL: ['sql-why-ops', 'sql-select-where', 'sql-group-by', 'sql-join-left', 'sql-retention-simple']
 };
 
 const TOPIC_CAT_BOOST = {
@@ -82,6 +82,101 @@ export function buildChunksFromKnowledge(knowledge) {
     }
   }
   return chunks;
+}
+
+/** 将外部面经检索结果转为 RAG 切片（会话级，随 Agent 任务下发） */
+export function buildChunksFromSearchResults(results) {
+  /** @type {RagChunk[]} */
+  const chunks = [];
+  for (const r of results || []) {
+    if (!r || r.external || !r.snippet) continue;
+    const title = String(r.title || '').trim();
+    const snippet = String(r.snippet || '').trim();
+    const url = String(r.url || '').trim();
+    if (!title || !snippet) continue;
+    const sourceLabel = String(r.sourceLabel || r.source || '面经');
+    const slug = url.replace(/[^a-zA-Z0-9]/g, '').slice(-24) || String(chunks.length);
+    chunks.push({
+      id: `interview-rag-${slug}`,
+      title: title.slice(0, 120),
+      section: `${sourceLabel} · 检索面经`,
+      sectionId: 'interview-rag',
+      cat: 'interview',
+      tags: [sourceLabel, r.source].filter(Boolean),
+      text: `${title}\n${snippet}${url ? `\n来源：${url}` : ''}`.trim(),
+      sourceUrl: url || undefined,
+      sourceLabel,
+      ragKind: 'interview-search'
+    });
+  }
+  return chunks;
+}
+
+/** 从项目根目录 interview-rag-feed.json 加载人工整理面经（无需 Serper） */
+export async function loadInterviewRagFeed(origin) {
+  try {
+    const url = `${String(origin || '').replace(/\/$/, '')}/interview-rag-feed.json?t=${Date.now()}`;
+    const res = await fetch(url, { cache: 'no-store' });
+    if (!res.ok) return [];
+    const data = await res.json();
+    const posts = (Array.isArray(data.posts) ? data.posts : []).map((p) => ({
+      title: p.title,
+      snippet: p.body || p.snippet || p.content || '',
+      url: p.url,
+      source: p.source || 'feed',
+      sourceLabel: p.sourceLabel || '整理面经',
+      external: false
+    }));
+    return buildChunksFromSearchResults(posts).map((c) => ({
+      ...c,
+      ragKind: 'interview-feed',
+      section: `${c.sourceLabel || '整理面经'} · 投喂`
+    }));
+  } catch {
+    return [];
+  }
+}
+
+/** 按目标/岗位简单筛选投喂面经 */
+export function filterFeedChunksByIntent(chunks, intent, goal) {
+  if (!chunks.length) return [];
+  const hay = [goal, intent?.company, intent?.roleLabel].filter(Boolean).join(' ').toLowerCase();
+  if (!hay.trim()) return chunks.slice(0, 10);
+  const tokens = hay.split(/[\s,，、]+/).filter((t) => t.length >= 2);
+  const scored = chunks.map((c) => {
+    const text = `${c.title} ${c.text} ${(c.tags || []).join(' ')}`.toLowerCase();
+    const score = tokens.reduce((s, t) => s + (text.includes(t) ? 1 : 0), 0);
+    return { c, score };
+  });
+  const hit = scored.filter((s) => s.score > 0);
+  const pick = (hit.length ? hit : scored).sort((a, b) => b.score - a.score);
+  return pick.slice(0, 10).map((s) => s.c);
+}
+
+/** @param {unknown[]} raw */
+export function normalizeSessionRagChunks(raw) {
+  if (!Array.isArray(raw)) return [];
+  /** @type {RagChunk[]} */
+  const out = [];
+  for (const item of raw) {
+    if (!item || typeof item !== 'object') continue;
+    const title = String(item.title || '').trim();
+    const text = String(item.text || item.snippet || '').trim();
+    if (!title || !text) continue;
+    out.push({
+      id: String(item.id || `session-${out.length}`),
+      title,
+      section: String(item.section || '检索面经'),
+      sectionId: String(item.sectionId || 'interview-rag'),
+      cat: String(item.cat || 'interview'),
+      tags: Array.isArray(item.tags) ? item.tags.map(String) : [],
+      text: text.includes(title) ? text : `${title}\n${text}`,
+      sourceUrl: item.sourceUrl ? String(item.sourceUrl) : undefined,
+      sourceLabel: item.sourceLabel ? String(item.sourceLabel) : undefined,
+      ragKind: item.ragKind || 'interview-search'
+    });
+  }
+  return out;
 }
 
 function tokenize(text) {
@@ -139,6 +234,7 @@ export function retrieveChunks(chunks, query) {
     }
     if (boostIds.includes(chunk.id)) score += 4;
     if (boostCat && chunk.cat === boostCat) score += 1.5;
+    if (chunk.ragKind === 'interview-search' || chunk.ragKind === 'interview-feed') score += 2;
     for (const [ind, ids] of Object.entries(INDUSTRY_TAG_BOOST)) {
       if (qText.includes(ind) && ids.includes(chunk.id)) score += 3;
     }
@@ -158,11 +254,12 @@ export function retrieveChunks(chunks, query) {
 export function formatRagContext(chunks) {
   if (!chunks.length) return '';
   const blocks = chunks.map((c, i) => {
-    const body = c.text.split('\n').slice(1).join('\n').trim();
-    return `【参考 ${i + 1}：${c.title} · ${c.section}】\n${body}`;
+    const body = c.text.split('\n').slice(1).join('\n').trim() || c.text;
+    const src = c.sourceLabel ? ` · ${c.sourceLabel}` : c.ragKind === 'interview-search' ? ' · 检索面经' : '';
+    return `【参考 ${i + 1}：${c.title} · ${c.section}${src}】\n${body}`;
   });
   return (
-    '\n\n---\n知识库检索（RAG，供对齐框架用；请结合本题场景与学员作答，勿生硬照搬）：\n' +
+    '\n\n---\n知识库与面经检索（RAG，供对齐框架与真实面经表述；请结合本题场景与学员作答，勿生硬照搬）：\n' +
     blocks.join('\n\n')
   );
 }
@@ -184,9 +281,44 @@ export async function loadKnowledgeChunks(origin) {
   return chunks;
 }
 
-export async function retrieveRagContext(origin, query) {
-  if (!ragEnabled()) return { chunks: [], context: '' };
-  const all = await loadKnowledgeChunks(origin);
-  const chunks = retrieveChunks(all, query);
-  return { chunks, context: formatRagContext(chunks) };
+export async function retrieveRagContext(origin, query, options = {}) {
+  if (!ragEnabled()) return { chunks: [], context: '', interviewRagCount: 0 };
+
+  let sessionChunks = normalizeSessionRagChunks(options.sessionChunks);
+  if (!sessionChunks.length) {
+    const feed = await loadInterviewRagFeed(origin);
+    if (feed.length) {
+      const fromFeed = retrieveChunks(feed, query);
+      sessionChunks = fromFeed.length ? fromFeed : feed.slice(0, 3);
+    }
+  }
+  const knowledge = await loadKnowledgeChunks(origin);
+  const fromKnowledge = retrieveChunks(knowledge, query);
+  const fromSession = sessionChunks.length ? retrieveChunks(sessionChunks, query) : [];
+
+  const k = ragTopK();
+  const sessionTake = Math.min(fromSession.length, Math.max(1, Math.ceil(k / 2)));
+  const knowTake = Math.max(1, k - sessionTake);
+  const seen = new Set();
+  /** @type {RagChunk[]} */
+  const merged = [];
+
+  for (const c of fromSession.slice(0, sessionTake)) {
+    if (seen.has(c.id)) continue;
+    seen.add(c.id);
+    merged.push(c);
+  }
+  for (const c of fromKnowledge) {
+    if (merged.length >= k) break;
+    if (seen.has(c.id)) continue;
+    seen.add(c.id);
+    merged.push(c);
+    if (merged.length >= sessionTake + knowTake) break;
+  }
+
+  return {
+    chunks: merged,
+    context: formatRagContext(merged),
+    interviewRagCount: merged.filter((c) => c.ragKind === 'interview-search' || c.ragKind === 'interview-feed').length
+  };
 }

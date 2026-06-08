@@ -641,12 +641,528 @@
     color: var(--ink);
     box-shadow: var(--shadow-sm), var(--inset-hi);
   }
+  .scenario-search-wrap {
+    position: relative;
+    width: 100%;
+    margin-bottom: 0;
+  }
+  .train-toolbar {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+  @media (min-width: 900px) {
+    .train-toolbar {
+      grid-column: 1 / -1;
+    }
+  }
+  .scenario-search-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink3);
+    margin-bottom: 6px;
+  }
+  .scenario-search-field {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+  }
+  .scenario-search-icon {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ink3);
+    pointer-events: none;
+  }
+  .scenario-search-icon svg {
+    display: block;
+    width: 16px;
+    height: 16px;
+  }
+  .scenario-search-input {
+    width: 100%;
+    font-family: inherit;
+    font-size: 14px;
+    padding: 10px 14px 10px 40px;
+    border-radius: var(--r-lg);
+    border: 1px solid var(--frost-border);
+    background: rgba(255, 255, 255, 0.55);
+    color: var(--ink);
+    box-shadow: var(--inset-hi);
+    outline: none;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .scenario-search-input:focus {
+    border-color: rgba(0, 0, 0, 0.12);
+    background: #fff;
+    box-shadow: var(--inset-hi);
+  }
+  .scenario-search-input::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+  }
+  .scenario-search-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+  }
+  .scenario-search-chip {
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--frost-border);
+    background: rgba(255, 255, 255, 0.4);
+    color: var(--ink2);
+    cursor: pointer;
+  }
+  .scenario-search-chip:hover { background: #fff; color: var(--ink); }
+  .scenario-search-results {
+    position: absolute;
+    z-index: 40;
+    left: 0;
+    right: 0;
+    top: calc(100% + 4px);
+    max-height: min(320px, 50vh);
+    overflow-y: auto;
+    border-radius: var(--r-lg);
+    background: #fff;
+    border: 1px solid var(--frost-border);
+    box-shadow: var(--shadow-md);
+  }
+  .scenario-search-results[hidden] { display: none !important; }
+  .scenario-search-item {
+    display: block;
+    width: 100%;
+    text-align: left;
+    font-family: inherit;
+    font-size: 13px;
+    line-height: 1.45;
+    padding: 10px 12px;
+    border: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+  }
+  .scenario-search-item:last-child { border-bottom: none; }
+  .scenario-search-item:hover,
+  .scenario-search-item:focus {
+    background: rgba(99, 102, 241, 0.08);
+    outline: none;
+  }
+  .scenario-search-item-meta {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ink3);
+    margin-bottom: 4px;
+  }
+  .scenario-search-item mark {
+    background: rgba(250, 204, 21, 0.45);
+    color: inherit;
+    padding: 0 1px;
+    border-radius: 2px;
+  }
+  .scenario-search-empty {
+    padding: 12px 14px;
+    font-size: 13px;
+    color: var(--ink3);
+  }
+  .goal-plan-wrap {
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .goal-plan-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink3);
+    margin-bottom: 6px;
+  }
+  .goal-plan-row {
+    display: flex;
+    gap: 8px;
+    align-items: stretch;
+  }
+  .goal-plan-input {
+    flex: 1;
+    min-width: 0;
+    font-family: inherit;
+    font-size: 14px;
+    padding: 10px 14px;
+    border-radius: var(--r-lg);
+    border: 1px solid var(--frost-border);
+    background: rgba(255, 255, 255, 0.55);
+    color: var(--ink);
+    box-shadow: var(--inset-hi);
+    outline: none;
+  }
+  .goal-plan-input:focus {
+    border-color: rgba(0, 0, 0, 0.12);
+    background: #fff;
+  }
+  .goal-plan-btn {
+    flex-shrink: 0;
+    height: auto;
+    padding: 10px 18px;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+  .goal-plan-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+  .goal-plan-error {
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--danger);
+    display: none;
+  }
+  .goal-plan-error.visible { display: block; }
+  .module-head .mh-focus {
+    font-size: 14px;
+    color: var(--accent);
+    line-height: 1.5;
+    margin-bottom: 10px;
+    padding: 10px 12px;
+    border-radius: var(--r);
+    background: rgba(0, 113, 227, 0.06);
+    border: 1px solid rgba(0, 113, 227, 0.12);
+  }
+  .module-head .mh-focus-label { font-weight: 700; }
+  .goal-plan-list {
+    margin-bottom: 1rem;
+    padding: 12px 14px;
+    border-radius: var(--r-lg);
+    background: rgba(255, 255, 255, 0.45);
+    border: 1px solid var(--frost-border);
+  }
+  .goal-plan-list[hidden] { display: none !important; }
+  .goal-plan-list-head {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink3);
+    margin-bottom: 8px;
+  }
+  .goal-plan-item {
+    display: block;
+    width: 100%;
+    text-align: left;
+    font-family: inherit;
+    font-size: 13px;
+    line-height: 1.45;
+    padding: 10px 12px;
+    margin-bottom: 6px;
+    border-radius: var(--r);
+    border: 1px solid var(--frost-border);
+    background: rgba(255, 255, 255, 0.65);
+    color: var(--ink);
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .goal-plan-item:last-child { margin-bottom: 0; }
+  .goal-plan-item:hover,
+  .goal-plan-item:focus {
+    background: #fff;
+    border-color: rgba(38, 194, 129, 0.35);
+    outline: none;
+  }
+  .goal-plan-item-label {
+    display: block;
+    font-weight: 600;
+    font-size: 12px;
+    color: var(--accent-green, #26c281);
+    margin-bottom: 4px;
+  }
+  .goal-plan-item-text {
+    display: block;
+    color: var(--ink2);
+    font-size: 12px;
+  }
+  @media (max-width: 899px) {
+    .goal-plan-row { flex-direction: column; }
+    .goal-plan-btn { width: 100%; min-height: 44px; }
+    .goal-plan-input { font-size: 16px; }
+  }
+  .mission-bar {
+    margin-bottom: 1rem;
+    padding: 12px 14px;
+    border-radius: var(--r-lg);
+    background: linear-gradient(135deg, rgba(38, 194, 129, 0.08) 0%, rgba(255, 255, 255, 0.65) 100%);
+    border: 1px solid rgba(38, 194, 129, 0.22);
+  }
+  .mission-bar[hidden] { display: none !important; }
+  .mission-bar-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .mission-bar-title {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #26c281;
+  }
+  .mission-bar-progress {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink2);
+  }
+  .mission-bar-focus {
+    font-size: 14px;
+    line-height: 1.45;
+    color: var(--ink);
+  }
+  .mission-bar-focus strong { color: var(--accent); }
+  .mission-step-panel {
+    margin-bottom: 1rem;
+  }
+  .mission-step-panel[hidden] { display: none !important; }
+  .mission-read-card {
+    padding: 1.25rem 1.35rem;
+  }
+  .mission-step-tag {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink3);
+    margin-bottom: 8px;
+  }
+  .mission-read-card h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    letter-spacing: -0.02em;
+  }
+  .mission-read-body {
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--ink2);
+    white-space: pre-wrap;
+    margin-bottom: 1rem;
+  }
+  .mission-step-done-btn {
+    width: 100%;
+    min-height: 44px;
+  }
+  .goal-plan-item.done {
+    opacity: 0.55;
+    text-decoration: line-through;
+  }
+  .goal-plan-item.current {
+    border-color: rgba(38, 194, 129, 0.45);
+    background: rgba(38, 194, 129, 0.06);
+  }
+  .external-search-box {
+    margin-bottom: 1rem;
+    padding: 12px 14px;
+    border-radius: var(--r-lg);
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid var(--frost-border);
+  }
+  .external-search-box[hidden] { display: none !important; }
+  .external-search-head {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink3);
+    margin-bottom: 8px;
+  }
+  .external-search-note {
+    font-size: 12px;
+    color: var(--ink3);
+    margin-bottom: 8px;
+    line-height: 1.45;
+  }
+  .external-search-item {
+    display: block;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--line);
+    text-decoration: none;
+    color: inherit;
+  }
+  .external-search-item:last-child { border-bottom: none; }
+  .external-search-item:hover .external-search-title { color: var(--accent); }
+  .external-search-meta {
+    font-size: 10px;
+    font-weight: 600;
+    color: #26c281;
+    margin-bottom: 2px;
+  }
+  .external-search-title {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.35;
+  }
+  .external-search-snippet {
+    display: block;
+    font-size: 12px;
+    color: var(--ink2);
+    line-height: 1.45;
+    margin-top: 4px;
+  }
+  .llm-demo-box {
+    margin-bottom: 1rem;
+    padding: 12px 14px;
+    border-radius: var(--r-lg);
+    background: rgba(0, 113, 227, 0.06);
+    border: 1px solid rgba(0, 113, 227, 0.15);
+  }
+  .llm-demo-box[hidden] { display: none !important; }
+  .llm-demo-head {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #0071e3;
+    margin-bottom: 6px;
+  }
+  .llm-demo-note {
+    font-size: 12px;
+    color: var(--ink2);
+    line-height: 1.5;
+  }
   .knowledge-intro {
     font-size: 14px;
     color: var(--ink2);
     line-height: 1.55;
-    margin-bottom: 1.25rem;
+    margin-bottom: 0.75rem;
     max-width: 40em;
+  }
+  .knowledge-pager {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 1.25rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  }
+  .knowledge-page-btn {
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 8px 12px;
+    border-radius: var(--r-lg);
+    border: 1px solid var(--frost-border);
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.52) 0%, rgba(255, 255, 255, 0.28) 100%);
+    backdrop-filter: var(--blur-sm);
+    -webkit-backdrop-filter: var(--blur-sm);
+    color: var(--ink2);
+    cursor: pointer;
+    transition: background 0.3s ease, border-color 0.3s ease, color 0.25s ease, box-shadow 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .knowledge-page-btn:hover {
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.78) 0%, rgba(255, 255, 255, 0.5) 100%);
+    color: var(--ink);
+    box-shadow: var(--inset-hi);
+  }
+  .knowledge-page-btn.active {
+    color: var(--ink);
+    backdrop-filter: var(--blur-md);
+    -webkit-backdrop-filter: var(--blur-md);
+    box-shadow: var(--inset-hi), 0 6px 20px rgba(0, 0, 0, 0.06);
+  }
+  .knowledge-page-btn.cat-product.active {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.88) 0%, rgba(212, 245, 232, 0.62) 45%, rgba(38, 194, 129, 0.14) 100%);
+    border-color: rgba(255, 255, 255, 0.9);
+    box-shadow: var(--inset-hi), 0 6px 22px rgba(38, 194, 129, 0.12);
+  }
+  .knowledge-page-btn.cat-ops.active {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.88) 0%, rgba(220, 236, 255, 0.62) 45%, rgba(0, 102, 204, 0.1) 100%);
+    border-color: rgba(255, 255, 255, 0.9);
+    box-shadow: var(--inset-hi), 0 6px 22px rgba(0, 102, 204, 0.1);
+  }
+  .knowledge-page-btn.cat-interview.active {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.88) 0%, rgba(232, 230, 255, 0.65) 45%, rgba(94, 92, 230, 0.12) 100%);
+    border-color: rgba(255, 255, 255, 0.9);
+    box-shadow: var(--inset-hi), 0 6px 22px rgba(94, 92, 230, 0.1);
+  }
+  .kpage-count {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.06);
+    color: var(--ink3);
+    font-variant-numeric: tabular-nums;
+  }
+  .knowledge-page-btn.active .kpage-count {
+    backdrop-filter: var(--blur-sm);
+    -webkit-backdrop-filter: var(--blur-sm);
+    border: 1px solid rgba(255, 255, 255, 0.55);
+  }
+  .knowledge-page-btn.cat-product.active .kpage-count {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.75) 0%, rgba(38, 194, 129, 0.22) 100%);
+    color: var(--product);
+  }
+  .knowledge-page-btn.cat-ops.active .kpage-count {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.75) 0%, rgba(0, 102, 204, 0.18) 100%);
+    color: var(--ops);
+  }
+  .knowledge-page-btn.cat-interview.active .kpage-count {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.75) 0%, rgba(94, 92, 230, 0.2) 100%);
+    color: var(--interview);
+  }
+  .knowledge-page-hint {
+    width: 100%;
+    font-size: 12px;
+    color: var(--ink3);
+    margin: -4px 0 0;
+  }
+  .knowledge-pager-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+  }
+  .knowledge-pager-nav button {
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 14px;
+    border-radius: var(--r);
+    border: 1px solid var(--frost-border);
+    background: rgba(255, 255, 255, 0.55);
+    color: var(--ink2);
+    cursor: pointer;
+  }
+  .knowledge-pager-nav button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  .knowledge-pager-nav button:not(:disabled):hover {
+    background: #fff;
+    color: var(--ink);
+  }
+  .knowledge-pager-pos {
+    font-size: 12px;
+    color: var(--ink3);
+    font-variant-numeric: tabular-nums;
   }
   .knowledge-section {
     margin-bottom: 2rem;
@@ -970,26 +1486,100 @@
     font-style: normal; font-weight: 500; opacity: 0.85;
   }
   .module-item {
+    position: relative;
     display: block; width: 100%; text-align: left;
-    padding: 5px 8px 5px 10px;
-    border: none; border-radius: var(--r);
+    padding: 6px 10px 6px 16px;
+    border: 1px solid transparent;
+    border-radius: var(--r-md);
     background: transparent; cursor: pointer;
-    font-family: inherit; transition: background 0.2s;
-    border-left: 3px solid transparent;
+    font-family: inherit;
+    transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
   }
-  .module-item:hover { background: rgba(255, 255, 255, 0.35); }
-  .module-item.active {
-    background: rgba(255, 255, 255, 0.52);
+  .module-item::before {
+    content: '';
+    position: absolute;
+    left: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 0;
+    border-radius: 3px;
+    background: transparent;
+    opacity: 0;
+    transition: height 0.3s ease, opacity 0.3s ease, box-shadow 0.3s ease;
+  }
+  .module-item:hover {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.42) 0%, rgba(255, 255, 255, 0.18) 100%);
     backdrop-filter: var(--blur-sm);
     -webkit-backdrop-filter: var(--blur-sm);
-    box-shadow: var(--inset-hi), 0 2px 8px rgba(0, 0, 0, 0.04);
-    border-left-color: var(--ink);
   }
-  .module-item.active.cat-product { border-left-color: var(--product); }
-  .module-item.active.cat-ops { border-left-color: var(--ops); }
-  .module-item.active.cat-interview { border-left-color: var(--interview); }
-  .module-item.active.cat-biz { border-left-color: var(--biz); }
-  .module-item.active.cat-map { border-left-color: var(--map); }
+  .module-item.active {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.82) 0%, rgba(255, 255, 255, 0.48) 100%);
+    border-color: var(--frost-border);
+    backdrop-filter: var(--blur-md);
+    -webkit-backdrop-filter: var(--blur-md);
+    box-shadow: var(--inset-hi), 0 4px 14px rgba(0, 0, 0, 0.05);
+  }
+  .module-item.active::before {
+    height: 52%;
+    min-height: 12px;
+    max-height: 20px;
+    opacity: 1;
+  }
+  .module-item.active.cat-product {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(212, 245, 232, 0.5) 50%, rgba(38, 194, 129, 0.1) 100%);
+    box-shadow: var(--inset-hi), 0 4px 16px rgba(38, 194, 129, 0.1);
+  }
+  .module-item.active.cat-product::before {
+    background: linear-gradient(180deg, #6ee7b7 0%, var(--product) 50%, #1e9e68 100%);
+    box-shadow: 0 0 10px rgba(38, 194, 129, 0.35);
+  }
+  .module-item.active.cat-ops {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(220, 236, 255, 0.5) 50%, rgba(0, 102, 204, 0.08) 100%);
+    box-shadow: var(--inset-hi), 0 4px 16px rgba(0, 102, 204, 0.08);
+  }
+  .module-item.active.cat-ops::before {
+    background: linear-gradient(180deg, #6eb3ff 0%, var(--ops) 50%, #004d99 100%);
+    box-shadow: 0 0 10px rgba(0, 102, 204, 0.3);
+  }
+  .module-item.active.cat-interview {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(232, 230, 255, 0.52) 50%, rgba(94, 92, 230, 0.1) 100%);
+    box-shadow: var(--inset-hi), 0 4px 16px rgba(94, 92, 230, 0.1);
+  }
+  .module-item.active.cat-interview::before {
+    background: linear-gradient(180deg, #a5a3ff 0%, var(--interview) 50%, #4240b8 100%);
+    box-shadow: 0 0 10px rgba(94, 92, 230, 0.3);
+  }
+  .module-item.active.cat-biz {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(220, 248, 245, 0.5) 50%, rgba(48, 176, 166, 0.1) 100%);
+    box-shadow: var(--inset-hi), 0 4px 16px rgba(48, 176, 166, 0.1);
+  }
+  .module-item.active.cat-biz::before {
+    background: linear-gradient(180deg, #7dd9cf 0%, var(--biz) 50%, #248f86 100%);
+    box-shadow: 0 0 10px rgba(48, 176, 166, 0.28);
+  }
+  .module-item.active.cat-map {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(245, 238, 228, 0.55) 50%, rgba(172, 142, 104, 0.12) 100%);
+    box-shadow: var(--inset-hi), 0 4px 16px rgba(172, 142, 104, 0.1);
+  }
+  .module-item.active.cat-map::before {
+    background: linear-gradient(180deg, #d4b896 0%, var(--map) 50%, #8a7048 100%);
+    box-shadow: 0 0 10px rgba(172, 142, 104, 0.28);
+  }
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .module-item:hover,
+    .module-item.active,
+    .knowledge-page-btn,
+    .knowledge-page-btn.active {
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+    }
+    .module-item.active.cat-product { background: var(--product-soft); }
+    .module-item.active.cat-ops { background: var(--ops-soft); }
+    .module-item.active.cat-interview { background: var(--interview-soft); }
+    .module-item.active.cat-biz { background: var(--biz-soft); }
+    .module-item.active.cat-map { background: var(--map-soft); }
+  }
   .module-item .mi-cat {
     font-size: 10px; font-weight: 600; letter-spacing: 0.06em;
     text-transform: uppercase; margin-bottom: 4px;
@@ -1591,7 +2181,7 @@
 
   <div id="mainContent" class="loading-main">加载训练模块…</div>
 
-  <footer class="footer"><span class="footer-brand" aria-label="MindTraining"><span class="hb-mind">Mind</span><span class="hb-train">Training</span></span> · 仅供学习使用 · <a class="footer-link" href="/download">下载 · 开源</a> · <a class="footer-link" href="https://github.com/mianei/ops-trainer" target="_blank" rel="noopener noreferrer">GitHub</a> · <span id="buildTag">v4.43</span></footer>
+  <footer class="footer"><span class="footer-brand" aria-label="MindTraining"><span class="hb-mind">Mind</span><span class="hb-train">Training</span></span> · 仅供学习使用 · <a class="footer-link" href="/download">下载 · 开源</a> · <a class="footer-link" href="https://github.com/mianei/ops-trainer" target="_blank" rel="noopener noreferrer">GitHub</a> · <span id="buildTag">v4.58</span></footer>
   </div>
 </div>
 
@@ -1614,10 +2204,63 @@ const REMEMBER_DAYS = 7;
 let accessCode = '';
 let userAccountId = '';
 let workspaceMode = 'train';
+let knowledgePageId = localStorage.getItem('knowledgePageId') || 'product';
+/** 切到知识库前暂存的题目/作答，返回练习时恢复 */
+const scenarioPinByTopic = Object.create(null);
+const answerDraftByTopic = Object.create(null);
+let trainUiReturnTopicId = '';
+
+/** 知识库分页：每页只展示对应 section，避免单页过长 */
+const KNOWLEDGE_PAGES = [
+  {
+    id: 'product',
+    label: '产品思维',
+    cat: 'product',
+    hint: '需求 · 交互 · AI 产品 · PM 方法',
+    sectionIds: ['product-needs', 'wechat-product', 'content-ux', 'platform-aigc', 'web-pm-methods', 'web-ai-pm']
+  },
+  {
+    id: 'ops-core',
+    label: '运营基础',
+    cat: 'ops',
+    hint: '决策 · 增长 · 数据 · SQL · 体系课',
+    sectionIds: ['ops-decision', 'platform-rec', 'growth-retention', 'biz-platform', 'instant-retail', 'map-local', 'crisis-content', 'web-data-ops', 'ops-learning-guide', 'ops-sql-basics']
+  },
+  {
+    id: 'industry',
+    label: 'OTA · 电商',
+    cat: 'ops',
+    hint: '酒旅 · 货架 · 即时零售',
+    sectionIds: ['industry-ota', 'ota-extra', 'industry-ecommerce', 'ecom-extra', 'local-map']
+  },
+  {
+    id: 'community',
+    label: '社区 · 平台',
+    cat: 'ops',
+    hint: '内容社区 · 知乎 · 小红书 · 抖音',
+    sectionIds: ['industry-community', 'community-extra', 'platform-zhihu', 'platform-xhs', 'platform-douyin']
+  },
+  {
+    id: 'interview',
+    label: '面试 · 面经',
+    cat: 'interview',
+    hint: 'STAR · 框架 · 笔试 · 表达',
+    sectionIds: ['interview-skills', 'interview-expr', 'interview-pm-extra', 'interview-frameworks', 'web-interview-core', 'web-interview-batch2']
+  }
+];
 let KNOWLEDGE = [];
 let KNOWLEDGE_MAP = { readingByNav: {}, readingByTopic: {} };
 let TOPICS = [];
 let activeTopicId = '';
+/** @type {{ navId: string, moduleLabel: string, scenario: string, tag: string }[]} */
+let SCENARIO_INDEX = [];
+let scenarioSearchTimer = null;
+/** @type {string} */
+let activeGoalFocus = '';
+/** @type {{ goal: string, focus: string, steps: object[], currentIndex: number, doneKeys: string[] } | null} */
+let agentMission = null;
+/** @type {{ navId: string, moduleLabel: string, scenario: string, tag: string }[]} */
+let scenarioSearchHits = [];
 /** @type {Record<string, { scenario: string, answer: string, feedback: string, history: {q:string,a:string}[] }>} */
 const mentorSessions = {};
 
@@ -1663,6 +2306,7 @@ const CURRICULUM = {
   ],
   ops: [
     { label: '经营与决策', id: 'decision', poolIds: ['decision', 'data', 'content', 'crisis'], desc: '决策 · 数据 · 传播 · 舆情' },
+    { label: 'SQL 实操', id: 'sql', desc: '取数 · 漏斗 · 留存 · 日报' },
     { label: '增长与留存', id: 'growth', poolIds: ['growth', 'retention'], desc: 'AARRR · 用户分层' },
     { label: '产运策略', id: 'iv-ops', poolIds: ['iv-ops', 'iv-open'], desc: '增长商业化 · 平台博弈' },
     { label: '行业商业', id: 'biz-platform', poolIds: ['biz-platform', 'biz-vertical', 'biz-monetize', 'map-ride', 'map-local'], desc: '平台 · 垂直 · 出行与本地生活' }
@@ -1900,7 +2544,7 @@ async function loadTopics() {
   const data = await res.json();
   if (!Array.isArray(data.topics) || !data.topics.length) throw new Error('topics 格式错误');
   const topics = data.topics;
-  for (const topicsFile of ['topics-interview.json', 'topics-biz.json', 'topics-map.json']) {
+  for (const topicsFile of ['topics-interview.json', 'topics-biz.json', 'topics-map.json', 'topics-sql.json']) {
     try {
       const tr = await fetch(topicsFile + '?t=' + Date.now(), { cache: 'no-store' });
       if (tr.ok) {
@@ -1922,6 +2566,11 @@ async function loadTopics() {
     'scenarios-interview-open.json',
     'scenarios-interview-biz.json',
     'scenarios-industry-map.json',
+    'scenarios-web-curated.json',
+    'scenarios-web-curated-batch2.json',
+    'scenarios-sql-practice.json',
+    'scenarios-pm-product-batch3.json',
+    'scenarios-pm-debrief.json',
     'scenarios-platform-content.json'
   ]) {
     try {
@@ -1950,7 +2599,11 @@ function updateModuleHead(id) {
   const m = navCategory(id);
   const head = document.getElementById('moduleHead');
   if (!head || !t) return;
+  const focusBlock = activeGoalFocus
+    ? `<p class="mh-focus"><span class="mh-focus-label">本次重点：</span>${escapeHtml(activeGoalFocus)}</p>`
+    : '';
   head.innerHTML = `
+    ${focusBlock}
     <span class="mh-cat ${m.cat}">${m.catLabel}</span>
     <h2>${escapeHtml(mod ? mod.label : t.label)}</h2>
     <p>${escapeHtml(mod ? mod.desc : (t.desc || ''))}</p>
@@ -1972,7 +2625,7 @@ function appendModuleBtn(parent, t, mod, isActive, navCat) {
   return btn;
 }
 
-function renderNavGroup(nav, cat, catLabel, modules, topicById, firstActiveRef) {
+function renderNavGroup(nav, cat, catLabel, modules, topicById, activeRef) {
   const topics = modules.map(m => topicById.get(m.id)).filter(Boolean);
   const q = modules.reduce((n, m) => n + countModuleScenarios(m, topicById), 0);
   const navMeta = { cat, catLabel };
@@ -1987,12 +2640,604 @@ function renderNavGroup(nav, cat, catLabel, modules, topicById, firstActiveRef) 
   modules.forEach(mod => {
     const t = topicById.get(mod.id);
     if (!t) return;
-    appendModuleBtn(body, t, mod, firstActiveRef.value, navMeta);
-    if (firstActiveRef.value) firstActiveRef.value = false;
+    appendModuleBtn(body, t, mod, t.id === activeRef.activeId, navMeta);
   });
   group.appendChild(body);
   nav.appendChild(group);
   return { topics, q };
+}
+
+function scenarioSearchBarHtml() {
+  return `<div class="scenario-search-wrap" id="scenarioSearchWrap">
+    <label class="scenario-search-label" for="scenarioSearchInput">搜索题目</label>
+    <div class="scenario-search-field">
+      <span class="scenario-search-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></span>
+      <input type="search" class="scenario-search-input" id="scenarioSearchInput" placeholder="关键词：面经、OTA、数据、STAR、估算…" autocomplete="off" enterkeyhint="search" />
+    </div>
+    <div class="scenario-search-chips" id="scenarioSearchChips">
+      <button type="button" class="scenario-search-chip" data-q="面经">面经</button>
+      <button type="button" class="scenario-search-chip" data-q="OTA">OTA</button>
+      <button type="button" class="scenario-search-chip" data-q="电商">电商</button>
+      <button type="button" class="scenario-search-chip" data-q="数据">数据</button>
+      <button type="button" class="scenario-search-chip" data-q="SQL">SQL</button>
+      <button type="button" class="scenario-search-chip" data-q="STAR">STAR</button>
+      <button type="button" class="scenario-search-chip" data-q="AI">AI</button>
+    </div>
+    <div class="scenario-search-results" id="scenarioSearchResults" hidden></div>
+  </div>`;
+}
+
+function goalPlanBarHtml() {
+  return `<div class="goal-plan-wrap" id="goalPlanWrap">
+    <label class="goal-plan-label" for="goalPlanInput">训练智能体 · 说目标或明日面试岗位</label>
+    <div class="goal-plan-row">
+      <input type="text" class="goal-plan-input" id="goalPlanInput" placeholder="如：明天面字节产品经理 / 补强 SQL 数据分析 / 备战美团用户运营" autocomplete="off" enterkeyhint="go" />
+      <button type="button" class="btn-primary goal-plan-btn" id="goalPlanBtn">开始训练</button>
+    </div>
+    <p class="goal-plan-error" id="goalPlanError" role="alert"></p>
+  </div>
+  <div class="mission-bar" id="missionBar" hidden>
+    <div class="mission-bar-head">
+      <span class="mission-bar-title">Agent 任务流</span>
+      <span class="mission-bar-progress" id="missionProgress"></span>
+    </div>
+    <p class="mission-bar-focus" id="missionFocus"></p>
+  </div>
+  <div class="mission-step-panel" id="missionStepPanel" hidden></div>`;
+}
+
+function buildScenarioIndex() {
+  SCENARIO_INDEX = [];
+  const mods = [...CURRICULUM.product, ...CURRICULUM.ops, ...CURRICULUM.interview];
+  for (const mod of mods) {
+    const pool = scenariosForNavModule(mod.id);
+    const seen = new Set();
+    pool.forEach(scenario => {
+      if (!scenario || seen.has(scenario)) return;
+      seen.add(scenario);
+      const tagMatch = String(scenario).match(/^【([^·】]+)·([^】]+)】/);
+      SCENARIO_INDEX.push({
+        navId: mod.id,
+        moduleLabel: mod.label,
+        scenario,
+        tag: tagMatch ? tagMatch[1] + '·' + tagMatch[2].split('·')[0] : ''
+      });
+    });
+  }
+}
+
+function highlightSearchText(text, query) {
+  const safe = escapeHtml(text);
+  const q = String(query || '').trim();
+  if (!q) return safe;
+  const tokens = q.split(/\s+/).filter(Boolean);
+  let out = safe;
+  for (const tok of tokens) {
+    const re = new RegExp(tok.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+    out = out.replace(re, m => `<mark>${m}</mark>`);
+  }
+  return out;
+}
+
+function searchScenarios(query, limit = 24) {
+  const q = String(query || '').trim().toLowerCase();
+  if (!q) return [];
+  const tokens = q.split(/\s+/).filter(Boolean);
+  const scored = [];
+  for (const item of SCENARIO_INDEX) {
+    const hay = (item.scenario + ' ' + item.moduleLabel + ' ' + item.tag).toLowerCase();
+    if (!tokens.every(t => hay.includes(t))) continue;
+    let score = 0;
+    if (item.scenario.toLowerCase().startsWith('【' + tokens[0])) score += 3;
+    if (item.tag.toLowerCase().includes(tokens[0])) score += 2;
+    if (item.scenario.toLowerCase().indexOf(q) >= 0) score += 1;
+    scored.push({ item, score });
+  }
+  scored.sort((a, b) => b.score - a.score || a.item.scenario.length - b.item.scenario.length);
+  return scored.slice(0, limit).map(s => s.item);
+}
+
+function openScenarioFromSearch(navId, scenario) {
+  const results = document.getElementById('scenarioSearchResults');
+  const input = document.getElementById('scenarioSearchInput');
+  if (results) results.hidden = true;
+  switchTab(navId, null);
+  loadScenario(navId, scenario);
+  const caseEl = document.getElementById('scenario-' + navId);
+  if (caseEl) caseEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  if (input) input.blur();
+}
+
+function showGoalPlanError(msg) {
+  const el = document.getElementById('goalPlanError');
+  if (!el) return;
+  if (!msg) {
+    el.textContent = '';
+    el.classList.remove('visible');
+    return;
+  }
+  el.textContent = msg;
+  el.classList.add('visible');
+}
+
+function buildCardCatalog() {
+  const out = [];
+  for (const sec of KNOWLEDGE) {
+    for (const c of sec.cards || []) {
+      out.push({
+        id: c.id,
+        title: c.title,
+        tags: c.tags || [],
+        sectionId: sec.id,
+        sectionTitle: sec.title
+      });
+    }
+  }
+  return out;
+}
+
+function scenarioKey(topicId, scenario) {
+  return topicId + '::' + scenario;
+}
+
+function resolvePracticeScenario(topicId, keywords, excludeKeys) {
+  const t = getTopic(topicId);
+  if (!t) return null;
+  let pool = pickScenarios(t);
+  const kw = (keywords || []).filter(Boolean);
+  if (kw.length) {
+    const filtered = pool.filter(s => kw.some(k => String(s).includes(k)));
+    if (filtered.length) pool = filtered;
+  }
+  const ex = new Set(excludeKeys || []);
+  const available = pool.filter(s => !ex.has(scenarioKey(topicId, s)));
+  const pickFrom = available.length ? available : pool.filter(s => !ex.has(scenarioKey(topicId, s)));
+  const finalPool = pickFrom.length ? pickFrom : pool;
+  if (!finalPool.length) return null;
+  return finalPool[Math.floor(Math.random() * finalPool.length)];
+}
+
+function renderLlmDemoBox(llmGenerate, ragSession) {
+  const box = document.getElementById('llmDemoBox');
+  if (!box) return;
+  const ragN = ragSession?.count || 0;
+  if (!llmGenerate?.enabled && !ragN) {
+    box.hidden = true;
+    box.innerHTML = '';
+    return;
+  }
+  box.hidden = false;
+  const n = llmGenerate?.count || 0;
+  let note = '';
+  if (ragN && llmGenerate?.grounded) {
+    note = `已检索 ${ragN} 条面经注入 RAG，并据此生成 ${n} 道题；提交作答时点评也会引用这些面经摘要。`;
+  } else if (ragN) {
+    note = `已检索 ${ragN} 条面经注入 RAG，点评时会与知识库一并引用。`;
+  } else if (llmGenerate?.enabled) {
+    note = `已生成 ${n} 道仿真题。后续可把优质面经写入项目根目录 interview-rag-feed.json，Agent 会自动当作 RAG 使用。`;
+  } else if (ragN) {
+    note = `已加载 ${ragN} 条投喂面经作为 RAG，出题与点评会参考这些内容。`;
+  }
+  box.innerHTML = `
+    <div class="llm-demo-head">${ragN ? '面经 RAG + AI 出题' : 'AI 仿真出题 · Demo'}</div>
+    <p class="llm-demo-note">${escapeHtml(note)}</p>
+  `;
+}
+
+function renderExternalSearchBox(search) {
+  const box = document.getElementById('externalSearchBox');
+  if (!box) return;
+  if (!search?.results?.length) {
+    box.hidden = true;
+    box.innerHTML = '';
+    return;
+  }
+  box.hidden = false;
+  const note = search.message
+    ? `<p class="external-search-note">${escapeHtml(search.message)}</p>`
+    : search.enabled
+      ? `<p class="external-search-note">已从牛客 / 小红书 / 知乎公开索引检索「${escapeHtml(search.query || '')}」，并提炼可练题目。</p>`
+      : '';
+  box.innerHTML = `
+    <div class="external-search-head">外部面经检索</div>
+    ${note}
+    ${search.results.slice(0, 6).map(r => {
+      const meta = escapeHtml(r.sourceLabel || r.label || r.source || '来源');
+      const title = escapeHtml(r.title || '查看原文');
+      const snip = escapeHtml((r.snippet || '').slice(0, 120));
+      const url = escapeAttr(r.url || '#');
+      return `<a class="external-search-item" href="${url}" target="_blank" rel="noopener noreferrer">
+        <span class="external-search-meta">${meta}${r.external ? ' · 手动打开' : ''}</span>
+        <span class="external-search-title">${title}</span>
+        ${snip ? `<span class="external-search-snippet">${snip}</span>` : ''}
+      </a>`;
+    }).join('')}
+  `;
+}
+
+function renderMissionBar() {
+  const bar = document.getElementById('missionBar');
+  const prog = document.getElementById('missionProgress');
+  const focusEl = document.getElementById('missionFocus');
+  if (!bar || !agentMission) {
+    if (bar) bar.hidden = true;
+    return;
+  }
+  bar.hidden = false;
+  const total = agentMission.steps.length;
+  const done = agentMission.steps.filter(s => s.status === 'done').length;
+  const cur = agentMission.currentIndex + 1;
+  const intent = agentMission.intent || {};
+  let modeLabel = 'Agent 任务流';
+  if (intent.mode === 'interview') {
+    modeLabel = intent.urgent ? '明日面试冲刺' : '面试备战';
+    if (intent.roleLabel || intent.company) {
+      modeLabel += ' · ' + [intent.company, intent.roleLabel].filter(Boolean).join(' ');
+    }
+  }
+  const titleEl = bar.querySelector('.mission-bar-title');
+  if (titleEl) titleEl.textContent = modeLabel;
+  if (prog) prog.textContent = `进度 ${done}/${total} · 第 ${cur} 步`;
+  if (focusEl) focusEl.innerHTML = `<strong>本次重点：</strong>${escapeHtml(agentMission.focus || agentMission.goal)}`;
+  activeGoalFocus = agentMission.focus || agentMission.goal;
+}
+
+function renderMissionStepList() {
+  const box = document.getElementById('goalPlanList');
+  if (!box || !agentMission) {
+    if (box) { box.hidden = true; box.innerHTML = ''; }
+    return;
+  }
+  const steps = agentMission.steps;
+  if (!steps.length) {
+    box.hidden = true;
+    return;
+  }
+  box.hidden = false;
+  box.innerHTML = `
+    <div class="goal-plan-list-head">任务清单</div>
+    ${steps.map((step, i) => {
+      const isCurrent = i === agentMission.currentIndex && step.status !== 'done';
+      const isDone = step.status === 'done';
+      let label = '';
+      let preview = '';
+      if (step.type === 'read') {
+        label = '阅读 · ' + (step.title || step.cardId || '知识卡');
+        preview = '先读框架再练题';
+      } else if (step.type === 'practice') {
+        const mod = getNavModule(step.topicId);
+        const prefix = step.generated
+          ? (step.grounded || (step.scenario && step.scenario.includes('RAG面经')) ? 'RAG面经 · ' : 'AI 生成 · ')
+          : step.external || step.fromSearch ? '外部面经 · ' : '练习 · ';
+        label = prefix + (mod ? mod.label : step.topicId);
+        preview = step.scenario
+          ? step.scenario.replace(/^【[^】]+】\s*/, '').trim().slice(0, 72) + (step.scenario.length > 72 ? '…' : '')
+          : '待加载题目';
+      } else {
+        label = step.type;
+        preview = '';
+      }
+      return `<button type="button" class="goal-plan-item${isDone ? ' done' : ''}${isCurrent ? ' current' : ''}" data-step="${i}" ${isDone ? '' : ''}>
+        <span class="goal-plan-item-label">${i + 1}. ${escapeHtml(label)}</span>
+        <span class="goal-plan-item-text">${escapeHtml(preview)}</span>
+      </button>`;
+    }).join('')}
+  `;
+  box.querySelectorAll('.goal-plan-item').forEach(btn => {
+    btn.onclick = () => {
+      const idx = Number(btn.dataset.step);
+      if (Number.isNaN(idx) || !agentMission.steps[idx]) return;
+      runMissionStep(idx);
+    };
+  });
+}
+
+function setMissionViewMode(mode) {
+  const panels = document.getElementById('panels');
+  const msp = document.getElementById('missionStepPanel');
+  if (mode === 'read') {
+    if (panels) panels.style.display = 'none';
+    if (msp) msp.hidden = false;
+  } else {
+    if (panels) panels.style.display = '';
+    if (msp) msp.hidden = true;
+  }
+}
+
+function showMissionReadStep(step, stepIndex) {
+  const panel = document.getElementById('missionStepPanel');
+  if (!panel) return;
+  const card = knowledgeCardById(step.cardId);
+  if (!card) {
+    completeMissionStep(stepIndex);
+    advanceMission();
+    return;
+  }
+  setMissionViewMode('read');
+  panel.innerHTML = `
+    <article class="surface-card mission-read-card">
+      <div class="mission-step-tag">第 ${stepIndex + 1} 步 · 阅读</div>
+      <h3>${escapeHtml(card.title)}</h3>
+      <div class="mission-read-body">${escapeHtml(card.body || '')}</div>
+      <button type="button" class="btn-primary mission-step-done-btn" id="missionStepDoneBtn">已读完，继续</button>
+    </article>
+  `;
+  document.getElementById('missionStepDoneBtn').onclick = () => {
+    completeMissionStep(stepIndex);
+    advanceMission();
+  };
+  panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function showMissionPracticeStep(step, stepIndex) {
+  setMissionViewMode('practice');
+  if (!step.scenario) {
+    step.scenario = resolvePracticeScenario(step.topicId, step.keywords, agentMission.doneKeys);
+  }
+  if (!step.scenario) {
+    showGoalPlanError('该模块暂无可用题目');
+    completeMissionStep(stepIndex);
+    advanceMission();
+    return;
+  }
+  agentMission.doneKeys.push(scenarioKey(step.topicId, step.scenario));
+  switchTab(step.topicId, null);
+  loadScenario(step.topicId, step.scenario, { allowExternal: !!(step.external || step.fromSearch || step.generated) });
+  updateModuleHead(step.topicId);
+  renderMissionBar();
+  renderMissionStepList();
+  const caseEl = document.getElementById('scenario-' + step.topicId);
+  if (caseEl) caseEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function runMissionStep(index) {
+  if (!agentMission || !agentMission.steps[index]) return;
+  agentMission.currentIndex = index;
+  const step = agentMission.steps[index];
+  step.status = step.status === 'done' ? 'done' : 'current';
+  agentMission.steps.forEach((s, i) => {
+    if (i !== index && s.status === 'current') s.status = 'pending';
+  });
+  renderMissionBar();
+  renderMissionStepList();
+  if (step.type === 'read') showMissionReadStep(step, index);
+  else if (step.type === 'practice') showMissionPracticeStep(step, index);
+}
+
+function completeMissionStep(index) {
+  if (!agentMission || !agentMission.steps[index]) return;
+  agentMission.steps[index].status = 'done';
+  renderMissionBar();
+  renderMissionStepList();
+}
+
+function advanceMission() {
+  if (!agentMission) return;
+  const next = agentMission.steps.findIndex((s, i) => i > agentMission.currentIndex && s.status !== 'done');
+  const firstPending = agentMission.steps.findIndex(s => s.status !== 'done');
+  const idx = next >= 0 ? next : firstPending;
+  if (idx < 0) {
+    showGoalPlanError('');
+    const bar = document.getElementById('missionProgress');
+    if (bar) bar.textContent = '任务完成 ✓';
+    setMissionViewMode('practice');
+    return;
+  }
+  runMissionStep(idx);
+}
+
+function insertRemedialSteps(topicId, scenario) {
+  if (!agentMission) return;
+  const insertAt = agentMission.currentIndex + 1;
+  const newSteps = [];
+  const cardIds = readingIdsForNav(topicId, scenario);
+  cardIds.slice(0, 2).forEach(cardId => {
+    const card = knowledgeCardById(cardId);
+    if (card) newSteps.push({ type: 'read', cardId: card.id, title: card.title, status: 'pending', remedial: true });
+  });
+  const extraScenario = resolvePracticeScenario(topicId, agentMission.keywords || [], agentMission.doneKeys);
+  if (extraScenario) {
+    newSteps.push({
+      type: 'practice',
+      topicId,
+      keywords: agentMission.keywords || [],
+      scenario: extraScenario,
+      status: 'pending',
+      remedial: true
+    });
+  }
+  if (!newSteps.length) return;
+  agentMission.steps.splice(insertAt, 0, ...newSteps);
+  renderMissionBar();
+  renderMissionStepList();
+}
+
+function onMissionPracticeComplete(topicId, rubricAvg, scenario) {
+  if (!agentMission) return;
+  const cur = agentMission.steps[agentMission.currentIndex];
+  if (!cur || cur.type !== 'practice' || cur.topicId !== topicId) return;
+  if (scenario && !cur.scenario) cur.scenario = scenario;
+  completeMissionStep(agentMission.currentIndex);
+  const score = Number(rubricAvg);
+  if (Number.isFinite(score) && score < 3) {
+    insertRemedialSteps(topicId, cur.scenario || scenario);
+  }
+  setTimeout(() => advanceMission(), 800);
+}
+
+async function startMission(goal) {
+  goal = String(goal || '').trim();
+  if (!goal) {
+    showGoalPlanError('请输入学习目标');
+    return;
+  }
+  if (!TOPICS.length) {
+    showGoalPlanError('题目尚未加载完成');
+    return;
+  }
+  const btn = document.getElementById('goalPlanBtn');
+  const input = document.getElementById('goalPlanInput');
+  showGoalPlanError('');
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = /面|面试|明[天日]|后天/i.test(goal) ? '规划并 AI 出题…' : '规划中…';
+  }
+  try {
+    if (workspaceMode !== 'train') {
+      workspaceMode = 'train';
+      renderTopics();
+    }
+    const catalog = TOPICS.map(t => ({
+      id: t.id,
+      label: t.label,
+      cat: t.cat,
+      catLabel: t.catLabel
+    }));
+    const cardCatalog = buildCardCatalog();
+    const res = await fetch('/api/plan', {
+      method: 'POST',
+      headers: authHeaders(),
+      body: JSON.stringify({ goal, catalog, cardCatalog })
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || '规划失败（HTTP ' + res.status + '）');
+    const steps = (Array.isArray(data.steps) ? data.steps : []).map(s => ({
+      ...s,
+      status: 'pending'
+    }));
+    if (!steps.length) {
+      showGoalPlanError('未生成有效任务，请换个目标描述再试');
+      return;
+    }
+    agentMission = {
+      goal,
+      focus: data.focus || goal,
+      keywords: data.keywords || [],
+      weakTopicIds: data.weakTopicIds || [],
+      intent: data.intent || null,
+      externalSearch: data.externalSearch || null,
+      llmGenerate: data.llmGenerate || null,
+      ragChunks: data.ragChunks || [],
+      ragSession: data.ragSession || null,
+      steps,
+      currentIndex: 0,
+      doneKeys: []
+    };
+    activeGoalFocus = agentMission.focus;
+    renderMissionBar();
+    renderExternalSearchBox(agentMission.externalSearch);
+    renderLlmDemoBox(agentMission.llmGenerate, agentMission.ragSession);
+    renderMissionStepList();
+    runMissionStep(0);
+    if (input) input.blur();
+  } catch (e) {
+    showGoalPlanError(e.message || '规划失败');
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = '开始训练';
+    }
+  }
+}
+
+function startByGoal(goal) {
+  return startMission(goal);
+}
+
+function bindGoalPlan() {
+  const btn = document.getElementById('goalPlanBtn');
+  const input = document.getElementById('goalPlanInput');
+  if (!btn || !input) return;
+  btn.onclick = () => startMission(input.value);
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      startMission(input.value);
+    }
+  });
+  if (agentMission) {
+    renderMissionBar();
+    renderExternalSearchBox(agentMission.externalSearch);
+    renderLlmDemoBox(agentMission.llmGenerate, agentMission.ragSession);
+    renderMissionStepList();
+    const cur = agentMission.steps[agentMission.currentIndex];
+    if (cur && cur.type === 'read' && cur.status !== 'done') {
+      showMissionReadStep(cur, agentMission.currentIndex);
+    } else {
+      setMissionViewMode('practice');
+    }
+  }
+}
+
+function renderScenarioSearchResults(query) {
+  const box = document.getElementById('scenarioSearchResults');
+  if (!box) return;
+  const q = String(query || '').trim();
+  if (!q) {
+    box.hidden = true;
+    box.innerHTML = '';
+    return;
+  }
+  const hits = searchScenarios(q);
+  scenarioSearchHits = hits;
+  if (!hits.length) {
+    box.hidden = false;
+    box.innerHTML = '<p class="scenario-search-empty">未找到匹配题目，试试「面经」「数据」「OTA」等关键词</p>';
+    return;
+  }
+  box.hidden = false;
+  box.innerHTML = hits.map((item, i) => {
+    const preview = item.scenario.length > 120 ? item.scenario.slice(0, 120) + '…' : item.scenario;
+    return `<button type="button" class="scenario-search-item" data-hit="${i}">
+      <span class="scenario-search-item-meta">${escapeHtml(item.moduleLabel)}${item.tag ? ' · ' + escapeHtml(item.tag) : ''}</span>
+      ${highlightSearchText(preview, q)}
+    </button>`;
+  }).join('');
+  box.querySelectorAll('.scenario-search-item').forEach(btn => {
+    btn.onclick = () => {
+      const item = scenarioSearchHits[Number(btn.dataset.hit)];
+      if (item) openScenarioFromSearch(item.navId, item.scenario);
+    };
+  });
+}
+
+function bindScenarioSearch() {
+  const input = document.getElementById('scenarioSearchInput');
+  const box = document.getElementById('scenarioSearchResults');
+  const wrap = document.getElementById('scenarioSearchWrap');
+  if (!input || !box) return;
+
+  const run = () => renderScenarioSearchResults(input.value);
+
+  input.addEventListener('input', () => {
+    clearTimeout(scenarioSearchTimer);
+    scenarioSearchTimer = setTimeout(run, 120);
+  });
+  input.addEventListener('focus', () => {
+    if (input.value.trim()) run();
+  });
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      box.hidden = true;
+      input.blur();
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      const first = box.querySelector('.scenario-search-item');
+      if (first && !box.hidden) first.click();
+    }
+  });
+
+  document.getElementById('scenarioSearchChips')?.querySelectorAll('.scenario-search-chip').forEach(chip => {
+    chip.onclick = () => {
+      input.value = chip.dataset.q || '';
+      input.focus();
+      run();
+    };
+  });
+
+  document.addEventListener('click', e => {
+    if (!wrap?.contains(e.target)) box.hidden = true;
+  });
 }
 
 function modeBarHtml() {
@@ -2008,8 +3253,23 @@ function bindModeBar() {
   });
 }
 
+function captureTrainWorkspaceState() {
+  if (!TOPICS.length) return;
+  if (activeTopicId) trainUiReturnTopicId = activeTopicId;
+  TOPICS.forEach(t => {
+    const sEl = document.getElementById('scenario-' + t.id);
+    const aEl = document.getElementById('answer-' + t.id);
+    if (sEl) {
+      const text = sEl.textContent.trim();
+      if (text && !text.includes('暂无题目')) scenarioPinByTopic[t.id] = text;
+    }
+    if (aEl) answerDraftByTopic[t.id] = aEl.value;
+  });
+}
+
 function setWorkspaceMode(mode) {
   if (mode !== 'train' && mode !== 'knowledge') return;
+  if (mode === 'knowledge' && workspaceMode === 'train') captureTrainWorkspaceState();
   workspaceMode = mode;
   if (mode === 'knowledge') renderKnowledgeView();
   else renderTopics();
@@ -2047,15 +3307,23 @@ function resolveSystemPrompt(scenario, fallbackPrompt) {
   if (tag) {
     const industry = tag[1];
     const kind = tag[2].split('·')[0];
+    const mianjingMap = {
+      需求: 'user', 决策: 'decision', 数据: 'data', 增长: 'growth', 留存: 'retention',
+      竞品: 'competitor', 功能: 'feature', 危机: 'crisis', 活动: 'content',
+      实习: 'iv-exp', 行为: 'iv-self', 规划: 'iv-career', 产品: 'iv-pm', AI: 'iv-pm',
+      实操: 'iv-skills', 估算: 'iv-skills', 运营: 'iv-ops', 综合: 'iv-misc',
+      策略: 'iv-open', 设计: 'prod-open', 变现: 'biz-monetize', 笔试: 'iv-misc'
+    };
+    if (industry === '面经') {
+      const topicId = mianjingMap[kind];
+      const tp = topicId && map.get(topicId);
+      if (tp?.systemPrompt) return tp.systemPrompt;
+    }
     const industryMap = {
       OTA: { 需求: 'user', 决策: 'decision', 数据: 'data', 竞品: 'competitor', 增长: 'growth', 功能: 'feature', 危机: 'crisis', 开放: 'iv-open' },
       电商: { 需求: 'user', 决策: 'decision', 数据: 'data', 竞品: 'competitor', 增长: 'growth', 功能: 'feature', 危机: 'crisis' },
       社区: { 需求: 'user', 决策: 'decision', 数据: 'data', 竞品: 'competitor', 增长: 'growth', 功能: 'feature', 危机: 'crisis' },
-      即时零售: { 需求: 'user', 决策: 'decision', 数据: 'data' },
-      知乎: { 需求: 'user', 决策: 'decision', 数据: 'data', 增长: 'growth', 竞品: 'competitor', 功能: 'feature', 危机: 'crisis', 传播: 'content' },
-      小红书: { 需求: 'user', 决策: 'decision', 数据: 'data', 增长: 'growth', 竞品: 'competitor', 功能: 'feature', 危机: 'crisis', 传播: 'content' },
-      抖音: { 需求: 'user', 决策: 'decision', 数据: 'data', 增长: 'growth', 竞品: 'competitor', 功能: 'feature', 危机: 'crisis', 传播: 'content' },
-      AI: { 数据: 'data', 功能: 'feature' }
+      即时零售: { 需求: 'user', 决策: 'decision', 数据: 'data' }
     };
     const topicId = industryMap[industry]?.[kind];
     const tp = topicId && map.get(topicId);
@@ -2069,7 +3337,7 @@ function resolveSystemPrompt(scenario, fallbackPrompt) {
     const ops = map.get('iv-ops');
     if (ops?.systemPrompt) return ops.systemPrompt;
   }
-  if (/^【面试/.test(text) || /面试题/.test(text)) {
+  if (/^【面经/.test(text) || /^【面试/.test(text) || /面试题/.test(text)) {
     const pm = map.get('iv-pm');
     if (pm?.systemPrompt) return pm.systemPrompt;
   }
@@ -2080,8 +3348,29 @@ function readingIdsForNav(navId, scenario) {
   const ids = [...(KNOWLEDGE_MAP.readingByNav?.[navId] || [])];
   const tag = String(scenario || '').match(/^【([^·]+)/);
   if (tag) {
-    const extra = { OTA: ['ota-hotel-modes', 'ota-cross-sell'], 电商: ['ecom-shelf-vs-content'], 社区: ['community-triangle'], 知乎: ['zhihu-qa-vs-content'], 小红书: ['xhs-decision-engine'], 抖音: ['douyin-local-loop'] };
+    const extra = {
+      OTA: ['ota-hotel-modes', 'ota-cross-sell'],
+      电商: ['ecom-shelf-vs-content'],
+      社区: ['community-triangle'],
+      面经: ['starr-framework', 'prep-framework', 'metric-selection-chain']
+    };
+    const kind = String(scenario || '').match(/^【面经·([^·】]+)/);
+    const kindExtra = {
+      数据: ['impact-coefficient', 'data-anomaly-debug', 'renhuochang-analysis'],
+      决策: ['priority-rice', 'goal-path-resource-risk'],
+      竞品: ['competitor-four-layers', 'competitor-analysis'],
+      运营: ['activity-review-loop', 'renhuochang-analysis'],
+      活动: ['ops-plan-5w1h', 'activity-review-loop'],
+      AI: ['ai-project-four-steps', 'llm-output-constraints'],
+      估算: ['fermi-estimation', 'written-exam-five-types'],
+      实习: ['starr-framework', 'quantify-resume'],
+      行为: ['starr-framework', 'prep-framework'],
+      规划: ['self-intro-four', 'career-stages'],
+      变现: ['arpu-ltv-dau', 'north-star-guardrails'],
+      策略: ['gmv-decomposition', 'influence-without-authority']
+    };
     (extra[tag[1]] || []).forEach(id => { if (!ids.includes(id)) ids.push(id); });
+    if (kind) (kindExtra[kind[1]] || []).forEach(id => { if (!ids.includes(id)) ids.push(id); });
   }
   return ids.slice(0, 3);
 }
@@ -2099,12 +3388,12 @@ function updateReadingTip(navId, scenario) {
   el.innerHTML = `<strong>作答前建议先看</strong>（1 分钟）：${chips}<div class="read-links"></div>`;
   el.querySelectorAll('.read-chip').forEach(btn => {
     btn.onclick = () => {
+      const cardId = btn.dataset.card;
+      captureTrainWorkspaceState();
       workspaceMode = 'knowledge';
-      renderKnowledgeView();
-      setTimeout(() => {
-        const card = document.querySelector(`.knowledge-card[data-kc-index]`);
-        if (card) card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }, 80);
+      knowledgePageId = findKnowledgePageForCard(cardId) || knowledgePageId;
+      localStorage.setItem('knowledgePageId', knowledgePageId);
+      renderKnowledgeView(cardId);
     };
   });
 }
@@ -2136,6 +3425,7 @@ function reviewMetaHtml(data) {
   }
   if (data.rubricAvg) metaHtml += `<p class="review-meta">综合 ${data.rubricAvg}/5</p>`;
   if (data.ragRefs?.length) metaHtml += `<p class="review-meta">RAG：${escapeHtml(data.ragRefs.join('、'))}</p>`;
+  if (data.interviewRagCount > 0) metaHtml += `<p class="review-meta">引用面经 ${data.interviewRagCount} 条</p>`;
   return metaHtml;
 }
 
@@ -2257,58 +3547,153 @@ function reflowKnowledgeStacks() {
   });
 }
 
-function renderKnowledgeView() {
+function getKnowledgePage(pageId) {
+  return KNOWLEDGE_PAGES.find(p => p.id === pageId) || KNOWLEDGE_PAGES[0];
+}
+
+function knowledgeSectionsForPage(pageId) {
+  const page = getKnowledgePage(pageId);
+  const idSet = new Set(page.sectionIds);
+  return KNOWLEDGE.filter(sec => idSet.has(sec.id));
+}
+
+function knowledgeCardCountForPage(page) {
+  return page.sectionIds.reduce((n, sid) => {
+    const sec = KNOWLEDGE.find(s => s.id === sid);
+    return n + (sec?.cards?.length || 0);
+  }, 0);
+}
+
+function findKnowledgePageForCard(cardId) {
+  for (const page of KNOWLEDGE_PAGES) {
+    for (const sid of page.sectionIds) {
+      const sec = KNOWLEDGE.find(s => s.id === sid);
+      if (sec?.cards?.some(c => c.id === cardId)) return page.id;
+    }
+  }
+  return null;
+}
+
+function setKnowledgePage(pageId) {
+  if (!getKnowledgePage(pageId)) return;
+  knowledgePageId = pageId;
+  localStorage.setItem('knowledgePageId', knowledgePageId);
+  renderKnowledgeView();
+  const pager = document.getElementById('knowledgePager');
+  if (pager) pager.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function knowledgePagerHtml() {
+  const pageIndex = KNOWLEDGE_PAGES.findIndex(p => p.id === knowledgePageId);
+  const page = getKnowledgePage(knowledgePageId);
+  const btns = KNOWLEDGE_PAGES.map(p =>
+    `<button type="button" class="knowledge-page-btn cat-${p.cat}${p.id === knowledgePageId ? ' active' : ''}" data-page="${escapeAttr(p.id)}">${escapeHtml(p.label)}<span class="kpage-count">${knowledgeCardCountForPage(p)}</span></button>`
+  ).join('');
+  const prev = pageIndex > 0 ? KNOWLEDGE_PAGES[pageIndex - 1] : null;
+  const next = pageIndex < KNOWLEDGE_PAGES.length - 1 ? KNOWLEDGE_PAGES[pageIndex + 1] : null;
+  return `<nav class="knowledge-pager" id="knowledgePager" aria-label="知识库分页">
+    ${btns}
+    <p class="knowledge-page-hint">${escapeHtml(page.hint)} · 本页 ${knowledgeCardCountForPage(page)} 张卡</p>
+  </nav>
+  <div class="knowledge-pager-nav" aria-label="翻页">
+    <button type="button" id="knowledgePrevPage" ${prev ? '' : 'disabled'}>${prev ? '← ' + escapeHtml(prev.label) : '已是第一页'}</button>
+    <span class="knowledge-pager-pos">${pageIndex + 1} / ${KNOWLEDGE_PAGES.length}</span>
+    <button type="button" id="knowledgeNextPage" ${next ? '' : 'disabled'}>${next ? escapeHtml(next.label) + ' →' : '已是最后一页'}</button>
+  </div>`;
+}
+
+function bindKnowledgePager() {
+  document.querySelectorAll('.knowledge-page-btn').forEach(btn => {
+    btn.onclick = () => setKnowledgePage(btn.dataset.page);
+  });
+  const prev = document.getElementById('knowledgePrevPage');
+  const next = document.getElementById('knowledgeNextPage');
+  const idx = KNOWLEDGE_PAGES.findIndex(p => p.id === knowledgePageId);
+  if (prev && idx > 0) prev.onclick = () => setKnowledgePage(KNOWLEDGE_PAGES[idx - 1].id);
+  if (next && idx < KNOWLEDGE_PAGES.length - 1) next.onclick = () => setKnowledgePage(KNOWLEDGE_PAGES[idx + 1].id);
+}
+
+function scrollToKnowledgeCard(cardId) {
+  if (!cardId) return;
+  const el = document.querySelector(`.knowledge-card[data-card-id="${CSS.escape(cardId)}"]`);
+  if (!el) return;
+  const stack = el.closest('.knowledge-stack');
+  if (stack) {
+    const cards = stack.querySelectorAll('.knowledge-card');
+    const index = Array.from(cards).findIndex(c => c.dataset.cardId === cardId);
+    if (index >= 0) updateKnowledgeStack(stack, index);
+  }
+  setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'center' }), 60);
+}
+
+function renderKnowledgeSectionHtml(sec) {
+  const cardList = sec.cards || [];
+  const cards = cardList.map((card, i) => knowledgeCardHtml(card, i)).join('');
+  const dots = cardList.map((_, i) =>
+    `<button type="button" class="kc-dot${i === 0 ? ' active' : ''}" data-index="${i}" aria-label="第 ${i + 1} 张"></button>`
+  ).join('');
+  const total = cardList.length;
+  return `<section class="knowledge-section cat-${escapeHtml(sec.cat || 'ops')}">
+    <div class="knowledge-section-head">
+      <h3>${escapeHtml(sec.title)}</h3>
+      <span class="knowledge-counter">${total ? '1 / ' + total : ''}</span>
+    </div>
+    <div class="knowledge-stack" data-section-id="${escapeHtml(sec.id || '')}">
+      <div class="knowledge-stack-stage">${cards || '<p style="color:var(--ink3);position:relative">暂无条目</p>'}</div>
+      ${total > 1 ? `<div class="knowledge-stack-nav">
+        <button type="button" class="kc-nav prev" disabled aria-label="上一张">← 上一张</button>
+        <div class="kc-dots">${dots}</div>
+        <button type="button" class="kc-nav next" aria-label="下一张">下一张 →</button>
+      </div>` : ''}
+    </div>
+  </section>`;
+}
+
+function renderKnowledgeView(scrollToCardId) {
   const main = document.getElementById('mainContent');
   main.classList.remove('loading-main');
-  const sectionsHtml = KNOWLEDGE.map(sec => {
-    const cardList = sec.cards || [];
-    const cards = cardList.map((card, i) => knowledgeCardHtml(card, i)).join('');
-    const dots = cardList.map((_, i) =>
-      `<button type="button" class="kc-dot${i === 0 ? ' active' : ''}" data-index="${i}" aria-label="第 ${i + 1} 张"></button>`
-    ).join('');
-    const total = cardList.length;
-    return `<section class="knowledge-section cat-${escapeHtml(sec.cat || 'ops')}">
-      <div class="knowledge-section-head">
-        <h3>${escapeHtml(sec.title)}</h3>
-        <span class="knowledge-counter">${total ? '1 / ' + total : ''}</span>
-      </div>
-      <div class="knowledge-stack" data-section-id="${escapeHtml(sec.id || '')}">
-        <div class="knowledge-stack-stage">${cards || '<p style="color:var(--ink3);position:relative">暂无条目</p>'}</div>
-        ${total > 1 ? `<div class="knowledge-stack-nav">
-          <button type="button" class="kc-nav prev" disabled aria-label="上一张">← 上一张</button>
-          <div class="kc-dots">${dots}</div>
-          <button type="button" class="kc-nav next" aria-label="下一张">下一张 →</button>
-        </div>` : ''}
-      </div>
-    </section>`;
-  }).join('');
+  const sections = knowledgeSectionsForPage(knowledgePageId);
+  const sectionsHtml = sections.map(sec => renderKnowledgeSectionHtml(sec)).join('');
 
   main.innerHTML = `
     <div class="workspace-shell">
       ${modeBarHtml()}
-      <p class="knowledge-intro">框架与定义供阅读记忆，<strong>不需要提交作答</strong>。左右切换或滑动翻看卡片；要练手请切回「练习」。</p>
-      ${sectionsHtml || '<p style="color:var(--ink3)">暂无知识条目</p>'}
+      <p class="knowledge-intro">框架与定义供阅读记忆，<strong>不需要提交作答</strong>。按主题分页浏览，卡片可左右切换或滑动；要练手请切回「练习」。</p>
+      ${knowledgePagerHtml()}
+      <div id="knowledgeSections">${sectionsHtml || '<p style="color:var(--ink3)">本页暂无条目</p>'}</div>
     </div>
   `;
   bindModeBar();
+  bindKnowledgePager();
   bindKnowledgeStacks();
+  if (scrollToCardId) scrollToKnowledgeCard(scrollToCardId);
 }
 
 function renderTopics() {
+  if (document.getElementById('panels')) captureTrainWorkspaceState();
   NAV_META = buildNavMeta();
   const main = document.getElementById('mainContent');
   main.classList.remove('loading-main');
   const { product, ops, interview, ordered } = topicsByCategory();
   const topicById = topicMap();
+  const restoreTopicId = trainUiReturnTopicId || activeTopicId;
+  const activeId = restoreTopicId && ordered.some(t => t.id === restoreTopicId)
+    ? restoreTopicId
+    : (ordered[0] ? ordered[0].id : '');
   main.innerHTML = `
     <div class="workspace-shell">
       ${modeBarHtml()}
       <div class="workspace">
+        <div class="train-toolbar">${scenarioSearchBarHtml()}</div>
         <aside class="workspace-aside" aria-label="训练模块">
           <nav class="module-nav" id="moduleNav"></nav>
         </aside>
         <div class="train-main">
+          ${goalPlanBarHtml()}
           <div class="module-head" id="moduleHead"></div>
+          <div class="goal-plan-list" id="goalPlanList" hidden></div>
+          <div class="external-search-box" id="externalSearchBox" hidden></div>
+          <div class="llm-demo-box" id="llmDemoBox" hidden></div>
           <div id="panels"></div>
         </div>
       </div>
@@ -2317,16 +3702,14 @@ function renderTopics() {
 
   const nav = document.getElementById('moduleNav');
   const panels = document.getElementById('panels');
-  const firstActiveRef = { value: true };
-  renderNavGroup(nav, 'product', '产品思维', CURRICULUM.product, topicById, firstActiveRef);
-  renderNavGroup(nav, 'ops', '运营思维', CURRICULUM.ops, topicById, firstActiveRef);
-  renderNavGroup(nav, 'interview', '面试通用问题', CURRICULUM.interview, topicById, firstActiveRef);
+  const activeRef = { activeId };
+  renderNavGroup(nav, 'product', '产品思维', CURRICULUM.product, topicById, activeRef);
+  renderNavGroup(nav, 'ops', '运营思维', CURRICULUM.ops, topicById, activeRef);
+  renderNavGroup(nav, 'interview', '面试通用问题', CURRICULUM.interview, topicById, activeRef);
 
-  let firstActive = true;
   ordered.forEach((t) => {
     const panel = document.createElement('div');
-    panel.className = 'panel' + (firstActive ? ' active' : '');
-    firstActive = false;
+    panel.className = 'panel';
     panel.id = 'panel-' + t.id;
     panel.innerHTML = `
       <div class="train-flow">
@@ -2366,21 +3749,30 @@ function renderTopics() {
       </div>
     `;
     panels.appendChild(panel);
-    panel.querySelector('[data-reload]').onclick = () => loadScenario(t.id);
+    panel.querySelector('[data-reload]').onclick = () => {
+      delete scenarioPinByTopic[t.id];
+      delete answerDraftByTopic[t.id];
+      loadScenario(t.id, null, { forceRandom: true });
+    };
     document.getElementById('btn-' + t.id).onclick = () => submitAnswer(t.id);
     initFollowUp(t.id);
-    loadScenario(t.id);
+    const pinned = scenarioPinByTopic[t.id];
+    const draft = answerDraftByTopic[t.id];
+    loadScenario(t.id, pinned, { preserveAnswer: !!draft, preserveFeedback: true });
+    if (draft) document.getElementById('answer-' + t.id).value = draft;
   });
 
-  activeTopicId = ordered[0].id;
-  updateModuleHead(activeTopicId);
+  if (activeId) switchTab(activeId, null);
   setupMobileModuleNav(ordered);
   bindModeBar();
+  bindScenarioSearch();
+  bindGoalPlan();
 }
 
 async function loadTopicsAndRender() {
   try {
     TOPICS = await loadTopics();
+    buildScenarioIndex();
     await loadKnowledge();
     await loadKnowledgeMap();
     setSyncStatus(true);
@@ -2520,23 +3912,37 @@ function answerHintForScenario(scenarioText, fallback) {
   return fallback || '请阅读上方场景，写出你的分析思路、依据与可验证的下一步。';
 }
 
-function loadScenario(id) {
+function loadScenario(id, preferredScenario, opts) {
+  opts = opts || {};
   const t = getTopic(id);
   const pool = pickScenarios(t);
-  if (!pool.length) {
+  const allowExternal = opts.allowExternal && preferredScenario;
+  if (!pool.length && !allowExternal) {
     document.getElementById('scenario-' + id).textContent = '本题库暂无题目，请检查 scenarios-interview-pm.json';
     return;
   }
-  const idx = Math.floor(Math.random() * pool.length);
-  const scenario = pool[idx];
+  let scenario;
+  if (preferredScenario && (pool.includes(preferredScenario) || allowExternal)) {
+    scenario = preferredScenario;
+  } else if (!opts.forceRandom && scenarioPinByTopic[id] && pool.includes(scenarioPinByTopic[id])) {
+    scenario = scenarioPinByTopic[id];
+  } else {
+    scenario = pool[Math.floor(Math.random() * pool.length)];
+  }
+  scenarioPinByTopic[id] = scenario;
   document.getElementById('scenario-' + id).textContent = scenario;
   updateReadingTip(id, scenario);
   const hintEl = document.querySelector('#panel-' + id + ' .wb-hint');
   if (hintEl) hintEl.textContent = answerHintForScenario(scenario, t.fieldLabel);
-  document.getElementById('answer-' + id).value = '';
-  const resp = document.getElementById('resp-' + id);
-  if (resp) resp.classList.remove('visible');
-  clearMentorSession(id);
+  if (!opts.preserveAnswer) {
+    document.getElementById('answer-' + id).value = '';
+    delete answerDraftByTopic[id];
+  }
+  if (!opts.preserveFeedback) {
+    const resp = document.getElementById('resp-' + id);
+    if (resp) resp.classList.remove('visible');
+    clearMentorSession(id);
+  }
 }
 
 function clearMentorSession(id) {
@@ -2618,11 +4024,13 @@ async function submitFollowUp(id) {
         topicId: id,
         mode: 'followup',
         systemPrompt: t.systemPrompt,
+        topicPrompts: topicPromptsPayload(),
         scenario: session.scenario,
         answer: session.answer,
         priorFeedback: session.feedback,
         history: session.history,
-        question
+        question,
+        ...(agentMission?.ragChunks?.length ? { ragChunks: agentMission.ragChunks } : {})
       })
     });
     let data = {};
@@ -2652,6 +4060,19 @@ async function submitFollowUp(id) {
   input.focus();
 }
 
+function finishReviewForTopic(id, scenario, data) {
+  const metaHtml = reviewMetaHtml(data);
+  const respBody = document.getElementById('resp-body-' + id);
+  if (respBody) {
+    respBody.innerHTML = data.structured
+      ? renderStructuredReview(data.structured, metaHtml)
+      : metaHtml + escapeHtml(data.text || '').replace(/\n/g, '<br/>');
+  }
+  mentorSessions[id] = { scenario, answer: document.getElementById('answer-' + id)?.value || '', feedback: data.text, history: [] };
+  enableFollowUp(id);
+  onMissionPracticeComplete(id, data.rubricAvg, scenario);
+}
+
 async function submitAnswer(id) {
   if (!accessCode) { lockApp(); return; }
   const answer = document.getElementById('answer-' + id).value.trim();
@@ -2679,6 +4100,9 @@ async function submitAnswer(id) {
     answer,
     topicPrompts: topicPromptsPayload()
   };
+  if (agentMission?.ragChunks?.length) {
+    payload.ragChunks = agentMission.ragChunks;
+  }
 
   try {
     const res = await fetch('/api/chat', {
@@ -2703,12 +4127,7 @@ async function submitAnswer(id) {
           let evt;
           try { evt = JSON.parse(line); } catch { continue; }
           if (evt.type === 'done') {
-            const metaHtml = reviewMetaHtml(evt);
-            respBody.innerHTML = evt.structured
-              ? renderStructuredReview(evt.structured, metaHtml)
-              : metaHtml + escapeHtml(evt.text || '').replace(/\n/g, '<br/>');
-            mentorSessions[id] = { scenario, answer, feedback: evt.text, history: [] };
-            enableFollowUp(id);
+            finishReviewForTopic(id, scenario, evt);
           } else if (evt.type === 'error') {
             respBody.textContent = evt.error || '生成失败';
             clearMentorSession(id);
@@ -2723,12 +4142,7 @@ async function submitAnswer(id) {
         return;
       }
       if (res.ok && data.text) {
-        const metaHtml = reviewMetaHtml(data);
-        respBody.innerHTML = data.structured
-          ? renderStructuredReview(data.structured, metaHtml)
-          : metaHtml + escapeHtml(data.text).replace(/\n/g, '<br/>');
-        mentorSessions[id] = { scenario, answer, feedback: data.text, history: [] };
-        enableFollowUp(id);
+        finishReviewForTopic(id, scenario, data);
       } else if (res.status === 401) {
         respBody.textContent = '登录已失效，请重新登录。';
         setTimeout(() => { clearSession(); lockApp(); }, 2000);

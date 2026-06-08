@@ -366,16 +366,22 @@ export default async function handler(req) {
   }
 
   let ragRefs = [];
+  let interviewRagCount = 0;
   if (ragEnabled()) {
     const origin = new URL(req.url).origin;
     const ragQuery =
       mode === 'followup'
         ? { scenario, answer, topicId, question: body.question || '' }
         : { scenario, answer, topicId };
-    const rag = await retrieveRagContext(origin, ragQuery);
+    const rag = await retrieveRagContext(origin, ragQuery, {
+      sessionChunks: body.ragChunks
+    });
     if (rag.context) {
       reviewSystemPrompt += rag.context;
-      ragRefs = rag.chunks.map((c) => c.title);
+      ragRefs = rag.chunks.map((c) =>
+        c.sourceLabel ? `${c.title}（${c.sourceLabel}）` : c.title
+      );
+      interviewRagCount = rag.interviewRagCount || 0;
     }
   }
 
@@ -411,7 +417,8 @@ export default async function handler(req) {
         comparedWith,
         historyEnabled: historyEnabled(),
         ragEnabled: ragEnabled(),
-        ragRefs
+        ragRefs,
+        interviewRagCount
       };
     });
     if (streamed instanceof Response) return streamed;
@@ -450,7 +457,8 @@ export default async function handler(req) {
       comparedWith,
       historyEnabled: historyEnabled(),
       ragEnabled: ragEnabled(),
-      ragRefs
+      ragRefs,
+      interviewRagCount
     });
   } catch (e) {
     return json({ error: '上游调用失败：' + e.message }, 502);
