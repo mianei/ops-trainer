@@ -1191,55 +1191,58 @@
   .knowledge-section.cat-product h3 { color: var(--product); }
   .knowledge-section.cat-ops h3 { color: var(--ops); }
   .knowledge-section.cat-interview h3 { color: var(--interview); }
-  .knowledge-stack-stage {
-    position: relative;
-    margin-bottom: 12px;
-    min-height: 160px;
-    transition: height 0.25s ease;
+  .knowledge-flat-viewer {
+    margin-bottom: 1rem;
   }
-  .knowledge-stack-stage .knowledge-card {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
+  .knowledge-card-single {
+    position: relative;
     padding: 1.15rem 1.25rem;
     border-radius: var(--r-lg);
     background: rgba(255, 255, 255, 0.88);
     border: 1px solid var(--frost-border);
     box-shadow: var(--shadow-sm), var(--inset-hi);
-    transition: transform 0.32s cubic-bezier(0.34, 1.2, 0.64, 1), opacity 0.28s ease;
-    transform-origin: top center;
-    will-change: transform, opacity;
+    margin-bottom: 12px;
   }
-  .knowledge-card.stack-active {
-    z-index: 3;
-    transform: translateY(0) scale(1);
-    opacity: 1;
-    pointer-events: auto;
-  }
-  .knowledge-card.stack-behind-1 {
-    z-index: 2;
-    transform: translateY(12px) scale(0.975);
-    opacity: 0.72;
-    pointer-events: none;
-  }
-  .knowledge-card.stack-behind-2 {
-    z-index: 1;
-    transform: translateY(24px) scale(0.95);
-    opacity: 0.45;
-    pointer-events: none;
-  }
-  .knowledge-card.stack-gone {
-    z-index: 0;
-    transform: translateX(-28px) scale(0.94);
-    opacity: 0;
-    pointer-events: none;
+  .knowledge-card-single .kc-body-paged {
+    max-height: min(44vh, 320px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
   .knowledge-stack-nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 8px 10px;
+    position: sticky;
+    bottom: 10px;
+    z-index: 5;
+    padding: 10px 12px;
+    border-radius: var(--r-lg);
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid var(--frost-border);
+    box-shadow: var(--shadow-sm);
+    backdrop-filter: blur(12px);
+  }
+  .knowledge-pager-pos {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink3);
+    font-variant-numeric: tabular-nums;
+    min-width: 72px;
+    text-align: center;
+  }
+  .mission-read-body-paged {
+    max-height: min(44vh, 320px);
+    overflow-y: auto;
+    margin-bottom: 12px;
+  }
+  .mission-read-pager {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
+    margin-bottom: 12px;
   }
   .kc-nav {
     font-family: inherit;
@@ -2205,6 +2208,8 @@ let accessCode = '';
 let userAccountId = '';
 let workspaceMode = 'train';
 let knowledgePageId = localStorage.getItem('knowledgePageId') || 'product';
+let knowledgeFlatIndex = 0;
+let knowledgeBodyPageIndex = 0;
 /** 切到知识库前暂存的题目/作答，返回练习时恢复 */
 const scenarioPinByTopic = Object.create(null);
 const answerDraftByTopic = Object.create(null);
@@ -2954,18 +2959,42 @@ function showMissionReadStep(step, stepIndex) {
     return;
   }
   setMissionViewMode('read');
-  panel.innerHTML = `
-    <article class="surface-card mission-read-card">
-      <div class="mission-step-tag">第 ${stepIndex + 1} 步 · 阅读</div>
-      <h3>${escapeHtml(card.title)}</h3>
-      <div class="mission-read-body">${escapeHtml(card.body || '')}</div>
-      <button type="button" class="btn-primary mission-step-done-btn" id="missionStepDoneBtn">已读完，继续</button>
-    </article>
-  `;
-  document.getElementById('missionStepDoneBtn').onclick = () => {
-    completeMissionStep(stepIndex);
-    advanceMission();
+  const bodyPages = paginateCardBody(card.body || '');
+  let bodyPage = 0;
+  const render = () => {
+    const bodyText = bodyPages[bodyPage] || '';
+    const bodyPager = bodyPages.length > 1
+      ? `<div class="mission-read-pager">
+          <button type="button" class="kc-nav" id="missionBodyPrev" ${bodyPage <= 0 ? 'disabled' : ''}>上一页</button>
+          <span class="knowledge-pager-pos">${bodyPage + 1} / ${bodyPages.length}</span>
+          <button type="button" class="kc-nav" id="missionBodyNext" ${bodyPage >= bodyPages.length - 1 ? 'disabled' : ''}>下一页</button>
+        </div>`
+      : '';
+    panel.innerHTML = `
+      <article class="surface-card mission-read-card">
+        <div class="mission-step-tag">第 ${stepIndex + 1} 步 · 阅读</div>
+        <h3>${escapeHtml(card.title)}</h3>
+        <div class="mission-read-body mission-read-body-paged">${escapeHtml(bodyText)}</div>
+        ${bodyPager}
+        <button type="button" class="btn-primary mission-step-done-btn" id="missionStepDoneBtn">已读完，继续</button>
+      </article>
+    `;
+    document.getElementById('missionBodyPrev')?.addEventListener('click', () => {
+      if (bodyPage <= 0) return;
+      bodyPage -= 1;
+      render();
+    });
+    document.getElementById('missionBodyNext')?.addEventListener('click', () => {
+      if (bodyPage >= bodyPages.length - 1) return;
+      bodyPage += 1;
+      render();
+    });
+    document.getElementById('missionStepDoneBtn').onclick = () => {
+      completeMissionStep(stepIndex);
+      advanceMission();
+    };
   };
+  render();
   panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
@@ -3474,77 +3503,131 @@ function renderKnowledgeMarkdownish(text) {
     .replace(/\n/g, '<br/>');
 }
 
-function knowledgeCardHtml(card, index) {
-  return `<article class="knowledge-card" data-kc-index="${index}" data-card-id="${escapeAttr(card.id || '')}">
-    <h4>${escapeHtml(card.title)}</h4>
-    <div class="kc-tags">${(card.tags || []).map(t => `<span class="kc-tag">${escapeHtml(t)}</span>`).join('')}</div>
-    <div class="kc-body">${renderKnowledgeMarkdownish(card.body || '')}</div>
-  </article>`;
-}
-
-function updateKnowledgeStack(stackEl, index) {
-  const cards = stackEl.querySelectorAll('.knowledge-card');
-  const total = cards.length;
-  if (!total) return;
-  const i = Math.max(0, Math.min(index, total - 1));
-  stackEl.dataset.kcActive = String(i);
-  cards.forEach((card, ci) => {
-    card.classList.remove('stack-active', 'stack-behind-1', 'stack-behind-2', 'stack-gone');
-    if (ci < i) card.classList.add('stack-gone');
-    else if (ci === i) card.classList.add('stack-active');
-    else if (ci === i + 1) card.classList.add('stack-behind-1');
-    else if (ci === i + 2) card.classList.add('stack-behind-2');
-    else card.classList.add('stack-gone');
-  });
-  const stage = stackEl.querySelector('.knowledge-stack-stage');
-  const active = cards[i];
-  if (stage && active) {
-    stage.style.height = (active.offsetHeight + (i < total - 1 ? 28 : 0)) + 'px';
-  }
-  const section = stackEl.closest('.knowledge-section');
-  const counter = section && section.querySelector('.knowledge-counter');
-  if (counter) counter.textContent = (i + 1) + ' / ' + total;
-  const prev = stackEl.querySelector('.kc-nav.prev');
-  const next = stackEl.querySelector('.kc-nav.next');
-  if (prev) prev.disabled = i <= 0;
-  if (next) next.disabled = i >= total - 1;
-  stackEl.querySelectorAll('.kc-dot').forEach((dot, di) => {
-    dot.classList.toggle('active', di === i);
-  });
-}
-
-function bindKnowledgeStacks() {
-  document.querySelectorAll('.knowledge-stack').forEach(stackEl => {
-    const total = stackEl.querySelectorAll('.knowledge-card').length;
-    let index = 0;
-    const go = (next) => {
-      index = Math.max(0, Math.min(next, total - 1));
-      updateKnowledgeStack(stackEl, index);
-    };
-    stackEl.querySelector('.kc-nav.prev')?.addEventListener('click', () => go(index - 1));
-    stackEl.querySelector('.kc-nav.next')?.addEventListener('click', () => go(index + 1));
-    stackEl.querySelectorAll('.kc-dot').forEach(dot => {
-      dot.addEventListener('click', () => go(Number(dot.dataset.index)));
-    });
-    let touchX = 0;
-    const stage = stackEl.querySelector('.knowledge-stack-stage');
-    if (stage) {
-      stage.addEventListener('touchstart', e => { touchX = e.changedTouches[0].clientX; }, { passive: true });
-      stage.addEventListener('touchend', e => {
-        const dx = e.changedTouches[0].clientX - touchX;
-        if (Math.abs(dx) < 40) return;
-        if (dx < 0) go(index + 1);
-        else go(index - 1);
-      }, { passive: true });
+function paginateCardBody(text, maxChars = 240) {
+  const raw = String(text || '').trim();
+  if (!raw) return [''];
+  if (raw.length <= maxChars) return [raw];
+  const pages = [];
+  const paras = raw.split(/\n\n+/).filter(Boolean);
+  let buf = '';
+  const flush = () => {
+    if (buf.trim()) { pages.push(buf.trim()); buf = ''; }
+  };
+  const pushLong = (p) => {
+    let rest = p;
+    while (rest.length > maxChars) {
+      let cut = rest.lastIndexOf('。', maxChars);
+      if (cut < maxChars * 0.35) cut = rest.lastIndexOf('\n', maxChars);
+      if (cut < maxChars * 0.35) cut = maxChars;
+      pages.push(rest.slice(0, cut).trim());
+      rest = rest.slice(cut).trim();
     }
-    updateKnowledgeStack(stackEl, 0);
-  });
+    if (rest) buf = rest;
+  };
+  for (const p of paras) {
+    const next = buf ? `${buf}\n\n${p}` : p;
+    if (next.length <= maxChars) { buf = next; continue; }
+    flush();
+    if (p.length > maxChars) pushLong(p);
+    else buf = p;
+  }
+  flush();
+  return pages.length ? pages : [raw];
 }
 
-function reflowKnowledgeStacks() {
-  document.querySelectorAll('.knowledge-stack').forEach(stackEl => {
-    updateKnowledgeStack(stackEl, Number(stackEl.dataset.kcActive || 0));
+function knowledgeFlatCardsForPage(pageId) {
+  const flat = [];
+  for (const sec of knowledgeSectionsForPage(pageId)) {
+    for (const card of sec.cards || []) {
+      flat.push({
+        ...card,
+        sectionTitle: sec.title,
+        sectionCat: sec.cat || 'ops',
+        bodyPages: paginateCardBody(card.body || '')
+      });
+    }
+  }
+  return flat;
+}
+
+function renderKnowledgeFlatViewerHtml(flat, cardIndex, bodyPageIndex) {
+  if (!flat.length) {
+    return '<p style="color:var(--ink3)">本页暂无条目</p>';
+  }
+  const ci = Math.max(0, Math.min(cardIndex, flat.length - 1));
+  const card = flat[ci];
+  const bodyPages = card.bodyPages || paginateCardBody(card.body || '');
+  const bi = Math.max(0, Math.min(bodyPageIndex, bodyPages.length - 1));
+  const bodyText = bodyPages[bi];
+  const bodyNav = bodyPages.length > 1
+    ? `<button type="button" class="kc-nav kc-body-prev" ${bi <= 0 ? 'disabled' : ''}>上一页</button>
+       <span class="knowledge-pager-pos">${bi + 1} / ${bodyPages.length}</span>
+       <button type="button" class="kc-nav kc-body-next" ${bi >= bodyPages.length - 1 ? 'disabled' : ''}>下一页</button>`
+    : '';
+  return `<section class="knowledge-flat-viewer cat-${escapeHtml(card.sectionCat || 'ops')}" data-card-id="${escapeAttr(card.id || '')}">
+    <div class="knowledge-section-head">
+      <h3>${escapeHtml(card.sectionTitle || '')}</h3>
+      <span class="knowledge-counter">${ci + 1} / ${flat.length}</span>
+    </div>
+    <article class="knowledge-card knowledge-card-single">
+      <h4>${escapeHtml(card.title)}</h4>
+      <div class="kc-tags">${(card.tags || []).map(t => `<span class="kc-tag">${escapeHtml(t)}</span>`).join('')}</div>
+      <div class="kc-body kc-body-paged">${renderKnowledgeMarkdownish(bodyText)}</div>
+    </article>
+    ${bodyNav ? `<div class="mission-read-pager">${bodyNav}</div>` : ''}
+    <div class="knowledge-stack-nav" aria-label="卡片翻页">
+      <button type="button" class="kc-nav kc-card-prev" ${ci <= 0 ? 'disabled' : ''} aria-label="上一张">← 上一张</button>
+      <span class="knowledge-pager-pos">${ci + 1} / ${flat.length}</span>
+      <button type="button" class="kc-nav kc-card-next" ${ci >= flat.length - 1 ? 'disabled' : ''} aria-label="下一张">下一张 →</button>
+    </div>
+  </section>`;
+}
+
+function bindKnowledgeFlatPager(flat) {
+  const root = document.getElementById('knowledgeFlatViewer');
+  if (!root || !flat.length) return;
+  const rerender = () => {
+    root.innerHTML = renderKnowledgeFlatViewerHtml(flat, knowledgeFlatIndex, knowledgeBodyPageIndex);
+    bindKnowledgeFlatPager(flat);
+  };
+  root.querySelector('.kc-card-prev')?.addEventListener('click', () => {
+    if (knowledgeFlatIndex <= 0) return;
+    knowledgeFlatIndex -= 1;
+    knowledgeBodyPageIndex = 0;
+    rerender();
   });
+  root.querySelector('.kc-card-next')?.addEventListener('click', () => {
+    if (knowledgeFlatIndex >= flat.length - 1) return;
+    knowledgeFlatIndex += 1;
+    knowledgeBodyPageIndex = 0;
+    rerender();
+  });
+  root.querySelector('.kc-body-prev')?.addEventListener('click', () => {
+    if (knowledgeBodyPageIndex <= 0) return;
+    knowledgeBodyPageIndex -= 1;
+    rerender();
+  });
+  root.querySelector('.kc-body-next')?.addEventListener('click', () => {
+    const pages = flat[knowledgeFlatIndex]?.bodyPages || [''];
+    if (knowledgeBodyPageIndex >= pages.length - 1) return;
+    knowledgeBodyPageIndex += 1;
+    rerender();
+  });
+  let touchX = 0;
+  root.addEventListener('touchstart', e => { touchX = e.changedTouches[0].clientX; }, { passive: true, once: true });
+  root.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - touchX;
+    if (Math.abs(dx) < 40) return;
+    if (dx < 0 && knowledgeFlatIndex < flat.length - 1) {
+      knowledgeFlatIndex += 1;
+      knowledgeBodyPageIndex = 0;
+      rerender();
+    } else if (dx > 0 && knowledgeFlatIndex > 0) {
+      knowledgeFlatIndex -= 1;
+      knowledgeBodyPageIndex = 0;
+      rerender();
+    }
+  }, { passive: true, once: true });
 }
 
 function getKnowledgePage(pageId) {
@@ -3615,58 +3698,46 @@ function bindKnowledgePager() {
 
 function scrollToKnowledgeCard(cardId) {
   if (!cardId) return;
-  const el = document.querySelector(`.knowledge-card[data-card-id="${CSS.escape(cardId)}"]`);
-  if (!el) return;
-  const stack = el.closest('.knowledge-stack');
-  if (stack) {
-    const cards = stack.querySelectorAll('.knowledge-card');
-    const index = Array.from(cards).findIndex(c => c.dataset.cardId === cardId);
-    if (index >= 0) updateKnowledgeStack(stack, index);
+  const flat = knowledgeFlatCardsForPage(knowledgePageId);
+  const index = flat.findIndex(c => c.id === cardId);
+  if (index >= 0) {
+    knowledgeFlatIndex = index;
+    knowledgeBodyPageIndex = 0;
+    const root = document.getElementById('knowledgeFlatViewer');
+    if (root) {
+      root.innerHTML = renderKnowledgeFlatViewerHtml(flat, knowledgeFlatIndex, knowledgeBodyPageIndex);
+      bindKnowledgeFlatPager(flat);
+    }
   }
-  setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'center' }), 60);
-}
-
-function renderKnowledgeSectionHtml(sec) {
-  const cardList = sec.cards || [];
-  const cards = cardList.map((card, i) => knowledgeCardHtml(card, i)).join('');
-  const dots = cardList.map((_, i) =>
-    `<button type="button" class="kc-dot${i === 0 ? ' active' : ''}" data-index="${i}" aria-label="第 ${i + 1} 张"></button>`
-  ).join('');
-  const total = cardList.length;
-  return `<section class="knowledge-section cat-${escapeHtml(sec.cat || 'ops')}">
-    <div class="knowledge-section-head">
-      <h3>${escapeHtml(sec.title)}</h3>
-      <span class="knowledge-counter">${total ? '1 / ' + total : ''}</span>
-    </div>
-    <div class="knowledge-stack" data-section-id="${escapeHtml(sec.id || '')}">
-      <div class="knowledge-stack-stage">${cards || '<p style="color:var(--ink3);position:relative">暂无条目</p>'}</div>
-      ${total > 1 ? `<div class="knowledge-stack-nav">
-        <button type="button" class="kc-nav prev" disabled aria-label="上一张">← 上一张</button>
-        <div class="kc-dots">${dots}</div>
-        <button type="button" class="kc-nav next" aria-label="下一张">下一张 →</button>
-      </div>` : ''}
-    </div>
-  </section>`;
+  setTimeout(() => {
+    document.querySelector(`.knowledge-flat-viewer[data-card-id="${CSS.escape(cardId)}"]`)
+      ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 60);
 }
 
 function renderKnowledgeView(scrollToCardId) {
   const main = document.getElementById('mainContent');
   main.classList.remove('loading-main');
-  const sections = knowledgeSectionsForPage(knowledgePageId);
-  const sectionsHtml = sections.map(sec => renderKnowledgeSectionHtml(sec)).join('');
+  const flat = knowledgeFlatCardsForPage(knowledgePageId);
+  knowledgeFlatIndex = 0;
+  knowledgeBodyPageIndex = 0;
+  if (scrollToCardId) {
+    const i = flat.findIndex(c => c.id === scrollToCardId);
+    if (i >= 0) knowledgeFlatIndex = i;
+  }
+  const viewerHtml = renderKnowledgeFlatViewerHtml(flat, knowledgeFlatIndex, knowledgeBodyPageIndex);
 
   main.innerHTML = `
     <div class="workspace-shell">
       ${modeBarHtml()}
-      <p class="knowledge-intro">框架与定义供阅读记忆，<strong>不需要提交作答</strong>。按主题分页浏览，卡片可左右切换或滑动；要练手请切回「练习」。</p>
+      <p class="knowledge-intro">框架与定义供阅读记忆，<strong>不需要提交作答</strong>。一次只看一张卡，长文可点「下一页」；要练手请切回「练习」。</p>
       ${knowledgePagerHtml()}
-      <div id="knowledgeSections">${sectionsHtml || '<p style="color:var(--ink3)">本页暂无条目</p>'}</div>
+      <div id="knowledgeFlatViewer">${viewerHtml}</div>
     </div>
   `;
   bindModeBar();
   bindKnowledgePager();
-  bindKnowledgeStacks();
-  if (scrollToCardId) scrollToKnowledgeCard(scrollToCardId);
+  bindKnowledgeFlatPager(flat);
 }
 
 function renderTopics() {
@@ -4278,7 +4349,7 @@ function initHeroWaveform() {
 async function bootstrap() {
   initMobile();
   initHorizonWave();
-  window.addEventListener('resize', reflowKnowledgeStacks);
+  window.addEventListener('resize', () => {});
   const btnExit = document.getElementById('btnExit');
   if (btnExit) btnExit.onclick = logoutApp;
   const btnHistory = document.getElementById('btnHistory');
