@@ -1441,12 +1441,8 @@
   .module-intro { font-size: 13px; color: var(--ink2); line-height: 1.6; margin-bottom: 14px; }
 
   /* ── AI 项目教练 ── */
-  .coach-layout {
-    display: grid;
-    grid-template-columns: 200px 1fr;
-    gap: 16px;
-    min-height: 420px;
-  }
+  .coach-layout-single { max-width: 760px; margin: 0 auto; }
+  .coach-main { min-width: 0; }
   @media (max-width: 899px) {
     .coach-layout { grid-template-columns: 1fr; }
     .coach-mode-aside { display: none; }
@@ -2494,45 +2490,12 @@ let knowledgeBodyPageIndex = 0;
 const scenarioPinByTopic = Object.create(null);
 const answerDraftByTopic = Object.create(null);
 let trainUiReturnTopicId = '';
-let resumeModeId = localStorage.getItem('resumeMode') || 'resume-diagnosis';
-let interviewModeId = localStorage.getItem('interviewMode') || 'interview-defense';
+const RESUME_COACH_MODES = new Set(['full-report', 'project-direction', 'project-iteration', 'resume-diagnosis']);
 const coachIntake = Object.create(null);
 const resumeMessages = [];
 const interviewPrepMessages = [];
 let resumeDraftMessage = '';
 let interviewDraftMessage = '';
-const RESUME_MODES = [
-  { id: 'resume-diagnosis', title: '简历诊断', icon: '🔍', desc: '识别 AI 产品信号强弱，分类每段经历', placeholder: '诊断我的简历：前 15 秒能否看出 AI 产品信号？', fields: [
-    { id: 'feedback', label: '已收到的反馈', type: 'textarea', rows: 2 }
-  ]},
-  { id: 'project-direction', title: '项目方向', icon: '🧭', desc: '没有 AI 项目？从真实经历里找方向', placeholder: '我没有 AI 项目，帮我从经历里找 1 个主方向 + 1 个备选…', fields: [
-    { id: 'constraints', label: '限制条件', type: 'textarea', rows: 2, hint: '时间、技术栈、不能编造的内容' }
-  ]},
-  { id: 'project-iteration', title: '项目迭代', icon: '🔄', desc: '已有 demo 但无面试？诊断并迭代', placeholder: '帮我诊断这个项目为什么看起来弱，并给出 eval + badcase 迭代方案…', fields: [
-    { id: 'project', label: '要迭代的项目', type: 'textarea', rows: 4 },
-    { id: 'problem', label: '当前问题', type: 'textarea', rows: 2 },
-    { id: 'artifacts', label: '现有材料', type: 'textarea', rows: 2 }
-  ]},
-  { id: 'full-report', title: '完整落地方案', icon: '📋', desc: '结构化 AI 项目规划 + 简历 bullet + 行动项', placeholder: '请基于我的简历，生成一份完整的 AI 项目落地方案…', fields: [
-    { id: 'materials', label: '已有材料', type: 'textarea', rows: 3 },
-    { id: 'timeline', label: '可投入时间', type: 'text', hint: '如：3-7 天可补做证据' }
-  ]}
-];
-const INTERVIEW_MODES = [
-  { id: 'interview-defense', title: '面试防御', icon: '🛡️', desc: '基于简历准备项目讲述、追问与 badcase', placeholder: '基于我的简历，帮我准备面试追问、2 个 badcase 和边界防御…', fields: [
-    { id: 'project', label: '重点准备的项目', type: 'textarea', rows: 4 },
-    { id: 'role', label: '你的真实参与', type: 'textarea', rows: 2 },
-    { id: 'concerns', label: '担心被问穿的地方', type: 'textarea', rows: 2 }
-  ]},
-  { id: 'ai-pm-qa', title: 'AI PM 答疑', icon: '💡', desc: 'RAG、Agent、Evals 等产品判断问题', placeholder: 'AI 产品经理需要懂多少 RAG / Agent / 评测？面试怎么考？', fields: [
-    { id: 'question', label: '你的问题', type: 'textarea', rows: 3 },
-    { id: 'context', label: '背景（可选）', type: 'textarea', rows: 2 }
-  ]}
-];
-const RESUME_MODE_IDS = new Set(RESUME_MODES.map(m => m.id));
-const INTERVIEW_MODE_IDS = new Set(INTERVIEW_MODES.map(m => m.id));
-
-/** 知识库：仅 AI 产品经理相关 */
 const KNOWLEDGE_PAGES = [
   {
     id: 'ai-pm',
@@ -3571,12 +3534,16 @@ function setWorkspaceMode(mode) {
   else renderInterviewView();
 }
 
-function getResumeModeConfig(id) {
-  return RESUME_MODES.find(m => m.id === id) || RESUME_MODES[0];
+function coachExtraNotesHtml() {
+  return `<div class="coach-intake">
+    <label for="coachExtraNotes">补充说明（可选）</label>
+    <textarea id="coachExtraNotes" rows="2" placeholder="如：已收到的反馈、重点想改的项目、担心被问穿的地方…">${escapeHtml(coachIntake.extra || '')}</textarea>
+  </div>`;
 }
 
-function getInterviewModeConfig(id) {
-  return INTERVIEW_MODES.find(m => m.id === id) || INTERVIEW_MODES[0];
+function syncExtraNotesFromDom() {
+  const el = document.getElementById('coachExtraNotes');
+  if (el) coachIntake.extra = el.value.trim();
 }
 
 function saveProfileFromDom() {
@@ -3754,24 +3721,6 @@ function bindProfileUpload() {
   });
 }
 
-function moduleIntakeHtml(modeCfg) {
-  if (!modeCfg.fields?.length) return '';
-  return `<div class="coach-intake"><h3>${modeCfg.icon} ${escapeHtml(modeCfg.title)} · 补充信息</h3>${modeCfg.fields.map(f => {
-    const val = coachIntake[f.id] || '';
-    const input = f.type === 'textarea'
-      ? `<textarea id="coach-field-${f.id}" rows="${f.rows || 3}">${escapeHtml(val)}</textarea>`
-      : `<input type="text" id="coach-field-${f.id}" value="${escapeAttr(val)}" />`;
-    return `<div class="coach-field"><label for="coach-field-${f.id}">${escapeHtml(f.label)}</label>${input}</div>`;
-  }).join('')}</div>`;
-}
-
-function syncCoachIntakeFromDom(modeCfg) {
-  modeCfg.fields?.forEach(f => {
-    const el = document.getElementById('coach-field-' + f.id);
-    if (el) coachIntake[f.id] = el.value.trim();
-  });
-}
-
 function renderModuleThread(threadId, messages) {
   const thread = document.getElementById(threadId);
   if (!thread) return;
@@ -3782,7 +3731,7 @@ function renderModuleThread(threadId, messages) {
 }
 
 async function sendModuleCoachMessage(opts) {
-  const { module, message, mode, messages, threadId, draftKey, errId, btnId, inputId } = opts;
+  const { module, message, mode, messages, threadId, errId, btnId, inputId } = opts;
   const errEl = document.getElementById(errId);
   const btn = document.getElementById(btnId);
   const input = document.getElementById(inputId);
@@ -3791,8 +3740,7 @@ async function sendModuleCoachMessage(opts) {
   if (input) input.value = '';
   renderModuleThread(threadId, messages);
   if (btn) { btn.disabled = true; btn.textContent = '生成中…'; }
-  const modeCfg = module === 'resume' ? getResumeModeConfig(mode) : getInterviewModeConfig(mode);
-  syncCoachIntakeFromDom(modeCfg);
+  syncExtraNotesFromDom();
   saveProfileFromDom();
   try {
     const res = await fetch('/api/coach', {
@@ -3801,7 +3749,8 @@ async function sendModuleCoachMessage(opts) {
       body: JSON.stringify({
         accessCode,
         userId: userAccountId,
-        mode,
+        mode: mode || '',
+        contextModule: module,
         intake: buildCoachIntakeFromProfile(),
         message,
         history: messages.slice(0, -1)
@@ -3818,43 +3767,33 @@ async function sendModuleCoachMessage(opts) {
     if (input) input.value = message;
   } finally {
     if (btn) { btn.disabled = false; btn.textContent = '发送'; }
-    if (draftKey) window[draftKey] = '';
   }
 }
 
 function renderResumeView() {
   const main = document.getElementById('mainContent');
   main.classList.remove('loading-main');
-  const modeCfg = getResumeModeConfig(resumeModeId);
-  const draft = resumeDraftMessage || modeCfg.placeholder;
+  const draft = resumeDraftMessage || '简历哪里弱、项目怎么改、缺什么证据…直接问';
   main.innerHTML = `
     <div class="workspace-shell">
       ${modeBarHtml()}
-      <p class="module-intro">简历优化 · 上传简历与 JD → <strong>评分</strong> → <strong>一键优化</strong> → 像老师一样逐步改项目、补证据、迭代叙事</p>
+      <p class="module-intro">简历优化 · 上传简历与 JD → <strong>评分</strong> → <strong>一键优化</strong> → 对话继续追问</p>
       ${profileUploadHtml()}
       <div class="profile-actions">
         <button type="button" class="btn-primary" id="resumeScoreBtn">📊 简历评分</button>
         <button type="button" class="btn-primary" id="resumeOptimizeBtn">✨ 一键优化简历</button>
       </div>
-      <div class="coach-layout">
-        <aside class="coach-mode-aside" role="tablist" aria-label="简历能力">
-          ${RESUME_MODES.map(m => `<button type="button" class="coach-mode-btn${m.id === resumeModeId ? ' active' : ''}" data-resume-mode="${m.id}" title="${escapeAttr(m.desc)}">${m.icon} ${escapeHtml(m.title)}</button>`).join('')}
-        </aside>
-        <div class="coach-main">
-          <div class="coach-mode-chips" role="tablist">
-            ${RESUME_MODES.map(m => `<button type="button" class="${m.id === resumeModeId ? 'active' : ''}" data-resume-mode="${m.id}">${m.title}</button>`).join('')}
-          </div>
-          ${moduleIntakeHtml(modeCfg)}
-          <div class="coach-thread" id="resumeThread" aria-live="polite">
-            ${resumeMessages.map(m => `<div class="coach-bubble ${m.role}">${escapeHtml(m.content).replace(/\n/g, '<br/>')}</div>`).join('')}
-          </div>
-          <div class="coach-compose">
-            <textarea id="resumeMessageInput" placeholder="${escapeAttr(modeCfg.placeholder)}">${escapeHtml(draft)}</textarea>
-            <div class="coach-compose-row">
-              <button type="button" class="btn-primary" id="resumeSendBtn">发送</button>
-              <button type="button" class="btn-frost" id="resumeClearBtn">清空对话</button>
-              <p class="coach-error" id="resumeError" hidden></p>
-            </div>
+      <div class="coach-layout-single coach-main">
+        ${coachExtraNotesHtml()}
+        <div class="coach-thread" id="resumeThread" aria-live="polite">
+          ${resumeMessages.map(m => `<div class="coach-bubble ${m.role}">${escapeHtml(m.content).replace(/\n/g, '<br/>')}</div>`).join('')}
+        </div>
+        <div class="coach-compose">
+          <textarea id="resumeMessageInput" placeholder="继续问：哪个项目该深挖、怎么补 eval、bullet 怎么改…">${escapeHtml(draft)}</textarea>
+          <div class="coach-compose-row">
+            <button type="button" class="btn-primary" id="resumeSendBtn">发送</button>
+            <button type="button" class="btn-frost" id="resumeClearBtn">清空对话</button>
+            <p class="coach-error" id="resumeError" hidden></p>
           </div>
         </div>
       </div>
@@ -3866,14 +3805,6 @@ function renderResumeView() {
 }
 
 function bindResumeView() {
-  document.querySelectorAll('[data-resume-mode]').forEach(btn => {
-    btn.onclick = () => {
-      syncCoachIntakeFromDom(getResumeModeConfig(resumeModeId));
-      resumeModeId = btn.dataset.resumeMode;
-      localStorage.setItem('resumeMode', resumeModeId);
-      renderResumeView();
-    };
-  });
   document.getElementById('resumeSendBtn')?.addEventListener('click', () => {
     const msg = document.getElementById('resumeMessageInput')?.value?.trim();
     if (!msg) return;
@@ -3882,7 +3813,7 @@ function bindResumeView() {
       return;
     }
     sendModuleCoachMessage({
-      module: 'resume', message: msg, mode: resumeModeId,
+      module: 'resume', message: msg, mode: '',
       messages: resumeMessages, threadId: 'resumeThread',
       errId: 'resumeError', btnId: 'resumeSendBtn', inputId: 'resumeMessageInput'
     });
@@ -3901,8 +3832,6 @@ function bindResumeView() {
 3. 各维度一句话点评
 4. 最该先改的 3 个问题（按优先级排序）
 ${jdNote}`;
-    resumeModeId = 'resume-diagnosis';
-    localStorage.setItem('resumeMode', resumeModeId);
     sendModuleCoachMessage({
       module: 'resume', message: msg, mode: 'resume-diagnosis',
       messages: resumeMessages, threadId: 'resumeThread',
@@ -3924,8 +3853,6 @@ ${jdNote}`;
 **第四步：方向** — 若还缺主项目，推荐 1 个主方向 + 1 个备选 + 最小证据计划
 
 ${jdNote}`;
-    resumeModeId = 'full-report';
-    localStorage.setItem('resumeMode', resumeModeId);
     sendModuleCoachMessage({
       module: 'resume', message: msg, mode: 'full-report',
       messages: resumeMessages, threadId: 'resumeThread',
@@ -3951,8 +3878,7 @@ function renderInterviewView() {
     renderSenseHome();
     return;
   }
-  const modeCfg = getInterviewModeConfig(interviewModeId);
-  const draft = interviewDraftMessage || modeCfg.placeholder;
+  const draft = interviewDraftMessage || '项目怎么讲、追问怎么防、RAG/Agent/评测怎么答…直接问';
   const hasResume = profileResume.trim().length > 0;
   main.innerHTML = `
     <div class="workspace-shell">
@@ -3961,30 +3887,22 @@ function renderInterviewView() {
         <button type="button" class="module-subtab active" data-interview-sub="prep">① 根据简历准备</button>
         <button type="button" class="module-subtab" data-interview-sub="scenario">② 业务场景作答</button>
       </div>
-      <p class="module-intro">面试训练 · 先基于简历准备讲述与防御，再练业务场景 sense 判断</p>
-      ${!hasResume ? '<p class="module-intro" style="color:#b45309">提示：在「简历优化」上传简历后，此处可自动带入；也可直接粘贴到下方补充信息。</p>' : ''}
-      <div class="coach-layout">
-        <aside class="coach-mode-aside" role="tablist" aria-label="面试能力">
-          ${INTERVIEW_MODES.map(m => `<button type="button" class="coach-mode-btn${m.id === interviewModeId ? ' active' : ''}" data-interview-mode="${m.id}" title="${escapeAttr(m.desc)}">${m.icon} ${escapeHtml(m.title)}</button>`).join('')}
-        </aside>
-        <div class="coach-main">
-          <div class="coach-mode-chips" role="tablist">
-            ${INTERVIEW_MODES.map(m => `<button type="button" class="${m.id === interviewModeId ? 'active' : ''}" data-interview-mode="${m.id}">${m.title}</button>`).join('')}
-          </div>
-          <div class="profile-actions">
-            <button type="button" class="btn-primary" id="interviewPrepBtn">🎯 基于简历一键准备面试</button>
-          </div>
-          ${moduleIntakeHtml(modeCfg)}
-          <div class="coach-thread" id="interviewPrepThread" aria-live="polite">
-            ${interviewPrepMessages.map(m => `<div class="coach-bubble ${m.role}">${escapeHtml(m.content).replace(/\n/g, '<br/>')}</div>`).join('')}
-          </div>
-          <div class="coach-compose">
-            <textarea id="interviewMessageInput" placeholder="${escapeAttr(modeCfg.placeholder)}">${escapeHtml(draft)}</textarea>
-            <div class="coach-compose-row">
-              <button type="button" class="btn-primary" id="interviewSendBtn">发送</button>
-              <button type="button" class="btn-frost" id="interviewClearBtn">清空对话</button>
-              <p class="coach-error" id="interviewError" hidden></p>
-            </div>
+      <p class="module-intro">面试训练 · 先基于简历准备讲述与防御，再练业务场景判断</p>
+      ${!hasResume ? '<p class="module-intro" style="color:#b45309">提示：在「简历优化」上传简历后，此处会自动带入。</p>' : ''}
+      <div class="coach-layout-single coach-main">
+        <div class="profile-actions">
+          <button type="button" class="btn-primary" id="interviewPrepBtn">🎯 基于简历一键准备面试</button>
+        </div>
+        ${coachExtraNotesHtml()}
+        <div class="coach-thread" id="interviewPrepThread" aria-live="polite">
+          ${interviewPrepMessages.map(m => `<div class="coach-bubble ${m.role}">${escapeHtml(m.content).replace(/\n/g, '<br/>')}</div>`).join('')}
+        </div>
+        <div class="coach-compose">
+          <textarea id="interviewMessageInput" placeholder="继续问：某个项目怎么 defense、badcase 怎么准备…">${escapeHtml(draft)}</textarea>
+          <div class="coach-compose-row">
+            <button type="button" class="btn-primary" id="interviewSendBtn">发送</button>
+            <button type="button" class="btn-frost" id="interviewClearBtn">清空对话</button>
+            <p class="coach-error" id="interviewError" hidden></p>
           </div>
         </div>
       </div>
@@ -4012,15 +3930,11 @@ function detectCoachIntentLocal(text) {
 }
 
 function openCoachFromGoal(goal, mode) {
-  if (RESUME_MODE_IDS.has(mode)) {
-    resumeModeId = mode;
-    localStorage.setItem('resumeMode', mode);
+  if (RESUME_COACH_MODES.has(mode)) {
     resumeDraftMessage = goal;
     workspaceMode = 'resume';
     renderResumeView();
   } else {
-    interviewModeId = mode || 'interview-defense';
-    localStorage.setItem('interviewMode', interviewModeId);
     interviewDraftMessage = goal;
     interviewSubView = 'prep';
     localStorage.setItem('interviewSubView', 'prep');
@@ -4038,20 +3952,12 @@ function bindInterviewView() {
       renderInterviewView();
     };
   });
-  document.querySelectorAll('[data-interview-mode]').forEach(btn => {
-    btn.onclick = () => {
-      syncCoachIntakeFromDom(getInterviewModeConfig(interviewModeId));
-      interviewModeId = btn.dataset.interviewMode;
-      localStorage.setItem('interviewMode', interviewModeId);
-      renderInterviewView();
-    };
-  });
   document.getElementById('interviewSendBtn')?.addEventListener('click', () => {
     const msg = document.getElementById('interviewMessageInput')?.value?.trim();
     if (!msg) return;
     saveProfileFromDom();
     sendModuleCoachMessage({
-      module: 'interview', message: msg, mode: interviewModeId,
+      module: 'interview', message: msg, mode: '',
       messages: interviewPrepMessages, threadId: 'interviewPrepThread',
       errId: 'interviewError', btnId: 'interviewSendBtn', inputId: 'interviewMessageInput'
     });
@@ -4062,7 +3968,7 @@ function bindInterviewView() {
   });
   document.getElementById('interviewPrepBtn')?.addEventListener('click', () => {
     saveProfileFromDom();
-    const resumeNote = profileResume.trim() ? '' : '（简历未上传，请根据下方补充信息回答）';
+    const resumeNote = profileResume.trim() ? '' : '（简历未上传，请根据补充说明回答）';
     const jdNote = profileJd.trim() ? '已提供目标 JD，请对齐岗位要求。' : '';
     const msg = `基于我的简历${resumeNote}，帮我准备 AI 产品经理面试：
 1. 面试官前 15 秒会怎么看我？最强/最弱信号是什么？
@@ -4071,8 +3977,6 @@ function bindInterviewView() {
 4. 必须准备的 2 个 badcase（现象-归因-改法-复测）
 5. 明确不能说的话（避免被问穿）
 ${jdNote}`;
-    interviewModeId = 'interview-defense';
-    localStorage.setItem('interviewMode', interviewModeId);
     sendModuleCoachMessage({
       module: 'interview', message: msg, mode: 'interview-defense',
       messages: interviewPrepMessages, threadId: 'interviewPrepThread',

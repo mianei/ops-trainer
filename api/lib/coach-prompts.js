@@ -140,7 +140,8 @@ export function buildCoachUserMessage(mode, intake, message) {
     question: '问题',
     context: '背景',
     role: '真实参与',
-    concerns: '担心被问穿的地方'
+    concerns: '担心被问穿的地方',
+    extra: '补充说明'
   };
   const filled = Object.entries(intake || {})
     .filter(([, v]) => String(v || '').trim())

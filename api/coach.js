@@ -70,6 +70,7 @@ export default async function handler(req) {
 
   let mode = String(body?.mode || '').trim();
   const message = String(body?.message || '').trim();
+  const contextModule = String(body?.contextModule || '').trim();
   const intake = body?.intake && typeof body.intake === 'object' ? body.intake : {};
   const history = Array.isArray(body?.history) ? body.history : [];
 
@@ -78,7 +79,8 @@ export default async function handler(req) {
   }
 
   if (!mode || !VALID_COACH_MODES.includes(mode)) {
-    mode = detectCoachIntent(message) || 'ai-pm-qa';
+    mode = detectCoachIntent(message)
+      || (contextModule === 'resume' ? 'resume-diagnosis' : contextModule === 'interview' ? 'interview-defense' : 'ai-pm-qa');
   }
 
   const cfg = getLlmConfig();
