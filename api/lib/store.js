@@ -147,6 +147,7 @@ export async function registerUser(userIdRaw, passwordRaw, inviteRaw) {
 
 export function authDisabled() {
   const users = parseAccessUsers();
+  // 未配置 ACCESS_CODE / ACCESS_USERS 时始终访客模式，不因鉴权 misconfig 返回 500
   if (users.size === 0) return true;
   const flag = (process.env.AUTH_DISABLED || '').trim();
   if (flag === '1') return true;

@@ -88,21 +88,9 @@ const OUTPUT_RULES = `## 输出规则
 
 /** @param {string} mode */
 function buildCompactCoachSystemPrompt(mode) {
-  const judgment = readReference('judgment-principles.md');
-  /** @type {string[]} */
-  const refs = [
-    MODE_INSTRUCTIONS[mode] || MODE_INSTRUCTIONS['ai-pm-qa']
-  ];
-  if (mode === 'resume-diagnosis' || mode === 'full-report') {
-    const assessment = readReference('assessment-framework.md');
-    if (assessment) refs.push('## Assessment Framework\n' + assessment);
-  }
-  if (judgment) refs.push('## Judgment Principles\n' + judgment);
-
   return `${CORE_STANCE}
 
-## 参考文档
-${refs.join('\n\n')}
+${MODE_INSTRUCTIONS[mode] || MODE_INSTRUCTIONS['ai-pm-qa']}
 
 ${OUTPUT_RULES}`;
 }

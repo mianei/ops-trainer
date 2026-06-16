@@ -105,7 +105,6 @@
     background: linear-gradient(180deg, #e8f2fa 0%, #e4ebf8 45%, #dde8f5 100%);
     overflow: hidden;
   }
-  #gate .bg-scene { min-height: 100%; }
   .bg-horizon-svg {
     position: absolute;
     top: 0;
@@ -257,131 +256,7 @@
     }
   }
 
-  /* —— 门禁（SaaS Hero） —— */
-  #gate {
-    position: fixed; inset: 0; z-index: 100;
-    display: flex; flex-direction: column;
-    padding: 0 max(20px, env(safe-area-inset-right)) 1.5rem max(20px, env(safe-area-inset-left));
-    overflow-y: auto;
-  }
-  #gate.hidden { display: none; }
-
-  .gate-layout {
-    position: relative; z-index: 1;
-    flex: 1; display: flex; align-items: center; justify-content: center;
-    width: 100%; max-width: var(--max); margin: 0 auto;
-    padding: 2.5rem 0 3rem;
-  }
-  .gate-grid {
-    display: grid; grid-template-columns: 1fr; gap: 1.5rem;
-    width: 100%; align-items: center;
-  }
-  @media (min-width: 860px) {
-    .gate-grid { grid-template-columns: 1.15fr 0.85fr; gap: 2rem; }
-  }
-
-  .gate-intro { padding: 0.5rem 0; }
-  .gate-intro .hero-brand { margin-bottom: 1rem; }
-  .gate-intro h1 {
-    font-size: clamp(2rem, 5vw, 3rem);
-    font-weight: 700;
-    letter-spacing: -0.035em;
-    line-height: 1.08;
-    margin-bottom: 1.25rem;
-  }
-  .gate-intro .lead {
-    font-size: 17px; color: var(--ink2); line-height: 1.55;
-    max-width: 28em; margin-bottom: 0;
-  }
-  .gate-actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
-  .btn-ghost {
-    font-size: 15px; font-weight: 500; color: var(--accent);
-    background: none; border: none; cursor: default;
-    font-family: inherit; padding: 0;
-  }
-  .gate-card {
-    padding: 2rem; border-radius: var(--r-xl);
-    background: var(--frost-solid);
-    backdrop-filter: var(--blur-lg);
-    -webkit-backdrop-filter: var(--blur-lg);
-    border: 1px solid var(--frost-border);
-    box-shadow: var(--shadow-lg), var(--inset-hi);
-  }
-  .gate-card h2 {
-    font-size: 22px; font-weight: 700; letter-spacing: -0.02em;
-    margin-bottom: 8px;
-  }
-  .gate-card .sub { font-size: 15px; color: var(--ink2); margin-bottom: 1.25rem; line-height: 1.5; }
-  .gate-tabs {
-    display: flex;
-    gap: 6px;
-    margin-bottom: 1.25rem;
-    padding: 4px;
-    border-radius: var(--r-lg);
-    background: rgba(255, 255, 255, 0.4);
-    border: 1px solid var(--frost-border);
-  }
-  .gate-tab {
-    flex: 1;
-    font-family: inherit;
-    font-size: 13px;
-    font-weight: 600;
-    padding: 8px 12px;
-    border: none;
-    border-radius: var(--r);
-    background: transparent;
-    color: var(--ink2);
-    cursor: pointer;
-    transition: background 0.2s, color 0.2s;
-  }
-  .gate-tab.active {
-    background: #fff;
-    color: var(--ink);
-    box-shadow: var(--shadow-sm), var(--inset-hi);
-  }
-  .gate-panel { display: none; }
-  .gate-panel.active { display: block; }
-  .btn-register {
-    width: 100%;
-    margin-top: 0;
-    padding: 14px 20px;
-    font-family: inherit;
-    font-size: 15px;
-    font-weight: 600;
-    border: 1px solid var(--frost-border);
-    border-radius: var(--r-lg);
-    background: rgba(255, 255, 255, 0.55);
-    color: var(--ink);
-    cursor: pointer;
-    transition: background 0.2s;
-  }
-  .btn-register:hover { background: rgba(255, 255, 255, 0.85); }
-  .btn-register:disabled { opacity: 0.6; cursor: not-allowed; }
-  .gate-field label {
-    display: block; font-size: 12px; font-weight: 500;
-    color: var(--ink3); margin-bottom: 8px;
-  }
-  .gate-field input {
-    width: 100%; height: 48px; padding: 0 16px;
-    font-size: 16px; font-family: inherit;
-    border: 1px solid var(--frost-border); border-radius: var(--r);
-    background: rgba(255, 255, 255, 0.5);
-    backdrop-filter: var(--blur-sm);
-    -webkit-backdrop-filter: var(--blur-sm);
-    outline: none;
-    box-shadow: var(--inset-hi);
-  }
-  .gate-field input:focus {
-    border-color: rgba(255, 255, 255, 0.9);
-    background: rgba(255, 255, 255, 0.65);
-    box-shadow: var(--inset-hi), 0 0 0 4px rgba(48, 209, 88, 0.12);
-  }
-  .gate-remember {
-    display: flex; align-items: center; gap: 8px;
-    margin: 14px 0 1.25rem; font-size: 13px; color: var(--ink2);
-    cursor: pointer;
-  }
-  .btn-enter, .btn-primary {
+  .btn-primary {
     font-size: 15px; font-weight: 600; font-family: inherit;
     color: #fff;
     border: none;
@@ -401,8 +276,7 @@
       0 10px 24px var(--btn-green-glow);
     transition: transform 0.15s ease, box-shadow 0.15s ease;
   }
-  .btn-enter { width: 100%; height: 48px; }
-  .btn-enter:hover, .btn-primary:hover {
+  .btn-primary:hover {
     background: linear-gradient(
       180deg,
       #55e6b8 0%,
@@ -416,7 +290,7 @@
       0 6px 0 var(--btn-green-lip),
       0 14px 30px rgba(38, 194, 129, 0.44);
   }
-  .btn-enter:active, .btn-primary:active {
+  .btn-primary:active {
     transform: translateY(4px);
     background: linear-gradient(
       180deg,
@@ -430,7 +304,7 @@
       0 1px 0 var(--btn-green-lip),
       0 5px 16px rgba(38, 194, 129, 0.28);
   }
-  .btn-enter:disabled, .btn-primary:disabled {
+  .btn-primary:disabled {
     opacity: 0.52;
     cursor: not-allowed;
     transform: none;
@@ -438,27 +312,6 @@
       inset 0 1px 0 rgba(255, 255, 255, 0.3),
       0 3px 0 var(--btn-green-lip),
       0 6px 14px rgba(38, 194, 129, 0.18);
-  }
-  .gate-error {
-    margin-top: 12px; padding: 11px 14px; font-size: 13px;
-    color: var(--danger); background: var(--danger-bg);
-    border-radius: var(--r); display: none;
-  }
-  .gate-error.visible { display: block; }
-  .gate-hint { margin-top: 1rem; font-size: 11px; color: var(--ink3); text-align: center; }
-  .user-badge {
-    position: fixed;
-    top: max(14px, env(safe-area-inset-top));
-    left: max(18px, env(safe-area-inset-left));
-    z-index: 20;
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--ink3);
-    padding: 8px 14px;
-    border-radius: 980px;
-    background: var(--frost);
-    border: 1px solid var(--frost-border);
-    box-shadow: var(--inset-hi);
   }
   .review-meta {
     font-size: 12px;
@@ -470,31 +323,6 @@
   /* —— 主应用 —— */
   #app { display: none; position: relative; z-index: 1; min-height: 100vh; }
   #app.visible { display: flex; flex-direction: column; }
-
-  .btn-exit {
-    position: fixed;
-    top: max(14px, env(safe-area-inset-top));
-    right: max(18px, env(safe-area-inset-right));
-    z-index: 20;
-    font-family: inherit;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--ink2);
-    padding: 8px 16px;
-    border-radius: 980px;
-    cursor: pointer;
-    background: var(--frost);
-    backdrop-filter: var(--blur-sm);
-    -webkit-backdrop-filter: var(--blur-sm);
-    border: 1px solid var(--frost-border);
-    box-shadow: var(--inset-hi), 0 2px 10px rgba(0, 0, 0, 0.04);
-    transition: background 0.2s, color 0.2s, border-color 0.2s;
-  }
-  .btn-exit:hover {
-    color: var(--ink);
-    background: var(--frost-strong);
-    border-color: rgba(255, 255, 255, 0.85);
-  }
 
   .page-wrap {
     position: relative; z-index: 1;
@@ -2232,12 +2060,12 @@
       top: 18%;
       opacity: 0.65;
     }
-    .glass, .surface, .surface-card, .gate-card, .workspace-shell,
-    .module-nav, .case-head, .btn-frost, .btn-exit, .btn-refresh {
+    .glass, .surface, .surface-card, .workspace-shell,
+    .module-nav, .case-head, .btn-frost, .btn-refresh {
       backdrop-filter: none;
       -webkit-backdrop-filter: none;
     }
-    .gate-card, .workspace-shell, .module-nav, .surface-card {
+    .workspace-shell, .module-nav, .surface-card {
       background: rgba(255, 255, 255, 0.94);
     }
     .hero-eyebrow-row { display: none; }
@@ -2254,17 +2082,6 @@
       margin-bottom: 0.5rem;
     }
     .hero-copy .desc { font-size: 14px; line-height: 1.55; }
-    #gate {
-      padding-top: max(12px, env(safe-area-inset-top));
-      padding-bottom: max(1.25rem, env(safe-area-inset-bottom));
-    }
-    .gate-layout {
-      align-items: flex-start;
-      padding: 1rem 0 2rem;
-    }
-    .gate-intro h1 { font-size: clamp(1.45rem, 6.2vw, 1.85rem); }
-    .gate-intro .lead { font-size: 15px; }
-    .gate-card { padding: 1.35rem 1.25rem; }
     .workspace { display: flex; flex-direction: column; gap: 0.75rem; }
     .workspace-aside {
       position: static;
@@ -2304,7 +2121,6 @@
     .module-head h2 { font-size: 1.15rem; line-height: 1.25; }
     .module-head p { font-size: 13px; line-height: 1.5; }
     .train-main { overflow: visible; min-width: 0; width: 100%; }
-    .gate-grid { grid-template-columns: 1fr; }
     .page-wrap {
       padding: max(44px, calc(env(safe-area-inset-top) + 32px)) 12px max(1.5rem, env(safe-area-inset-bottom)) 12px;
     }
@@ -2332,30 +2148,13 @@
     .followup-thread { max-height: min(50vh, 320px); }
     .fu-msg { max-width: 100%; }
     textarea,
-    .followup-compose textarea,
-    .gate-field input {
+    .followup-compose textarea {
       font-size: 16px;
     }
-    .btn-primary, .btn-enter, .btn-exit, .btn-refresh, .btn-followup {
+    .btn-primary, .btn-refresh, .btn-followup {
       min-height: 44px;
       touch-action: manipulation;
       -webkit-tap-highlight-color: transparent;
-    }
-    .btn-exit {
-      top: max(10px, env(safe-area-inset-top));
-      right: max(12px, env(safe-area-inset-right));
-      padding: 10px 14px;
-      font-size: 14px;
-    }
-    .user-badge {
-      top: max(10px, env(safe-area-inset-top));
-      left: max(12px, env(safe-area-inset-left));
-      font-size: 11px;
-      padding: 8px 12px;
-      max-width: 42vw;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
     }
     .case-body,
     .feedback-body,
@@ -2385,7 +2184,6 @@
   @media (max-width: 380px) {
     .module-item { min-width: 92px; }
     .module-item .mi-label { font-size: 11px; }
-    .gate-card h2 { font-size: 1.15rem; }
   }
 </style>
 </head>
@@ -2454,11 +2252,6 @@
 
 <script>
 const GITHUB_TOPICS_URL = '';
-
-const CODE_KEY = 'ops-access-code';
-const USER_ID_KEY = 'ops-user-id';
-const SESSION_UNTIL_KEY = 'ops-session-until';
-const REMEMBER_DAYS = 7;
 
 let accessCode = 'guest';
 let userAccountId = 'guest';
@@ -2530,25 +2323,6 @@ let scenarioSearchHits = [];
 const mentorSessions = {};
 
 const app = document.getElementById('app');
-
-function setGateTab(mode) {
-  document.querySelectorAll('.gate-tab').forEach(btn => {
-    const on = btn.dataset.gate === mode;
-    btn.classList.toggle('active', on);
-    btn.setAttribute('aria-selected', on ? 'true' : 'false');
-  });
-  const loginPanel = document.getElementById('gatePanelLogin');
-  const regPanel = document.getElementById('gatePanelRegister');
-  if (loginPanel) {
-    loginPanel.classList.toggle('active', mode === 'login');
-    loginPanel.hidden = mode !== 'login';
-  }
-  if (regPanel) {
-    regPanel.classList.toggle('active', mode === 'register');
-    regPanel.hidden = mode !== 'register';
-  }
-  hideGateError();
-}
 
 /** 侧栏：仅 AI 产品经理训练模块 */
 const CURRICULUM = {
@@ -2631,48 +2405,6 @@ function setSyncStatus(ok, text) {
   txt.textContent = text;
 }
 
-function showGateError(msg) {
-  gateError.textContent = msg;
-  gateError.classList.add('visible');
-}
-function hideGateError() {
-  gateError.classList.remove('visible');
-}
-
-function isSessionValid() {
-  const v = localStorage.getItem(SESSION_UNTIL_KEY);
-  return v ? Date.now() < Number(v) : false;
-}
-
-function clearSession() {
-  accessCode = '';
-  userAccountId = '';
-  sessionStorage.removeItem(CODE_KEY);
-  sessionStorage.removeItem(USER_ID_KEY);
-  localStorage.removeItem(CODE_KEY);
-  localStorage.removeItem(USER_ID_KEY);
-  localStorage.removeItem(SESSION_UNTIL_KEY);
-  const badge = document.getElementById('userBadge');
-  if (badge) badge.hidden = true;
-}
-
-function updateUserBadge() {
-  const badge = document.getElementById('userBadge');
-  if (!badge) return;
-  if (userAccountId && userAccountId !== 'default') {
-    badge.textContent = userAccountId;
-    badge.hidden = false;
-  } else {
-    badge.hidden = true;
-  }
-}
-
-function logoutApp() {
-  clearSession();
-  Object.keys(mentorSessions).forEach(k => delete mentorSessions[k]);
-  lockApp();
-}
-
 function unlockApp() {
   app.classList.add('visible');
   const btnHist = document.getElementById('btnHistory');
@@ -2684,9 +2416,7 @@ function unlockApp() {
 
 async function enterApp() {
   accessCode = 'guest';
-  userAccountId = localStorage.getItem(USER_ID_KEY) || 'guest';
-  sessionStorage.setItem(CODE_KEY, accessCode);
-  sessionStorage.setItem(USER_ID_KEY, userAccountId);
+  userAccountId = 'guest';
   unlockApp();
   await loadTopicsAndRender();
 }
@@ -2695,81 +2425,8 @@ function authHeaders() {
   return {
     'Content-Type': 'application/json',
     'X-Access-Code': accessCode,
-    'X-User-Id': userAccountId || sessionStorage.getItem(USER_ID_KEY) || ''
+    'X-User-Id': userAccountId
   };
-}
-
-async function verifyCode(userId, code) {
-  const headers = {
-    'Content-Type': 'application/json',
-    'X-Access-Code': code,
-    'X-User-Id': userId || ''
-  };
-  const payload = JSON.stringify({ action: 'verify', accessCode: code, userId: userId || '' });
-  let res = await fetch('/api/verify', { method: 'POST', headers, body: payload });
-  if (res.status === 404 || res.status === 400) {
-    res = await fetch('/api/chat', { method: 'POST', headers, body: payload });
-  }
-  const data = await res.json().catch(() => ({}));
-  if (res.ok && data.ok) {
-    return { ok: true, userId: data.userId || userId || 'default' };
-  }
-  if (res.status === 401) return { ok: false, msg: data.error || '用户名或密码无效' };
-  if (res.status === 500) return { ok: false, msg: data.error || '请配置 REGISTER_INVITE_CODE 或 ACCESS_CODE' };
-  return { ok: false, msg: data.error || '验证失败（HTTP ' + res.status + '）' };
-}
-
-async function registerAccount(username, password, invite) {
-  regBtn.disabled = true;
-  regBtn.textContent = '注册中…';
-  hideGateError();
-  try {
-    const res = await fetch('/api/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, password, inviteCode: invite })
-    });
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok || !data.ok) {
-      showGateError(data.error || '注册失败（HTTP ' + res.status + '）');
-      return false;
-    }
-    return await tryEnter(data.userId || username, password, document.getElementById('gateRemember').checked);
-  } catch (e) {
-    showGateError('无法连接服务：' + e.message);
-    return false;
-  } finally {
-    regBtn.disabled = false;
-    regBtn.textContent = '注册并进入';
-  }
-}
-
-async function tryEnter(userId, code, remember) {
-  gateBtn.disabled = true;
-  gateBtn.textContent = '验证中…';
-  hideGateError();
-  try {
-    const result = await verifyCode(userId, code);
-    if (!result.ok) { showGateError(result.msg); return false; }
-    accessCode = code;
-    userAccountId = result.userId;
-    sessionStorage.setItem(CODE_KEY, accessCode);
-    sessionStorage.setItem(USER_ID_KEY, userAccountId);
-    if (remember) {
-      localStorage.setItem(CODE_KEY, accessCode);
-      localStorage.setItem(USER_ID_KEY, userAccountId);
-      localStorage.setItem(SESSION_UNTIL_KEY, String(Date.now() + REMEMBER_DAYS * 86400000));
-    }
-    unlockApp();
-    await loadTopicsAndRender();
-    return true;
-  } catch (e) {
-    showGateError('无法连接服务：' + e.message);
-    return false;
-  } finally {
-    gateBtn.disabled = false;
-    gateBtn.textContent = '开始训练';
-  }
 }
 
 async function loadTopics() {
