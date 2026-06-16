@@ -1,0 +1,15 @@
+---
+description: 完成功能改动后自动 commit 并 push 到 GitHub
+alwaysApply: true
+---
+
+# 部署到 GitHub
+
+在本项目（MindTraining / ops-trainer）完成有意义的代码或配置改动后：
+
+1. **默认 commit 并 push 到 GitHub**（`origin/main`），无需用户再单独说「要部署」。
+2. 提交前确认：不提交 `.env.local`、API Key、`.cursor/` 临时文件、大 PDF/ dump 等。
+3. 若用户明确说「先别 push / 只改本地」，则跳过 push。
+4. push 完成后简短告知：commit hash、推送结果；若 Vercel 已关联则提醒自动部署。
+
+Workflow：`git status` → `git diff` → stage 相关文件 → commit → `git push -u origin HEAD` → `git status` 确认。
