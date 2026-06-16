@@ -1428,7 +1428,9 @@
     padding: 8px 10px;
     resize: vertical;
   }
-  .profile-box .profile-file { font-size: 11px; color: var(--ink3); margin-top: 6px; }
+  .profile-box .profile-file { font-size: 11px; color: var(--ink3); margin-top: 6px; display: block; }
+  .profile-file-status { font-size: 11px; color: #5e5ce6; margin-top: 4px; min-height: 16px; }
+  .profile-file-status.is-error { color: var(--danger, #c62828); }
   .profile-actions {
     display: flex;
     flex-wrap: wrap;
@@ -3604,18 +3606,125 @@ function profileUploadHtml() {
   return `<div class="profile-upload-grid">
     <div class="profile-box">
       <label for="profileResumeInput">上传简历 <span style="color:var(--danger)">*</span></label>
-      <textarea id="profileResumeInput" placeholder="粘贴简历全文，或上传 .txt / .md 文件">${escapeHtml(profileResume)}</textarea>
-      <input type="file" id="resumeFileInput" accept=".txt,.md,.text" class="profile-file" />
-      <span class="profile-file">支持粘贴或上传文本文件</span>
+      <textarea id="profileResumeInput" placeholder="粘贴简历全文，或上传 PDF / DOCX / TXT">${escapeHtml(profileResume)}</textarea>
+      <input type="file" id="resumeFileInput" accept=".pdf,.doc,.docx,.txt,.md,.text,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" class="profile-file" />
+      <span class="profile-file">支持 PDF、DOCX、TXT · 单文件建议 10MB 以内</span>
+      <p class="profile-file-status" id="resumeFileStatus"></p>
     </div>
     <div class="profile-box">
       <label for="profileJdInput">上传 JD <span style="color:var(--ink3)">（可选）</span></label>
-      <textarea id="profileJdInput" placeholder="粘贴目标岗位 JD，便于对齐优化和面试准备">${escapeHtml(profileJd)}</textarea>
-      <input type="file" id="jdFileInput" accept=".txt,.md,.text" class="profile-file" />
+      <textarea id="profileJdInput" placeholder="粘贴目标岗位 JD，或上传 PDF / DOCX">${escapeHtml(profileJd)}</textarea>
+      <input type="file" id="jdFileInput" accept=".pdf,.doc,.docx,.txt,.md,.text,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" class="profile-file" />
+      <span class="profile-file">支持 PDF、DOCX、TXT</span>
+      <p class="profile-file-status" id="jdFileStatus"></p>
       <label for="profileTargetRoleInput" style="margin-top:8px">目标岗位</label>
       <input type="text" id="profileTargetRoleInput" value="${escapeAttr(profileTargetRole)}" placeholder="如：字节 AI 产品实习" style="width:100%;padding:8px 10px;border:1px solid var(--frost-border);border-radius:var(--r);font-family:inherit;font-size:13px" />
     </div>
   </div>`;
+}
+
+const DOC_PARSER_SCRIPTS = {
+  pdf: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js',
+  pdfWorker: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js',
+  mammoth: 'https://cdn.jsdelivr.net/npm/mammoth@1.8.0/mammoth.browser.min.js'
+};
+const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
+
+function loadExternalScript(src) {
+  if (document.querySelector(`script[src="${src}"]`)) return Promise.resolve();
+  return new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = src;
+    s.async = true;
+    s.onload = () => resolve();
+    s.onerror = () => reject(new Error('无法加载文档解析组件，请检查网络或改粘贴文本'));
+    document.head.appendChild(s);
+  });
+}
+
+async function ensureDocParsers() {
+  if (window.__docParsersReady) return;
+  await loadExternalScript(DOC_PARSER_SCRIPTS.pdf);
+  await loadExternalScript(DOC_PARSER_SCRIPTS.mammoth);
+  if (window.pdfjsLib) {
+    window.pdfjsLib.GlobalWorkerOptions.workerSrc = DOC_PARSER_SCRIPTS.pdfWorker;
+  }
+  window.__docParsersReady = true;
+}
+
+function fileExtension(name) {
+  const n = String(name || '').toLowerCase();
+  const i = n.lastIndexOf('.');
+  return i >= 0 ? n.slice(i + 1) : '';
+}
+
+async function parseUploadedDocument(file) {
+  if (!file) throw new Error('未选择文件');
+  if (file.size > MAX_UPLOAD_BYTES) throw new Error('文件超过 10MB，请压缩或粘贴文本');
+  const ext = fileExtension(file.name);
+  const type = String(file.type || '').toLowerCase();
+
+  if (['txt', 'md', 'text'].includes(ext) || type.startsWith('text/')) {
+    return { text: await file.text(), format: ext || 'txt' };
+  }
+
+  if (ext === 'doc') {
+    throw new Error('旧版 .doc 暂不支持，请在 Word 中另存为 .docx 或导出 PDF');
+  }
+
+  await ensureDocParsers();
+
+  if (ext === 'pdf' || type === 'application/pdf') {
+    const pdf = await window.pdfjsLib.getDocument({ data: await file.arrayBuffer() }).promise;
+    const parts = [];
+    for (let p = 1; p <= pdf.numPages; p++) {
+      const page = await pdf.getPage(p);
+      const content = await page.getTextContent();
+      parts.push(content.items.map(it => it.str).join(' '));
+    }
+    const text = parts.join('\n').replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
+    if (!text) {
+      throw new Error('PDF 未识别到文字（可能是扫描件图片）。请换可复制文字的 PDF，或直接粘贴简历内容');
+    }
+    return { text, format: 'pdf' };
+  }
+
+  if (ext === 'docx' || type.includes('wordprocessingml')) {
+    const result = await window.mammoth.extractRawText({ arrayBuffer: await file.arrayBuffer() });
+    const text = String(result.value || '').trim();
+    if (!text) throw new Error('DOCX 解析结果为空，请检查文件是否损坏');
+    return { text, format: 'docx' };
+  }
+
+  throw new Error('不支持的格式，请上传 PDF、DOCX 或 TXT');
+}
+
+async function applyParsedFileToField(file, field) {
+  const isResume = field === 'resume';
+  const statusEl = document.getElementById(isResume ? 'resumeFileStatus' : 'jdFileStatus');
+  const ta = document.getElementById(isResume ? 'profileResumeInput' : 'profileJdInput');
+  if (statusEl) {
+    statusEl.textContent = `正在解析 ${file.name}…`;
+    statusEl.classList.remove('is-error');
+  }
+  try {
+    const { text, format } = await parseUploadedDocument(file);
+    if (isResume) {
+      profileResume = text;
+      localStorage.setItem('profileResume', profileResume);
+    } else {
+      profileJd = text;
+      localStorage.setItem('profileJd', profileJd);
+    }
+    if (ta) ta.value = text;
+    if (statusEl) statusEl.textContent = `已导入 ${file.name}（${format.toUpperCase()}，${text.length} 字）`;
+  } catch (e) {
+    if (statusEl) {
+      statusEl.textContent = e.message || '解析失败';
+      statusEl.classList.add('is-error');
+    }
+    alert(e.message || '文件解析失败');
+  }
 }
 
 function bindProfileUpload() {
@@ -3634,20 +3743,14 @@ function bindProfileUpload() {
   document.getElementById('resumeFileInput')?.addEventListener('change', async e => {
     const file = e.target.files?.[0];
     if (!file) return;
-    const text = await file.text();
-    profileResume = text;
-    localStorage.setItem('profileResume', profileResume);
-    const ta = document.getElementById('profileResumeInput');
-    if (ta) ta.value = text;
+    await applyParsedFileToField(file, 'resume');
+    e.target.value = '';
   });
   document.getElementById('jdFileInput')?.addEventListener('change', async e => {
     const file = e.target.files?.[0];
     if (!file) return;
-    const text = await file.text();
-    profileJd = text;
-    localStorage.setItem('profileJd', profileJd);
-    const ta = document.getElementById('profileJdInput');
-    if (ta) ta.value = text;
+    await applyParsedFileToField(file, 'jd');
+    e.target.value = '';
   });
 }
 
