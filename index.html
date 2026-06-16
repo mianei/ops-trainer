@@ -2332,7 +2332,7 @@
     <div class="bg-blob bg-blob-2"></div>
     <div class="bg-blob bg-blob-3"></div>
   </div>
-  <button type="button" class="btn-history" id="btnHistory">我的成长</button>
+  <button type="button" class="btn-history" id="btnHistory">复盘</button>
   <div class="page-wrap">
 
   <section class="hero-compact">
@@ -2376,6 +2376,10 @@ const REMEMBER_DAYS = 7;
 let accessCode = 'guest';
 let userAccountId = 'guest';
 let workspaceMode = localStorage.getItem('workspaceMode') || 'bank';
+if (workspaceMode === 'knowledge') {
+  workspaceMode = 'bank';
+  localStorage.setItem('workspaceMode', 'bank');
+}
 /** @type {{ version: number, questions: object[] } | null} */
 let INTERVIEW_BANK_V2 = null;
 /** @type {{ questions: object[] } | null} */
@@ -3436,8 +3440,6 @@ function modeBarHtml() {
   return `<div class="workspace-mode-bar" role="tablist" aria-label="AI 产品经理训练">
     <button type="button" class="mode-btn${bankActive ? ' active' : ''}" data-mode="bank" role="tab">面经练习<span class="v2-badge">${AI_PM_BANK?.questions?.length || 218}+</span></button>
     <button type="button" class="mode-btn coach-tab${workspaceMode === 'coach' ? ' active' : ''}" data-mode="coach" role="tab">项目教练</button>
-    <button type="button" class="mode-btn${workspaceMode === 'knowledge' ? ' active' : ''}" data-mode="knowledge" role="tab">知识库</button>
-    <button type="button" class="mode-btn v2-analytics-btn" id="openAnalyticsBtn" title="进步曲线">复盘</button>
   </div>`;
 }
 
@@ -3445,7 +3447,6 @@ function bindModeBar() {
   document.querySelectorAll('.mode-btn[data-mode]').forEach(btn => {
     btn.onclick = () => setWorkspaceMode(btn.dataset.mode);
   });
-  document.getElementById('openAnalyticsBtn')?.addEventListener('click', openAnalyticsModal);
 }
 
 function captureTrainWorkspaceState() {
@@ -3463,12 +3464,11 @@ function captureTrainWorkspaceState() {
 }
 
 function setWorkspaceMode(mode) {
-  if (!['bank', 'knowledge', 'coach'].includes(mode)) return;
+  if (!['bank', 'coach'].includes(mode)) return;
   if (mode !== 'train' && workspaceMode === 'train') captureTrainWorkspaceState();
   workspaceMode = mode;
   localStorage.setItem('workspaceMode', mode);
-  if (mode === 'knowledge') renderKnowledgeView();
-  else if (mode === 'coach') renderCoachView();
+  if (mode === 'coach') renderCoachView();
   else renderBankView();
 }
 
@@ -3862,7 +3862,7 @@ async function openAnalyticsModal() {
     modal = document.createElement('div');
     modal.id = 'analyticsModal';
     modal.className = 'history-modal';
-    modal.innerHTML = '<div class="history-panel"><h3>v2.0 复盘</h3><div id="analyticsBody"></div><button type="button" class="btn-primary" id="analyticsClose">关闭</button></div>';
+    modal.innerHTML = '<div class="history-panel"><h3>复盘</h3><div id="analyticsBody"></div><button type="button" class="btn-primary" id="analyticsClose">关闭</button></div>';
     document.body.appendChild(modal);
     modal.onclick = e => { if (e.target === modal) modal.classList.remove('open'); };
     modal.querySelector('#analyticsClose').onclick = () => modal.classList.remove('open');
@@ -3982,24 +3982,8 @@ function readingIdsForNav(navId, scenario) {
 function updateReadingTip(navId, scenario) {
   const el = document.getElementById('reading-' + navId);
   if (!el) return;
-  const ids = readingIdsForNav(navId, scenario);
-  const cards = ids.map(knowledgeCardById).filter(Boolean);
-  if (!cards.length) { el.innerHTML = ''; el.style.display = 'none'; return; }
-  el.style.display = 'block';
-  const chips = cards.map(c =>
-    `<button type="button" class="read-chip" data-card="${escapeAttr(c.id)}">${escapeHtml(c.title)}</button>`
-  ).join('');
-  el.innerHTML = `<strong>作答前建议先看</strong>（1 分钟）：${chips}<div class="read-links"></div>`;
-  el.querySelectorAll('.read-chip').forEach(btn => {
-    btn.onclick = () => {
-      const cardId = btn.dataset.card;
-      captureTrainWorkspaceState();
-      workspaceMode = 'knowledge';
-      knowledgePageId = findKnowledgePageForCard(cardId) || knowledgePageId;
-      localStorage.setItem('knowledgePageId', knowledgePageId);
-      renderKnowledgeView(cardId);
-    };
-  });
+  el.innerHTML = '';
+  el.style.display = 'none';
 }
 
 function renderStructuredReview(review, metaHtml) {
@@ -4437,8 +4421,7 @@ async function loadTopicsAndRender() {
     await loadInterviewBankV2();
     await loadAiPmBanks();
     setSyncStatus(true);
-    if (workspaceMode === 'knowledge') renderKnowledgeView();
-    else if (workspaceMode === 'coach') renderCoachView();
+    if (workspaceMode === 'coach') renderCoachView();
     else if (workspaceMode === 'train') renderTopics();
     else renderBankView();
   } catch (e) {
@@ -4952,11 +4935,7 @@ async function bootstrap() {
   initHorizonWave();
   window.addEventListener('resize', () => {});
   const btnHistory = document.getElementById('btnHistory');
-  const historyClose = document.getElementById('historyClose');
-  const historyModal = document.getElementById('historyModal');
-  if (btnHistory) btnHistory.onclick = openHistoryModal;
-  if (historyClose) historyClose.onclick = closeHistoryModal;
-  if (historyModal) historyModal.onclick = (e) => { if (e.target === historyModal) closeHistoryModal(); };
+  if (btnHistory) btnHistory.onclick = openAnalyticsModal;
   await enterApp();
 }
 
