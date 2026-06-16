@@ -1,6 +1,7 @@
 # 密钥和本地配置
 .env
 .env.*
+!.env.example
 *token*.txt
 *api*.txt
 

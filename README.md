@@ -28,8 +28,19 @@
 ### 开发者
 
 1. 克隆或 [下载源码 ZIP](https://github.com/mianei/ops-trainer/archive/refs/heads/main.zip)
-2. 按下方「部署」章节配置环境变量并部署到 Vercel（或兼容平台）
-3. 本地调试可执行 `npx vercel dev`
+2. 在项目根目录复制 `.env.example` → `.env.local`，填入 `DEEPSEEK_API_KEY`
+3. **本地启动（必做，不能双击 `index.html`）**：
+
+```bash
+npx vercel dev
+```
+
+浏览器打开终端里显示的地址（通常是 `http://localhost:3000`）。
+
+> **为什么不能直接打开 HTML？**  
+> 页面会请求 `/api/chat`、`/api/coach`、`/api/plan` 等接口。用 `file://` 或普通静态服务器打开时，这些 API 不存在，AI 点评、项目教练、智能体规划都会失败。必须用 `vercel dev` 同时跑前端 + Serverless API。
+
+4. 部署到 Vercel 时按下方「部署」章节配置环境变量
 
 题目数据位于 `topics.json` 及配套的 `scenarios-*.json`、`topics-*.json` 文件。
 

@@ -1349,6 +1349,144 @@
   .bank-item.curated { border-color: rgba(94, 92, 230, 0.35); }
   .bank-item-hint { font-size: 11px; color: #5e5ce6; margin-top: 6px; }
   .bank-item-text { font-size: 14px; color: var(--ink); line-height: 1.5; }
+
+  /* ── AI 项目教练 ── */
+  .coach-layout {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 16px;
+    min-height: 420px;
+  }
+  @media (max-width: 899px) {
+    .coach-layout { grid-template-columns: 1fr; }
+    .coach-mode-aside { display: none; }
+    .coach-mode-chips { display: flex !important; }
+  }
+  .coach-mode-aside {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .coach-mode-btn {
+    font-family: inherit;
+    font-size: 13px;
+    text-align: left;
+    padding: 10px 12px;
+    border-radius: var(--r-lg);
+    border: 1px solid transparent;
+    background: rgba(255,255,255,0.45);
+    color: var(--ink2);
+    cursor: pointer;
+  }
+  .coach-mode-btn.active {
+    border-color: rgba(37, 99, 235, 0.35);
+    background: rgba(37, 99, 235, 0.08);
+    color: #2563eb;
+  }
+  .coach-mode-chips {
+    display: none;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+  .coach-mode-chips button {
+    font-family: inherit;
+    font-size: 11px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--frost-border);
+    background: #fff;
+    cursor: pointer;
+  }
+  .coach-mode-chips button.active {
+    background: #2563eb;
+    color: #fff;
+    border-color: #2563eb;
+  }
+  .coach-main {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-height: 360px;
+  }
+  .coach-intake {
+    padding: 14px;
+    border-radius: var(--r-lg);
+    background: rgba(255,255,255,0.55);
+    border: 1px solid var(--frost-border);
+  }
+  .coach-intake h3 { font-size: 14px; margin: 0 0 10px; color: var(--ink); }
+  .coach-field { margin-bottom: 10px; }
+  .coach-field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink2);
+    margin-bottom: 4px;
+  }
+  .coach-field textarea,
+  .coach-field input {
+    width: 100%;
+    font-family: inherit;
+    font-size: 14px;
+    padding: 8px 10px;
+    border-radius: var(--r);
+    border: 1px solid var(--frost-border);
+    background: #fff;
+    resize: vertical;
+  }
+  .coach-field .hint { font-size: 11px; color: var(--ink3); margin-top: 4px; }
+  .coach-thread {
+    flex: 1;
+    min-height: 200px;
+    max-height: 48vh;
+    overflow-y: auto;
+    padding: 12px;
+    border-radius: var(--r-lg);
+    background: rgba(255,255,255,0.4);
+    border: 1px solid var(--frost-border);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .coach-bubble {
+    max-width: 92%;
+    padding: 10px 12px;
+    border-radius: var(--r-lg);
+    font-size: 14px;
+    line-height: 1.55;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .coach-bubble.user {
+    align-self: flex-end;
+    background: rgba(37, 99, 235, 0.12);
+    color: var(--ink);
+  }
+  .coach-bubble.assistant {
+    align-self: flex-start;
+    background: #fff;
+    border: 1px solid var(--frost-border);
+  }
+  .coach-compose textarea {
+    width: 100%;
+    font-family: inherit;
+    font-size: 14px;
+    padding: 10px 12px;
+    border-radius: var(--r-lg);
+    border: 1px solid var(--frost-border);
+    min-height: 72px;
+    resize: vertical;
+  }
+  .coach-compose-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+    align-items: center;
+  }
+  .coach-error { font-size: 13px; color: var(--danger); margin: 0; }
+  .mode-btn.coach-tab { color: #2563eb; }
+  .mode-btn.coach-tab.active { background: rgba(37, 99, 235, 0.1); color: #2563eb; }
   .analytics-chart {
     display: flex;
     align-items: flex-end;
@@ -2257,6 +2395,42 @@ let knowledgeBodyPageIndex = 0;
 const scenarioPinByTopic = Object.create(null);
 const answerDraftByTopic = Object.create(null);
 let trainUiReturnTopicId = '';
+let coachModeId = localStorage.getItem('coachMode') || 'resume-diagnosis';
+const coachIntake = Object.create(null);
+const coachMessages = [];
+let coachDraftMessage = '';
+const COACH_MODES = [
+  { id: 'full-report', title: '完整落地方案', icon: '📋', placeholder: '请基于我的简历，生成一份完整的 AI 项目落地方案…', fields: [
+    { id: 'resume', label: '简历 / 经历', type: 'textarea', rows: 6, required: true },
+    { id: 'targetRole', label: '目标岗位', type: 'text', required: true },
+    { id: 'materials', label: '已有材料', type: 'textarea', rows: 3 },
+    { id: 'timeline', label: '可投入时间', type: 'text' }
+  ]},
+  { id: 'project-direction', title: '项目方向', icon: '🧭', placeholder: '我没有 AI 项目，帮我从经历里找 1 个主方向 + 1 个备选…', fields: [
+    { id: 'background', label: '背景经历', type: 'textarea', rows: 5, required: true },
+    { id: 'targetRole', label: '目标方向', type: 'text', required: true },
+    { id: 'constraints', label: '限制条件', type: 'textarea', rows: 2 }
+  ]},
+  { id: 'project-iteration', title: '项目迭代', icon: '🔄', placeholder: '帮我诊断这个项目为什么看起来弱，并给出 eval + badcase 迭代方案…', fields: [
+    { id: 'project', label: '项目描述', type: 'textarea', rows: 5, required: true },
+    { id: 'problem', label: '当前问题', type: 'textarea', rows: 2 },
+    { id: 'artifacts', label: '现有材料', type: 'textarea', rows: 2 }
+  ]},
+  { id: 'resume-diagnosis', title: '简历诊断', icon: '🔍', placeholder: '诊断我的简历：前 15 秒能否看出 AI 产品信号？', fields: [
+    { id: 'resume', label: '简历内容', type: 'textarea', rows: 8, required: true },
+    { id: 'targetRole', label: '目标岗位', type: 'text' },
+    { id: 'feedback', label: '已收到的反馈', type: 'textarea', rows: 2 }
+  ]},
+  { id: 'ai-pm-qa', title: 'AI PM 答疑', icon: '💡', placeholder: 'AI 产品经理需要懂多少 RAG / Agent / 评测？', fields: [
+    { id: 'question', label: '你的问题', type: 'textarea', rows: 3, required: true },
+    { id: 'context', label: '背景（可选）', type: 'textarea', rows: 2 }
+  ]},
+  { id: 'interview-defense', title: '面试防御', icon: '🛡️', placeholder: '帮我准备这个项目的面试追问、2 个 badcase 和边界防御…', fields: [
+    { id: 'project', label: '项目描述', type: 'textarea', rows: 5, required: true },
+    { id: 'role', label: '你的真实参与', type: 'textarea', rows: 2, required: true },
+    { id: 'concerns', label: '担心被问穿的地方', type: 'textarea', rows: 2 }
+  ]}
+];
 
 /** 知识库分页：每页只展示对应 section，避免单页过长 */
 const KNOWLEDGE_PAGES = [
@@ -2708,7 +2882,7 @@ function goalPlanBarHtml() {
   return `<div class="goal-plan-wrap" id="goalPlanWrap">
     <label class="goal-plan-label" for="goalPlanInput">训练智能体 · 说目标或明日面试岗位</label>
     <div class="goal-plan-row">
-      <input type="text" class="goal-plan-input" id="goalPlanInput" placeholder="如：明天面字节产品经理 / 补强 SQL 数据分析 / 备战美团用户运营" autocomplete="off" enterkeyhint="go" />
+      <input type="text" class="goal-plan-input" id="goalPlanInput" placeholder="如：明天面字节产品经理 / 诊断 AI 产品简历 / 补强 SQL 数据分析" autocomplete="off" enterkeyhint="go" />
       <button type="button" class="btn-primary goal-plan-btn" id="goalPlanBtn">开始训练</button>
     </div>
     <p class="goal-plan-error" id="goalPlanError" role="alert"></p>
@@ -3139,6 +3313,13 @@ async function startMission(goal) {
   const btn = document.getElementById('goalPlanBtn');
   const input = document.getElementById('goalPlanInput');
   showGoalPlanError('');
+  const coachIntent = detectCoachIntentLocal(goal);
+  if (coachIntent) {
+    if (btn) { btn.disabled = false; btn.textContent = '开始训练'; }
+    openCoachFromGoal(goal, coachIntent);
+    if (input) input.blur();
+    return;
+  }
   if (btn) {
     btn.disabled = true;
     btn.textContent = /面|面试|明[天日]|后天/i.test(goal) ? '规划并 AI 出题…' : '规划中…';
@@ -3305,6 +3486,7 @@ function modeBarHtml() {
   return `<div class="workspace-mode-bar" role="tablist" aria-label="练习与知识库">
     <button type="button" class="mode-btn${workspaceMode === 'train' ? ' active' : ''}" data-mode="train" role="tab">练习</button>
     <button type="button" class="mode-btn${workspaceMode === 'bank' ? ' active' : ''}" data-mode="bank" role="tab">产品题库<span class="v2-badge">${AI_PM_BANK?.questions?.length || 218}+</span></button>
+    <button type="button" class="mode-btn coach-tab${workspaceMode === 'coach' ? ' active' : ''}" data-mode="coach" role="tab">项目教练</button>
     <button type="button" class="mode-btn${workspaceMode === 'knowledge' ? ' active' : ''}" data-mode="knowledge" role="tab">知识库</button>
     <button type="button" class="mode-btn v2-analytics-btn" id="openAnalyticsBtn" title="进步曲线">复盘</button>
   </div>`;
@@ -3332,12 +3514,176 @@ function captureTrainWorkspaceState() {
 }
 
 function setWorkspaceMode(mode) {
-  if (!['train', 'knowledge', 'bank'].includes(mode)) return;
+  if (!['train', 'knowledge', 'bank', 'coach'].includes(mode)) return;
   if (mode !== 'train' && workspaceMode === 'train') captureTrainWorkspaceState();
   workspaceMode = mode;
   if (mode === 'knowledge') renderKnowledgeView();
   else if (mode === 'bank') renderBankView();
+  else if (mode === 'coach') renderCoachView();
   else renderTopics();
+}
+
+function getCoachModeConfig(id) {
+  return COACH_MODES.find(m => m.id === id) || COACH_MODES[3];
+}
+
+function detectCoachIntentLocal(text) {
+  const t = String(text || '').trim();
+  if (!t) return null;
+  const rules = [
+    [/完整|落地方案|规划.*AI\s*项目|转\s*AI\s*产品/i, 'full-report'],
+    [/迭代|无面试|没回复|demo.*弱|优化.*项目/i, 'project-iteration'],
+    [/简历|诊断|改写/i, 'resume-diagnosis'],
+    [/面试防御|追问|讲项目|被问穿/i, 'interview-defense'],
+    [/没有.*项目|项目方向|找方向/i, 'project-direction'],
+    [/AI\s*产品|RAG|Agent|评测|Eval|badcase|项目教练/i, 'ai-pm-qa']
+  ];
+  for (const [re, mode] of rules) {
+    if (re.test(t)) return mode;
+  }
+  return null;
+}
+
+function coachIntakeHtml(modeCfg) {
+  return modeCfg.fields.map(f => {
+    const val = escapeAttr(coachIntake[f.id] || '');
+    const input = f.type === 'textarea'
+      ? `<textarea id="coach-field-${f.id}" rows="${f.rows || 3}" ${f.required ? 'required' : ''}>${escapeHtml(coachIntake[f.id] || '')}</textarea>`
+      : `<input type="text" id="coach-field-${f.id}" value="${val}" ${f.required ? 'required' : ''} />`;
+    return `<div class="coach-field"><label for="coach-field-${f.id}">${escapeHtml(f.label)}</label>${input}</div>`;
+  }).join('');
+}
+
+function renderCoachView() {
+  const main = document.getElementById('mainContent');
+  main.classList.remove('loading-main');
+  const modeCfg = getCoachModeConfig(coachModeId);
+  const draft = coachDraftMessage || modeCfg.placeholder;
+  main.innerHTML = `
+    <div class="workspace-shell">
+      ${modeBarHtml()}
+      <p class="knowledge-intro">AI 产品项目教练 · 简历诊断、项目方向、eval/badcase 迭代与面试防御 · 基于 <code>ai-product-project-coach</code> skill</p>
+      <div class="coach-layout">
+        <aside class="coach-mode-aside" role="tablist" aria-label="辅导模式">
+          ${COACH_MODES.map(m => `<button type="button" class="coach-mode-btn${m.id === coachModeId ? ' active' : ''}" data-coach-mode="${m.id}">${m.icon} ${escapeHtml(m.title)}</button>`).join('')}
+        </aside>
+        <div class="coach-main">
+          <div class="coach-mode-chips" role="tablist">
+            ${COACH_MODES.map(m => `<button type="button" class="${m.id === coachModeId ? 'active' : ''}" data-coach-mode="${m.id}">${m.title}</button>`).join('')}
+          </div>
+          <div class="coach-intake">
+            <h3>${modeCfg.icon} ${escapeHtml(modeCfg.title)} · 补充信息（可选但越全越好）</h3>
+            ${coachIntakeHtml(modeCfg)}
+          </div>
+          <div class="coach-thread" id="coachThread" aria-live="polite">
+            ${coachMessages.map(m => `<div class="coach-bubble ${m.role}">${escapeHtml(m.content)}</div>`).join('')}
+          </div>
+          <div class="coach-compose">
+            <textarea id="coachMessageInput" placeholder="${escapeAttr(modeCfg.placeholder)}">${escapeHtml(draft)}</textarea>
+            <div class="coach-compose-row">
+              <button type="button" class="btn-primary" id="coachSendBtn">发送</button>
+              <button type="button" class="btn-frost" id="coachClearBtn">清空对话</button>
+              <p class="coach-error" id="coachError" hidden></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  coachDraftMessage = '';
+  bindModeBar();
+  bindCoachView();
+}
+
+function bindCoachView() {
+  document.querySelectorAll('[data-coach-mode]').forEach(btn => {
+    btn.onclick = () => {
+      syncCoachIntakeFromDom();
+      coachModeId = btn.dataset.coachMode;
+      localStorage.setItem('coachMode', coachModeId);
+      renderCoachView();
+    };
+  });
+  document.getElementById('coachSendBtn')?.addEventListener('click', sendCoachMessage);
+  document.getElementById('coachClearBtn')?.addEventListener('click', () => {
+    coachMessages.length = 0;
+    renderCoachView();
+  });
+  document.getElementById('coachMessageInput')?.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendCoachMessage();
+    }
+  });
+}
+
+function syncCoachIntakeFromDom() {
+  const modeCfg = getCoachModeConfig(coachModeId);
+  modeCfg.fields.forEach(f => {
+    const el = document.getElementById('coach-field-' + f.id);
+    if (el) coachIntake[f.id] = el.value.trim();
+  });
+}
+
+async function sendCoachMessage() {
+  const input = document.getElementById('coachMessageInput');
+  const errEl = document.getElementById('coachError');
+  const btn = document.getElementById('coachSendBtn');
+  const message = input?.value?.trim();
+  if (!message) return;
+  syncCoachIntakeFromDom();
+  if (errEl) { errEl.hidden = true; errEl.textContent = ''; }
+  coachMessages.push({ role: 'user', content: message });
+  if (input) input.value = '';
+  renderCoachThread();
+  if (btn) { btn.disabled = true; btn.textContent = '生成中…'; }
+  try {
+    const res = await fetch('/api/coach', {
+      method: 'POST',
+      headers: authHeaders(),
+      body: JSON.stringify({
+        accessCode,
+        userId: userAccountId,
+        mode: coachModeId,
+        intake: coachIntake,
+        message,
+        history: coachMessages.slice(0, -1)
+      })
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || '请求失败（HTTP ' + res.status + '）');
+    if (data.mode && data.mode !== coachModeId) {
+      coachModeId = data.mode;
+      localStorage.setItem('coachMode', coachModeId);
+    }
+    coachMessages.push({ role: 'assistant', content: data.reply || '' });
+    renderCoachThread();
+  } catch (e) {
+    if (errEl) {
+      errEl.hidden = false;
+      errEl.textContent = e.message || '发送失败';
+    }
+    coachMessages.pop();
+    renderCoachThread();
+    if (input) input.value = message;
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = '发送'; }
+  }
+}
+
+function renderCoachThread() {
+  const thread = document.getElementById('coachThread');
+  if (!thread) return;
+  thread.innerHTML = coachMessages.map(m =>
+    `<div class="coach-bubble ${m.role}">${escapeHtml(m.content)}</div>`
+  ).join('');
+  thread.scrollTop = thread.scrollHeight;
+}
+
+function openCoachFromGoal(goal, mode) {
+  if (mode) coachModeId = mode;
+  coachDraftMessage = goal;
+  workspaceMode = 'coach';
+  renderCoachView();
 }
 
 async function loadInterviewBankV2() {
@@ -4142,6 +4488,7 @@ async function loadTopicsAndRender() {
     setSyncStatus(true);
     if (workspaceMode === 'knowledge') renderKnowledgeView();
     else if (workspaceMode === 'bank') renderBankView();
+    else if (workspaceMode === 'coach') renderCoachView();
     else renderTopics();
   } catch (e) {
     setSyncStatus(false, '加载失败：' + e.message);
