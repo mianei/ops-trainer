@@ -3780,8 +3780,8 @@ function renderResumeView() {
       <p class="module-intro">简历优化 · 上传简历与 JD → <strong>评分</strong> → <strong>一键优化</strong> → 对话继续追问</p>
       ${profileUploadHtml()}
       <div class="profile-actions">
-        <button type="button" class="btn-primary" id="resumeScoreBtn">📊 简历评分</button>
-        <button type="button" class="btn-primary" id="resumeOptimizeBtn">✨ 一键优化简历</button>
+        <button type="button" class="btn-primary" id="resumeScoreBtn">简历评分</button>
+        <button type="button" class="btn-primary" id="resumeOptimizeBtn">一键优化简历</button>
       </div>
       <div class="coach-layout-single coach-main">
         ${coachExtraNotesHtml()}
@@ -3884,14 +3884,14 @@ function renderInterviewView() {
     <div class="workspace-shell">
       ${modeBarHtml()}
       <div class="module-subtabs" role="tablist">
-        <button type="button" class="module-subtab active" data-interview-sub="prep">① 根据简历准备</button>
-        <button type="button" class="module-subtab" data-interview-sub="scenario">② 业务场景作答</button>
+        <button type="button" class="module-subtab active" data-interview-sub="prep">根据简历准备</button>
+        <button type="button" class="module-subtab" data-interview-sub="scenario">业务场景作答</button>
       </div>
       <p class="module-intro">面试训练 · 先基于简历准备讲述与防御，再练业务场景判断</p>
       ${!hasResume ? '<p class="module-intro" style="color:#b45309">提示：在「简历优化」上传简历后，此处会自动带入。</p>' : ''}
       <div class="coach-layout-single coach-main">
         <div class="profile-actions">
-          <button type="button" class="btn-primary" id="interviewPrepBtn">🎯 基于简历一键准备面试</button>
+          <button type="button" class="btn-primary" id="interviewPrepBtn">基于简历一键准备面试</button>
         </div>
         ${coachExtraNotesHtml()}
         <div class="coach-thread" id="interviewPrepThread" aria-live="polite">
@@ -4022,8 +4022,8 @@ function bankQuestionsForSource(source) {
 
 function interviewSubtabsHtml(activeSub) {
   return `<div class="module-subtabs" role="tablist">
-    <button type="button" class="module-subtab${activeSub === 'prep' ? ' active' : ''}" data-interview-sub="prep">① 根据简历准备</button>
-    <button type="button" class="module-subtab${activeSub === 'scenario' ? ' active' : ''}" data-interview-sub="scenario">② 业务场景作答</button>
+    <button type="button" class="module-subtab${activeSub === 'prep' ? ' active' : ''}" data-interview-sub="prep">根据简历准备</button>
+    <button type="button" class="module-subtab${activeSub === 'scenario' ? ' active' : ''}" data-interview-sub="scenario">业务场景作答</button>
   </div>`;
 }
 
@@ -4173,7 +4173,7 @@ function renderSenseSession(q) {
           <button type="button" class="v2-tool-btn" data-v2="framework">回答框架</button>
           <button type="button" class="v2-tool-btn" data-v2="rubric">评分标准</button>
           <button type="button" class="v2-tool-btn" data-v2="compare">参考对比</button>
-          <button type="button" class="v2-tool-btn" data-v2-timer="1">⏱ 计时</button>
+          <button type="button" class="v2-tool-btn" data-v2-timer="1">计时</button>
           <span class="v2-timer" id="v2timer-${tid}">00:00</span>
           <button type="button" class="v2-tool-btn" data-v2-voice="1">语音输入</button>
         </div>
@@ -4838,7 +4838,7 @@ function renderTopics() {
           <button type="button" class="v2-tool-btn" data-v2="framework">回答框架</button>
           <button type="button" class="v2-tool-btn" data-v2="rubric">评分标准</button>
           <button type="button" class="v2-tool-btn" data-v2="compare">参考对比</button>
-          <button type="button" class="v2-tool-btn" data-v2-timer="1">⏱ 计时</button>
+          <button type="button" class="v2-tool-btn" data-v2-timer="1">计时</button>
           <span class="v2-timer" id="v2timer-${t.id}">00:00</span>
           <button type="button" class="v2-tool-btn" data-v2-voice="1">语音输入</button>
         </div>
