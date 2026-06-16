@@ -17,7 +17,7 @@
 <meta name="color-scheme" content="light" />
 <meta name="format-detection" content="telephone=no" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
-<title>MindTraining v2.0 · AI 产品面试题库</title>
+<title>MindTraining · AI 产品经理训练</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Outfit:wght@600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" />
@@ -2339,11 +2339,11 @@
     <div class="hero-copy">
       <p class="hero-brand" aria-label="MindTraining"><span class="hb-mind">Mind</span><span class="hb-train">Training</span></p>
       <div class="hero-eyebrow-row">
-        <p class="eyebrow">Judgment over generation</p>
+        <p class="eyebrow">AI Product Manager only</p>
         <canvas id="heroWaveform" class="hero-waveform" aria-hidden="true"></canvas>
       </div>
-      <h1>在真实场景里，练运营与产品的判断力。</h1>
-      <p class="desc">先独立作答，再获 AI 结构化点评，并可继续追问导师。</p>
+      <h1>只练 AI 产品经理：面经、项目叙事与 eval 思维。</h1>
+      <p class="desc">独立作答 → 五维 AI 点评 → 项目教练补全 RAG / Agent / 评测链路。</p>
     </div>
   </section>
 
@@ -2352,16 +2352,16 @@
     <span id="syncText">正在加载…</span>
   </div>
 
-  <div id="mainContent" class="loading-main">加载训练模块…</div>
+  <div id="mainContent" class="loading-main">加载 AI 产品经理训练…</div>
 
-  <footer class="footer"><span class="footer-brand" aria-label="MindTraining"><span class="hb-mind">Mind</span><span class="hb-train">Training</span></span><span class="v2-badge">v2.0</span> · 产品面试专版 · <a class="footer-link" href="/download">下载</a> · <a class="footer-link" href="https://github.com/mianei/ops-trainer" target="_blank" rel="noopener noreferrer">GitHub</a> · <span id="buildTag">v2.0</span></footer>
+  <footer class="footer"><span class="footer-brand" aria-label="MindTraining"><span class="hb-mind">Mind</span><span class="hb-train">Training</span></span><span class="v2-badge">AI PM</span> · AI 产品经理专版 · <a class="footer-link" href="/download">下载</a> · <a class="footer-link" href="https://github.com/mianei/ops-trainer" target="_blank" rel="noopener noreferrer">GitHub</a></footer>
   </div>
 </div>
 
 <div class="history-modal" id="historyModal" aria-hidden="true">
   <div class="history-panel" role="dialog" aria-labelledby="historyTitle">
     <button type="button" class="history-close" id="historyClose" aria-label="关闭">×</button>
-    <h3 id="historyTitle">思维成长记录</h3>
+    <h3 id="historyTitle">AI PM 练习记录</h3>
     <div id="historyBody"><p style="color:var(--ink3)">加载中…</p></div>
   </div>
 </div>
@@ -2376,7 +2376,7 @@ const REMEMBER_DAYS = 7;
 
 let accessCode = 'guest';
 let userAccountId = 'guest';
-let workspaceMode = 'train';
+let workspaceMode = localStorage.getItem('workspaceMode') || 'bank';
 /** @type {{ version: number, questions: object[] } | null} */
 let INTERVIEW_BANK_V2 = null;
 /** @type {{ questions: object[] } | null} */
@@ -2388,7 +2388,7 @@ let bankSource = localStorage.getItem('bankSource') || 'curated';
 let activeBankQuestion = null;
 const v2TimerByTopic = {};
 const v2RecorderByTopic = {};
-let knowledgePageId = localStorage.getItem('knowledgePageId') || 'product';
+let knowledgePageId = localStorage.getItem('knowledgePageId') || 'ai-pm';
 let knowledgeFlatIndex = 0;
 let knowledgeBodyPageIndex = 0;
 /** 切到知识库前暂存的题目/作答，返回练习时恢复 */
@@ -2432,42 +2432,21 @@ const COACH_MODES = [
   ]}
 ];
 
-/** 知识库分页：每页只展示对应 section，避免单页过长 */
+/** 知识库：仅 AI 产品经理相关 */
 const KNOWLEDGE_PAGES = [
   {
-    id: 'product',
-    label: '产品思维',
-    cat: 'product',
-    hint: '需求 · 交互 · AI 产品 · PM 方法',
-    sectionIds: ['product-needs', 'wechat-product', 'content-ux', 'platform-aigc', 'web-pm-methods', 'web-ai-pm']
-  },
-  {
-    id: 'ops-core',
-    label: '运营基础',
-    cat: 'ops',
-    hint: '决策 · 增长 · 数据 · SQL · 体系课',
-    sectionIds: ['ops-decision', 'platform-rec', 'growth-retention', 'biz-platform', 'instant-retail', 'map-local', 'crisis-content', 'web-data-ops', 'ops-learning-guide', 'ops-sql-basics']
-  },
-  {
-    id: 'industry',
-    label: 'OTA · 电商',
-    cat: 'ops',
-    hint: '酒旅 · 货架 · 即时零售',
-    sectionIds: ['industry-ota', 'ota-extra', 'industry-ecommerce', 'ecom-extra', 'local-map']
-  },
-  {
-    id: 'community',
-    label: '社区 · 平台',
-    cat: 'ops',
-    hint: '内容社区 · 知乎 · 小红书 · 抖音',
-    sectionIds: ['industry-community', 'community-extra', 'platform-zhihu', 'platform-xhs', 'platform-douyin']
+    id: 'ai-pm',
+    label: 'AI 产品方法',
+    cat: 'interview',
+    hint: 'RAG · Agent · Eval · AIGC 产品',
+    sectionIds: ['platform-aigc', 'web-ai-pm', 'interview-pm-extra']
   },
   {
     id: 'interview',
-    label: '面试 · 面经',
+    label: '面试表达',
     cat: 'interview',
-    hint: 'STAR · 框架 · 笔试 · 表达',
-    sectionIds: ['interview-skills', 'interview-expr', 'interview-pm-extra', 'interview-frameworks', 'web-interview-core', 'web-interview-batch2']
+    hint: 'STAR · 框架 · 项目 defense',
+    sectionIds: ['interview-skills', 'interview-expr', 'interview-frameworks', 'web-interview-core']
   }
 ];
 let KNOWLEDGE = [];
@@ -2507,25 +2486,11 @@ function setGateTab(mode) {
   hideGateError();
 }
 
-/**
- * 侧栏精简模块：每项对应一个训练入口，poolIds 合并同类题库（题目不删，随机池更大）
- */
+/** 侧栏：仅 AI 产品经理训练模块 */
 const CURRICULUM = {
-  product: [
-    { label: '用户需求挖掘', id: 'user', desc: '表面反馈 vs 核心需求' },
-    { label: '功能与交互', id: 'feature', poolIds: ['feature', 'interaction'], desc: '方案取舍 · 信息架构' },
-    { label: '竞品与产品判断', id: 'competitor', poolIds: ['competitor', 'iv-pm'], desc: '战略意图 · 需求真伪' }
-  ],
-  ops: [
-    { label: '经营与决策', id: 'decision', poolIds: ['decision', 'data', 'content', 'crisis'], desc: '决策 · 数据 · 传播 · 舆情' },
-    { label: 'SQL 实操', id: 'sql', desc: '取数 · 漏斗 · 留存 · 日报' },
-    { label: '增长与留存', id: 'growth', poolIds: ['growth', 'retention'], desc: 'AARRR · 用户分层' },
-    { label: '产运策略', id: 'iv-ops', poolIds: ['iv-ops', 'iv-open'], desc: '增长商业化 · 平台博弈' },
-    { label: '行业商业', id: 'biz-platform', poolIds: ['biz-platform', 'biz-vertical', 'biz-monetize', 'map-ride', 'map-local'], desc: '平台 · 垂直 · 出行与本地生活' }
-  ],
-  interview: [
-    { label: '面试 · 产品实操', id: 'prod-open', poolIds: ['prod-open', 'iv-skills'], desc: '设计开放题 · PM 方法' },
-    { label: '求职表达', id: 'iv-exp', poolIds: ['iv-exp', 'iv-self', 'iv-career', 'iv-misc'], desc: 'STAR · 优势困难 · 规划动机' }
+  aiPm: [
+    { label: 'AI 产品专业课', id: 'iv-pm', desc: 'RAG · Agent · 评测 · AIGC · 大模型产品' },
+    { label: '求职与项目表达', id: 'iv-exp', poolIds: ['iv-exp', 'iv-self', 'iv-career'], desc: 'STAR · 项目 defense · 动机规划' }
   ]
 };
 
@@ -2535,15 +2500,13 @@ function curriculumPoolIds(mod) {
 
 function buildNavMeta() {
   const map = new Map();
-  CURRICULUM.product.forEach(m => map.set(m.id, m));
-  CURRICULUM.ops.forEach(m => map.set(m.id, m));
-  CURRICULUM.interview.forEach(m => map.set(m.id, m));
+  CURRICULUM.aiPm.forEach(m => map.set(m.id, m));
   return map;
 }
 
 function navCategory(id) {
-  if (CURRICULUM.interview.some(m => m.id === id)) {
-    return { cat: 'interview', catLabel: '面试通用问题' };
+  if (CURRICULUM.aiPm.some(m => m.id === id || curriculumPoolIds(m).includes(id))) {
+    return { cat: 'interview', catLabel: 'AI 产品经理' };
   }
   const t = getTopic(id);
   return meta(t);
@@ -2557,10 +2520,8 @@ function getNavModule(id) {
 
 function meta(topicOrId) {
   const t = typeof topicOrId === 'string' ? getTopic(topicOrId) : topicOrId;
-  if (!t) return { cat: 'ops', catLabel: '运营思维', desc: '' };
-  const cat = t.cat === 'product' ? 'product' : 'ops';
-  const catLabel = t.catLabel || (cat === 'product' ? '产品思维' : '运营思维');
-  return { cat, catLabel, desc: t.desc || '' };
+  if (!t) return { cat: 'interview', catLabel: 'AI 产品经理', desc: '' };
+  return { cat: 'interview', catLabel: t.catLabel || 'AI 产品经理', desc: t.desc || '' };
 }
 
 function topicMap() {
@@ -2580,10 +2541,8 @@ function countModuleScenarios(mod, map) {
 
 function topicsByCategory() {
   const map = topicMap();
-  const product = CURRICULUM.product.map(m => map.get(m.id)).filter(Boolean);
-  const ops = CURRICULUM.ops.map(m => map.get(m.id)).filter(Boolean);
-  const interview = CURRICULUM.interview.map(m => map.get(m.id)).filter(Boolean);
-  return { product, ops, interview, ordered: [...product, ...ops, ...interview] };
+  const aiPm = CURRICULUM.aiPm.map(m => map.get(m.id)).filter(Boolean);
+  return { aiPm, ordered: aiPm };
 }
 
 function topicsUrl() {
@@ -2750,40 +2709,32 @@ async function tryEnter(userId, code, remember) {
 }
 
 async function loadTopics() {
-  const res = await fetch(topicsUrl(), { cache: 'no-store' });
-  if (!res.ok) throw new Error('HTTP ' + res.status);
-  const data = await res.json();
-  if (!Array.isArray(data.topics) || !data.topics.length) throw new Error('topics 格式错误');
-  const topics = data.topics;
-  for (const topicsFile of ['topics-interview.json', 'topics-biz.json', 'topics-map.json', 'topics-sql.json']) {
-    try {
-      const tr = await fetch(topicsFile + '?t=' + Date.now(), { cache: 'no-store' });
-      if (tr.ok) {
-        const trData = await tr.json();
-        if (Array.isArray(trData.topics)) topics.push(...trData.topics);
+  const AI_PM_TOPIC_IDS = new Set(['iv-pm', 'iv-exp', 'iv-self', 'iv-career', 'prod-open']);
+  /** @type {object[]} */
+  let topics = [];
+  try {
+    const tr = await fetch('topics-interview.json?t=' + Date.now(), { cache: 'no-store' });
+    if (tr.ok) {
+      const trData = await tr.json();
+      if (Array.isArray(trData.topics)) {
+        topics = trData.topics.filter(t => AI_PM_TOPIC_IDS.has(t.id));
       }
-    } catch (_) { /* 可选 */ }
+    }
+  } catch { /* */ }
+  if (!topics.length) {
+    topics = [{
+      id: 'iv-pm',
+      label: 'AI 产品经理',
+      fieldLabel: '从 AI 产品视角作答：场景、方案、评测与迭代。',
+      placeholder: '写下你的分析…',
+      scenarios: [],
+      systemPrompt: '你是一位 AI 产品经理面试官。点评学员作答是否体现 RAG/Agent/评测思维、产品判断与可辩护的项目叙事。300 字内，中文。',
+      cat: 'interview',
+      catLabel: 'AI 产品经理',
+      desc: 'RAG · Agent · Eval'
+    }];
   }
-  for (const file of [
-    'scenarios-extra.json',
-    'scenarios-industry-ota.json',
-    'scenarios-industry-ecommerce.json',
-    'scenarios-industry-community.json',
-    'scenarios-industry-instant-retail.json',
-    'scenarios-interview-pm.json',
-    'scenarios-interview-misc.json',
-    'scenarios-interview-skills.json',
-    'scenarios-interview-ops.json',
-    'scenarios-interview-open.json',
-    'scenarios-interview-biz.json',
-    'scenarios-industry-map.json',
-    'scenarios-web-curated.json',
-    'scenarios-web-curated-batch2.json',
-    'scenarios-sql-practice.json',
-    'scenarios-pm-product-batch3.json',
-    'scenarios-pm-debrief.json',
-    'scenarios-platform-content.json'
-  ]) {
+  for (const file of ['scenarios-interview-pm.json', 'scenarios-interview-misc.json', 'scenarios-interview-open.json']) {
     try {
       const ex = await fetch(file + '?t=' + Date.now(), { cache: 'no-store' });
       if (!ex.ok) continue;
@@ -2795,7 +2746,7 @@ async function loadTopics() {
           if (typeof s === 'string' && s.trim()) t.scenarios.push(s.trim());
         });
       });
-    } catch (_) { /* 可选文件 */ }
+    } catch { /* */ }
   }
   return topics;
 }
@@ -2863,16 +2814,16 @@ function scenarioSearchBarHtml() {
     <label class="scenario-search-label" for="scenarioSearchInput">搜索题目</label>
     <div class="scenario-search-field">
       <span class="scenario-search-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></span>
-      <input type="search" class="scenario-search-input" id="scenarioSearchInput" placeholder="关键词：面经、OTA、数据、STAR、估算…" autocomplete="off" enterkeyhint="search" />
+      <input type="search" class="scenario-search-input" id="scenarioSearchInput" placeholder="关键词：RAG、Agent、评测、大模型、AIGC、STAR…" autocomplete="off" enterkeyhint="search" />
     </div>
     <div class="scenario-search-chips" id="scenarioSearchChips">
-      <button type="button" class="scenario-search-chip" data-q="面经">面经</button>
-      <button type="button" class="scenario-search-chip" data-q="OTA">OTA</button>
-      <button type="button" class="scenario-search-chip" data-q="电商">电商</button>
-      <button type="button" class="scenario-search-chip" data-q="数据">数据</button>
-      <button type="button" class="scenario-search-chip" data-q="SQL">SQL</button>
+      <button type="button" class="scenario-search-chip" data-q="RAG">RAG</button>
+      <button type="button" class="scenario-search-chip" data-q="Agent">Agent</button>
+      <button type="button" class="scenario-search-chip" data-q="评测">评测</button>
+      <button type="button" class="scenario-search-chip" data-q="AIGC">AIGC</button>
+      <button type="button" class="scenario-search-chip" data-q="大模型">大模型</button>
       <button type="button" class="scenario-search-chip" data-q="STAR">STAR</button>
-      <button type="button" class="scenario-search-chip" data-q="AI">AI</button>
+      <button type="button" class="scenario-search-chip" data-q="面经">面经</button>
     </div>
     <div class="scenario-search-results" id="scenarioSearchResults" hidden></div>
   </div>`;
@@ -2880,9 +2831,9 @@ function scenarioSearchBarHtml() {
 
 function goalPlanBarHtml() {
   return `<div class="goal-plan-wrap" id="goalPlanWrap">
-    <label class="goal-plan-label" for="goalPlanInput">训练智能体 · 说目标或明日面试岗位</label>
+    <label class="goal-plan-label" for="goalPlanInput">备战助手 · 说明目标或困惑</label>
     <div class="goal-plan-row">
-      <input type="text" class="goal-plan-input" id="goalPlanInput" placeholder="如：明天面字节产品经理 / 诊断 AI 产品简历 / 补强 SQL 数据分析" autocomplete="off" enterkeyhint="go" />
+      <input type="text" class="goal-plan-input" id="goalPlanInput" placeholder="如：明天面字节 AI 产品经理 / 诊断 AI 项目简历 / 帮我准备 RAG 项目 defense" autocomplete="off" enterkeyhint="go" />
       <button type="button" class="btn-primary goal-plan-btn" id="goalPlanBtn">开始训练</button>
     </div>
     <p class="goal-plan-error" id="goalPlanError" role="alert"></p>
@@ -2899,8 +2850,7 @@ function goalPlanBarHtml() {
 
 function buildScenarioIndex() {
   SCENARIO_INDEX = [];
-  const mods = [...CURRICULUM.product, ...CURRICULUM.ops, ...CURRICULUM.interview];
-  for (const mod of mods) {
+  for (const mod of CURRICULUM.aiPm) {
     const pool = scenariosForNavModule(mod.id);
     const seen = new Set();
     pool.forEach(scenario => {
@@ -3483,9 +3433,9 @@ function bindScenarioSearch() {
 }
 
 function modeBarHtml() {
-  return `<div class="workspace-mode-bar" role="tablist" aria-label="练习与知识库">
-    <button type="button" class="mode-btn${workspaceMode === 'train' ? ' active' : ''}" data-mode="train" role="tab">练习</button>
-    <button type="button" class="mode-btn${workspaceMode === 'bank' ? ' active' : ''}" data-mode="bank" role="tab">产品题库<span class="v2-badge">${AI_PM_BANK?.questions?.length || 218}+</span></button>
+  const bankActive = workspaceMode === 'bank' || workspaceMode === 'train';
+  return `<div class="workspace-mode-bar" role="tablist" aria-label="AI 产品经理训练">
+    <button type="button" class="mode-btn${bankActive ? ' active' : ''}" data-mode="bank" role="tab">面经练习<span class="v2-badge">${AI_PM_BANK?.questions?.length || 218}+</span></button>
     <button type="button" class="mode-btn coach-tab${workspaceMode === 'coach' ? ' active' : ''}" data-mode="coach" role="tab">项目教练</button>
     <button type="button" class="mode-btn${workspaceMode === 'knowledge' ? ' active' : ''}" data-mode="knowledge" role="tab">知识库</button>
     <button type="button" class="mode-btn v2-analytics-btn" id="openAnalyticsBtn" title="进步曲线">复盘</button>
@@ -3514,13 +3464,13 @@ function captureTrainWorkspaceState() {
 }
 
 function setWorkspaceMode(mode) {
-  if (!['train', 'knowledge', 'bank', 'coach'].includes(mode)) return;
+  if (!['bank', 'knowledge', 'coach'].includes(mode)) return;
   if (mode !== 'train' && workspaceMode === 'train') captureTrainWorkspaceState();
   workspaceMode = mode;
+  localStorage.setItem('workspaceMode', mode);
   if (mode === 'knowledge') renderKnowledgeView();
-  else if (mode === 'bank') renderBankView();
   else if (mode === 'coach') renderCoachView();
-  else renderTopics();
+  else renderBankView();
 }
 
 function getCoachModeConfig(id) {
@@ -3712,25 +3662,25 @@ async function loadAiPmBanks() {
 
 function bankQuestionsForSource(source) {
   if (source === 'curated') return AI_PM_CURATED?.questions || [];
-  if (source === 'ai-pm') return AI_PM_BANK?.questions || [];
-  return INTERVIEW_BANK_V2?.questions || [];
+  return AI_PM_BANK?.questions || [];
 }
 
 function renderBankView() {
   const main = document.getElementById('mainContent');
   main.classList.remove('loading-main');
-  const source = bankSource;
+  const source = bankSource === 'ops' ? 'ai-pm' : bankSource;
+  if (bankSource === 'ops') {
+    bankSource = 'ai-pm';
+    localStorage.setItem('bankSource', 'ai-pm');
+  }
   const qs = bankQuestionsForSource(source);
   const nCur = AI_PM_CURATED?.questions?.length || 10;
   const nAi = AI_PM_BANK?.questions?.length || 218;
-  const nOps = INTERVIEW_BANK_V2?.questions?.length || 55;
   const companies = [...new Set(qs.map(q => q.company))].sort();
   const types = [...new Set(qs.map(q => q.type))];
   const intro = source === 'curated'
-    ? `精选 <strong>${nCur} 道</strong> AI PM 高频题 · 含 MindTraining/学伴专属话术 · 点击开练`
-    : source === 'ai-pm'
-      ? `Coach 面经 <strong>${nAi} 道</strong>（去重版）· AI 产品经理向`
-      : `产运面经 <strong>${nOps} 道</strong> · 公司/题型/难度筛选`;
+    ? `精选 <strong>${nCur} 道</strong> AI PM 高频题 · 含参考话术 · 点击开练`
+    : `AI 产品经理面经 <strong>${nAi} 道</strong> · 公司/题型筛选`;
 
   main.innerHTML = `
     <div class="workspace-shell">
@@ -3738,7 +3688,6 @@ function renderBankView() {
       <div class="bank-source-tabs" role="tablist">
         <button type="button" class="${source === 'curated' ? 'active' : ''}" data-bank="curated">精选话术 ${nCur}</button>
         <button type="button" class="${source === 'ai-pm' ? 'active' : ''}" data-bank="ai-pm">AI 面经 ${nAi}</button>
-        <button type="button" class="${source === 'ops' ? 'active' : ''}" data-bank="ops">产运 ${nOps}</button>
       </div>
       <p class="knowledge-intro">${intro}</p>
       <div class="bank-filters" id="bankFilters" ${source === 'curated' ? 'hidden' : ''}>
@@ -4357,7 +4306,7 @@ function renderKnowledgeView(scrollToCardId) {
   main.innerHTML = `
     <div class="workspace-shell">
       ${modeBarHtml()}
-      <p class="knowledge-intro">框架与定义供阅读记忆，<strong>不需要提交作答</strong>。一次只看一张卡，长文可点「下一页」；要练手请切回「练习」。</p>
+      <p class="knowledge-intro">AI 产品经理知识卡 · <strong>阅读记忆即可</strong>，不必提交作答。要练题请切回「面经练习」。</p>
       ${knowledgePagerHtml()}
       <div id="knowledgeFlatViewer">${viewerHtml}</div>
     </div>
@@ -4372,7 +4321,7 @@ function renderTopics() {
   NAV_META = buildNavMeta();
   const main = document.getElementById('mainContent');
   main.classList.remove('loading-main');
-  const { product, ops, interview, ordered } = topicsByCategory();
+  const { aiPm, ordered } = topicsByCategory();
   const topicById = topicMap();
   const restoreTopicId = trainUiReturnTopicId || activeTopicId;
   const activeId = restoreTopicId && ordered.some(t => t.id === restoreTopicId)
@@ -4382,7 +4331,10 @@ function renderTopics() {
     <div class="workspace-shell">
       ${modeBarHtml()}
       <div class="workspace">
-        <div class="train-toolbar">${scenarioSearchBarHtml()}</div>
+        <div class="train-toolbar">
+          <button type="button" class="btn-frost" id="backToBankBtn">← 返回面经</button>
+          ${scenarioSearchBarHtml()}
+        </div>
         <aside class="workspace-aside" aria-label="训练模块">
           <nav class="module-nav" id="moduleNav"></nav>
         </aside>
@@ -4401,9 +4353,9 @@ function renderTopics() {
   const nav = document.getElementById('moduleNav');
   const panels = document.getElementById('panels');
   const activeRef = { activeId };
-  renderNavGroup(nav, 'product', '产品思维', CURRICULUM.product, topicById, activeRef);
-  renderNavGroup(nav, 'ops', '运营思维', CURRICULUM.ops, topicById, activeRef);
-  renderNavGroup(nav, 'interview', '面试通用问题', CURRICULUM.interview, topicById, activeRef);
+  renderNavGroup(nav, 'interview', 'AI 产品经理', CURRICULUM.aiPm, topicById, activeRef);
+
+  document.getElementById('backToBankBtn')?.addEventListener('click', () => setWorkspaceMode('bank'));
 
   ordered.forEach((t) => {
     const panel = document.createElement('div');
@@ -4487,13 +4439,21 @@ async function loadTopicsAndRender() {
     await loadAiPmBanks();
     setSyncStatus(true);
     if (workspaceMode === 'knowledge') renderKnowledgeView();
-    else if (workspaceMode === 'bank') renderBankView();
     else if (workspaceMode === 'coach') renderCoachView();
-    else renderTopics();
+    else if (workspaceMode === 'train') renderTopics();
+    else renderBankView();
   } catch (e) {
-    setSyncStatus(false, '加载失败：' + e.message);
+    const isFile = location.protocol === 'file:';
+    const hint = isFile
+      ? '不能双击打开 HTML。请在项目目录运行 <code>npx vercel dev</code>，再用终端里的 http://localhost 地址访问。'
+      : '请确认已运行 <code>npx vercel dev</code>，或访问已部署的 <a href="https://ops-trainer.vercel.app">ops-trainer.vercel.app</a>。';
+    setSyncStatus(false, '加载失败：' + (e.message || '网络错误'));
     document.getElementById('mainContent').innerHTML =
-      '<p style="color:var(--danger);text-align:center;padding:3rem">无法加载场景数据</p>';
+      `<div style="color:var(--danger);text-align:center;padding:2rem 1.5rem;max-width:520px;margin:0 auto;line-height:1.6">
+        <p style="font-weight:600;margin-bottom:12px">无法加载场景数据</p>
+        <p style="font-size:14px;color:var(--ink2);margin-bottom:16px">${hint}</p>
+        <p style="font-size:12px;color:var(--ink3)">${escapeHtml(e.message || 'Failed to fetch')}</p>
+      </div>`;
   }
 }
 
