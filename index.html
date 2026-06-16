@@ -1350,6 +1350,37 @@
   .bank-item-hint { font-size: 11px; color: #5e5ce6; margin-top: 6px; }
   .bank-item-text { font-size: 14px; color: var(--ink); line-height: 1.5; }
 
+  /* ── Sense 训练主流程 ── */
+  .sense-home { max-width: 720px; margin: 0 auto; }
+  .sense-loop {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    margin-bottom: 14px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .sense-loop--compact { justify-content: flex-end; margin-bottom: 0; font-size: 11px; }
+  .sense-step { color: var(--ink3); padding: 4px 10px; border-radius: 999px; background: rgba(255,255,255,0.6); border: 1px solid var(--frost-border); }
+  .sense-step.active { color: #5e5ce6; border-color: rgba(94, 92, 230, 0.45); background: rgba(94, 92, 230, 0.1); }
+  .sense-arrow { color: var(--ink3); font-weight: 400; }
+  .sense-tagline { text-align: center; color: var(--ink2); font-size: 14px; line-height: 1.65; margin-bottom: 20px; }
+  .sense-cta { display: block; width: 100%; max-width: 320px; margin: 0 auto 24px; padding: 14px 20px; font-size: 15px; }
+  .sense-picker { margin-top: 8px; border: 1px solid var(--frost-border); border-radius: var(--r-lg); background: rgba(255,255,255,0.72); padding: 12px 14px; }
+  .sense-picker summary { cursor: pointer; font-weight: 600; font-size: 13px; color: var(--ink2); list-style: none; }
+  .sense-picker summary::-webkit-details-marker { display: none; }
+  .sense-picker[open] summary { margin-bottom: 12px; }
+  .sense-session { max-width: 760px; margin: 0 auto; }
+  .sense-session-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
+  .sense-q-meta { font-size: 12px; color: var(--ink3); margin-bottom: 8px; }
+  .sense-q-card .case-body { font-size: 15px; line-height: 1.65; color: var(--ink); }
+  .sense-session-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+  .feedback-card .feedback-head { font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #5e5ce6; }
+
   /* ── AI 项目教练 ── */
   .coach-layout {
     display: grid;
@@ -2332,7 +2363,7 @@
     <div class="bg-blob bg-blob-2"></div>
     <div class="bg-blob bg-blob-3"></div>
   </div>
-  <button type="button" class="btn-history" id="btnHistory">复盘</button>
+  <button type="button" class="btn-history" id="btnHistory">Replay</button>
   <div class="page-wrap">
 
   <section class="hero-compact">
@@ -2351,7 +2382,7 @@
     <span id="syncText">正在加载…</span>
   </div>
 
-  <div id="mainContent" class="loading-main">加载 AI 产品经理训练…</div>
+  <div id="mainContent" class="loading-main">加载 Sense 训练…</div>
 
   <footer class="footer"><span class="footer-brand" aria-label="MindTraining"><span class="hb-mind">Mind</span><span class="hb-train">Training</span></span><span class="v2-badge">AI PM</span> · AI 产品经理专版 · <a class="footer-link" href="/download">下载</a> · <a class="footer-link" href="https://github.com/mianei/ops-trainer" target="_blank" rel="noopener noreferrer">GitHub</a></footer>
   </div>
@@ -2375,11 +2406,12 @@ const REMEMBER_DAYS = 7;
 
 let accessCode = 'guest';
 let userAccountId = 'guest';
-let workspaceMode = localStorage.getItem('workspaceMode') || 'bank';
-if (workspaceMode === 'knowledge') {
-  workspaceMode = 'bank';
-  localStorage.setItem('workspaceMode', 'bank');
+let workspaceMode = localStorage.getItem('workspaceMode') || 'sense';
+if (['bank', 'train', 'knowledge'].includes(workspaceMode)) {
+  workspaceMode = 'sense';
+  localStorage.setItem('workspaceMode', 'sense');
 }
+let senseSubView = 'home';
 /** @type {{ version: number, questions: object[] } | null} */
 let INTERVIEW_BANK_V2 = null;
 /** @type {{ questions: object[] } | null} */
@@ -3436,9 +3468,9 @@ function bindScenarioSearch() {
 }
 
 function modeBarHtml() {
-  const bankActive = workspaceMode === 'bank' || workspaceMode === 'train';
-  return `<div class="workspace-mode-bar" role="tablist" aria-label="AI 产品经理训练">
-    <button type="button" class="mode-btn${bankActive ? ' active' : ''}" data-mode="bank" role="tab">面经练习<span class="v2-badge">${AI_PM_BANK?.questions?.length || 218}+</span></button>
+  const senseActive = workspaceMode === 'sense';
+  return `<div class="workspace-mode-bar" role="tablist" aria-label="Sense 训练">
+    <button type="button" class="mode-btn${senseActive ? ' active' : ''}" data-mode="sense" role="tab">Sense 训练</button>
     <button type="button" class="mode-btn coach-tab${workspaceMode === 'coach' ? ' active' : ''}" data-mode="coach" role="tab">项目教练</button>
   </div>`;
 }
@@ -3464,12 +3496,13 @@ function captureTrainWorkspaceState() {
 }
 
 function setWorkspaceMode(mode) {
-  if (!['bank', 'coach'].includes(mode)) return;
-  if (mode !== 'train' && workspaceMode === 'train') captureTrainWorkspaceState();
+  if (!['sense', 'coach'].includes(mode)) return;
+  if (mode === 'sense' && workspaceMode !== 'sense') senseSubView = 'home';
   workspaceMode = mode;
   localStorage.setItem('workspaceMode', mode);
   if (mode === 'coach') renderCoachView();
-  else renderBankView();
+  else if (senseSubView === 'session' && activeBankQuestion) renderSenseSession(activeBankQuestion);
+  else renderSenseHome();
 }
 
 function getCoachModeConfig(id) {
@@ -3664,7 +3697,8 @@ function bankQuestionsForSource(source) {
   return AI_PM_BANK?.questions || [];
 }
 
-function renderBankView() {
+function renderSenseHome() {
+  senseSubView = 'home';
   const main = document.getElementById('mainContent');
   main.classList.remove('loading-main');
   const source = bankSource === 'ops' ? 'ai-pm' : bankSource;
@@ -3677,32 +3711,43 @@ function renderBankView() {
   const nAi = AI_PM_BANK?.questions?.length || 218;
   const companies = [...new Set(qs.map(q => q.company))].sort();
   const types = [...new Set(qs.map(q => q.type))];
-  const intro = source === 'curated'
-    ? `精选 <strong>${nCur} 道</strong> AI PM 高频题 · 含参考话术 · 点击开练`
-    : `AI 产品经理面经 <strong>${nAi} 道</strong> · 公司/题型筛选`;
 
   main.innerHTML = `
     <div class="workspace-shell">
       ${modeBarHtml()}
-      <div class="bank-source-tabs" role="tablist">
-        <button type="button" class="${source === 'curated' ? 'active' : ''}" data-bank="curated">精选话术 ${nCur}</button>
-        <button type="button" class="${source === 'ai-pm' ? 'active' : ''}" data-bank="ai-pm">AI 面经 ${nAi}</button>
+      <div class="sense-home">
+        <div class="sense-loop" aria-label="训练闭环">
+          <span class="sense-step active">Sense</span>
+          <span class="sense-arrow">→</span>
+          <span class="sense-step">Judgement</span>
+          <span class="sense-arrow">→</span>
+          <span class="sense-step">Replay</span>
+        </div>
+        <p class="sense-tagline">独立判断 → 结构化 Judgement → Replay 复盘进步。<br>练的是产品 sense，不是背答案。</p>
+        <button type="button" class="btn-primary sense-cta" id="senseStartBtn">开始一题 Sense 训练</button>
+        <details class="sense-picker">
+          <summary>选题库 · 精选 ${nCur} / 全部 ${nAi}</summary>
+          <div class="bank-source-tabs" role="tablist">
+            <button type="button" class="${source === 'curated' ? 'active' : ''}" data-bank="curated">精选 ${nCur}</button>
+            <button type="button" class="${source === 'ai-pm' ? 'active' : ''}" data-bank="ai-pm">全部 ${nAi}</button>
+          </div>
+          <div class="bank-filters" id="bankFilters" ${source === 'curated' ? 'hidden' : ''}>
+            <label class="bank-filter">公司 <select id="bankFilterCompany"><option value="">全部</option>${companies.map(c => `<option>${escapeHtml(c)}</option>`).join('')}</select></label>
+            <label class="bank-filter">题型 <select id="bankFilterType"><option value="">全部</option>${types.map(t => `<option value="${escapeAttr(t)}">${escapeHtml(t === 'ai_product' ? 'AI产品经理' : (INTERVIEW_BANK_V2?.typeLabels?.[t] || t))}</option>`).join('')}</select></label>
+            <label class="bank-filter">难度 <select id="bankFilterDiff"><option value="">全部</option><option value="easy">简单</option><option value="medium">中等</option><option value="hard">困难</option></select></label>
+            <label class="bank-filter" id="bankFilterCuratedWrap" ${source !== 'ai-pm' ? 'hidden' : ''}> <input type="checkbox" id="bankFilterCurated" /> 仅精选</label>
+          </div>
+          <div class="bank-list" id="bankList"></div>
+        </details>
       </div>
-      <p class="knowledge-intro">${intro}</p>
-      <div class="bank-filters" id="bankFilters" ${source === 'curated' ? 'hidden' : ''}>
-        <label class="bank-filter">公司 <select id="bankFilterCompany"><option value="">全部</option>${companies.map(c => `<option>${escapeHtml(c)}</option>`).join('')}</select></label>
-        <label class="bank-filter">题型 <select id="bankFilterType"><option value="">全部</option>${types.map(t => `<option value="${escapeAttr(t)}">${escapeHtml(t === 'ai_product' ? 'AI产品经理' : (INTERVIEW_BANK_V2?.typeLabels?.[t] || t))}</option>`).join('')}</select></label>
-        <label class="bank-filter">难度 <select id="bankFilterDiff"><option value="">全部</option><option value="easy">简单</option><option value="medium">中等</option><option value="hard">困难</option></select></label>
-        <label class="bank-filter" id="bankFilterCuratedWrap" ${source !== 'ai-pm' ? 'hidden' : ''}> <input type="checkbox" id="bankFilterCurated" /> 仅精选10题</label>
-      </div>
-      <div class="bank-list" id="bankList"></div>
     </div>`;
   bindModeBar();
+  document.getElementById('senseStartBtn').onclick = () => startRandomSense();
   main.querySelectorAll('[data-bank]').forEach(btn => {
     btn.onclick = () => {
       bankSource = btn.dataset.bank;
       localStorage.setItem('bankSource', bankSource);
-      renderBankView();
+      renderSenseHome();
     };
   });
   const renderList = () => {
@@ -3719,9 +3764,8 @@ function renderBankView() {
     const limit = source === 'curated' ? 20 : 50;
     list.innerHTML = filtered.slice(0, limit).map(q => `
       <button type="button" class="bank-item${q.curated ? ' curated' : ''}" data-qid="${escapeAttr(q.id)}">
-        <div class="bank-item-meta">${q.num ? '题' + q.num + ' · ' : ''}${escapeHtml(q.company || '通用')} · ${escapeHtml(q.typeLabel || q.type || '')}${q.framework ? ' · ' + escapeHtml(q.framework) : ''}</div>
-        <div class="bank-item-text">${escapeHtml(q.text.slice(0, 140))}${q.text.length > 140 ? '…' : ''}</div>
-        ${q.referenceAnswer ? '<div class="bank-item-hint">含参考话术 · 开练后可在「回答框架」旁查看</div>' : ''}
+        <div class="bank-item-meta">${q.num ? '题' + q.num + ' · ' : ''}${escapeHtml(q.company || '通用')} · ${escapeHtml(q.typeLabel || q.type || '')}</div>
+        <div class="bank-item-text">${escapeHtml(q.text.slice(0, 120))}${q.text.length > 120 ? '…' : ''}</div>
       </button>`).join('') || '<p style="color:var(--ink3)">无匹配题目</p>';
     list.querySelectorAll('.bank-item').forEach(btn => {
       btn.onclick = () => {
@@ -3736,26 +3780,105 @@ function renderBankView() {
   renderList();
 }
 
+function startRandomSense() {
+  const source = bankSource === 'curated' ? 'curated' : 'ai-pm';
+  const qs = bankQuestionsForSource(source);
+  const curatedPool = qs.filter(q => q.curated);
+  const pool = curatedPool.length ? curatedPool : qs;
+  if (!pool.length) { alert('题库尚未加载'); return; }
+  applyBankQuestion(pool[Math.floor(Math.random() * pool.length)]);
+}
+
+function renderSenseSession(q) {
+  senseSubView = 'session';
+  const main = document.getElementById('mainContent');
+  main.classList.remove('loading-main');
+  const tid = q.topicId || 'iv-pm';
+  activeTopicId = tid;
+  trainUiReturnTopicId = tid;
+  const t = getTopic(tid) || TOPICS[0];
+  if (!t) { renderSenseHome(); return; }
+  const meta = [q.num ? '题' + q.num : '', q.company, q.typeLabel || q.type, q.framework].filter(Boolean).join(' · ');
+  const draft = answerDraftByTopic[tid] || '';
+
+  main.innerHTML = `
+    <div class="workspace-shell sense-shell">
+      ${modeBarHtml()}
+      <div class="sense-session">
+        <div class="sense-session-top">
+          <button type="button" class="btn-frost" id="senseBackBtn">← 选题</button>
+          <div class="sense-loop sense-loop--compact" aria-hidden="true">
+            <span class="sense-step active">Sense</span><span class="sense-arrow">→</span>
+            <span class="sense-step">Judgement</span><span class="sense-arrow">→</span>
+            <span class="sense-step">Replay</span>
+          </div>
+        </div>
+        ${meta ? `<p class="sense-q-meta">${escapeHtml(meta)}</p>` : ''}
+        <article class="surface-card case-card sense-q-card">
+          <div class="case-body" id="scenario-${tid}">${escapeHtml(q.text)}</div>
+        </article>
+        <div class="v2-tools">
+          <button type="button" class="v2-tool-btn" data-v2="framework">回答框架</button>
+          <button type="button" class="v2-tool-btn" data-v2="rubric">评分标准</button>
+          <button type="button" class="v2-tool-btn" data-v2="compare">参考对比</button>
+          <button type="button" class="v2-tool-btn" data-v2-timer="1">⏱ 计时</button>
+          <span class="v2-timer" id="v2timer-${tid}">00:00</span>
+          <button type="button" class="v2-tool-btn" data-v2-voice="1">语音输入</button>
+        </div>
+        <div class="v2-prep-panel" id="v2prep-${tid}" hidden></div>
+        <div class="surface-card work-card">
+          <div class="work-block">
+            <div class="wb-label">你的判断</div>
+            <div class="wb-hint">先独立完成 sense 判断，再提交获取 Judgement</div>
+            <textarea id="answer-${tid}" placeholder="写下你的产品判断…">${escapeHtml(draft)}</textarea>
+          </div>
+        </div>
+        <div class="surface-card surface-card--flat action-card">
+          <div class="btn-row">
+            <button class="btn-primary" id="btn-${tid}" type="button">提交判断 · Judgement</button>
+          </div>
+        </div>
+        <div class="surface-card feedback-card" id="resp-${tid}">
+          <div class="feedback-head">Judgement</div>
+          <div class="feedback-body" id="resp-body-${tid}"></div>
+          <div class="followup-wrap" id="followup-${tid}">
+            <div class="followup-label">针对 Judgement 追问</div>
+            <div class="followup-thread" id="followup-thread-${tid}"></div>
+            <div class="followup-compose">
+              <textarea id="followup-input-${tid}" rows="2" maxlength="800" placeholder="哪里判断错了？怎么改？" disabled></textarea>
+              <button type="button" class="btn-followup" id="followup-btn-${tid}" disabled>发送</button>
+            </div>
+          </div>
+        </div>
+        <div class="sense-session-actions">
+          <button type="button" class="btn-frost" id="senseNextBtn">下一题</button>
+          <button type="button" class="btn-frost" id="senseReplayBtn">Replay 复盘</button>
+        </div>
+      </div>
+    </div>`;
+
+  bindModeBar();
+  document.getElementById('senseBackBtn').onclick = () => renderSenseHome();
+  document.getElementById('btn-' + tid).onclick = () => submitAnswer(tid);
+  document.getElementById('senseNextBtn').onclick = () => startRandomSense();
+  document.getElementById('senseReplayBtn').onclick = () => openAnalyticsModal();
+  initFollowUp(tid);
+  bindV2Tools(tid);
+  updateReadingTip(tid, q.text);
+  if (q.referenceAnswer || q.framework) {
+    const prep = document.getElementById('v2prep-' + tid);
+    if (prep) {
+      prep.hidden = false;
+      prep.innerHTML = (q.framework ? `<h5>框架：${escapeHtml(q.framework)}</h5>` : '') +
+        (q.projects?.length ? `<p style="font-size:12px;color:var(--ink3)">结合项目：${escapeHtml(q.projects.join(' · '))}</p>` : '') +
+        `<h5>参考话术（请改写成你自己的判断）</h5><p style="white-space:pre-wrap">${escapeHtml(q.referenceAnswer || q.referenceOutline || '')}</p>`;
+    }
+  }
+}
+
 function applyBankQuestion(q) {
   activeBankQuestion = q;
-  trainUiReturnTopicId = q.topicId || 'iv-pm';
-  workspaceMode = 'train';
-  renderTopics();
-  setTimeout(() => {
-    const tid = q.topicId || 'iv-pm';
-    switchTab(tid, null);
-    loadScenario(tid, q.text, { allowExternal: true });
-    updateReadingTip(tid, q.text);
-    if (q.referenceAnswer || q.framework) {
-      const prep = document.getElementById('v2prep-' + tid);
-      if (prep) {
-        prep.hidden = false;
-        prep.innerHTML = (q.framework ? `<h5>框架：${escapeHtml(q.framework)}</h5>` : '') +
-          (q.projects?.length ? `<p style="font-size:12px;color:var(--ink3)">结合项目：${escapeHtml(q.projects.join(' · '))}</p>` : '') +
-          `<h5>参考话术（请改写成你自己的话）</h5><p style="white-space:pre-wrap">${escapeHtml(q.referenceAnswer || q.referenceOutline || '')}</p>`;
-      }
-    }
-  }, 80);
+  renderSenseSession(q);
 }
 
 function bindV2Tools(topicId) {
@@ -3862,7 +3985,7 @@ async function openAnalyticsModal() {
     modal = document.createElement('div');
     modal.id = 'analyticsModal';
     modal.className = 'history-modal';
-    modal.innerHTML = '<div class="history-panel"><h3>复盘</h3><div id="analyticsBody"></div><button type="button" class="btn-primary" id="analyticsClose">关闭</button></div>';
+    modal.innerHTML = '<div class="history-panel"><h3>Replay · 复盘</h3><div id="analyticsBody"></div><button type="button" class="btn-primary" id="analyticsClose">关闭</button></div>';
     document.body.appendChild(modal);
     modal.onclick = e => { if (e.target === modal) modal.classList.remove('open'); };
     modal.querySelector('#analyticsClose').onclick = () => modal.classList.remove('open');
@@ -4422,8 +4545,8 @@ async function loadTopicsAndRender() {
     await loadAiPmBanks();
     setSyncStatus(true);
     if (workspaceMode === 'coach') renderCoachView();
-    else if (workspaceMode === 'train') renderTopics();
-    else renderBankView();
+    else if (senseSubView === 'session' && activeBankQuestion) renderSenseSession(activeBankQuestion);
+    else renderSenseHome();
   } catch (e) {
     const isFile = location.protocol === 'file:';
     const hint = isFile
@@ -4729,7 +4852,7 @@ function finishReviewForTopic(id, scenario, data) {
 async function submitAnswer(id) {
   if (!accessCode) { accessCode = 'guest'; userAccountId = userAccountId || 'guest'; }
   const answer = document.getElementById('answer-' + id).value.trim();
-  if (!answer) { alert('请先写下你的分析'); return; }
+  if (!answer) { alert('请先写下你的判断'); return; }
 
   const t = getTopic(id);
   const scenario = document.getElementById('scenario-' + id).textContent;
@@ -4739,9 +4862,9 @@ async function submitAnswer(id) {
   const systemPrompt = resolveSystemPrompt(scenario, t.systemPrompt);
 
   btn.disabled = true;
-  btn.textContent = '点评生成中…';
+  btn.textContent = 'Judgement 生成中…';
   respArea.classList.add('visible');
-  respBody.innerHTML = '<p class="stream-status">正在生成结构化点评…</p>';
+  respBody.innerHTML = '<p class="stream-status">正在生成 Judgement…</p>';
 
   const payload = {
     accessCode,
@@ -4814,7 +4937,7 @@ async function submitAnswer(id) {
   }
 
   btn.disabled = false;
-  btn.textContent = '提交 · 获取 AI 点评';
+  btn.textContent = '提交判断 · Judgement';
 }
 
 
