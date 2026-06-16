@@ -33,8 +33,10 @@ function readReference(name) {
 
 /** @type {Record<string, string>} */
 const MODE_INSTRUCTIONS = {
-  'full-report': `当前模式：Full Report（完整落地方案）
-- 使用 output-template.md 的完整结构输出
+  'full-report': `当前模式：Full Report（完整落地方案 / 一键优化）
+- 像老师一样分步骤输出，不要一次给空话
+- 若用户请求优化：按 诊断→改写 bullet→迭代证据→补方向 四步走
+- 完整报告时使用 output-template.md 结构
 - 诊断简历 → 选 1 主项目 + 1 备选 → 底层逻辑 → 架构 → eval → badcase → 简历 bullet → 边界 → 行动项
 - 信息不足时最多问 5 个高影响问题，否则直接输出`,
 
@@ -49,6 +51,8 @@ const MODE_INSTRUCTIONS = {
   'resume-diagnosis': `当前模式：Resume Diagnosis（简历诊断）
 - 先诊断再改写，不要直接全文重写除非用户要求
 - 分类经历：深挖 / 辅助 / 压缩删除 / 不适合 AI 包装
+- 若用户请求评分：给出 1-10 总评 + 五维 1-5 分（AI产品信号、项目可信度、叙述结构、证据完整度、面试可防守性）
+- 若提供了 JD：增加岗位匹配度评估
 - 结构：总诊断 / 最强信号 / 最弱风险 / 经历分类 / 调整建议 / 项目机会`,
 
   'ai-pm-qa': `当前模式：AI PM Q&A（概念答疑）
@@ -57,6 +61,7 @@ const MODE_INSTRUCTIONS = {
 - 涵盖 RAG、Agent、Prompt、Evals 等产品判断视角`,
 
   'interview-defense': `当前模式：Interview Defense（面试防御）
+- 若提供了简历/JD：先基于材料准备，再给出追问与防御
 - 结构：核心故事 / 3 个 likely questions / 可防御回答 / 2 个 badcase / 不能说的话
 - 强调边界与真实参与，准备 metric 口径`
 };
@@ -120,9 +125,26 @@ ${refs.join('\n\n')}
  * @param {string} message
  */
 export function buildCoachUserMessage(mode, intake, message) {
+  const labels = {
+    resume: '简历',
+    jd: '目标 JD',
+    targetRole: '目标岗位',
+    background: '背景经历',
+    project: '项目',
+    problem: '当前问题',
+    artifacts: '现有材料',
+    materials: '已有材料',
+    timeline: '可投入时间',
+    constraints: '限制条件',
+    feedback: '已收到反馈',
+    question: '问题',
+    context: '背景',
+    role: '真实参与',
+    concerns: '担心被问穿的地方'
+  };
   const filled = Object.entries(intake || {})
     .filter(([, v]) => String(v || '').trim())
-    .map(([k, v]) => `【${k}】\n${v}`)
+    .map(([k, v]) => `【${labels[k] || k}】\n${v}`)
     .join('\n\n');
 
   return [filled && `## 用户提供的信息\n${filled}`, `## 用户请求\n${message}`]

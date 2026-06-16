@@ -1381,6 +1381,63 @@
   .sense-session-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
   .feedback-card .feedback-head { font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #5e5ce6; }
 
+  /* ── 双模块：面试训练 / 简历优化 ── */
+  .module-subtabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .module-subtab {
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 999px;
+    border: 1px solid var(--frost-border);
+    background: rgba(255,255,255,0.7);
+    cursor: pointer;
+    color: var(--ink2);
+  }
+  .module-subtab.active {
+    background: rgba(94, 92, 230, 0.12);
+    border-color: rgba(94, 92, 230, 0.45);
+    color: #5e5ce6;
+  }
+  .profile-upload-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  @media (max-width: 699px) { .profile-upload-grid { grid-template-columns: 1fr; } }
+  .profile-box {
+    border: 1px solid var(--frost-border);
+    border-radius: var(--r-lg);
+    background: rgba(255,255,255,0.85);
+    padding: 12px 14px;
+  }
+  .profile-box label { display: block; font-size: 12px; font-weight: 600; color: var(--ink2); margin-bottom: 6px; }
+  .profile-box textarea {
+    width: 100%;
+    min-height: 120px;
+    font-family: inherit;
+    font-size: 13px;
+    border: 1px solid var(--frost-border);
+    border-radius: var(--r);
+    padding: 8px 10px;
+    resize: vertical;
+  }
+  .profile-box .profile-file { font-size: 11px; color: var(--ink3); margin-top: 6px; }
+  .profile-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .profile-actions .btn-primary { flex: 1; min-width: 140px; }
+  .module-intro { font-size: 13px; color: var(--ink2); line-height: 1.6; margin-bottom: 14px; }
+
   /* ── AI 项目教练 ── */
   .coach-layout {
     display: grid;
@@ -2382,7 +2439,7 @@
     <span id="syncText">正在加载…</span>
   </div>
 
-  <div id="mainContent" class="loading-main">加载 Sense 训练…</div>
+  <div id="mainContent" class="loading-main">加载中…</div>
 
   <footer class="footer"><span class="footer-brand" aria-label="MindTraining"><span class="hb-mind">Mind</span><span class="hb-train">Training</span></span><span class="v2-badge">AI PM</span> · AI 产品经理专版 · <a class="footer-link" href="/download">下载</a> · <a class="footer-link" href="https://github.com/mianei/ops-trainer" target="_blank" rel="noopener noreferrer">GitHub</a></footer>
   </div>
@@ -2406,12 +2463,17 @@ const REMEMBER_DAYS = 7;
 
 let accessCode = 'guest';
 let userAccountId = 'guest';
-let workspaceMode = localStorage.getItem('workspaceMode') || 'sense';
-if (['bank', 'train', 'knowledge'].includes(workspaceMode)) {
-  workspaceMode = 'sense';
-  localStorage.setItem('workspaceMode', 'sense');
+let workspaceMode = localStorage.getItem('workspaceMode') || 'interview';
+const LEGACY_WORKSPACE = { sense: 'interview', coach: 'resume', bank: 'interview', train: 'interview', knowledge: 'interview' };
+if (LEGACY_WORKSPACE[workspaceMode]) {
+  workspaceMode = LEGACY_WORKSPACE[workspaceMode];
+  localStorage.setItem('workspaceMode', workspaceMode);
 }
 let senseSubView = 'home';
+let interviewSubView = localStorage.getItem('interviewSubView') || 'prep';
+let profileResume = localStorage.getItem('profileResume') || '';
+let profileJd = localStorage.getItem('profileJd') || '';
+let profileTargetRole = localStorage.getItem('profileTargetRole') || '';
 /** @type {{ version: number, questions: object[] } | null} */
 let INTERVIEW_BANK_V2 = null;
 /** @type {{ questions: object[] } | null} */
@@ -2430,42 +2492,43 @@ let knowledgeBodyPageIndex = 0;
 const scenarioPinByTopic = Object.create(null);
 const answerDraftByTopic = Object.create(null);
 let trainUiReturnTopicId = '';
-let coachModeId = localStorage.getItem('coachMode') || 'resume-diagnosis';
+let resumeModeId = localStorage.getItem('resumeMode') || 'resume-diagnosis';
+let interviewModeId = localStorage.getItem('interviewMode') || 'interview-defense';
 const coachIntake = Object.create(null);
-const coachMessages = [];
-let coachDraftMessage = '';
-const COACH_MODES = [
-  { id: 'full-report', title: '完整落地方案', icon: '📋', placeholder: '请基于我的简历，生成一份完整的 AI 项目落地方案…', fields: [
-    { id: 'resume', label: '简历 / 经历', type: 'textarea', rows: 6, required: true },
-    { id: 'targetRole', label: '目标岗位', type: 'text', required: true },
-    { id: 'materials', label: '已有材料', type: 'textarea', rows: 3 },
-    { id: 'timeline', label: '可投入时间', type: 'text' }
+const resumeMessages = [];
+const interviewPrepMessages = [];
+let resumeDraftMessage = '';
+let interviewDraftMessage = '';
+const RESUME_MODES = [
+  { id: 'resume-diagnosis', title: '简历诊断', icon: '🔍', desc: '识别 AI 产品信号强弱，分类每段经历', placeholder: '诊断我的简历：前 15 秒能否看出 AI 产品信号？', fields: [
+    { id: 'feedback', label: '已收到的反馈', type: 'textarea', rows: 2 }
   ]},
-  { id: 'project-direction', title: '项目方向', icon: '🧭', placeholder: '我没有 AI 项目，帮我从经历里找 1 个主方向 + 1 个备选…', fields: [
-    { id: 'background', label: '背景经历', type: 'textarea', rows: 5, required: true },
-    { id: 'targetRole', label: '目标方向', type: 'text', required: true },
-    { id: 'constraints', label: '限制条件', type: 'textarea', rows: 2 }
+  { id: 'project-direction', title: '项目方向', icon: '🧭', desc: '没有 AI 项目？从真实经历里找方向', placeholder: '我没有 AI 项目，帮我从经历里找 1 个主方向 + 1 个备选…', fields: [
+    { id: 'constraints', label: '限制条件', type: 'textarea', rows: 2, hint: '时间、技术栈、不能编造的内容' }
   ]},
-  { id: 'project-iteration', title: '项目迭代', icon: '🔄', placeholder: '帮我诊断这个项目为什么看起来弱，并给出 eval + badcase 迭代方案…', fields: [
-    { id: 'project', label: '项目描述', type: 'textarea', rows: 5, required: true },
+  { id: 'project-iteration', title: '项目迭代', icon: '🔄', desc: '已有 demo 但无面试？诊断并迭代', placeholder: '帮我诊断这个项目为什么看起来弱，并给出 eval + badcase 迭代方案…', fields: [
+    { id: 'project', label: '要迭代的项目', type: 'textarea', rows: 4 },
     { id: 'problem', label: '当前问题', type: 'textarea', rows: 2 },
     { id: 'artifacts', label: '现有材料', type: 'textarea', rows: 2 }
   ]},
-  { id: 'resume-diagnosis', title: '简历诊断', icon: '🔍', placeholder: '诊断我的简历：前 15 秒能否看出 AI 产品信号？', fields: [
-    { id: 'resume', label: '简历内容', type: 'textarea', rows: 8, required: true },
-    { id: 'targetRole', label: '目标岗位', type: 'text' },
-    { id: 'feedback', label: '已收到的反馈', type: 'textarea', rows: 2 }
-  ]},
-  { id: 'ai-pm-qa', title: 'AI PM 答疑', icon: '💡', placeholder: 'AI 产品经理需要懂多少 RAG / Agent / 评测？', fields: [
-    { id: 'question', label: '你的问题', type: 'textarea', rows: 3, required: true },
-    { id: 'context', label: '背景（可选）', type: 'textarea', rows: 2 }
-  ]},
-  { id: 'interview-defense', title: '面试防御', icon: '🛡️', placeholder: '帮我准备这个项目的面试追问、2 个 badcase 和边界防御…', fields: [
-    { id: 'project', label: '项目描述', type: 'textarea', rows: 5, required: true },
-    { id: 'role', label: '你的真实参与', type: 'textarea', rows: 2, required: true },
-    { id: 'concerns', label: '担心被问穿的地方', type: 'textarea', rows: 2 }
+  { id: 'full-report', title: '完整落地方案', icon: '📋', desc: '结构化 AI 项目规划 + 简历 bullet + 行动项', placeholder: '请基于我的简历，生成一份完整的 AI 项目落地方案…', fields: [
+    { id: 'materials', label: '已有材料', type: 'textarea', rows: 3 },
+    { id: 'timeline', label: '可投入时间', type: 'text', hint: '如：3-7 天可补做证据' }
   ]}
 ];
+const INTERVIEW_MODES = [
+  { id: 'interview-defense', title: '面试防御', icon: '🛡️', desc: '基于简历准备项目讲述、追问与 badcase', placeholder: '基于我的简历，帮我准备面试追问、2 个 badcase 和边界防御…', fields: [
+    { id: 'project', label: '重点准备的项目', type: 'textarea', rows: 4 },
+    { id: 'role', label: '你的真实参与', type: 'textarea', rows: 2 },
+    { id: 'concerns', label: '担心被问穿的地方', type: 'textarea', rows: 2 }
+  ]},
+  { id: 'ai-pm-qa', title: 'AI PM 答疑', icon: '💡', desc: 'RAG、Agent、Evals 等产品判断问题', placeholder: 'AI 产品经理需要懂多少 RAG / Agent / 评测？面试怎么考？', fields: [
+    { id: 'question', label: '你的问题', type: 'textarea', rows: 3 },
+    { id: 'context', label: '背景（可选）', type: 'textarea', rows: 2 }
+  ]}
+];
+const RESUME_MODE_IDS = new Set(RESUME_MODES.map(m => m.id));
+const INTERVIEW_MODE_IDS = new Set(INTERVIEW_MODES.map(m => m.id));
 
 /** 知识库：仅 AI 产品经理相关 */
 const KNOWLEDGE_PAGES = [
@@ -3468,10 +3531,9 @@ function bindScenarioSearch() {
 }
 
 function modeBarHtml() {
-  const senseActive = workspaceMode === 'sense';
-  return `<div class="workspace-mode-bar" role="tablist" aria-label="Sense 训练">
-    <button type="button" class="mode-btn${senseActive ? ' active' : ''}" data-mode="sense" role="tab">Sense 训练</button>
-    <button type="button" class="mode-btn coach-tab${workspaceMode === 'coach' ? ' active' : ''}" data-mode="coach" role="tab">项目教练</button>
+  return `<div class="workspace-mode-bar" role="tablist" aria-label="主模块">
+    <button type="button" class="mode-btn${workspaceMode === 'interview' ? ' active' : ''}" data-mode="interview" role="tab">面试训练</button>
+    <button type="button" class="mode-btn${workspaceMode === 'resume' ? ' active' : ''}" data-mode="resume" role="tab">简历优化</button>
   </div>`;
 }
 
@@ -3496,17 +3558,337 @@ function captureTrainWorkspaceState() {
 }
 
 function setWorkspaceMode(mode) {
-  if (!['sense', 'coach'].includes(mode)) return;
-  if (mode === 'sense' && workspaceMode !== 'sense') senseSubView = 'home';
+  if (!['interview', 'resume'].includes(mode)) return;
+  if (mode === 'interview' && workspaceMode !== 'interview') {
+    senseSubView = 'home';
+  }
   workspaceMode = mode;
   localStorage.setItem('workspaceMode', mode);
-  if (mode === 'coach') renderCoachView();
-  else if (senseSubView === 'session' && activeBankQuestion) renderSenseSession(activeBankQuestion);
-  else renderSenseHome();
+  if (mode === 'resume') renderResumeView();
+  else if (interviewSubView === 'scenario' && senseSubView === 'session' && activeBankQuestion) renderSenseSession(activeBankQuestion);
+  else renderInterviewView();
 }
 
-function getCoachModeConfig(id) {
-  return COACH_MODES.find(m => m.id === id) || COACH_MODES[3];
+function getResumeModeConfig(id) {
+  return RESUME_MODES.find(m => m.id === id) || RESUME_MODES[0];
+}
+
+function getInterviewModeConfig(id) {
+  return INTERVIEW_MODES.find(m => m.id === id) || INTERVIEW_MODES[0];
+}
+
+function saveProfileFromDom() {
+  profileResume = document.getElementById('profileResumeInput')?.value?.trim() || profileResume;
+  profileJd = document.getElementById('profileJdInput')?.value?.trim() || profileJd;
+  profileTargetRole = document.getElementById('profileTargetRoleInput')?.value?.trim() || profileTargetRole;
+  localStorage.setItem('profileResume', profileResume);
+  localStorage.setItem('profileJd', profileJd);
+  localStorage.setItem('profileTargetRole', profileTargetRole);
+}
+
+function buildCoachIntakeFromProfile(extra = {}) {
+  const intake = {
+    resume: profileResume,
+    jd: profileJd,
+    targetRole: profileTargetRole,
+    background: profileResume,
+    ...extra
+  };
+  Object.keys(coachIntake).forEach(k => {
+    if (coachIntake[k]) intake[k] = coachIntake[k];
+  });
+  return intake;
+}
+
+function profileUploadHtml() {
+  return `<div class="profile-upload-grid">
+    <div class="profile-box">
+      <label for="profileResumeInput">上传简历 <span style="color:var(--danger)">*</span></label>
+      <textarea id="profileResumeInput" placeholder="粘贴简历全文，或上传 .txt / .md 文件">${escapeHtml(profileResume)}</textarea>
+      <input type="file" id="resumeFileInput" accept=".txt,.md,.text" class="profile-file" />
+      <span class="profile-file">支持粘贴或上传文本文件</span>
+    </div>
+    <div class="profile-box">
+      <label for="profileJdInput">上传 JD <span style="color:var(--ink3)">（可选）</span></label>
+      <textarea id="profileJdInput" placeholder="粘贴目标岗位 JD，便于对齐优化和面试准备">${escapeHtml(profileJd)}</textarea>
+      <input type="file" id="jdFileInput" accept=".txt,.md,.text" class="profile-file" />
+      <label for="profileTargetRoleInput" style="margin-top:8px">目标岗位</label>
+      <input type="text" id="profileTargetRoleInput" value="${escapeAttr(profileTargetRole)}" placeholder="如：字节 AI 产品实习" style="width:100%;padding:8px 10px;border:1px solid var(--frost-border);border-radius:var(--r);font-family:inherit;font-size:13px" />
+    </div>
+  </div>`;
+}
+
+function bindProfileUpload() {
+  document.getElementById('profileResumeInput')?.addEventListener('input', e => {
+    profileResume = e.target.value;
+    localStorage.setItem('profileResume', profileResume);
+  });
+  document.getElementById('profileJdInput')?.addEventListener('input', e => {
+    profileJd = e.target.value;
+    localStorage.setItem('profileJd', profileJd);
+  });
+  document.getElementById('profileTargetRoleInput')?.addEventListener('input', e => {
+    profileTargetRole = e.target.value;
+    localStorage.setItem('profileTargetRole', profileTargetRole);
+  });
+  document.getElementById('resumeFileInput')?.addEventListener('change', async e => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const text = await file.text();
+    profileResume = text;
+    localStorage.setItem('profileResume', profileResume);
+    const ta = document.getElementById('profileResumeInput');
+    if (ta) ta.value = text;
+  });
+  document.getElementById('jdFileInput')?.addEventListener('change', async e => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const text = await file.text();
+    profileJd = text;
+    localStorage.setItem('profileJd', profileJd);
+    const ta = document.getElementById('profileJdInput');
+    if (ta) ta.value = text;
+  });
+}
+
+function moduleIntakeHtml(modeCfg) {
+  if (!modeCfg.fields?.length) return '';
+  return `<div class="coach-intake"><h3>${modeCfg.icon} ${escapeHtml(modeCfg.title)} · 补充信息</h3>${modeCfg.fields.map(f => {
+    const val = coachIntake[f.id] || '';
+    const input = f.type === 'textarea'
+      ? `<textarea id="coach-field-${f.id}" rows="${f.rows || 3}">${escapeHtml(val)}</textarea>`
+      : `<input type="text" id="coach-field-${f.id}" value="${escapeAttr(val)}" />`;
+    return `<div class="coach-field"><label for="coach-field-${f.id}">${escapeHtml(f.label)}</label>${input}</div>`;
+  }).join('')}</div>`;
+}
+
+function syncCoachIntakeFromDom(modeCfg) {
+  modeCfg.fields?.forEach(f => {
+    const el = document.getElementById('coach-field-' + f.id);
+    if (el) coachIntake[f.id] = el.value.trim();
+  });
+}
+
+function renderModuleThread(threadId, messages) {
+  const thread = document.getElementById(threadId);
+  if (!thread) return;
+  thread.innerHTML = messages.map(m =>
+    `<div class="coach-bubble ${m.role}">${escapeHtml(m.content).replace(/\n/g, '<br/>')}</div>`
+  ).join('');
+  thread.scrollTop = thread.scrollHeight;
+}
+
+async function sendModuleCoachMessage(opts) {
+  const { module, message, mode, messages, threadId, draftKey, errId, btnId, inputId } = opts;
+  const errEl = document.getElementById(errId);
+  const btn = document.getElementById(btnId);
+  const input = document.getElementById(inputId);
+  if (errEl) { errEl.hidden = true; errEl.textContent = ''; }
+  messages.push({ role: 'user', content: message });
+  if (input) input.value = '';
+  renderModuleThread(threadId, messages);
+  if (btn) { btn.disabled = true; btn.textContent = '生成中…'; }
+  const modeCfg = module === 'resume' ? getResumeModeConfig(mode) : getInterviewModeConfig(mode);
+  syncCoachIntakeFromDom(modeCfg);
+  saveProfileFromDom();
+  try {
+    const res = await fetch('/api/coach', {
+      method: 'POST',
+      headers: authHeaders(),
+      body: JSON.stringify({
+        accessCode,
+        userId: userAccountId,
+        mode,
+        intake: buildCoachIntakeFromProfile(),
+        message,
+        history: messages.slice(0, -1)
+      })
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || '请求失败（HTTP ' + res.status + '）');
+    messages.push({ role: 'assistant', content: data.reply || '' });
+    renderModuleThread(threadId, messages);
+  } catch (e) {
+    if (errEl) { errEl.hidden = false; errEl.textContent = e.message || '发送失败'; }
+    messages.pop();
+    renderModuleThread(threadId, messages);
+    if (input) input.value = message;
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = '发送'; }
+    if (draftKey) window[draftKey] = '';
+  }
+}
+
+function renderResumeView() {
+  const main = document.getElementById('mainContent');
+  main.classList.remove('loading-main');
+  const modeCfg = getResumeModeConfig(resumeModeId);
+  const draft = resumeDraftMessage || modeCfg.placeholder;
+  main.innerHTML = `
+    <div class="workspace-shell">
+      ${modeBarHtml()}
+      <p class="module-intro">简历优化 · 上传简历与 JD → <strong>评分</strong> → <strong>一键优化</strong> → 像老师一样逐步改项目、补证据、迭代叙事</p>
+      ${profileUploadHtml()}
+      <div class="profile-actions">
+        <button type="button" class="btn-primary" id="resumeScoreBtn">📊 简历评分</button>
+        <button type="button" class="btn-primary" id="resumeOptimizeBtn">✨ 一键优化简历</button>
+      </div>
+      <div class="coach-layout">
+        <aside class="coach-mode-aside" role="tablist" aria-label="简历能力">
+          ${RESUME_MODES.map(m => `<button type="button" class="coach-mode-btn${m.id === resumeModeId ? ' active' : ''}" data-resume-mode="${m.id}" title="${escapeAttr(m.desc)}">${m.icon} ${escapeHtml(m.title)}</button>`).join('')}
+        </aside>
+        <div class="coach-main">
+          <div class="coach-mode-chips" role="tablist">
+            ${RESUME_MODES.map(m => `<button type="button" class="${m.id === resumeModeId ? 'active' : ''}" data-resume-mode="${m.id}">${m.title}</button>`).join('')}
+          </div>
+          ${moduleIntakeHtml(modeCfg)}
+          <div class="coach-thread" id="resumeThread" aria-live="polite">
+            ${resumeMessages.map(m => `<div class="coach-bubble ${m.role}">${escapeHtml(m.content).replace(/\n/g, '<br/>')}</div>`).join('')}
+          </div>
+          <div class="coach-compose">
+            <textarea id="resumeMessageInput" placeholder="${escapeAttr(modeCfg.placeholder)}">${escapeHtml(draft)}</textarea>
+            <div class="coach-compose-row">
+              <button type="button" class="btn-primary" id="resumeSendBtn">发送</button>
+              <button type="button" class="btn-frost" id="resumeClearBtn">清空对话</button>
+              <p class="coach-error" id="resumeError" hidden></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  resumeDraftMessage = '';
+  bindModeBar();
+  bindProfileUpload();
+  bindResumeView();
+}
+
+function bindResumeView() {
+  document.querySelectorAll('[data-resume-mode]').forEach(btn => {
+    btn.onclick = () => {
+      syncCoachIntakeFromDom(getResumeModeConfig(resumeModeId));
+      resumeModeId = btn.dataset.resumeMode;
+      localStorage.setItem('resumeMode', resumeModeId);
+      renderResumeView();
+    };
+  });
+  document.getElementById('resumeSendBtn')?.addEventListener('click', () => {
+    const msg = document.getElementById('resumeMessageInput')?.value?.trim();
+    if (!msg) return;
+    if (!profileResume.trim() && !document.getElementById('profileResumeInput')?.value?.trim()) {
+      alert('请先上传或粘贴简历');
+      return;
+    }
+    sendModuleCoachMessage({
+      module: 'resume', message: msg, mode: resumeModeId,
+      messages: resumeMessages, threadId: 'resumeThread',
+      errId: 'resumeError', btnId: 'resumeSendBtn', inputId: 'resumeMessageInput'
+    });
+  });
+  document.getElementById('resumeClearBtn')?.addEventListener('click', () => {
+    resumeMessages.length = 0;
+    renderResumeView();
+  });
+  document.getElementById('resumeScoreBtn')?.addEventListener('click', () => {
+    saveProfileFromDom();
+    if (!profileResume.trim()) { alert('请先上传或粘贴简历'); return; }
+    const jdNote = profileJd.trim() ? '请对照 JD 评估岗位匹配度。' : '';
+    const msg = `请对我的简历做结构化评分（像老师批改作业）：
+1. 总评（1-10 分）及一句话结论
+2. 分维度评分（1-5）：AI 产品信号、项目可信度、叙述结构、证据完整度、面试可防守性
+3. 各维度一句话点评
+4. 最该先改的 3 个问题（按优先级排序）
+${jdNote}`;
+    resumeModeId = 'resume-diagnosis';
+    localStorage.setItem('resumeMode', resumeModeId);
+    sendModuleCoachMessage({
+      module: 'resume', message: msg, mode: 'resume-diagnosis',
+      messages: resumeMessages, threadId: 'resumeThread',
+      errId: 'resumeError', btnId: 'resumeSendBtn', inputId: 'resumeMessageInput'
+    });
+  });
+  document.getElementById('resumeOptimizeBtn')?.addEventListener('click', () => {
+    saveProfileFromDom();
+    if (!profileResume.trim()) { alert('请先上传或粘贴简历'); return; }
+    const jdNote = profileJd.trim() ? '目标 JD 已提供，请对齐岗位要求。' : '';
+    const msg = `请像老师一样一步一步教我优化简历（不要空话，每一步都要具体可执行）：
+
+**第一步：诊断** — 标出简历里每个 AI/产品项目的最大不足（逐条列出）
+
+**第二步：改写** — 每个薄弱项目给出 bullet 改前→改后示例（只写能辩护的内容）
+
+**第三步：迭代** — 哪些项目需要补 eval/badcase/证据？给出 3-7 天可执行清单
+
+**第四步：方向** — 若还缺主项目，推荐 1 个主方向 + 1 个备选 + 最小证据计划
+
+${jdNote}`;
+    resumeModeId = 'full-report';
+    localStorage.setItem('resumeMode', resumeModeId);
+    sendModuleCoachMessage({
+      module: 'resume', message: msg, mode: 'full-report',
+      messages: resumeMessages, threadId: 'resumeThread',
+      errId: 'resumeError', btnId: 'resumeSendBtn', inputId: 'resumeMessageInput'
+    });
+  });
+  document.getElementById('resumeMessageInput')?.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      document.getElementById('resumeSendBtn')?.click();
+    }
+  });
+}
+
+function renderInterviewView() {
+  const main = document.getElementById('mainContent');
+  main.classList.remove('loading-main');
+  if (interviewSubView === 'scenario') {
+    if (senseSubView === 'session' && activeBankQuestion) {
+      renderSenseSession(activeBankQuestion);
+      return;
+    }
+    renderSenseHome();
+    return;
+  }
+  const modeCfg = getInterviewModeConfig(interviewModeId);
+  const draft = interviewDraftMessage || modeCfg.placeholder;
+  const hasResume = profileResume.trim().length > 0;
+  main.innerHTML = `
+    <div class="workspace-shell">
+      ${modeBarHtml()}
+      <div class="module-subtabs" role="tablist">
+        <button type="button" class="module-subtab active" data-interview-sub="prep">① 根据简历准备</button>
+        <button type="button" class="module-subtab" data-interview-sub="scenario">② 业务场景作答</button>
+      </div>
+      <p class="module-intro">面试训练 · 先基于简历准备讲述与防御，再练业务场景 sense 判断</p>
+      ${!hasResume ? '<p class="module-intro" style="color:#b45309">提示：在「简历优化」上传简历后，此处可自动带入；也可直接粘贴到下方补充信息。</p>' : ''}
+      <div class="coach-layout">
+        <aside class="coach-mode-aside" role="tablist" aria-label="面试能力">
+          ${INTERVIEW_MODES.map(m => `<button type="button" class="coach-mode-btn${m.id === interviewModeId ? ' active' : ''}" data-interview-mode="${m.id}" title="${escapeAttr(m.desc)}">${m.icon} ${escapeHtml(m.title)}</button>`).join('')}
+        </aside>
+        <div class="coach-main">
+          <div class="coach-mode-chips" role="tablist">
+            ${INTERVIEW_MODES.map(m => `<button type="button" class="${m.id === interviewModeId ? 'active' : ''}" data-interview-mode="${m.id}">${m.title}</button>`).join('')}
+          </div>
+          <div class="profile-actions">
+            <button type="button" class="btn-primary" id="interviewPrepBtn">🎯 基于简历一键准备面试</button>
+          </div>
+          ${moduleIntakeHtml(modeCfg)}
+          <div class="coach-thread" id="interviewPrepThread" aria-live="polite">
+            ${interviewPrepMessages.map(m => `<div class="coach-bubble ${m.role}">${escapeHtml(m.content).replace(/\n/g, '<br/>')}</div>`).join('')}
+          </div>
+          <div class="coach-compose">
+            <textarea id="interviewMessageInput" placeholder="${escapeAttr(modeCfg.placeholder)}">${escapeHtml(draft)}</textarea>
+            <div class="coach-compose-row">
+              <button type="button" class="btn-primary" id="interviewSendBtn">发送</button>
+              <button type="button" class="btn-frost" id="interviewClearBtn">清空对话</button>
+              <p class="coach-error" id="interviewError" hidden></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  interviewDraftMessage = '';
+  bindModeBar();
+  bindInterviewView();
 }
 
 function detectCoachIntentLocal(text) {
@@ -3515,10 +3897,10 @@ function detectCoachIntentLocal(text) {
   const rules = [
     [/完整|落地方案|规划.*AI\s*项目|转\s*AI\s*产品/i, 'full-report'],
     [/迭代|无面试|没回复|demo.*弱|优化.*项目/i, 'project-iteration'],
-    [/简历|诊断|改写/i, 'resume-diagnosis'],
-    [/面试防御|追问|讲项目|被问穿/i, 'interview-defense'],
+    [/简历|诊断|改写|优化简历/i, 'resume-diagnosis'],
+    [/面试防御|追问|讲项目|被问穿|准备面试/i, 'interview-defense'],
     [/没有.*项目|项目方向|找方向/i, 'project-direction'],
-    [/AI\s*产品|RAG|Agent|评测|Eval|badcase|项目教练/i, 'ai-pm-qa']
+    [/AI\s*产品|RAG|Agent|评测|Eval|badcase/i, 'ai-pm-qa']
   ];
   for (const [re, mode] of rules) {
     if (re.test(t)) return mode;
@@ -3526,146 +3908,80 @@ function detectCoachIntentLocal(text) {
   return null;
 }
 
-function coachIntakeHtml(modeCfg) {
-  return modeCfg.fields.map(f => {
-    const val = escapeAttr(coachIntake[f.id] || '');
-    const input = f.type === 'textarea'
-      ? `<textarea id="coach-field-${f.id}" rows="${f.rows || 3}" ${f.required ? 'required' : ''}>${escapeHtml(coachIntake[f.id] || '')}</textarea>`
-      : `<input type="text" id="coach-field-${f.id}" value="${val}" ${f.required ? 'required' : ''} />`;
-    return `<div class="coach-field"><label for="coach-field-${f.id}">${escapeHtml(f.label)}</label>${input}</div>`;
-  }).join('');
-}
-
-function renderCoachView() {
-  const main = document.getElementById('mainContent');
-  main.classList.remove('loading-main');
-  const modeCfg = getCoachModeConfig(coachModeId);
-  const draft = coachDraftMessage || modeCfg.placeholder;
-  main.innerHTML = `
-    <div class="workspace-shell">
-      ${modeBarHtml()}
-      <p class="knowledge-intro">AI 产品项目教练 · 简历诊断、项目方向、eval/badcase 迭代与面试防御 · 基于 <code>ai-product-project-coach</code> skill</p>
-      <div class="coach-layout">
-        <aside class="coach-mode-aside" role="tablist" aria-label="辅导模式">
-          ${COACH_MODES.map(m => `<button type="button" class="coach-mode-btn${m.id === coachModeId ? ' active' : ''}" data-coach-mode="${m.id}">${m.icon} ${escapeHtml(m.title)}</button>`).join('')}
-        </aside>
-        <div class="coach-main">
-          <div class="coach-mode-chips" role="tablist">
-            ${COACH_MODES.map(m => `<button type="button" class="${m.id === coachModeId ? 'active' : ''}" data-coach-mode="${m.id}">${m.title}</button>`).join('')}
-          </div>
-          <div class="coach-intake">
-            <h3>${modeCfg.icon} ${escapeHtml(modeCfg.title)} · 补充信息（可选但越全越好）</h3>
-            ${coachIntakeHtml(modeCfg)}
-          </div>
-          <div class="coach-thread" id="coachThread" aria-live="polite">
-            ${coachMessages.map(m => `<div class="coach-bubble ${m.role}">${escapeHtml(m.content)}</div>`).join('')}
-          </div>
-          <div class="coach-compose">
-            <textarea id="coachMessageInput" placeholder="${escapeAttr(modeCfg.placeholder)}">${escapeHtml(draft)}</textarea>
-            <div class="coach-compose-row">
-              <button type="button" class="btn-primary" id="coachSendBtn">发送</button>
-              <button type="button" class="btn-frost" id="coachClearBtn">清空对话</button>
-              <p class="coach-error" id="coachError" hidden></p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>`;
-  coachDraftMessage = '';
-  bindModeBar();
-  bindCoachView();
-}
-
-function bindCoachView() {
-  document.querySelectorAll('[data-coach-mode]').forEach(btn => {
-    btn.onclick = () => {
-      syncCoachIntakeFromDom();
-      coachModeId = btn.dataset.coachMode;
-      localStorage.setItem('coachMode', coachModeId);
-      renderCoachView();
-    };
-  });
-  document.getElementById('coachSendBtn')?.addEventListener('click', sendCoachMessage);
-  document.getElementById('coachClearBtn')?.addEventListener('click', () => {
-    coachMessages.length = 0;
-    renderCoachView();
-  });
-  document.getElementById('coachMessageInput')?.addEventListener('keydown', e => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      sendCoachMessage();
-    }
-  });
-}
-
-function syncCoachIntakeFromDom() {
-  const modeCfg = getCoachModeConfig(coachModeId);
-  modeCfg.fields.forEach(f => {
-    const el = document.getElementById('coach-field-' + f.id);
-    if (el) coachIntake[f.id] = el.value.trim();
-  });
-}
-
-async function sendCoachMessage() {
-  const input = document.getElementById('coachMessageInput');
-  const errEl = document.getElementById('coachError');
-  const btn = document.getElementById('coachSendBtn');
-  const message = input?.value?.trim();
-  if (!message) return;
-  syncCoachIntakeFromDom();
-  if (errEl) { errEl.hidden = true; errEl.textContent = ''; }
-  coachMessages.push({ role: 'user', content: message });
-  if (input) input.value = '';
-  renderCoachThread();
-  if (btn) { btn.disabled = true; btn.textContent = '生成中…'; }
-  try {
-    const res = await fetch('/api/coach', {
-      method: 'POST',
-      headers: authHeaders(),
-      body: JSON.stringify({
-        accessCode,
-        userId: userAccountId,
-        mode: coachModeId,
-        intake: coachIntake,
-        message,
-        history: coachMessages.slice(0, -1)
-      })
-    });
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok) throw new Error(data.error || '请求失败（HTTP ' + res.status + '）');
-    if (data.mode && data.mode !== coachModeId) {
-      coachModeId = data.mode;
-      localStorage.setItem('coachMode', coachModeId);
-    }
-    coachMessages.push({ role: 'assistant', content: data.reply || '' });
-    renderCoachThread();
-  } catch (e) {
-    if (errEl) {
-      errEl.hidden = false;
-      errEl.textContent = e.message || '发送失败';
-    }
-    coachMessages.pop();
-    renderCoachThread();
-    if (input) input.value = message;
-  } finally {
-    if (btn) { btn.disabled = false; btn.textContent = '发送'; }
+function openCoachFromGoal(goal, mode) {
+  if (RESUME_MODE_IDS.has(mode)) {
+    resumeModeId = mode;
+    localStorage.setItem('resumeMode', mode);
+    resumeDraftMessage = goal;
+    workspaceMode = 'resume';
+    renderResumeView();
+  } else {
+    interviewModeId = mode || 'interview-defense';
+    localStorage.setItem('interviewMode', interviewModeId);
+    interviewDraftMessage = goal;
+    interviewSubView = 'prep';
+    localStorage.setItem('interviewSubView', 'prep');
+    workspaceMode = 'interview';
+    renderInterviewView();
   }
 }
 
-function renderCoachThread() {
-  const thread = document.getElementById('coachThread');
-  if (!thread) return;
-  thread.innerHTML = coachMessages.map(m =>
-    `<div class="coach-bubble ${m.role}">${escapeHtml(m.content)}</div>`
-  ).join('');
-  thread.scrollTop = thread.scrollHeight;
-}
-
-function openCoachFromGoal(goal, mode) {
-  if (mode) coachModeId = mode;
-  coachDraftMessage = goal;
-  workspaceMode = 'coach';
-  renderCoachView();
+function bindInterviewView() {
+  document.querySelectorAll('[data-interview-sub]').forEach(btn => {
+    btn.onclick = () => {
+      interviewSubView = btn.dataset.interviewSub;
+      localStorage.setItem('interviewSubView', interviewSubView);
+      if (interviewSubView === 'scenario') senseSubView = 'home';
+      renderInterviewView();
+    };
+  });
+  document.querySelectorAll('[data-interview-mode]').forEach(btn => {
+    btn.onclick = () => {
+      syncCoachIntakeFromDom(getInterviewModeConfig(interviewModeId));
+      interviewModeId = btn.dataset.interviewMode;
+      localStorage.setItem('interviewMode', interviewModeId);
+      renderInterviewView();
+    };
+  });
+  document.getElementById('interviewSendBtn')?.addEventListener('click', () => {
+    const msg = document.getElementById('interviewMessageInput')?.value?.trim();
+    if (!msg) return;
+    saveProfileFromDom();
+    sendModuleCoachMessage({
+      module: 'interview', message: msg, mode: interviewModeId,
+      messages: interviewPrepMessages, threadId: 'interviewPrepThread',
+      errId: 'interviewError', btnId: 'interviewSendBtn', inputId: 'interviewMessageInput'
+    });
+  });
+  document.getElementById('interviewClearBtn')?.addEventListener('click', () => {
+    interviewPrepMessages.length = 0;
+    renderInterviewView();
+  });
+  document.getElementById('interviewPrepBtn')?.addEventListener('click', () => {
+    saveProfileFromDom();
+    const resumeNote = profileResume.trim() ? '' : '（简历未上传，请根据下方补充信息回答）';
+    const jdNote = profileJd.trim() ? '已提供目标 JD，请对齐岗位要求。' : '';
+    const msg = `基于我的简历${resumeNote}，帮我准备 AI 产品经理面试：
+1. 面试官前 15 秒会怎么看我？最强/最弱信号是什么？
+2. 每个项目 30 秒讲述结构（开场-任务-方案-评测-结果-边界）
+3. 最可能被追问的 5 个问题 + 可防守回答要点
+4. 必须准备的 2 个 badcase（现象-归因-改法-复测）
+5. 明确不能说的话（避免被问穿）
+${jdNote}`;
+    interviewModeId = 'interview-defense';
+    localStorage.setItem('interviewMode', interviewModeId);
+    sendModuleCoachMessage({
+      module: 'interview', message: msg, mode: 'interview-defense',
+      messages: interviewPrepMessages, threadId: 'interviewPrepThread',
+      errId: 'interviewError', btnId: 'interviewSendBtn', inputId: 'interviewMessageInput'
+    });
+  });
+  document.getElementById('interviewMessageInput')?.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      document.getElementById('interviewSendBtn')?.click();
+    }
+  });
 }
 
 async function loadInterviewBankV2() {
@@ -3697,8 +4013,32 @@ function bankQuestionsForSource(source) {
   return AI_PM_BANK?.questions || [];
 }
 
+function interviewSubtabsHtml(activeSub) {
+  return `<div class="module-subtabs" role="tablist">
+    <button type="button" class="module-subtab${activeSub === 'prep' ? ' active' : ''}" data-interview-sub="prep">① 根据简历准备</button>
+    <button type="button" class="module-subtab${activeSub === 'scenario' ? ' active' : ''}" data-interview-sub="scenario">② 业务场景作答</button>
+  </div>`;
+}
+
+function bindInterviewSubtabs() {
+  document.querySelectorAll('[data-interview-sub]').forEach(btn => {
+    btn.onclick = () => {
+      interviewSubView = btn.dataset.interviewSub;
+      localStorage.setItem('interviewSubView', interviewSubView);
+      if (interviewSubView === 'scenario') {
+        senseSubView = 'home';
+        renderInterviewView();
+      } else {
+        renderInterviewView();
+      }
+    };
+  });
+}
+
 function renderSenseHome() {
   senseSubView = 'home';
+  interviewSubView = 'scenario';
+  localStorage.setItem('interviewSubView', 'scenario');
   const main = document.getElementById('mainContent');
   main.classList.remove('loading-main');
   const source = bankSource === 'ops' ? 'ai-pm' : bankSource;
@@ -3715,6 +4055,8 @@ function renderSenseHome() {
   main.innerHTML = `
     <div class="workspace-shell">
       ${modeBarHtml()}
+      ${interviewSubtabsHtml('scenario')}
+      <p class="module-intro">业务场景作答 · 独立判断 → Judgement → Replay</p>
       <div class="sense-home">
         <div class="sense-loop" aria-label="训练闭环">
           <span class="sense-step active">Sense</span>
@@ -3723,8 +4065,8 @@ function renderSenseHome() {
           <span class="sense-arrow">→</span>
           <span class="sense-step">Replay</span>
         </div>
-        <p class="sense-tagline">独立判断 → 结构化 Judgement → Replay 复盘进步。<br>练的是产品 sense，不是背答案。</p>
-        <button type="button" class="btn-primary sense-cta" id="senseStartBtn">开始一题 Sense 训练</button>
+        <p class="sense-tagline">给场景 → 写下产品判断 → 获取结构化 Judgement → Replay 复盘</p>
+        <button type="button" class="btn-primary sense-cta" id="senseStartBtn">开始一题场景训练</button>
         <details class="sense-picker">
           <summary>选题库 · 精选 ${nCur} / 全部 ${nAi}</summary>
           <div class="bank-source-tabs" role="tablist">
@@ -3742,6 +4084,7 @@ function renderSenseHome() {
       </div>
     </div>`;
   bindModeBar();
+  bindInterviewSubtabs();
   document.getElementById('senseStartBtn').onclick = () => startRandomSense();
   main.querySelectorAll('[data-bank]').forEach(btn => {
     btn.onclick = () => {
@@ -3791,6 +4134,7 @@ function startRandomSense() {
 
 function renderSenseSession(q) {
   senseSubView = 'session';
+  interviewSubView = 'scenario';
   const main = document.getElementById('mainContent');
   main.classList.remove('loading-main');
   const tid = q.topicId || 'iv-pm';
@@ -3804,9 +4148,10 @@ function renderSenseSession(q) {
   main.innerHTML = `
     <div class="workspace-shell sense-shell">
       ${modeBarHtml()}
+      ${interviewSubtabsHtml('scenario')}
       <div class="sense-session">
         <div class="sense-session-top">
-          <button type="button" class="btn-frost" id="senseBackBtn">← 选题</button>
+          <button type="button" class="btn-frost" id="senseBackBtn">← 返回场景列表</button>
           <div class="sense-loop sense-loop--compact" aria-hidden="true">
             <span class="sense-step active">Sense</span><span class="sense-arrow">→</span>
             <span class="sense-step">Judgement</span><span class="sense-arrow">→</span>
@@ -3858,6 +4203,7 @@ function renderSenseSession(q) {
     </div>`;
 
   bindModeBar();
+  bindInterviewSubtabs();
   document.getElementById('senseBackBtn').onclick = () => renderSenseHome();
   document.getElementById('btn-' + tid).onclick = () => submitAnswer(tid);
   document.getElementById('senseNextBtn').onclick = () => startRandomSense();
@@ -4461,7 +4807,11 @@ function renderTopics() {
   const activeRef = { activeId };
   renderNavGroup(nav, 'interview', 'AI 产品经理', CURRICULUM.aiPm, topicById, activeRef);
 
-  document.getElementById('backToBankBtn')?.addEventListener('click', () => setWorkspaceMode('bank'));
+  document.getElementById('backToBankBtn')?.addEventListener('click', () => {
+    interviewSubView = 'scenario';
+    senseSubView = 'home';
+    renderInterviewView();
+  });
 
   ordered.forEach((t) => {
     const panel = document.createElement('div');
@@ -4544,9 +4894,11 @@ async function loadTopicsAndRender() {
     await loadInterviewBankV2();
     await loadAiPmBanks();
     setSyncStatus(true);
-    if (workspaceMode === 'coach') renderCoachView();
-    else if (senseSubView === 'session' && activeBankQuestion) renderSenseSession(activeBankQuestion);
-    else renderSenseHome();
+    if (workspaceMode === 'resume') renderResumeView();
+    else if (workspaceMode === 'interview') {
+      if (interviewSubView === 'scenario' && senseSubView === 'session' && activeBankQuestion) renderSenseSession(activeBankQuestion);
+      else renderInterviewView();
+    } else renderInterviewView();
   } catch (e) {
     const isFile = location.protocol === 'file:';
     const hint = isFile
