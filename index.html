@@ -1438,6 +1438,8 @@
     margin-bottom: 16px;
   }
   .profile-actions .btn-primary { flex: 1; min-width: 140px; }
+  .profile-actions .btn-primary:disabled { opacity: 0.65; cursor: wait; }
+  .profile-action-error { width: 100%; font-size: 12px; color: var(--danger, #c62828); margin-top: 4px; }
   .module-intro { font-size: 13px; color: var(--ink2); line-height: 1.6; margin-bottom: 14px; }
 
   /* ── AI 项目教练 ── */
@@ -3555,11 +3557,16 @@ function saveProfileFromDom() {
 }
 
 function buildCoachIntakeFromProfile(extra = {}) {
+  const trim = (s, max = 18000) => {
+    const t = String(s || '').trim();
+    if (t.length <= max) return t;
+    return t.slice(0, max) + '\n\n…（内容过长已截断，核心部分已保留）';
+  };
   const intake = {
-    resume: profileResume,
-    jd: profileJd,
+    resume: trim(profileResume),
+    jd: trim(profileJd, 8000),
     targetRole: profileTargetRole,
-    background: profileResume,
+    background: trim(profileResume),
     ...extra
   };
   Object.keys(coachIntake).forEach(k => {
@@ -3730,42 +3737,66 @@ function renderModuleThread(threadId, messages) {
 }
 
 async function sendModuleCoachMessage(opts) {
-  const { module, message, mode, messages, threadId, errId, btnId, inputId } = opts;
+  const {
+    module, message, mode, action, messages, threadId,
+    errId, btnId, inputId,
+    displayMessage, restoreInputOnError = true,
+    triggerBtnId, triggerBtnLabel
+  } = opts;
   const errEl = document.getElementById(errId);
   const btn = document.getElementById(btnId);
   const input = document.getElementById(inputId);
+  const triggerBtn = triggerBtnId ? document.getElementById(triggerBtnId) : null;
+  const threadLabel = displayMessage || (action ? (triggerBtnLabel || '处理中') : message);
+
   if (errEl) { errEl.hidden = true; errEl.textContent = ''; }
-  messages.push({ role: 'user', content: message });
+  messages.push({ role: 'user', content: threadLabel });
   if (input) input.value = '';
   renderModuleThread(threadId, messages);
-  if (btn) { btn.disabled = true; btn.textContent = '生成中…'; }
+  if (btn && !triggerBtnId) { btn.disabled = true; btn.textContent = '生成中…'; }
+  if (triggerBtn) {
+    triggerBtn.disabled = true;
+    triggerBtn.dataset.prevLabel = triggerBtn.textContent;
+    triggerBtn.textContent = (triggerBtnLabel || '处理中') + '…';
+  }
   syncExtraNotesFromDom();
   saveProfileFromDom();
   try {
+    const payload = {
+      accessCode,
+      userId: userAccountId,
+      contextModule: module,
+      intake: buildCoachIntakeFromProfile(),
+      history: messages.slice(0, -1)
+    };
+    if (action) payload.action = action;
+    else {
+      payload.message = message;
+      payload.mode = mode || '';
+    }
     const res = await fetch('/api/coach', {
       method: 'POST',
       headers: authHeaders(),
-      body: JSON.stringify({
-        accessCode,
-        userId: userAccountId,
-        mode: mode || '',
-        contextModule: module,
-        intake: buildCoachIntakeFromProfile(),
-        message,
-        history: messages.slice(0, -1)
-      })
+      body: JSON.stringify(payload)
     });
     const data = await res.json().catch(() => ({}));
     if (!res.ok) throw new Error(data.error || '请求失败（HTTP ' + res.status + '）');
     messages.push({ role: 'assistant', content: data.reply || '' });
     renderModuleThread(threadId, messages);
   } catch (e) {
-    if (errEl) { errEl.hidden = false; errEl.textContent = e.message || '发送失败'; }
+    if (errEl) {
+      errEl.hidden = false;
+      errEl.textContent = e.message || '发送失败';
+    }
     messages.pop();
     renderModuleThread(threadId, messages);
-    if (input) input.value = message;
+    if (restoreInputOnError && input && message) input.value = message;
   } finally {
     if (btn) { btn.disabled = false; btn.textContent = '发送'; }
+    if (triggerBtn) {
+      triggerBtn.disabled = false;
+      triggerBtn.textContent = triggerBtn.dataset.prevLabel || triggerBtnLabel || '完成';
+    }
   }
 }
 
@@ -3781,6 +3812,7 @@ function renderResumeView() {
       <div class="profile-actions">
         <button type="button" class="btn-primary" id="resumeScoreBtn">简历评分</button>
         <button type="button" class="btn-primary" id="resumeOptimizeBtn">一键优化简历</button>
+        <p class="profile-action-error" id="resumeActionError" hidden></p>
       </div>
       <div class="coach-layout-single coach-main">
         ${coachExtraNotesHtml()}
@@ -3824,38 +3856,35 @@ function bindResumeView() {
   document.getElementById('resumeScoreBtn')?.addEventListener('click', () => {
     saveProfileFromDom();
     if (!profileResume.trim()) { alert('请先上传或粘贴简历'); return; }
-    const jdNote = profileJd.trim() ? '请对照 JD 评估岗位匹配度。' : '';
-    const msg = `请对我的简历做结构化评分（像老师批改作业）：
-1. 总评（1-10 分）及一句话结论
-2. 分维度评分（1-5）：AI 产品信号、项目可信度、叙述结构、证据完整度、面试可防守性
-3. 各维度一句话点评
-4. 最该先改的 3 个问题（按优先级排序）
-${jdNote}`;
     sendModuleCoachMessage({
-      module: 'resume', message: msg, mode: 'resume-diagnosis',
-      messages: resumeMessages, threadId: 'resumeThread',
-      errId: 'resumeError', btnId: 'resumeSendBtn', inputId: 'resumeMessageInput'
+      module: 'resume',
+      action: 'resume-score',
+      displayMessage: '简历评分',
+      restoreInputOnError: false,
+      triggerBtnId: 'resumeScoreBtn',
+      triggerBtnLabel: '简历评分',
+      messages: resumeMessages,
+      threadId: 'resumeThread',
+      errId: 'resumeActionError',
+      btnId: 'resumeSendBtn',
+      inputId: 'resumeMessageInput'
     });
   });
   document.getElementById('resumeOptimizeBtn')?.addEventListener('click', () => {
     saveProfileFromDom();
     if (!profileResume.trim()) { alert('请先上传或粘贴简历'); return; }
-    const jdNote = profileJd.trim() ? '目标 JD 已提供，请对齐岗位要求。' : '';
-    const msg = `请像老师一样一步一步教我优化简历（不要空话，每一步都要具体可执行）：
-
-**第一步：诊断** — 标出简历里每个 AI/产品项目的最大不足（逐条列出）
-
-**第二步：改写** — 每个薄弱项目给出 bullet 改前→改后示例（只写能辩护的内容）
-
-**第三步：迭代** — 哪些项目需要补 eval/badcase/证据？给出 3-7 天可执行清单
-
-**第四步：方向** — 若还缺主项目，推荐 1 个主方向 + 1 个备选 + 最小证据计划
-
-${jdNote}`;
     sendModuleCoachMessage({
-      module: 'resume', message: msg, mode: 'full-report',
-      messages: resumeMessages, threadId: 'resumeThread',
-      errId: 'resumeError', btnId: 'resumeSendBtn', inputId: 'resumeMessageInput'
+      module: 'resume',
+      action: 'resume-optimize',
+      displayMessage: '一键优化简历',
+      restoreInputOnError: false,
+      triggerBtnId: 'resumeOptimizeBtn',
+      triggerBtnLabel: '一键优化简历',
+      messages: resumeMessages,
+      threadId: 'resumeThread',
+      errId: 'resumeActionError',
+      btnId: 'resumeSendBtn',
+      inputId: 'resumeMessageInput'
     });
   });
   document.getElementById('resumeMessageInput')?.addEventListener('keydown', e => {
@@ -3967,19 +3996,18 @@ function bindInterviewView() {
   });
   document.getElementById('interviewPrepBtn')?.addEventListener('click', () => {
     saveProfileFromDom();
-    const resumeNote = profileResume.trim() ? '' : '（简历未上传，请根据补充说明回答）';
-    const jdNote = profileJd.trim() ? '已提供目标 JD，请对齐岗位要求。' : '';
-    const msg = `基于我的简历${resumeNote}，帮我准备 AI 产品经理面试：
-1. 面试官前 15 秒会怎么看我？最强/最弱信号是什么？
-2. 每个项目 30 秒讲述结构（开场-任务-方案-评测-结果-边界）
-3. 最可能被追问的 5 个问题 + 可防守回答要点
-4. 必须准备的 2 个 badcase（现象-归因-改法-复测）
-5. 明确不能说的话（避免被问穿）
-${jdNote}`;
     sendModuleCoachMessage({
-      module: 'interview', message: msg, mode: 'interview-defense',
-      messages: interviewPrepMessages, threadId: 'interviewPrepThread',
-      errId: 'interviewError', btnId: 'interviewSendBtn', inputId: 'interviewMessageInput'
+      module: 'interview',
+      action: 'interview-prep',
+      displayMessage: '基于简历准备面试',
+      restoreInputOnError: false,
+      triggerBtnId: 'interviewPrepBtn',
+      triggerBtnLabel: '基于简历一键准备面试',
+      messages: interviewPrepMessages,
+      threadId: 'interviewPrepThread',
+      errId: 'interviewError',
+      btnId: 'interviewSendBtn',
+      inputId: 'interviewMessageInput'
     });
   });
   document.getElementById('interviewMessageInput')?.addEventListener('keydown', e => {

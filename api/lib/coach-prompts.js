@@ -21,12 +21,14 @@ function resolveSkillRoot() {
       return p;
     }
   }
-  throw new Error('未找到 ai-product-project-coach skill（skills/ 或 .cursor/skills/）');
+  return null;
 }
 
 /** @param {string} name */
 function readReference(name) {
-  const path = join(resolveSkillRoot(), 'references', name);
+  const root = resolveSkillRoot();
+  if (!root) return '';
+  const path = join(root, 'references', name);
   if (!existsSync(path)) return '';
   return readFileSync(path, 'utf-8');
 }
