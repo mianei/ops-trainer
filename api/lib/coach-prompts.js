@@ -1,38 +1,3 @@
-import { readFileSync, existsSync } from 'node:fs';
-import { join, dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
-
-/** @type {string | null} */
-let skillRootCache = null;
-
-function resolveSkillRoot() {
-  if (skillRootCache) return skillRootCache;
-  const candidates = [
-    join(process.cwd(), 'skills', 'ai-product-project-coach'),
-    join(process.cwd(), '.cursor', 'skills', 'ai-product-project-coach'),
-    join(__dirname, '..', '..', 'skills', 'ai-product-project-coach'),
-    join(__dirname, '..', '..', '.cursor', 'skills', 'ai-product-project-coach')
-  ];
-  for (const p of candidates) {
-    if (existsSync(join(p, 'SKILL.md'))) {
-      skillRootCache = p;
-      return p;
-    }
-  }
-  return null;
-}
-
-/** @param {string} name */
-function readReference(name) {
-  const root = resolveSkillRoot();
-  if (!root) return '';
-  const path = join(root, 'references', name);
-  if (!existsSync(path)) return '';
-  return readFileSync(path, 'utf-8');
-}
-
 /** @type {Record<string, string>} */
 const MODE_INSTRUCTIONS = {
   'full-report': `当前模式：Full Report（完整落地方案 / 一键优化）
@@ -86,6 +51,38 @@ const OUTPUT_RULES = `## 输出规则
 - 无真实证据时明确说不要写上线、AB 测试、内部库访问等
 - 使用简体中文回复，多用表格和 checklist`;
 
+/** 内联评分框架（原 assessment-framework.md 精简版，供 Vercel 无 fs 环境） */
+const INLINE_ASSESSMENT = `## 评分框架
+- 总评 1-10：能否在前 15 秒看出 AI 产品信号
+- 五维各 1-5：AI产品信号、项目可信度、叙述结构、证据完整度、面试可防守性
+- 每维一句诊断 + 优先改的 3 点（按影响排序）`;
+
+/** @type {Record<string, string>} action → 专用 system prompt（无 fs 依赖） */
+const ACTION_SYSTEM_PROMPTS = {
+  'resume-score': `${CORE_STANCE}
+
+${MODE_INSTRUCTIONS['resume-diagnosis']}
+
+${INLINE_ASSESSMENT}
+
+${OUTPUT_RULES}
+- 本次为结构化评分：表格呈现五维分数，总评放最前，控制篇幅`,
+
+  'resume-optimize': `${CORE_STANCE}
+
+${MODE_INSTRUCTIONS['full-report']}
+
+${OUTPUT_RULES}
+- 本次为四步优化：诊断→改 bullet→补 eval/badcase→补主项目方向，每步具体可执行`,
+
+  'interview-prep': `${CORE_STANCE}
+
+${MODE_INSTRUCTIONS['interview-defense']}
+
+${OUTPUT_RULES}
+- 本次为面试准备：前 15 秒印象、30 秒项目结构、5 追问+防守、2 badcase、不能说的话`
+};
+
 /** @param {string} mode */
 function buildCompactCoachSystemPrompt(mode) {
   return `${CORE_STANCE}
@@ -95,45 +92,15 @@ ${MODE_INSTRUCTIONS[mode] || MODE_INSTRUCTIONS['ai-pm-qa']}
 ${OUTPUT_RULES}`;
 }
 
+/** @param {string} action */
+export function buildActionCoachSystemPrompt(action) {
+  return ACTION_SYSTEM_PROMPTS[action] || buildCompactCoachSystemPrompt('ai-pm-qa');
+}
+
 /** @param {string} mode @param {{ compact?: boolean }} [options] */
 export function buildCoachSystemPrompt(mode, options = {}) {
   if (options.compact) return buildCompactCoachSystemPrompt(mode);
-
-  const intentRouting = readReference('intent-routing.md');
-  const judgment = readReference('judgment-principles.md');
-  const harness = readReference('harness-project-logic.md');
-  const assessment = readReference('assessment-framework.md');
-  const patterns = readReference('project-patterns.md');
-  const outputTemplate = readReference('output-template.md');
-  const cases = readReference('anonymized-cases.md');
-
-  /** @type {string[]} */
-  const refs = [
-    '## Intent Routing\n' + intentRouting,
-    '## Judgment Principles\n' + judgment,
-    MODE_INSTRUCTIONS[mode] || MODE_INSTRUCTIONS['ai-pm-qa']
-  ];
-
-  if (mode === 'full-report' || mode === 'project-direction' || mode === 'project-iteration') {
-    refs.push('## Harness Project Logic\n' + harness);
-    refs.push('## Project Patterns\n' + patterns);
-  }
-
-  if (mode === 'full-report' || mode === 'resume-diagnosis') {
-    refs.push('## Assessment Framework\n' + assessment);
-  }
-
-  if (mode === 'full-report') {
-    refs.push('## Output Template\n' + outputTemplate);
-    refs.push('## Anonymized Cases\n' + cases);
-  }
-
-  return `${CORE_STANCE}
-
-## 参考文档
-${refs.join('\n\n')}
-
-${OUTPUT_RULES}`;
+  return buildCompactCoachSystemPrompt(mode);
 }
 
 /**

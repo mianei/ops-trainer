@@ -1,9 +1,9 @@
-export const config = { runtime: 'nodejs', maxDuration: 60 };
+export const config = { runtime: 'edge', maxDuration: 60 };
 
 import { json, getHeader, readJsonBody, verifyUserCredentials } from './lib/store.js';
 import { getLlmConfig } from './lib/scenario-generate.js';
 import { VALID_COACH_MODES, detectCoachIntent } from './lib/coach-modes.js';
-import { buildCoachSystemPrompt, buildCoachUserMessage } from './lib/coach-prompts.js';
+import { buildCoachSystemPrompt, buildActionCoachSystemPrompt, buildCoachUserMessage } from './lib/coach-prompts.js';
 import { resolveCoachAction } from './lib/coach-actions.js';
 
 async function callDeepSeekCoach(cfg, systemPrompt, messages, maxTokens = 4096) {
@@ -102,7 +102,9 @@ export default async function handler(req) {
 
     const compact = Boolean(action);
     const maxTokens = compact ? 2048 : 4096;
-    const systemPrompt = buildCoachSystemPrompt(mode, { compact });
+    const systemPrompt = action
+      ? buildActionCoachSystemPrompt(action)
+      : buildCoachSystemPrompt(mode, { compact });
     const userContent = buildCoachUserMessage(mode, intake, message);
     const chatMessages = [
       ...history
