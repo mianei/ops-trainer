@@ -146,10 +146,12 @@ export async function registerUser(userIdRaw, passwordRaw, inviteRaw) {
 }
 
 export function authDisabled() {
+  const users = parseAccessUsers();
+  if (users.size === 0) return true;
   const flag = (process.env.AUTH_DISABLED || '').trim();
   if (flag === '1') return true;
   if (flag === '0') return false;
-  return parseAccessUsers().size === 0;
+  return false;
 }
 
 export async function verifyUserCredentials(userIdRaw, codeRaw) {
@@ -158,8 +160,9 @@ export async function verifyUserCredentials(userIdRaw, codeRaw) {
     return { ok: true, userId, guest: true };
   }
   const users = parseAccessUsers();
-  if (users.size === 0 && !historyEnabled()) {
-    return { ok: false, error: '服务端未配置 REGISTER_INVITE_CODE 或 ACCESS_CODE', status: 500 };
+  if (users.size === 0) {
+    const userId = String(userIdRaw || '').trim() || 'guest';
+    return { ok: true, userId, guest: true };
   }
   const code = String(codeRaw || '').trim();
   if (!code) {

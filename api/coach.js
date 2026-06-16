@@ -6,7 +6,7 @@ import { VALID_COACH_MODES, detectCoachIntent } from './lib/coach-modes.js';
 import { buildCoachSystemPrompt, buildCoachUserMessage } from './lib/coach-prompts.js';
 import { resolveCoachAction } from './lib/coach-actions.js';
 
-async function callDeepSeekCoach(cfg, systemPrompt, messages) {
+async function callDeepSeekCoach(cfg, systemPrompt, messages, maxTokens = 4096) {
   const res = await fetch(`${cfg.baseUrl}/chat/completions`, {
     method: 'POST',
     headers: {
@@ -15,7 +15,7 @@ async function callDeepSeekCoach(cfg, systemPrompt, messages) {
     },
     body: JSON.stringify({
       model: cfg.model,
-      max_tokens: 4096,
+      max_tokens: maxTokens,
       temperature: 0.7,
       messages: [{ role: 'system', content: systemPrompt }, ...messages]
     })
@@ -30,7 +30,7 @@ async function callDeepSeekCoach(cfg, systemPrompt, messages) {
   return { text };
 }
 
-async function callAnthropicCoach(cfg, systemPrompt, messages) {
+async function callAnthropicCoach(cfg, systemPrompt, messages, maxTokens = 4096) {
   const anthropicMessages = messages.filter(m => m.role !== 'system');
   const res = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
@@ -41,7 +41,7 @@ async function callAnthropicCoach(cfg, systemPrompt, messages) {
     },
     body: JSON.stringify({
       model: cfg.model,
-      max_tokens: 4096,
+      max_tokens: maxTokens,
       system: systemPrompt,
       messages: anthropicMessages.map(m => ({ role: m.role, content: m.content }))
     })
@@ -100,7 +100,9 @@ export default async function handler(req) {
       }, 503);
     }
 
-    const systemPrompt = buildCoachSystemPrompt(mode);
+    const compact = Boolean(action);
+    const maxTokens = compact ? 2048 : 4096;
+    const systemPrompt = buildCoachSystemPrompt(mode, { compact });
     const userContent = buildCoachUserMessage(mode, intake, message);
     const chatMessages = [
       ...history
@@ -112,8 +114,8 @@ export default async function handler(req) {
 
     const result =
       cfg.provider === 'anthropic'
-        ? await callAnthropicCoach(cfg, systemPrompt, chatMessages)
-        : await callDeepSeekCoach(cfg, systemPrompt, chatMessages);
+        ? await callAnthropicCoach(cfg, systemPrompt, chatMessages, maxTokens)
+        : await callDeepSeekCoach(cfg, systemPrompt, chatMessages, maxTokens);
 
     if (result.error) {
       return json({ error: result.error }, result.status >= 400 && result.status < 600 ? result.status : 502);

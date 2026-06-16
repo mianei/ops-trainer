@@ -68,8 +68,49 @@ const MODE_INSTRUCTIONS = {
 - 强调边界与真实参与，准备 metric 口径`
 };
 
+const CORE_STANCE = `你是 AI 产品项目教练，专门帮助想拿 AI 产品实习或需要 AI 产品项目叙事的用户。
+
+## 核心立场
+- 从真实经历出发，安全包装边界是「在真实业务基础上向前推一步」
+- 绝不编造内部权限、上线结果、算法归属、私有数据或增长指标
+- 优先 AI 产品判断力：每个推荐项目必须包含评测集、badcase、支撑材料、面试防御
+- 语气：直接但克制，像付费咨询交付物
+
+## 项目底层逻辑（必须体现）
+功能点/用户任务 → AI 技术方案 → 评测集+MECE 评分 → 跑评测定位链路问题 → 迭代链路 → 复测指标提升`;
+
+const OUTPUT_RULES = `## 输出规则
+- 匹配意图深度：窄问题简洁具体；完整报告按模板结构
+- 至少 2 个 badcase（从低分维度 → 链路归因 → 修改节点 → 复测）
+- 不确定数据用 XX 占位并说明测量口径
+- 无真实证据时明确说不要写上线、AB 测试、内部库访问等
+- 使用简体中文回复，多用表格和 checklist`;
+
 /** @param {string} mode */
-export function buildCoachSystemPrompt(mode) {
+function buildCompactCoachSystemPrompt(mode) {
+  const judgment = readReference('judgment-principles.md');
+  /** @type {string[]} */
+  const refs = [
+    MODE_INSTRUCTIONS[mode] || MODE_INSTRUCTIONS['ai-pm-qa']
+  ];
+  if (mode === 'resume-diagnosis' || mode === 'full-report') {
+    const assessment = readReference('assessment-framework.md');
+    if (assessment) refs.push('## Assessment Framework\n' + assessment);
+  }
+  if (judgment) refs.push('## Judgment Principles\n' + judgment);
+
+  return `${CORE_STANCE}
+
+## 参考文档
+${refs.join('\n\n')}
+
+${OUTPUT_RULES}`;
+}
+
+/** @param {string} mode @param {{ compact?: boolean }} [options] */
+export function buildCoachSystemPrompt(mode, options = {}) {
+  if (options.compact) return buildCompactCoachSystemPrompt(mode);
+
   const intentRouting = readReference('intent-routing.md');
   const judgment = readReference('judgment-principles.md');
   const harness = readReference('harness-project-logic.md');
@@ -99,26 +140,12 @@ export function buildCoachSystemPrompt(mode) {
     refs.push('## Anonymized Cases\n' + cases);
   }
 
-  return `你是 AI 产品项目教练，专门帮助想拿 AI 产品实习或需要 AI 产品项目叙事的用户。
-
-## 核心立场
-- 从真实经历出发，安全包装边界是「在真实业务基础上向前推一步」
-- 绝不编造内部权限、上线结果、算法归属、私有数据或增长指标
-- 优先 AI 产品判断力：每个推荐项目必须包含评测集、badcase、支撑材料、面试防御
-- 语气：直接但克制，像付费咨询交付物
-
-## 项目底层逻辑（必须体现）
-功能点/用户任务 → AI 技术方案 → 评测集+MECE 评分 → 跑评测定位链路问题 → 迭代链路 → 复测指标提升
+  return `${CORE_STANCE}
 
 ## 参考文档
 ${refs.join('\n\n')}
 
-## 输出规则
-- 匹配意图深度：窄问题简洁具体；完整报告按模板结构
-- 至少 2 个 badcase（从低分维度 → 链路归因 → 修改节点 → 复测）
-- 不确定数据用 XX 占位并说明测量口径
-- 无真实证据时明确说不要写上线、AB 测试、内部库访问等
-- 使用简体中文回复，多用表格和 checklist`;
+${OUTPUT_RULES}`;
 }
 
 /**

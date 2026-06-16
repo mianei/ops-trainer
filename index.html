@@ -3779,8 +3779,16 @@ async function sendModuleCoachMessage(opts) {
       headers: authHeaders(),
       body: JSON.stringify(payload)
     });
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok) throw new Error(data.error || '请求失败（HTTP ' + res.status + '）');
+    const raw = await res.text();
+    let data = {};
+    try {
+      data = raw ? JSON.parse(raw) : {};
+    } catch {
+      if (!res.ok) throw new Error(raw.slice(0, 300) || '请求失败（HTTP ' + res.status + '）');
+    }
+    if (!res.ok) {
+      throw new Error(data.error || raw.slice(0, 300) || '请求失败（HTTP ' + res.status + '）');
+    }
     messages.push({ role: 'assistant', content: data.reply || '' });
     renderModuleThread(threadId, messages);
   } catch (e) {
