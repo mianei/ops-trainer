@@ -1,6 +1,6 @@
-# MindTraining
+# CVassistant
 
-产运思维训练 Web 应用：在真实业务场景中练习产品与运营判断，支持独立作答、AI 结构化点评与多轮追问。
+AI 产品经理简历优化与面试训练：简历评分与一键优化、基于简历准备面试、业务场景判断练习。
 
 ## 链接
 
@@ -50,7 +50,7 @@ npx vercel dev
 
 `desktop/` 目录提供基于 Electron 的 Windows 便携版（`.exe`），窗口内加载已部署的线上站点，需保持网络连接。
 
-- **下载**：在 [Releases](https://github.com/mianei/ops-trainer/releases) 获取 `MindTraining-*-Windows-portable.exe`
+- **下载**：在 [Releases](https://github.com/mianei/ops-trainer/releases) 获取 Windows 便携版
 - **构建说明**：见 [desktop/README.md](./desktop/README.md)
 
 ## 部署

@@ -5,7 +5,7 @@ alwaysApply: true
 
 # 部署到 GitHub
 
-在本项目（MindTraining / ops-trainer）完成有意义的代码或配置改动后：
+在本项目（CVassistant / ops-trainer）完成有意义的代码或配置改动后：
 
 1. **默认 commit 并 push 到 GitHub**（`origin/main`），无需用户再单独说「要部署」。
 2. 提交前确认：不提交 `.env.local`、API Key、`.cursor/` 临时文件、大 PDF/ dump 等。
