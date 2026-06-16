@@ -17,7 +17,7 @@
 <meta name="color-scheme" content="light" />
 <meta name="format-detection" content="telephone=no" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
-<title>MindTraining · 产运思维训练</title>
+<title>MindTraining v2.0 · AI 产品面试题库</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Outfit:wght@600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" />
@@ -1244,6 +1244,124 @@
     gap: 10px;
     margin-bottom: 12px;
   }
+  /* ── v2.0 产品面试 ── */
+  .v2-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: rgba(94, 92, 230, 0.12);
+    color: #5e5ce6;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+  .v2-tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0 0 10px;
+    padding: 10px 12px;
+    border-radius: var(--r-lg);
+    background: rgba(94, 92, 230, 0.06);
+    border: 1px dashed rgba(94, 92, 230, 0.25);
+  }
+  .v2-tool-btn {
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--frost-border);
+    background: #fff;
+    color: var(--ink2);
+    cursor: pointer;
+  }
+  .v2-tool-btn:hover:not(:disabled) { background: rgba(94, 92, 230, 0.08); color: #5e5ce6; }
+  .v2-tool-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+  .v2-tool-btn.recording { background: #ff3b30; color: #fff; border-color: #ff3b30; }
+  .v2-timer {
+    font-size: 13px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: #5e5ce6;
+    min-width: 52px;
+  }
+  .v2-prep-panel {
+    margin-bottom: 12px;
+    padding: 12px 14px;
+    border-radius: var(--r-lg);
+    background: rgba(255, 255, 255, 0.72);
+    border: 1px solid var(--frost-border);
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--ink2);
+  }
+  .v2-prep-panel h5 { font-size: 12px; color: var(--ink3); margin: 8px 0 4px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .bank-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .bank-filter select {
+    font-family: inherit;
+    font-size: 13px;
+    padding: 6px 10px;
+    border-radius: var(--r);
+    border: 1px solid var(--frost-border);
+    background: #fff;
+  }
+  .bank-list { display: flex; flex-direction: column; gap: 8px; }
+  .bank-item {
+    text-align: left;
+    font-family: inherit;
+    padding: 12px 14px;
+    border-radius: var(--r-lg);
+    border: 1px solid var(--frost-border);
+    background: rgba(255,255,255,0.85);
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .bank-item:hover { border-color: rgba(94, 92, 230, 0.45); }
+  .bank-source-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .bank-source-tabs button {
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--frost-border);
+    background: rgba(255,255,255,0.7);
+    cursor: pointer;
+  }
+  .bank-source-tabs button.active {
+    background: rgba(94, 92, 230, 0.12);
+    border-color: rgba(94, 92, 230, 0.45);
+    color: #5e5ce6;
+  }
+  .bank-item.curated { border-color: rgba(94, 92, 230, 0.35); }
+  .bank-item-hint { font-size: 11px; color: #5e5ce6; margin-top: 6px; }
+  .bank-item-text { font-size: 14px; color: var(--ink); line-height: 1.5; }
+  .analytics-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 4px;
+    height: 80px;
+    margin: 12px 0;
+  }
+  .analytics-bar {
+    flex: 1;
+    min-width: 8px;
+    background: rgba(94, 92, 230, 0.35);
+    border-radius: 3px 3px 0 0;
+  }
   .kc-nav {
     font-family: inherit;
     font-size: 13px;
@@ -2047,91 +2165,7 @@
 </head>
 <body>
 
-<div id="gate">
-  <div class="bg-scene" aria-hidden="true">
-    <svg class="bg-horizon-svg" viewBox="0 0 1440 480" preserveAspectRatio="none" aria-hidden="true">
-      <defs>
-        <linearGradient id="skyCapGradGate" x1="0" y1="0" x2="0" y2="480" gradientUnits="userSpaceOnUse">
-          <stop stop-color="#ffffff"/>
-          <stop offset="0.58" stop-color="#fafdfc"/>
-          <stop offset="1" stop-color="#f3f8f6"/>
-        </linearGradient>
-      </defs>
-      <path fill="url(#skyCapGradGate)" d="M0,0 H1440 V350 C1253,451 965,322 720,389 C475,470 187,336 0,374 V0 Z">
-        <animate attributeName="d" dur="16s" repeatCount="indefinite" calcMode="spline" keyTimes="0; 0.33; 0.66; 1" keySplines="0.42 0 0.58 1; 0.42 0 0.58 1; 0.42 0 0.58 1"
-          values="M0,0 H1440 V350 C1253,451 965,322 720,389 C475,470 187,336 0,374 V0 Z;M0,0 H1440 V335 C1230,430 980,345 720,365 C470,455 200,350 0,390 V0 Z;M0,0 H1440 V368 C1275,472 940,298 720,410 C490,485 170,318 0,358 V0 Z;M0,0 H1440 V350 C1253,451 965,322 720,389 C475,470 187,336 0,374 V0 Z"/>
-      </path>
-    </svg>
-    <svg class="bg-wave-svg" viewBox="0 0 1440 900" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <defs>
-        <linearGradient id="gwg0" x1="0" y1="280" x2="1440" y2="900" gradientUnits="userSpaceOnUse"><stop stop-color="#eef8f4" stop-opacity="0.85"/><stop offset="0.5" stop-color="#e8f4ff" stop-opacity="0.7"/><stop offset="1" stop-color="#dde8f5" stop-opacity="0.45"/></linearGradient>
-        <linearGradient id="gwg2" x1="200" y1="300" x2="1200" y2="900"><stop stop-color="#eef8f4" stop-opacity="0.92"/><stop offset="0.5" stop-color="#e4f0fa" stop-opacity="0.7"/><stop offset="1" stop-color="#d8e4f5" stop-opacity="0.45"/></linearGradient>
-        <linearGradient id="gwg3" x1="400" y1="480" x2="1100" y2="900"><stop stop-color="#ffffff" stop-opacity="0.45"/><stop offset="1" stop-color="#c8ecd8" stop-opacity="0.3"/></linearGradient>
-      </defs>
-      <g class="bg-wave-back"><path d="M-80 380C180 280 380 220 680 300C980 380 1180 480 1520 400L1520 900L-80 900Z" fill="url(#gwg0)"/></g>
-      <g class="bg-wave-mid"><path d="M-60 460C280 380 520 320 820 380C1120 440 1300 520 1500 440L1500 900L-60 900Z" fill="url(#gwg2)" opacity="0.72"/></g>
-      <g class="bg-wave-front"><path d="M-60 560C260 480 540 420 840 480C1140 540 1320 620 1500 540L1500 900L-60 900Z" fill="url(#gwg3)" opacity="0.65"/></g>
-    </svg>
-    <div class="bg-blob bg-blob-1"></div>
-    <div class="bg-blob bg-blob-2"></div>
-    <div class="bg-blob bg-blob-3"></div>
-  </div>
-  <div class="gate-layout">
-    <div class="gate-grid">
-    <div class="gate-intro">
-      <p class="hero-brand" aria-label="MindTraining"><span class="hb-mind">Mind</span><span class="hb-train">Training</span></p>
-      <h1>在真实场景里，<br/>练产品与运营的判断力</h1>
-      <p class="lead">不是标准答案背诵，而是独立分析、获得 AI 结构化点评，并继续追问深化——建立可复用的思维框架。</p>
-    </div>
-    <div class="gate-card surface">
-      <h2>进入训练场</h2>
-      <p class="sub">注册后自选用户名与密码，作答会保存；换题再练时对照近期思路是否在进步。</p>
-      <div class="gate-tabs" role="tablist">
-        <button type="button" class="gate-tab active" data-gate="login" role="tab" aria-selected="true">登录</button>
-        <button type="button" class="gate-tab" data-gate="register" role="tab" aria-selected="false">注册</button>
-      </div>
-      <div class="gate-panel active" id="gatePanelLogin" role="tabpanel">
-        <div class="gate-field">
-          <label for="gateUser">用户名</label>
-          <input type="text" id="gateUser" placeholder="注册时自己取的名字" autocomplete="username" autocapitalize="off" />
-        </div>
-        <div class="gate-field">
-          <label for="gateCode">密码</label>
-          <input type="password" id="gateCode" placeholder="请输入密码" autocomplete="current-password" />
-        </div>
-        <label class="gate-remember">
-          <input type="checkbox" id="gateRemember" checked />
-          7 天内免重复输入
-        </label>
-        <button class="btn-enter" id="gateBtn" type="button">开始训练</button>
-      </div>
-      <div class="gate-panel" id="gatePanelRegister" role="tabpanel" hidden>
-        <div class="gate-field">
-          <label for="regUser">用户名</label>
-          <input type="text" id="regUser" placeholder="2–24 位，字母/数字/下划线" autocomplete="username" autocapitalize="off" />
-        </div>
-        <div class="gate-field">
-          <label for="regPass">密码</label>
-          <input type="password" id="regPass" placeholder="至少 6 位" autocomplete="new-password" />
-        </div>
-        <div class="gate-field">
-          <label for="regPass2">确认密码</label>
-          <input type="password" id="regPass2" placeholder="再输入一次" autocomplete="new-password" />
-        </div>
-        <div class="gate-field">
-          <label for="regInvite">邀请码</label>
-          <input type="text" id="regInvite" placeholder="向站长获取，全员共用" autocomplete="off" />
-        </div>
-        <button class="btn-register" id="regBtn" type="button">注册并进入</button>
-      </div>
-      <div class="gate-error" id="gateError"></div>
-      <p class="gate-hint">首次使用请注册 · 仅站长预分配账号时可留空用户名（单一访问码模式）</p>
-    </div>
-    </div>
-  </div>
-  </div>
-
-<div id="app">
+<div id="app" class="visible">
   <div class="bg-scene" aria-hidden="true">
     <svg class="bg-horizon-svg" viewBox="0 0 1440 480" preserveAspectRatio="none" aria-hidden="true">
       <defs>
@@ -2160,9 +2194,7 @@
     <div class="bg-blob bg-blob-2"></div>
     <div class="bg-blob bg-blob-3"></div>
   </div>
-  <button type="button" class="btn-history" id="btnHistory" hidden>我的成长</button>
-  <button type="button" class="btn-exit" id="btnExit" aria-label="退出训练">退出</button>
-  <div class="user-badge" id="userBadge" hidden></div>
+  <button type="button" class="btn-history" id="btnHistory">我的成长</button>
   <div class="page-wrap">
 
   <section class="hero-compact">
@@ -2184,7 +2216,7 @@
 
   <div id="mainContent" class="loading-main">加载训练模块…</div>
 
-  <footer class="footer"><span class="footer-brand" aria-label="MindTraining"><span class="hb-mind">Mind</span><span class="hb-train">Training</span></span> · 仅供学习使用 · <a class="footer-link" href="/download">下载 · 开源</a> · <a class="footer-link" href="https://github.com/mianei/ops-trainer" target="_blank" rel="noopener noreferrer">GitHub</a> · <span id="buildTag">v4.58</span></footer>
+  <footer class="footer"><span class="footer-brand" aria-label="MindTraining"><span class="hb-mind">Mind</span><span class="hb-train">Training</span></span><span class="v2-badge">v2.0</span> · 产品面试专版 · <a class="footer-link" href="/download">下载</a> · <a class="footer-link" href="https://github.com/mianei/ops-trainer" target="_blank" rel="noopener noreferrer">GitHub</a> · <span id="buildTag">v2.0</span></footer>
   </div>
 </div>
 
@@ -2204,9 +2236,20 @@ const USER_ID_KEY = 'ops-user-id';
 const SESSION_UNTIL_KEY = 'ops-session-until';
 const REMEMBER_DAYS = 7;
 
-let accessCode = '';
-let userAccountId = '';
+let accessCode = 'guest';
+let userAccountId = 'guest';
 let workspaceMode = 'train';
+/** @type {{ version: number, questions: object[] } | null} */
+let INTERVIEW_BANK_V2 = null;
+/** @type {{ questions: object[] } | null} */
+let AI_PM_BANK = null;
+/** @type {{ questions: object[] } | null} */
+let AI_PM_CURATED = null;
+let bankSource = localStorage.getItem('bankSource') || 'curated';
+/** @type {object | null} */
+let activeBankQuestion = null;
+const v2TimerByTopic = {};
+const v2RecorderByTopic = {};
 let knowledgePageId = localStorage.getItem('knowledgePageId') || 'product';
 let knowledgeFlatIndex = 0;
 let knowledgeBodyPageIndex = 0;
@@ -2269,17 +2312,7 @@ let scenarioSearchHits = [];
 /** @type {Record<string, { scenario: string, answer: string, feedback: string, history: {q:string,a:string}[] }>} */
 const mentorSessions = {};
 
-const gate = document.getElementById('gate');
 const app = document.getElementById('app');
-const gateCode = document.getElementById('gateCode');
-const gateUser = document.getElementById('gateUser');
-const gateBtn = document.getElementById('gateBtn');
-const gateError = document.getElementById('gateError');
-const regBtn = document.getElementById('regBtn');
-const regUser = document.getElementById('regUser');
-const regPass = document.getElementById('regPass');
-const regPass2 = document.getElementById('regPass2');
-const regInvite = document.getElementById('regInvite');
 
 function setGateTab(mode) {
   document.querySelectorAll('.gate-tab').forEach(btn => {
@@ -2444,9 +2477,7 @@ function logoutApp() {
 }
 
 function unlockApp() {
-  gate.classList.add('hidden');
   app.classList.add('visible');
-  updateUserBadge();
   const btnHist = document.getElementById('btnHistory');
   if (btnHist) btnHist.hidden = false;
   if (!document.documentElement.classList.contains('is-mobile')) {
@@ -2454,12 +2485,13 @@ function unlockApp() {
   }
 }
 
-function lockApp() {
-  gate.classList.remove('hidden');
-  app.classList.remove('visible');
-  gateCode.value = '';
-  if (gateUser) gateUser.value = '';
-  hideGateError();
+async function enterApp() {
+  accessCode = 'guest';
+  userAccountId = localStorage.getItem(USER_ID_KEY) || 'guest';
+  sessionStorage.setItem(CODE_KEY, accessCode);
+  sessionStorage.setItem(USER_ID_KEY, userAccountId);
+  unlockApp();
+  await loadTopicsAndRender();
 }
 
 function authHeaders() {
@@ -3271,15 +3303,18 @@ function bindScenarioSearch() {
 
 function modeBarHtml() {
   return `<div class="workspace-mode-bar" role="tablist" aria-label="练习与知识库">
-    <button type="button" class="mode-btn${workspaceMode === 'train' ? ' active' : ''}" data-mode="train" role="tab" aria-selected="${workspaceMode === 'train'}">练习</button>
-    <button type="button" class="mode-btn${workspaceMode === 'knowledge' ? ' active' : ''}" data-mode="knowledge" role="tab" aria-selected="${workspaceMode === 'knowledge'}">知识库</button>
+    <button type="button" class="mode-btn${workspaceMode === 'train' ? ' active' : ''}" data-mode="train" role="tab">练习</button>
+    <button type="button" class="mode-btn${workspaceMode === 'bank' ? ' active' : ''}" data-mode="bank" role="tab">产品题库<span class="v2-badge">${AI_PM_BANK?.questions?.length || 218}+</span></button>
+    <button type="button" class="mode-btn${workspaceMode === 'knowledge' ? ' active' : ''}" data-mode="knowledge" role="tab">知识库</button>
+    <button type="button" class="mode-btn v2-analytics-btn" id="openAnalyticsBtn" title="进步曲线">复盘</button>
   </div>`;
 }
 
 function bindModeBar() {
-  document.querySelectorAll('.mode-btn').forEach(btn => {
+  document.querySelectorAll('.mode-btn[data-mode]').forEach(btn => {
     btn.onclick = () => setWorkspaceMode(btn.dataset.mode);
   });
+  document.getElementById('openAnalyticsBtn')?.addEventListener('click', openAnalyticsModal);
 }
 
 function captureTrainWorkspaceState() {
@@ -3297,11 +3332,257 @@ function captureTrainWorkspaceState() {
 }
 
 function setWorkspaceMode(mode) {
-  if (mode !== 'train' && mode !== 'knowledge') return;
-  if (mode === 'knowledge' && workspaceMode === 'train') captureTrainWorkspaceState();
+  if (!['train', 'knowledge', 'bank'].includes(mode)) return;
+  if (mode !== 'train' && workspaceMode === 'train') captureTrainWorkspaceState();
   workspaceMode = mode;
   if (mode === 'knowledge') renderKnowledgeView();
+  else if (mode === 'bank') renderBankView();
   else renderTopics();
+}
+
+async function loadInterviewBankV2() {
+  if (INTERVIEW_BANK_V2?.questions?.length) return INTERVIEW_BANK_V2;
+  try {
+    const res = await fetch('interview-bank-v2.json?t=' + Date.now(), { cache: 'no-store' });
+    if (res.ok) INTERVIEW_BANK_V2 = await res.json();
+  } catch { /* */ }
+  return INTERVIEW_BANK_V2;
+}
+
+async function loadAiPmBanks() {
+  if (!AI_PM_BANK?.questions?.length) {
+    try {
+      const res = await fetch('interview-bank-ai-pm.json?t=' + Date.now(), { cache: 'no-store' });
+      if (res.ok) AI_PM_BANK = await res.json();
+    } catch { /* */ }
+  }
+  if (!AI_PM_CURATED?.questions?.length) {
+    try {
+      const res = await fetch('interview-bank-ai-pm-curated.json?t=' + Date.now(), { cache: 'no-store' });
+      if (res.ok) AI_PM_CURATED = await res.json();
+    } catch { /* */ }
+  }
+}
+
+function bankQuestionsForSource(source) {
+  if (source === 'curated') return AI_PM_CURATED?.questions || [];
+  if (source === 'ai-pm') return AI_PM_BANK?.questions || [];
+  return INTERVIEW_BANK_V2?.questions || [];
+}
+
+function renderBankView() {
+  const main = document.getElementById('mainContent');
+  main.classList.remove('loading-main');
+  const source = bankSource;
+  const qs = bankQuestionsForSource(source);
+  const nCur = AI_PM_CURATED?.questions?.length || 10;
+  const nAi = AI_PM_BANK?.questions?.length || 218;
+  const nOps = INTERVIEW_BANK_V2?.questions?.length || 55;
+  const companies = [...new Set(qs.map(q => q.company))].sort();
+  const types = [...new Set(qs.map(q => q.type))];
+  const intro = source === 'curated'
+    ? `精选 <strong>${nCur} 道</strong> AI PM 高频题 · 含 MindTraining/学伴专属话术 · 点击开练`
+    : source === 'ai-pm'
+      ? `Coach 面经 <strong>${nAi} 道</strong>（去重版）· AI 产品经理向`
+      : `产运面经 <strong>${nOps} 道</strong> · 公司/题型/难度筛选`;
+
+  main.innerHTML = `
+    <div class="workspace-shell">
+      ${modeBarHtml()}
+      <div class="bank-source-tabs" role="tablist">
+        <button type="button" class="${source === 'curated' ? 'active' : ''}" data-bank="curated">精选话术 ${nCur}</button>
+        <button type="button" class="${source === 'ai-pm' ? 'active' : ''}" data-bank="ai-pm">AI 面经 ${nAi}</button>
+        <button type="button" class="${source === 'ops' ? 'active' : ''}" data-bank="ops">产运 ${nOps}</button>
+      </div>
+      <p class="knowledge-intro">${intro}</p>
+      <div class="bank-filters" id="bankFilters" ${source === 'curated' ? 'hidden' : ''}>
+        <label class="bank-filter">公司 <select id="bankFilterCompany"><option value="">全部</option>${companies.map(c => `<option>${escapeHtml(c)}</option>`).join('')}</select></label>
+        <label class="bank-filter">题型 <select id="bankFilterType"><option value="">全部</option>${types.map(t => `<option value="${escapeAttr(t)}">${escapeHtml(t === 'ai_product' ? 'AI产品经理' : (INTERVIEW_BANK_V2?.typeLabels?.[t] || t))}</option>`).join('')}</select></label>
+        <label class="bank-filter">难度 <select id="bankFilterDiff"><option value="">全部</option><option value="easy">简单</option><option value="medium">中等</option><option value="hard">困难</option></select></label>
+        <label class="bank-filter" id="bankFilterCuratedWrap" ${source !== 'ai-pm' ? 'hidden' : ''}> <input type="checkbox" id="bankFilterCurated" /> 仅精选10题</label>
+      </div>
+      <div class="bank-list" id="bankList"></div>
+    </div>`;
+  bindModeBar();
+  main.querySelectorAll('[data-bank]').forEach(btn => {
+    btn.onclick = () => {
+      bankSource = btn.dataset.bank;
+      localStorage.setItem('bankSource', bankSource);
+      renderBankView();
+    };
+  });
+  const renderList = () => {
+    const fc = document.getElementById('bankFilterCompany')?.value || '';
+    const ft = document.getElementById('bankFilterType')?.value || '';
+    const fd = document.getElementById('bankFilterDiff')?.value || '';
+    const onlyCur = document.getElementById('bankFilterCurated')?.checked;
+    let filtered = qs.filter(q =>
+      (!fc || q.company === fc) && (!ft || q.type === ft) && (!fd || q.difficulty === fd)
+    );
+    if (onlyCur) filtered = filtered.filter(q => q.curated);
+    const list = document.getElementById('bankList');
+    if (!list) return;
+    const limit = source === 'curated' ? 20 : 50;
+    list.innerHTML = filtered.slice(0, limit).map(q => `
+      <button type="button" class="bank-item${q.curated ? ' curated' : ''}" data-qid="${escapeAttr(q.id)}">
+        <div class="bank-item-meta">${q.num ? '题' + q.num + ' · ' : ''}${escapeHtml(q.company || '通用')} · ${escapeHtml(q.typeLabel || q.type || '')}${q.framework ? ' · ' + escapeHtml(q.framework) : ''}</div>
+        <div class="bank-item-text">${escapeHtml(q.text.slice(0, 140))}${q.text.length > 140 ? '…' : ''}</div>
+        ${q.referenceAnswer ? '<div class="bank-item-hint">含参考话术 · 开练后可在「回答框架」旁查看</div>' : ''}
+      </button>`).join('') || '<p style="color:var(--ink3)">无匹配题目</p>';
+    list.querySelectorAll('.bank-item').forEach(btn => {
+      btn.onclick = () => {
+        const q = qs.find(x => x.id === btn.dataset.qid);
+        if (q) applyBankQuestion(q);
+      };
+    });
+  };
+  ['bankFilterCompany', 'bankFilterType', 'bankFilterDiff', 'bankFilterCurated'].forEach(id => {
+    document.getElementById(id)?.addEventListener('change', renderList);
+  });
+  renderList();
+}
+
+function applyBankQuestion(q) {
+  activeBankQuestion = q;
+  trainUiReturnTopicId = q.topicId || 'iv-pm';
+  workspaceMode = 'train';
+  renderTopics();
+  setTimeout(() => {
+    const tid = q.topicId || 'iv-pm';
+    switchTab(tid, null);
+    loadScenario(tid, q.text, { allowExternal: true });
+    updateReadingTip(tid, q.text);
+    if (q.referenceAnswer || q.framework) {
+      const prep = document.getElementById('v2prep-' + tid);
+      if (prep) {
+        prep.hidden = false;
+        prep.innerHTML = (q.framework ? `<h5>框架：${escapeHtml(q.framework)}</h5>` : '') +
+          (q.projects?.length ? `<p style="font-size:12px;color:var(--ink3)">结合项目：${escapeHtml(q.projects.join(' · '))}</p>` : '') +
+          `<h5>参考话术（请改写成你自己的话）</h5><p style="white-space:pre-wrap">${escapeHtml(q.referenceAnswer || q.referenceOutline || '')}</p>`;
+      }
+    }
+  }, 80);
+}
+
+function bindV2Tools(topicId) {
+  const panel = document.getElementById('panel-' + topicId);
+  if (!panel) return;
+  panel.querySelectorAll('[data-v2]').forEach(btn => {
+    btn.onclick = () => runV2Analyze(topicId, btn.dataset.v2);
+  });
+  panel.querySelector('[data-v2-timer]')?.addEventListener('click', () => toggleV2Timer(topicId));
+  panel.querySelector('[data-v2-voice]')?.addEventListener('click', () => toggleV2Voice(topicId));
+}
+
+async function runV2Analyze(topicId, mode) {
+  const scenario = document.getElementById('scenario-' + topicId)?.textContent?.trim();
+  const prep = document.getElementById('v2prep-' + topicId);
+  if (!scenario || !prep) return;
+  prep.hidden = false;
+  prep.innerHTML = '<p class="stream-status">生成中…</p>';
+  const answer = document.getElementById('answer-' + topicId)?.value?.trim() || '';
+  const payload = { accessCode, userId: userAccountId, mode, scenario, bankMeta: activeBankQuestion || null };
+  if (mode === 'compare') {
+    if (!answer) { prep.innerHTML = '<p>请先写下回答，再点「参考对比」</p>'; return; }
+    payload.answer = answer;
+    payload.referenceOutline = activeBankQuestion?.referenceOutline;
+  }
+  try {
+    const res = await fetch('/api/analyze', { method: 'POST', headers: authHeaders(), body: JSON.stringify(payload) });
+    const data = await res.json();
+    if (!res.ok) { prep.innerHTML = '<p>' + escapeHtml(data.error || '失败') + '</p>'; return; }
+    prep.innerHTML = renderV2PrepHtml(mode, data.structured, data.text);
+  } catch (e) {
+    prep.innerHTML = '<p>网络错误：' + escapeHtml(e.message) + '</p>';
+  }
+}
+
+function renderV2PrepHtml(mode, st, raw) {
+  if (!st) return escapeHtml(raw || '').replace(/\n/g, '<br/>');
+  if (mode === 'framework') {
+    return `<h5>${escapeHtml(st.frameworkName || '回答框架')}</h5>` +
+      (st.steps || []).map(s => `<p><strong>${escapeHtml(s.title)}</strong> ${escapeHtml(s.hint)}</p>`).join('') +
+      (st.mustMention?.length ? `<h5>必须覆盖</h5><p>${st.mustMention.map(escapeHtml).join(' · ')}</p>` : '');
+  }
+  if (mode === 'rubric') {
+    return `<h5>题型：${escapeHtml(st.questionType || '')}</h5>` +
+      (st.dimensions || []).map(d => `<p><strong>${escapeHtml(d.name)}</strong> · 5分：${escapeHtml(d.excellent || '')}</p>`).join('');
+  }
+  if (mode === 'compare') {
+    return `<p>覆盖度 ${st.coverageScore || '?'}/5</p>` +
+      (st.missing?.length ? `<h5>遗漏</h5><p>${st.missing.map(escapeHtml).join(' · ')}</p>` : '') +
+      (st.rewriteHint ? `<p>${escapeHtml(st.rewriteHint)}</p>` : '');
+  }
+  return escapeHtml(JSON.stringify(st));
+}
+
+function toggleV2Timer(topicId) {
+  const el = document.getElementById('v2timer-' + topicId);
+  if (!el) return;
+  let t = v2TimerByTopic[topicId];
+  if (t?.interval) { clearInterval(t.interval); v2TimerByTopic[topicId] = { sec: t.sec, interval: null }; return; }
+  if (!t) t = { sec: 0, interval: null };
+  t.interval = setInterval(() => {
+    t.sec += 1;
+    el.textContent = String(Math.floor(t.sec / 60)).padStart(2, '0') + ':' + String(t.sec % 60).padStart(2, '0');
+  }, 1000);
+  v2TimerByTopic[topicId] = t;
+}
+
+async function toggleV2Voice(topicId) {
+  const btn = document.querySelector('#panel-' + topicId + ' [data-v2-voice]');
+  const ta = document.getElementById('answer-' + topicId);
+  if (!btn || !ta) return;
+  if (v2RecorderByTopic[topicId]?.recording) { v2RecorderByTopic[topicId].recorder.stop(); return; }
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    const recorder = new MediaRecorder(stream);
+    const chunks = [];
+    recorder.ondataavailable = e => { if (e.data.size) chunks.push(e.data); };
+    recorder.onstop = async () => {
+      btn.classList.remove('recording'); btn.textContent = '语音输入';
+      v2RecorderByTopic[topicId] = { recording: false };
+      stream.getTracks().forEach(tr => tr.stop());
+      const blob = new Blob(chunks, { type: 'audio/webm' });
+      const b64 = await new Promise((resolve, reject) => {
+        const r = new FileReader(); r.onload = () => resolve(String(r.result).split(',')[1]); r.onerror = reject; r.readAsDataURL(blob);
+      });
+      btn.textContent = '转写中…';
+      try {
+        const res = await fetch('/api/transcribe', { method: 'POST', headers: authHeaders(), body: JSON.stringify({ accessCode, userId: userAccountId, audioBase64: b64, mimeType: 'audio/webm' }) });
+        const data = await res.json();
+        if (res.ok && data.text) ta.value = (ta.value ? ta.value + '\n' : '') + data.text;
+        else alert(data.error || '转写失败');
+      } catch (e) { alert(e.message); }
+      btn.textContent = '语音输入';
+    };
+    recorder.start();
+    v2RecorderByTopic[topicId] = { recording: true, recorder };
+    btn.classList.add('recording'); btn.textContent = '停止录音';
+  } catch { alert('无法访问麦克风'); }
+}
+
+async function openAnalyticsModal() {
+  let modal = document.getElementById('analyticsModal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'analyticsModal';
+    modal.className = 'history-modal';
+    modal.innerHTML = '<div class="history-panel"><h3>v2.0 复盘</h3><div id="analyticsBody"></div><button type="button" class="btn-primary" id="analyticsClose">关闭</button></div>';
+    document.body.appendChild(modal);
+    modal.onclick = e => { if (e.target === modal) modal.classList.remove('open'); };
+    modal.querySelector('#analyticsClose').onclick = () => modal.classList.remove('open');
+  }
+  const body = document.getElementById('analyticsBody');
+  body.innerHTML = '<p style="color:var(--ink3)">加载中…</p>';
+  modal.classList.add('open');
+  try {
+    const res = await fetch('/api/analytics', { method: 'POST', headers: authHeaders(), body: JSON.stringify({ accessCode, userId: userAccountId, topicIds: TOPICS.map(t => t.id) }) });
+    const data = await res.json();
+    if (!data.progressCurve?.length) { body.innerHTML = '<p>' + escapeHtml(data.summary || '暂无数据') + '</p>'; return; }
+    const max = Math.max(...data.progressCurve.map(p => p.score), 5);
+    body.innerHTML = `<p>${escapeHtml(data.summary || '')}</p><div class="analytics-chart">${data.progressCurve.map(p => `<div class="analytics-bar" style="height:${Math.round((p.score / max) * 100)}%"></div>`).join('')}</div><ul>${(data.weakTypes || []).map(w => `<li>${escapeHtml(w.typeLabel)} ${w.avgScore}/5</li>`).join('')}</ul>`;
+  } catch (e) { body.innerHTML = '<p>' + escapeHtml(e.message) + '</p>'; }
 }
 
 async function loadKnowledge() {
@@ -3792,6 +4073,15 @@ function renderTopics() {
           <div class="case-body" id="scenario-${t.id}"></div>
         </article>
         <div class="reading-tip" id="reading-${t.id}" style="display:none"></div>
+        <div class="v2-tools">
+          <button type="button" class="v2-tool-btn" data-v2="framework">回答框架</button>
+          <button type="button" class="v2-tool-btn" data-v2="rubric">评分标准</button>
+          <button type="button" class="v2-tool-btn" data-v2="compare">参考对比</button>
+          <button type="button" class="v2-tool-btn" data-v2-timer="1">⏱ 计时</button>
+          <span class="v2-timer" id="v2timer-${t.id}">00:00</span>
+          <button type="button" class="v2-tool-btn" data-v2-voice="1">语音输入</button>
+        </div>
+        <div class="v2-prep-panel" id="v2prep-${t.id}" hidden></div>
         <div class="surface-card work-card">
           <div class="work-block">
             <div class="wb-label">你的分析</div>
@@ -3827,6 +4117,7 @@ function renderTopics() {
     };
     document.getElementById('btn-' + t.id).onclick = () => submitAnswer(t.id);
     initFollowUp(t.id);
+    bindV2Tools(t.id);
     const pinned = scenarioPinByTopic[t.id];
     const draft = answerDraftByTopic[t.id];
     loadScenario(t.id, pinned, { preserveAnswer: !!draft, preserveFeedback: true });
@@ -3846,8 +4137,11 @@ async function loadTopicsAndRender() {
     buildScenarioIndex();
     await loadKnowledge();
     await loadKnowledgeMap();
+    await loadInterviewBankV2();
+    await loadAiPmBanks();
     setSyncStatus(true);
     if (workspaceMode === 'knowledge') renderKnowledgeView();
+    else if (workspaceMode === 'bank') renderBankView();
     else renderTopics();
   } catch (e) {
     setSyncStatus(false, '加载失败：' + e.message);
@@ -4066,7 +4360,7 @@ function appendFollowUpBubble(id, role, text, pending) {
 }
 
 async function submitFollowUp(id) {
-  if (!accessCode) { lockApp(); return; }
+  if (!accessCode) { accessCode = 'guest'; userAccountId = userAccountId || 'guest'; }
   const session = mentorSessions[id];
   if (!session?.feedback) {
     alert('请先完成首轮作答并获取 AI 点评');
@@ -4113,8 +4407,7 @@ async function submitFollowUp(id) {
       session.history.push({ q: question, a: data.text });
       appendFollowUpBubble(id, 'assistant', data.text, false);
     } else if (res.status === 401) {
-      appendFollowUpBubble(id, 'assistant', '访问码已失效，请重新登录。', false);
-      setTimeout(() => { clearSession(); lockApp(); }, 2000);
+      appendFollowUpBubble(id, 'assistant', data.error || '请求失败，请稍后重试。', false);
     } else if (res.status === 429) {
       appendFollowUpBubble(id, 'assistant', data.error || '今日次数已达上限', false);
     } else {
@@ -4145,7 +4438,7 @@ function finishReviewForTopic(id, scenario, data) {
 }
 
 async function submitAnswer(id) {
-  if (!accessCode) { lockApp(); return; }
+  if (!accessCode) { accessCode = 'guest'; userAccountId = userAccountId || 'guest'; }
   const answer = document.getElementById('answer-' + id).value.trim();
   if (!answer) { alert('请先写下你的分析'); return; }
 
@@ -4173,6 +4466,9 @@ async function submitAnswer(id) {
   };
   if (agentMission?.ragChunks?.length) {
     payload.ragChunks = agentMission.ragChunks;
+  }
+  if (activeBankQuestion) {
+    payload.bankMeta = activeBankQuestion;
   }
 
   try {
@@ -4215,8 +4511,7 @@ async function submitAnswer(id) {
       if (res.ok && data.text) {
         finishReviewForTopic(id, scenario, data);
       } else if (res.status === 401) {
-        respBody.textContent = '登录已失效，请重新登录。';
-        setTimeout(() => { clearSession(); lockApp(); }, 2000);
+        respBody.textContent = '请求失败，请稍后重试。';
       } else if (res.status === 429) {
         respBody.textContent = data.error || '今日次数已达上限';
       } else {
@@ -4350,51 +4645,13 @@ async function bootstrap() {
   initMobile();
   initHorizonWave();
   window.addEventListener('resize', () => {});
-  const btnExit = document.getElementById('btnExit');
-  if (btnExit) btnExit.onclick = logoutApp;
   const btnHistory = document.getElementById('btnHistory');
   const historyClose = document.getElementById('historyClose');
   const historyModal = document.getElementById('historyModal');
   if (btnHistory) btnHistory.onclick = openHistoryModal;
   if (historyClose) historyClose.onclick = closeHistoryModal;
   if (historyModal) historyModal.onclick = (e) => { if (e.target === historyModal) closeHistoryModal(); };
-  document.querySelectorAll('.gate-tab').forEach(btn => {
-    btn.onclick = () => setGateTab(btn.dataset.gate);
-  });
-  gateBtn.onclick = () => {
-    const code = gateCode.value.trim();
-    const userId = gateUser ? gateUser.value.trim() : '';
-    if (!code) { showGateError('请输入密码'); return; }
-    tryEnter(userId, code, document.getElementById('gateRemember').checked);
-  };
-  if (regBtn) {
-    regBtn.onclick = () => {
-      const username = regUser ? regUser.value.trim() : '';
-      const pass = regPass ? regPass.value : '';
-      const pass2 = regPass2 ? regPass2.value : '';
-      const invite = regInvite ? regInvite.value.trim() : '';
-      if (!username) { showGateError('请输入用户名'); return; }
-      if (pass.length < 6) { showGateError('密码至少 6 位'); return; }
-      if (pass !== pass2) { showGateError('两次密码不一致'); return; }
-      if (!invite) { showGateError('请输入邀请码'); return; }
-      registerAccount(username, pass, invite);
-    };
-  }
-  gateCode.addEventListener('keydown', e => { if (e.key === 'Enter') gateBtn.click(); });
-  if (gateUser) gateUser.addEventListener('keydown', e => { if (e.key === 'Enter') gateBtn.click(); });
-  if (regPass2) regPass2.addEventListener('keydown', e => { if (e.key === 'Enter' && regBtn) regBtn.click(); });
-
-  const remembered = localStorage.getItem(CODE_KEY);
-  const rememberedUser = localStorage.getItem(USER_ID_KEY) || '';
-  if (remembered && isSessionValid()) {
-    gateCode.value = remembered;
-    if (gateUser) gateUser.value = rememberedUser;
-    if (await tryEnter(rememberedUser, remembered, true)) return;
-  }
-  const sessionCode = sessionStorage.getItem(CODE_KEY);
-  const sessionUser = sessionStorage.getItem(USER_ID_KEY) || '';
-  if (sessionCode && await tryEnter(sessionUser, sessionCode, false)) return;
-  lockApp();
+  await enterApp();
 }
 
 bootstrap();

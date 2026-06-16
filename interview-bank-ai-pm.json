@@ -1,0 +1,3933 @@
+{
+  "version": 2,
+  "product": "AI PM Interview Bank (Coach)",
+  "updated": "2026-06-15",
+  "total": 218,
+  "curatedCount": 10,
+  "questions": [
+    {
+      "id": "ai-pm-001",
+      "num": 1,
+      "text": "一个需求摆在面前，什么时候适合先调Prompt，什么时候该上RAG，什么时候已经需要Agent了？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": true,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-002",
+      "num": 2,
+      "text": "一个Agent在Demo环境里通过率很高，接进真实研发流程后失败率明显上升，你会先把问题切到哪几个层面？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": true,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-003",
+      "num": 3,
+      "text": "你会怎么判断一个广告场景适不适合用文本、图片或视频生成模型来做产品化？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-004",
+      "num": 4,
+      "text": "如果一套评测能力技术上很完整，但业务增长并不明显，你会怎么看这个问题？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-005",
+      "num": 5,
+      "text": "如果研发团队想优先做更强的模型能力，但你更想先打磨开发流程体验，你会怎么推动决策？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": true,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-006",
+      "num": 6,
+      "text": "业务背景提到要落地‘动态卡片生成’和‘实时穿搭建议’，第一版MVP你会砍掉哪些功能来保证上线质量？",
+      "company": "通用",
+      "type": "product_design",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "product_design"
+      ]
+    },
+    {
+      "id": "ai-pm-007",
+      "num": 7,
+      "text": "如果开发者觉得评测平台很好用，但研发团队接入意愿不高，你会怎么分析这个问题？",
+      "company": "通用",
+      "type": "case",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "case"
+      ]
+    },
+    {
+      "id": "ai-pm-008",
+      "num": 8,
+      "text": "在推荐系统中引入LLM生成‘个性化推荐理由’时，如何低成本且高效地评估模型是否存在‘幻觉’或‘过度承诺’？请给出一个可落地的评测方案。",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": true,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-009",
+      "num": 9,
+      "text": "如果技术团队很想做更强的模型能力，但业务侧更在意能不能尽快落地，你会怎么推动方案收敛？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-010",
+      "num": 10,
+      "text": "针对巴西大量缺乏标准征信记录的网约车司机，你如何设计一个 AI 辅助的收入申报流程来提升进件转化率？",
+      "company": "通用",
+      "type": "product_design",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "product_design"
+      ]
+    },
+    {
+      "id": "ai-pm-011",
+      "num": 11,
+      "text": "我们需要同时对接 Google Hotel Ads、Tripadvisor 等多个 Metasearch 平台，每个平台的 API 结构和参数要求都不一样。你如何设计这套对接体系，才能避免每接一个新渠道都要重新开发一遍？",
+      "company": "通用",
+      "type": "product_design",
+      "typeLabel": "AI产品经理",
+      "difficulty": "medium",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "product_design"
+      ]
+    },
+    {
+      "id": "ai-pm-012",
+      "num": 12,
+      "text": "你会怎么理解评测产品和AgentOps、LLMOps这些平台能力之间的关系？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-013",
+      "num": 13,
+      "text": "巴西用户对沟通语气非常敏感，你如何通过 Prompt 工程或微调策略，确保 AI 生成的信贷服务文案符合当地文化习惯，避免“机器味”过重？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-014",
+      "num": 14,
+      "text": "假设开发资源只够支持一个AI小功能上线，且必须在一个月内看到数据反馈。在“AI智能客服”、“AI笔记润色”和“AI搜索摘要”三个方向中，你选哪个？请说明你的MVP裁剪逻辑。",
+      "company": "通用",
+      "type": "product_design",
+      "typeLabel": "AI产品经理",
+      "difficulty": "medium",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "product_design"
+      ]
+    },
+    {
+      "id": "ai-pm-015",
+      "num": 15,
+      "text": "如果上线一个AI辅助发帖功能，数据显示发帖量提升了20%，但用户举报“内容虚假/营销号”的比例也上升了15%，作为PM你决定下线该功能还是继续迭代？请给出你的判断依据。",
+      "company": "通用",
+      "type": "product_design",
+      "typeLabel": "AI产品经理",
+      "difficulty": "medium",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": true,
+      "tags": [
+        "AI产品经理",
+        "product_design"
+      ]
+    },
+    {
+      "id": "ai-pm-016",
+      "num": 16,
+      "text": "业务背景里提到要负责Agent方向的需求分析。假设我们要做一个“营销视频自动生成助手”，你觉得哪个环节最适合用Agent来接管？为什么不是全流程自动化？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-017",
+      "num": 17,
+      "text": "在缺乏高质量真实用户数据的情况下，你如何构建用于训练和评测Agent复杂规划能力的数据集？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-018",
+      "num": 18,
+      "text": "回顾你过去7年的经历，哪一个仓储或物流相关的AI落地案例是你觉得‘投入产出比’最高的？为什么当时选择了那个切入点，而不是其他看似更性感的场景？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-019",
+      "num": 19,
+      "text": "如何通过数据分析识别高广告参与频次的用户，并设计有效的路径将他们转化为付费用户，从而提升LTV？",
+      "company": "通用",
+      "type": "product_design",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "product_design"
+      ]
+    },
+    {
+      "id": "ai-pm-020",
+      "num": 20,
+      "text": "业务背景里特别提到要降低“AIGC感”。在你过往的经验中，除了提升画面分辨率，还有哪些细节手段能让用户感觉视频更真实、更像人做的？请举个具体例子。",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-021",
+      "num": 21,
+      "text": "国际业务中，小语种（如泰语、越南语）的RAG检索效果往往不如英语稳定。当业务方急着要上线，但算法团队说长尾词召回率只有70%时，你会怎么推进？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-022",
+      "num": 22,
+      "text": "结合当前AI趋势，如何在酷狗的网赚场景中设计一个‘轻量化、高互动’的AI功能，以提升用户主动参与意愿？",
+      "company": "通用",
+      "type": "product_design",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "product_design"
+      ]
+    },
+    {
+      "id": "ai-pm-023",
+      "num": 23,
+      "text": "你怎么理解电商场景里的幻觉问题，哪些幻觉是最危险的？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-024",
+      "num": 24,
+      "text": "面对近期大模型厂商的竞争格局变化（如微软OpenAI决裂、DeepSeek融资），你在设计国际产品技术选型时，会如何在需求评审会上论证你的模型供应链策略？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-025",
+      "num": 25,
+      "text": "选品分析和营销素材生成，这两个场景的评测重点会有什么不一样？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-026",
+      "num": 26,
+      "text": "多轮对话里，用户表达很模糊、情绪又比较强，这类场景你会怎么定义评测维度？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-027",
+      "num": 27,
+      "text": "大模型能力接进CFO产品后，产品经理最需要守住的边界是什么？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-028",
+      "num": 28,
+      "text": "如果一个版本自动化评测分数提升了，但人工抽检体验一般，你会怎么处理？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-029",
+      "num": 29,
+      "text": "你怎么理解火山方舟/豆包这类大模型平台的产品价值？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-030",
+      "num": 30,
+      "text": "你认为大模型产品和传统互联网产品最大的区别是什么？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-031",
+      "num": 31,
+      "text": "你觉得做Agent评测，和做通用大模型评测相比，最大的不同在哪里？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-032",
+      "num": 32,
+      "text": "你对RL、精调、推理成本这些技术问题了解多少？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-033",
+      "num": 33,
+      "text": "如果平台上的一个“Prompt优化/应用搭建”功能使用率不高，你会怎么分析？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-034",
+      "num": 34,
+      "text": "如果让你调研企业客户对大模型平台的需求，你会怎么做？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-035",
+      "num": 35,
+      "text": "如果开发者说评测结果看了很多，但还是不知道该怎么改产品，你会怎么优化这个评测产品？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-036",
+      "num": 36,
+      "text": "如果客户说模型离线评测不错，但一上线效果就不稳定，你会怎么分析这个问题？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-037",
+      "num": 37,
+      "text": "如果不同团队对同一个Agent的效果判断差异很大，你会怎么处理这个问题？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-038",
+      "num": 38,
+      "text": "如果让你向一个刚开始做LLM应用的人解释评测产品的作用，你会怎么说？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-039",
+      "num": 39,
+      "text": "你会怎么判断一个推理优化方向，比如P/D分离、vLLM、SGLang，到底值不值得投入？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-040",
+      "num": 40,
+      "text": "你会怎么判断一套评测体系是否真的有用，而不只是指标看起来很完整？",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "business"
+      ]
+    },
+    {
+      "id": "ai-pm-041",
+      "num": 41,
+      "text": "你觉得做模型线上效果分析和优化平台，最关键的是把哪条链路打通？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-042",
+      "num": 42,
+      "text": "你会怎么判断一个Agent平台的易用性到底做得好不好？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-043",
+      "num": 43,
+      "text": "一个用户在Coze里搭了Agent，但跑出来的效果总是不稳定，你觉得问题可能出在哪里？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-044",
+      "num": 44,
+      "text": "你觉得即梦这类多模态创作产品里，用户体验最容易卡在哪些地方？",
+      "company": "通用",
+      "type": "product_design",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "product_design"
+      ]
+    },
+    {
+      "id": "ai-pm-045",
+      "num": 45,
+      "text": "如果让你提升新用户第一次搭建Agent的成功率，你会从哪几步入手？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-046",
+      "num": 46,
+      "text": "面对MoE、端侧大模型、强化学习这些新趋势，你会怎么判断哪些值得优先跟进？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-047",
+      "num": 47,
+      "text": "做AI视频短片或多模态创作产品时，你会怎么定义生成结果的好坏？",
+      "company": "通用",
+      "type": "product_design",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "product_design"
+      ]
+    },
+    {
+      "id": "ai-pm-048",
+      "num": 48,
+      "text": "你觉得一个好的AI评测平台，最核心应该解决开发者的什么问题？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-049",
+      "num": 49,
+      "text": "如果算法团队说模型效果已经提升了，但用户留存没有明显变化，你会怎么理解这个现象？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-050",
+      "num": 50,
+      "text": "在TikTok的视频流里做AI导购，怎么解决LLM推理延迟导致用户流失的问题？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-051",
+      "num": 51,
+      "text": "现在行业都在谈ChatGPT转向Agent平台，如果让你基于Data AML的中台定位，设计一个支持业务方快速搭建“推荐Agent”的基础能力模块，你会优先切入哪个痛点？为什么？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "medium",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-052",
+      "num": 52,
+      "text": "在和 Tripadvisor 或 Google 这类强势媒体对接 API 时，如果对方的数据实时性要求超过了我们后端服务的承载极限，你会怎么定义这个对接方案？",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "business"
+      ]
+    },
+    {
+      "id": "ai-pm-053",
+      "num": 53,
+      "text": "如果模型团队觉得效果已经达标，但业务侧还是觉得场景不好用，你会怎么推进？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-054",
+      "num": 54,
+      "text": "在资源投放平台中，我们想引入 AI 辅助出价功能。但一线运营人员对黑盒算法缺乏信任，不愿意使用。你会如何设计第一版功能，既能体现 AI 价值，又能降低他们的使用心理门槛？",
+      "company": "通用",
+      "type": "product_design",
+      "typeLabel": "AI产品经理",
+      "difficulty": "medium",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "product_design"
+      ]
+    },
+    {
+      "id": "ai-pm-055",
+      "num": 55,
+      "text": "业务方希望在一个高并发的短视频推荐流中增加实时的LLM重排环节，但算法团队指出这会导致P99延迟超标，工程团队也拒绝承担额外的推理算力预算。面对这种三方僵局，你会如何提出一个各方都能接受的折中方案？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "medium",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-056",
+      "num": 56,
+      "text": "在巴西信贷场景中，如果用 AI 重构“额度被拒”或“利率解释”的通知文案，你如何防止模型产生幻觉导致合规风险？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-057",
+      "num": 57,
+      "text": "海外媒体合作伙伴经常投诉我们的 API 数据回传不及时或数据有误，但研发团队认为是对方解析有问题。面对这种典型的‘罗生门’式技术扯皮，你通常如何快速定位问题并推动解决？",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "AI产品经理",
+      "difficulty": "medium",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "business"
+      ]
+    },
+    {
+      "id": "ai-pm-058",
+      "num": 58,
+      "text": "资源有限的情况下，如果要为巴西信贷 App 引入第一个 AI 功能，你会选择哪个切入点？请说明你的 MVP 范围界定逻辑。",
+      "company": "通用",
+      "type": "product_design",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "product_design"
+      ]
+    },
+    {
+      "id": "ai-pm-059",
+      "num": 59,
+      "text": "报销审核、对账解释、税务问答、付款流程提醒，这几类场景里哪些适合先交给 Agent，哪些要更谨慎？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-060",
+      "num": 60,
+      "text": "最近OpenAI强调ChatGPT正从对话界面重构为整合服务的Agent平台，如果要把这种“从问答到执行”的能力引入小红书，你觉得哪个具体场景最适合做第一个切入点？为什么？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "medium",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-061",
+      "num": 61,
+      "text": "我们在笔记详情页引入AI总结功能后，发现人均停留时长下降了，但点赞和收藏率持平。业务方认为这影响了广告曝光机会，想砍掉这个功能。你如何反驳或调整评估体系？",
+      "company": "通用",
+      "type": "product_design",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "product_design"
+      ]
+    },
+    {
+      "id": "ai-pm-062",
+      "num": 62,
+      "text": "假设你在推进小米欧洲仓的AI调度系统上线时，当地仓储经理强烈抵触，认为AI给出的拣货路径不符合他们的‘老经验’，导致项目停滞。作为PM，你具体怎么破局？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-063",
+      "num": 63,
+      "text": "算法团队认为新的AI推荐模型CTR提升了5%，但运营团队投诉推荐内容“太功利、破坏社区氛围”，导致部分KOL不满。作为PM，你如何协调这两方的分歧并推进项目？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-064",
+      "num": 64,
+      "text": "在构建Agent评测体系时，你如何避免“单点准确率高但整体任务失败”的评估陷阱？请结合具体场景说明你的指标分层逻辑。",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-065",
+      "num": 65,
+      "text": "现在视频生成模型最大的痛点是“长视频一致性”差，人物容易变形或背景闪烁。如果让你设计一个面向B端营销短视频的功能，你打算怎么在产品层面兜底这个技术缺陷？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-066",
+      "num": 66,
+      "text": "在构建动态监控模型优化激励规则时，你如何与算法团队协作，确保模型不仅追求高点击，还能兼顾长期的用户留存和成本控制？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-067",
+      "num": 67,
+      "text": "现在要做一个面向欧洲用户的跨境支付Agent，资源只够支持两个核心功能。你会选哪两个？为什么放弃其他看似性感的场景？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-068",
+      "num": 68,
+      "text": "现在多模态大模型能实时处理视频流了，如果让你把它用到小米海外仓的入库质检环节，你觉得最大的落地阻力是什么？第一版MVP你会砍掉哪些功能？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-069",
+      "num": 69,
+      "text": "在公立学校‘进校’场景中，老师对新技术的接受度往往很低。如果要通过AI实现‘启发式教学’，你如何设计第一个切入点，才能确保老师愿意用，而不是觉得这是个负担？",
+      "company": "通用",
+      "type": "product_design",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "product_design"
+      ]
+    },
+    {
+      "id": "ai-pm-070",
+      "num": 70,
+      "text": "你怎么理解评测在大模型平台里的意义？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-071",
+      "num": 71,
+      "text": "我们在印尼上线智能信贷助手时，当地监管对“误导性营销”查得很严。如果模型为了提升转化率，生成了稍微有点夸大收益的话术，作为PM你如何在架构层面杜绝这种风险？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-072",
+      "num": 72,
+      "text": "在网赚业务中，如果发现某类用户的广告点击率很高但后续留存极差，你会如何调整激励策略和模型特征？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-073",
+      "num": 73,
+      "text": "算法团队反馈目前的开源视频模型在“复杂指令遵循”上效果不好，想推迟上线。但你背着Q3的上线KPI。你如何评估他们的说法是否合理？又如何推动他们在不换大模型的前提下优化效果？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "medium",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-074",
+      "num": 74,
+      "text": "自动竞价系统上线后，算法团队认为应该给模型更多探索空间以优化长期 ROI，但业务方投诉最近两周在某些热门城市的投放成本不可控地上升。作为 PM，你如何平衡算法的探索需求和业务的止损诉求？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "medium",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-075",
+      "num": 75,
+      "text": "在推进‘智慧校园’项目时，销售团队为了签单，向学校承诺了高精度的‘学生课堂情绪实时分析’功能，但算法团队评估目前的技术准确率达到商用标准至少还需要3个月。面对这个资源与预期的冲突，你如何协调？",
+      "company": "通用",
+      "type": "product_design",
+      "typeLabel": "AI产品经理",
+      "difficulty": "medium",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "product_design"
+      ]
+    },
+    {
+      "id": "ai-pm-076",
+      "num": 76,
+      "text": "假设上线了一个 AI 智能提额功能，A/B 测试显示授信转化率大幅提升，但同期 M1+ 逾期率也出现了显著上涨。面对业务增长和风险控制的双重压力，你会怎么做决策？",
+      "company": "通用",
+      "type": "product_design",
+      "typeLabel": "AI产品经理",
+      "difficulty": "medium",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "product_design"
+      ]
+    },
+    {
+      "id": "ai-pm-077",
+      "num": 77,
+      "text": "随着AI生成内容占比增加，用户对“幻觉”的容忍度在降低。在小米手机助手的场景中，你如何设计产品机制来平衡“响应速度”与“信息可信度”？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-078",
+      "num": 78,
+      "text": "考虑到如今算力已成为战略资源且成本高昂，在仓储路径优化或订单调度中，你如何界定哪些环节值得用昂贵的LLM/多模态能力，哪些应该坚持用传统算法？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-079",
+      "num": 79,
+      "text": "做‘离校’端的自适应个性化学习时，如果模型对学生知识图谱的判断置信度不高，你是选择继续推题以获取反馈，还是保守地转为内容推荐？请结合教育场景的用户心理谈谈你的取舍。",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "medium",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-080",
+      "num": 80,
+      "text": "上线后我们发现，大量免费用户利用脚本高频调用视频生成接口，导致服务器负载飙升，付费用户的生成等待时间从30秒涨到了3分钟，投诉率激增。作为PM，你现在只有两天时间调整策略，你会怎么做？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "medium",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-081",
+      "num": 81,
+      "text": "假设你负责的AI备授课功能上线后，教师的使用频次大幅上升，但关于‘AI建议不准确’的投诉也在激增，且学校方表示如果下周不能解决将暂停采购。作为PM，你接下来的一周会具体做什么？",
+      "company": "通用",
+      "type": "product_design",
+      "typeLabel": "AI产品经理",
+      "difficulty": "medium",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "product_design"
+      ]
+    },
+    {
+      "id": "ai-pm-082",
+      "num": 82,
+      "text": "我们要将国内的K12教育经验复制到海外，比如中东或东南亚市场。面对不同的数据合规要求和文化背景，你在产品架构和交互设计上要做哪些关键的本地化调整？",
+      "company": "通用",
+      "type": "product_design",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "product_design"
+      ]
+    },
+    {
+      "id": "ai-pm-083",
+      "num": 83,
+      "text": "假设你优化了广告触达机制，使得单位用户广告收入提升了20%，但用户投诉率也上升了15%，业务方要求立即回滚，你怎么办？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-084",
+      "num": 84,
+      "text": "工具调用链路设计里，什么动作适合自动执行，什么动作一定要让用户确认？",
+      "company": "通用",
+      "type": "product_design",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "product_design"
+      ]
+    },
+    {
+      "id": "ai-pm-085",
+      "num": 85,
+      "text": "用户访谈里大家都觉得这个功能挺有帮助，但上线后核心数据没明显变化，你会怎么判断问题？",
+      "company": "通用",
+      "type": "product_design",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "product_design"
+      ]
+    },
+    {
+      "id": "ai-pm-086",
+      "num": 86,
+      "text": "同一个能力，算法更关注效果上限，后端更关注稳定性，产品更关注体验闭环，这种分歧你会怎么推进？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-087",
+      "num": 87,
+      "text": "你觉得AI时代的人机交互，和传统交互设计相比，最明显的变化是什么？",
+      "company": "通用",
+      "type": "product_design",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "product_design"
+      ]
+    },
+    {
+      "id": "ai-pm-088",
+      "num": 88,
+      "text": "如果设计、研发、产品对一个AI交互方案的理解不一致，你会怎么推进达成一致？",
+      "company": "通用",
+      "type": "product_design",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "product_design"
+      ]
+    },
+    {
+      "id": "ai-pm-089",
+      "num": 89,
+      "text": "你觉得在LLM应用开发流程里，评测产品最应该卡住哪几个关键节点？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-090",
+      "num": 90,
+      "text": "如果你负责一个AI创新功能，从0到1推进时最担心出现什么问题？",
+      "company": "通用",
+      "type": "product_design",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "product_design"
+      ]
+    },
+    {
+      "id": "ai-pm-091",
+      "num": 91,
+      "text": "如果底层硬件能力很多样，但上层业务希望尽量少感知差异，你会怎么做产品设计取舍？",
+      "company": "通用",
+      "type": "product_design",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "product_design"
+      ]
+    },
+    {
+      "id": "ai-pm-092",
+      "num": 92,
+      "text": "如果智能决策建议功能给出的建议经常比较泛，你会怎么推进优化？",
+      "company": "通用",
+      "type": "product_design",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "product_design"
+      ]
+    },
+    {
+      "id": "ai-pm-093",
+      "num": 93,
+      "text": "面对外部开发者和内部团队两类用户，你会怎么平衡评测产品的设计取舍？",
+      "company": "通用",
+      "type": "product_design",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "product_design"
+      ]
+    },
+    {
+      "id": "ai-pm-094",
+      "num": 94,
+      "text": "如果一个AI功能在Demo里表现很好，但真正接进研发流程后大家用得不深，你会怎么分析？",
+      "company": "通用",
+      "type": "product_design",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "product_design"
+      ]
+    },
+    {
+      "id": "ai-pm-095",
+      "num": 95,
+      "text": "如果一个自动化报告功能上线后，大家觉得省事，但真正看完并采取行动的人不多，你会怎么分析？",
+      "company": "通用",
+      "type": "product_design",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "product_design"
+      ]
+    },
+    {
+      "id": "ai-pm-096",
+      "num": 96,
+      "text": "同样是AI生成能力，为什么有些平台做成了生产力工具，有些平台最后只剩一个试玩功能？",
+      "company": "通用",
+      "type": "product_design",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "product_design"
+      ]
+    },
+    {
+      "id": "ai-pm-097",
+      "num": 97,
+      "text": "员工效率产品很容易做重，AI功能加进去之后，怎样才能让大家愿意真的用起来？",
+      "company": "通用",
+      "type": "product_design",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "product_design"
+      ]
+    },
+    {
+      "id": "ai-pm-098",
+      "num": 98,
+      "text": "一款AI创作工具看起来功能很多，但用户总觉得不好用，这种问题你通常会先看哪里？",
+      "company": "通用",
+      "type": "product_design",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "product_design"
+      ]
+    },
+    {
+      "id": "ai-pm-099",
+      "num": 99,
+      "text": "如果一个内部AI功能上线后，使用数据还可以，但用户反馈一般，你会怎么推进下一步？",
+      "company": "通用",
+      "type": "product_design",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "product_design"
+      ]
+    },
+    {
+      "id": "ai-pm-100",
+      "num": 100,
+      "text": "你会怎么设计一个更贴近真实业务场景的效果评估体系？",
+      "company": "通用",
+      "type": "product_design",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "product_design"
+      ]
+    },
+    {
+      "id": "ai-pm-101",
+      "num": 101,
+      "text": "你会怎么判断ArkClaw该更偏工具效率，还是更偏玩法和体验？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-102",
+      "num": 102,
+      "text": "你怎么看商业化系统AI产品里的用户体验和业务效率之间的关系？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-103",
+      "num": 103,
+      "text": "如果让你在飞书多维表格里设计一个AI能力，你会优先从哪个场景切入？",
+      "company": "通用",
+      "type": "product_design",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "product_design"
+      ]
+    },
+    {
+      "id": "ai-pm-104",
+      "num": 104,
+      "text": "你会怎么判断一个AI自动化功能到底有没有真正提升用户效率？",
+      "company": "通用",
+      "type": "product_design",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": true,
+      "tags": [
+        "AI产品经理",
+        "product_design"
+      ]
+    },
+    {
+      "id": "ai-pm-105",
+      "num": 105,
+      "text": "如果让你和工程、算法、设计一起推进一个AI功能，你会怎么确保最终体验不跑偏？",
+      "company": "通用",
+      "type": "product_design",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "product_design"
+      ]
+    },
+    {
+      "id": "ai-pm-106",
+      "num": 106,
+      "text": "如果用户说生成结果很惊艳，但自己不知道怎么继续改，你会怎么优化这个创作流程？",
+      "company": "通用",
+      "type": "product_design",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": true,
+      "tags": [
+        "AI产品经理",
+        "product_design"
+      ]
+    },
+    {
+      "id": "ai-pm-107",
+      "num": 107,
+      "text": "如果让你判断一个AI创作功能有没有真正打动用户，你最先会看什么？",
+      "company": "通用",
+      "type": "product_design",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "product_design"
+      ]
+    },
+    {
+      "id": "ai-pm-108",
+      "num": 108,
+      "text": "如果一个AI功能上线后，业务方觉得“不好用”，你会怎么推进优化？",
+      "company": "通用",
+      "type": "product_design",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "product_design"
+      ]
+    },
+    {
+      "id": "ai-pm-109",
+      "num": 109,
+      "text": "如果让你为即梦设计一个提升新用户留存的小功能，你会优先考虑什么方向？",
+      "company": "通用",
+      "type": "product_design",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": true,
+      "tags": [
+        "AI产品经理",
+        "product_design"
+      ]
+    },
+    {
+      "id": "ai-pm-110",
+      "num": 110,
+      "text": "你会怎么判断一个AI营销功能到底有没有帮助商家提升经营效果？",
+      "company": "通用",
+      "type": "product_design",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "product_design"
+      ]
+    },
+    {
+      "id": "ai-pm-111",
+      "num": 111,
+      "text": "你觉得AI创作产品和普通工具型产品，在产品设计上最大的不同是什么？",
+      "company": "通用",
+      "type": "product_design",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "product_design"
+      ]
+    },
+    {
+      "id": "ai-pm-112",
+      "num": 112,
+      "text": "如果研发资源有限，你会优先做更多能力，还是先把现有体验打磨顺？",
+      "company": "通用",
+      "type": "case",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "case"
+      ]
+    },
+    {
+      "id": "ai-pm-113",
+      "num": 113,
+      "text": "如果让你给一家本地商家设计一个AI能力，你会优先从营销、销售还是内容生产切入？",
+      "company": "通用",
+      "type": "product_design",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "product_design"
+      ]
+    },
+    {
+      "id": "ai-pm-114",
+      "num": 114,
+      "text": "如果让你给一个AI应用搭评估体系，你最想先盯住哪些指标？",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "business"
+      ]
+    },
+    {
+      "id": "ai-pm-115",
+      "num": 115,
+      "text": "如果模型指标提升了，但品牌客户对产品的满意度没有明显提升，你会怎么看这个问题？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-116",
+      "num": 116,
+      "text": "如果用户对产品初次评价不错，但长期留存一般，你会怎么分析这个问题？",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "business"
+      ]
+    },
+    {
+      "id": "ai-pm-117",
+      "num": 117,
+      "text": "面向品牌、商家、运营和管理层这几类角色做数据产品时，你会怎么处理需求差异？",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "business"
+      ]
+    },
+    {
+      "id": "ai-pm-118",
+      "num": 118,
+      "text": "你会怎么给飞书商业化AI产品搭建指标体系？",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "business"
+      ]
+    },
+    {
+      "id": "ai-pm-119",
+      "num": 119,
+      "text": "如果让你做一个面向商家和运营的数据AI产品，你会先从什么场景切入？",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "business"
+      ]
+    },
+    {
+      "id": "ai-pm-120",
+      "num": 120,
+      "text": "你怎么看抖音电商里数据产品和AI能力结合的长期空间？",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "business"
+      ]
+    },
+    {
+      "id": "ai-pm-121",
+      "num": 121,
+      "text": "你会怎么判断一个数据AI产品到底是在提升决策效率，还是只是在让信息展示更方便？",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "business"
+      ]
+    },
+    {
+      "id": "ai-pm-122",
+      "num": 122,
+      "text": "如果一个AI产品短期数据还不错，但你觉得它未必能长期成立，你会怎么看？",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": true,
+      "tags": [
+        "AI产品经理",
+        "business"
+      ]
+    },
+    {
+      "id": "ai-pm-123",
+      "num": 123,
+      "text": "给广告主做产品，什么样的数据看起来正常，其实已经在提醒产品有问题了？",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "business"
+      ]
+    },
+    {
+      "id": "ai-pm-124",
+      "num": 124,
+      "text": "给训练建议、路线推荐这类模块定分析标准时，哪些指标最能说明它真的有价值？",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "business"
+      ]
+    },
+    {
+      "id": "ai-pm-125",
+      "num": 125,
+      "text": "如果客户都说价格贵，怎么判断问题到底出在定价本身，还是产品价值还没讲清楚？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-126",
+      "num": 126,
+      "text": "在广告AIGC产品里，通用能力和行业定制能力之间你会怎么取舍？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-127",
+      "num": 127,
+      "text": "你怎么理解商业化系统AI产品里的长期规划和短期落地之间的关系？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-128",
+      "num": 128,
+      "text": "你会怎么判断一个研发场景里的AI需求，是高价值机会，还是局部优化？",
+      "company": "通用",
+      "type": "case",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "case"
+      ]
+    },
+    {
+      "id": "ai-pm-129",
+      "num": 129,
+      "text": "如果让你负责飞书商业化体系里的一个AI产品，你会怎么判断这个方向值不值得做？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-130",
+      "num": 130,
+      "text": "你怎么看RL、Skill、上下文管理这些能力在MaaS平台里的产品价值？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-131",
+      "num": 131,
+      "text": "如果一个AI交互方向短期看起来有热度，但你对它的长期价值不太确定，你会怎么做判断和推进？",
+      "company": "通用",
+      "type": "product_design",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "product_design"
+      ]
+    },
+    {
+      "id": "ai-pm-132",
+      "num": 132,
+      "text": "如果让你向一个企业客户解释火山方舟MaaS的核心价值，你会怎么讲？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-133",
+      "num": 133,
+      "text": "你怎么理解飞书在商业化系统里做AI的机会？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-134",
+      "num": 134,
+      "text": "如果让你为飞书商业化团队找一个最适合AI先切入的场景，你会怎么选？",
+      "company": "通用",
+      "type": "case",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "case"
+      ]
+    },
+    {
+      "id": "ai-pm-135",
+      "num": 135,
+      "text": "你怎么衡量一个商业化AI产品有没有真正做出价值？",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": true,
+      "tags": [
+        "AI产品经理",
+        "business"
+      ]
+    },
+    {
+      "id": "ai-pm-136",
+      "num": 136,
+      "text": "你觉得多维表格做AI和自动化，最有价值的结合点在哪里？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-137",
+      "num": 137,
+      "text": "你会怎么为飞书商业化AI产品制定中长期演进规划？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-138",
+      "num": 138,
+      "text": "你怎么理解商业化系统里的PMF验证？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-139",
+      "num": 139,
+      "text": "如果业务增长目标很明确，但AI能力当前还不够成熟，你会怎么做产品取舍？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-140",
+      "num": 140,
+      "text": "如果业务方提了很多AI需求，你会怎么判断优先级？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-141",
+      "num": 141,
+      "text": "如果让你和运营一起做增长，你会重点抓哪些动作？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-142",
+      "num": 142,
+      "text": "你怎么理解商业化系统AI产品里的产品负责人角色？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-143",
+      "num": 143,
+      "text": "你怎么判断AI导购是在‘有效引导’还是只是在‘陪聊’？有哪些核心指标能区分这两者",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "business"
+      ]
+    },
+    {
+      "id": "ai-pm-144",
+      "num": 144,
+      "text": "你觉得AI编程产品里，哪些场景最容易先做出用户价值？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-145",
+      "num": 145,
+      "text": "如果算法团队坚持要用一个更大、更慢但精度稍高的模型，而你觉得这会损害用户体验和成本，你怎么说服他们？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-146",
+      "num": 146,
+      "text": "你怎么理解TRAE这类AI编程产品的核心价值？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-147",
+      "num": 147,
+      "text": "当AIGC素材的生产效率越来越高，平台最容易掉进哪种增长陷阱？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-148",
+      "num": 148,
+      "text": "近期数据显示机器人流量和API通信占比大幅上升，你认为这对手机AI助手的产品形态和评测标准会带来哪些具体改变？",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "business"
+      ]
+    },
+    {
+      "id": "ai-pm-149",
+      "num": 149,
+      "text": "假设算法团队提出的新模型在内部Benchmark上表现优异，但上线灰度后导致核心互动指标下降。作为PM，你如何判断是继续优化还是回滚？请描述你的决策依据。",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-150",
+      "num": 150,
+      "text": "做竞品对标时，你会重点比较哪些能力？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-151",
+      "num": 151,
+      "text": "假设你负责的广告智能创意功能上线后，CTR提升了15%，但广告主的后端转化率反而下降了5%，且算法团队认为模型预测分没问题，坚持要全量推广。作为PM，你现在只有两个开发人力，接下来48小时你具体会做什么？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "medium",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-152",
+      "num": 152,
+      "text": "上线AI智能调度后，数据显示整体出库效率提升了15%，但同时也收到了多起关于‘路径规划过于紧凑导致员工安全隐患’的投诉，且合规部门警告这可能违反当地劳工法。此时业务方要求继续推广以达成季度目标，你怎么办？",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "AI产品经理",
+      "difficulty": "medium",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "business"
+      ]
+    },
+    {
+      "id": "ai-pm-153",
+      "num": 153,
+      "text": "假设你负责的海外购物助手上线后，CTR提升了15%，但用户投诉率也上升了5%，主要抱怨是‘推荐不精准’。业务方想继续推以保KPI，你怎么办？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-154",
+      "num": 154,
+      "text": "做AI应用时，工作流一旦变复杂，产品最容易失控的地方在哪里？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-155",
+      "num": 155,
+      "text": "你怎么看飞书多维表格里AI能力和工作流自动化之间的关系？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-156",
+      "num": 156,
+      "text": "业务方追求快上线，算法团队还想继续提效果，工程担心稳定性，这种局面你怎么往前推？",
+      "company": "通用",
+      "type": "case",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "case"
+      ]
+    },
+    {
+      "id": "ai-pm-157",
+      "num": 157,
+      "text": "超级智能体想成为万能助手，第一阶段最不该急着做的是什么？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-158",
+      "num": 158,
+      "text": "如果让你做一个结合GUI、视觉、语音的AI产品，你会怎么判断这个方向是否真的成立？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-159",
+      "num": 159,
+      "text": "如果让你负责一个AIGC广告产品，你会怎么平衡创意效果和投放效果？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-160",
+      "num": 160,
+      "text": "你会怎么验证一个新的AI交互方式到底是创新，还是只是看起来新鲜？",
+      "company": "通用",
+      "type": "product_design",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "product_design"
+      ]
+    },
+    {
+      "id": "ai-pm-161",
+      "num": 161,
+      "text": "用户看完 AI 搜索答案后，又回去点网页、重新搜一遍，甚至换关键词重搜，这种现象你会怎么分析？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-162",
+      "num": 162,
+      "text": "面向不同国家和市场做AI广告创意产品时，你觉得最容易被低估的问题是什么？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-163",
+      "num": 163,
+      "text": "在GUI、视觉、语音这些交互方式里，你会怎么决定某个场景该优先用哪一种？",
+      "company": "通用",
+      "type": "product_design",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "product_design"
+      ]
+    },
+    {
+      "id": "ai-pm-164",
+      "num": 164,
+      "text": "如果你来负责一款AI Coding产品的路线图，你会先想清楚哪些核心判断？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-165",
+      "num": 165,
+      "text": "你会怎么判断一个AI Coding能力到底是在提升开发效率，还是只是让用户觉得新鲜？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-166",
+      "num": 166,
+      "text": "面向开发者做产品时，你觉得最容易做错的点是什么？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-167",
+      "num": 167,
+      "text": "你觉得研发场景做AI产品，最难跨过去的一道坎是什么？",
+      "company": "通用",
+      "type": "case",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "case"
+      ]
+    },
+    {
+      "id": "ai-pm-168",
+      "num": 168,
+      "text": "如果让你为这个方向做一版中期规划，你会优先布局哪些能力？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-169",
+      "num": 169,
+      "text": "如果一个AI能力业务方很认可，但一线同学实际用得不多，你怎么看这个问题？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-170",
+      "num": 170,
+      "text": "你觉得智能问数这类产品，真正难的地方在哪里？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-171",
+      "num": 171,
+      "text": "如果让你推动一个跨销售、运营、产品、算法的AI项目落地，你会怎么推进？",
+      "company": "通用",
+      "type": "case",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "case"
+      ]
+    },
+    {
+      "id": "ai-pm-172",
+      "num": 172,
+      "text": "你怎么看研发平台里的AI产品和现有Dev Infra体系之间的关系？",
+      "company": "通用",
+      "type": "case",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "case"
+      ]
+    },
+    {
+      "id": "ai-pm-173",
+      "num": 173,
+      "text": "如果一个AIGC创意工具生成得很快，但广告主实际投放意愿不高，你会怎么分析原因？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-174",
+      "num": 174,
+      "text": "同一个AI能力，在演示环境里效果很好，到了真实业务里却不稳定，你会先从哪些地方排查？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-175",
+      "num": 175,
+      "text": "用户和AI聊了很多轮，答案看起来也没明显错误，但最后还是没下单，这种情况你会先查哪里？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-176",
+      "num": 176,
+      "text": "情感陪伴类产品里，用户经常会把它当成情绪出口，这种场景下产品边界该怎么立？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-177",
+      "num": 177,
+      "text": "生成式推荐听起来很有想象力，真正落地时最容易在哪一步失真？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-178",
+      "num": 178,
+      "text": "Skills越接越多之后，产品最容易失控的地方是什么？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-179",
+      "num": 179,
+      "text": "员工服务做AI，很多时候不是答得出来就够了。哪些瞬间最容易让员工觉得被冒犯、被误解，或者不被尊重？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-180",
+      "num": 180,
+      "text": "很多企业客户愿意试AI，但不一定愿意持续付费，这中间最关键的一步是什么？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-181",
+      "num": 181,
+      "text": "Skills很多，但不可能全都往里接，选型时你会看哪些标准？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-182",
+      "num": 182,
+      "text": "医疗用户很多时候表达得不专业，甚至会带着情绪来提问，这种场景下产品最该先解决什么问题？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-183",
+      "num": 183,
+      "text": "你觉得AI创新产品做到后面，最容易出现的伪需求是什么？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-184",
+      "num": 184,
+      "text": "如果让你负责一个还没有成熟范式的AI产品，你会怎么平衡创新感和可用性？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-185",
+      "num": 185,
+      "text": "你怎么看AI创新业务里产品判断力和用户研究之间的关系？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-186",
+      "num": 186,
+      "text": "做这类创新业务时，你觉得产品经理最重要的能力是什么？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-187",
+      "num": 187,
+      "text": "站在更长期一点的视角，你觉得GUI、视觉、语音这些交互方式未来会怎么融合？",
+      "company": "通用",
+      "type": "product_design",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "product_design"
+      ]
+    },
+    {
+      "id": "ai-pm-188",
+      "num": 188,
+      "text": "你觉得集团信息系统里的AI工具，和面向外部用户的AI产品最大的不同是什么？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-189",
+      "num": 189,
+      "text": "如果内部员工觉得一个AI工具有用，但总觉得不够放心用，你会怎么理解这个问题？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-190",
+      "num": 190,
+      "text": "如果让你在一个很新的AI交互方向上下注，你会怎么判断该不该继续投入？",
+      "company": "通用",
+      "type": "product_design",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "product_design"
+      ]
+    },
+    {
+      "id": "ai-pm-191",
+      "num": 191,
+      "text": "如果让你在集团信息系统里找一个最适合AI先落地的场景，你会优先看哪些方向？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-192",
+      "num": 192,
+      "text": "如果业务方抱怨GPU资源很贵，但利用率还是上不去，你会怎么分析这个问题？",
+      "company": "通用",
+      "type": "case",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "case"
+      ]
+    },
+    {
+      "id": "ai-pm-193",
+      "num": 193,
+      "text": "面对人事、财务、法务、采购、审批这些不同系统，你会怎么判断哪些需求值得优先做？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-194",
+      "num": 194,
+      "text": "你觉得这类AI助手产品，最容易把门槛做高的地方是什么？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-195",
+      "num": 195,
+      "text": "你怎么看标准API和适配层在异构算力产品里的意义？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-196",
+      "num": 196,
+      "text": "如果内外部团队都在提效果优化需求，但方向很多，你会怎么判断先做什么？",
+      "company": "通用",
+      "type": "case",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "case"
+      ]
+    },
+    {
+      "id": "ai-pm-197",
+      "num": 197,
+      "text": "如果ArkClaw同时面对个人用户和企业用户，你会先怎么处理两边需求的冲突？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-198",
+      "num": 198,
+      "text": "如果新用户第一次进入产品后很快流失，你会优先排查哪些环节？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-199",
+      "num": 199,
+      "text": "回头看一个AI项目，你会重点复盘哪些问题？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-200",
+      "num": 200,
+      "text": "在MaaS场景里，你觉得产品经理和算法、工程、销售之间最容易出现什么分歧，怎么推动协同？",
+      "company": "通用",
+      "type": "case",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "case"
+      ]
+    },
+    {
+      "id": "ai-pm-201",
+      "num": 201,
+      "text": "你觉得信息系统里的AI产品，怎样才算既提升效率，又没有带来额外风险？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-202",
+      "num": 202,
+      "text": "如果用户反馈TRAE生成的结果能写代码，但不够稳定，你会怎么看这个问题？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-203",
+      "num": 203,
+      "text": "如果让你做一轮TRAE用户调研，你会重点关注哪些问题？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-204",
+      "num": 204,
+      "text": "你觉得AI编程产品和普通代码补全工具的区别是什么？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-205",
+      "num": 205,
+      "text": "如果让你向一个没接触过Coze的人介绍这个产品，你会怎么说？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-206",
+      "num": 206,
+      "text": "你觉得抖音生活服务做AI产品，和其他电商或内容平台相比，最大的特点是什么？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-207",
+      "num": 207,
+      "text": "如果用户觉得多维表格的AI能力很强，但实际用起来还是觉得复杂，你会怎么优化？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-208",
+      "num": 208,
+      "text": "你觉得Coze这类产品未来最有可能往哪个方向继续发展？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-209",
+      "num": 209,
+      "text": "你觉得什么样的用户最适合先用Coze，为什么？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-210",
+      "num": 210,
+      "text": "如果让你为抖音生活服务做一套AI能力评估和反馈体系，你会重点放哪些内容？",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "business"
+      ]
+    },
+    {
+      "id": "ai-pm-211",
+      "num": 211,
+      "text": "如果商家觉得AI生成的营销内容能用，但总觉得不够像自己，你会怎么优化？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-212",
+      "num": 212,
+      "text": "在生活服务场景里，你觉得AI销售最值得做的环节是哪些？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-213",
+      "num": 213,
+      "text": "平台里的高频咨询很多，但AI客服覆盖率一直上不去，这种情况你会先查哪里？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-214",
+      "num": 214,
+      "text": "AI自动化运营在到店场景里，什么样的动作适合先放给系统做，什么样的动作要更谨慎？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-215",
+      "num": 215,
+      "text": "热点事件、明星动态、观点争议这类内容天然变化很快，AI搜索怎么避免答得像样但其实失真？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-216",
+      "num": 216,
+      "text": "AI陪伴产品里，用户说喜欢和用户真的愿意留下来，这中间通常差在哪里？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-217",
+      "num": 217,
+      "text": "站在户外运动用户的真实使用路径里，哪些时刻最需要AI介入？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    },
+    {
+      "id": "ai-pm-218",
+      "num": 218,
+      "text": "你怎么理解GTM系统体系的AI基建？",
+      "company": "通用",
+      "type": "ai_product",
+      "typeLabel": "AI产品经理",
+      "difficulty": "easy",
+      "topicId": "iv-pm",
+      "source": "coach面经去重版",
+      "framework": "",
+      "referenceOutline": "",
+      "curated": false,
+      "tags": [
+        "AI产品经理",
+        "ai_product"
+      ]
+    }
+  ]
+}

@@ -20,6 +20,11 @@ import {
   parseStructuredReview,
   reviewToPlainText
 } from './lib/review-format.js';
+import {
+  pmReviewEnabled,
+  isPmInterviewContext,
+  PM_STRUCTURED_REVIEW_SUFFIX
+} from './lib/pm-review.js';
 import { resolveSystemPrompt } from './lib/prompt-route.js';
 
 function getClientIp(req) {
@@ -391,8 +396,9 @@ export default async function handler(req) {
   }
 
   const useStructured = mode === 'review' && structuredReviewEnabled();
+  const usePmDims = useStructured && pmReviewEnabled() && isPmInterviewContext(topicId, scenario, body.bankMeta);
   if (useStructured) {
-    reviewSystemPrompt += STRUCTURED_REVIEW_SUFFIX;
+    reviewSystemPrompt += usePmDims ? PM_STRUCTURED_REVIEW_SUFFIX : STRUCTURED_REVIEW_SUFFIX;
   }
 
   const wantStream = streamEnabled(body, mode) && llm.provider === 'deepseek';
