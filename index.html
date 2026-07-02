@@ -421,14 +421,16 @@
     line-height: 1.3;
   }
   .hero-mutter {
-    flex: 0 0 auto;
-    margin: 0;
+    margin: -0.75rem 0 0.85rem;
     font-size: 10px;
     font-weight: 400;
     letter-spacing: 0.01em;
     line-height: 1.45;
     color: rgba(60, 60, 67, 0.38);
-    max-width: 14em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
   }
   .hero-waveform {
     position: relative;
@@ -557,7 +559,6 @@
   .agent-workspace {
     display: grid;
     grid-template-columns: var(--agent-nav-w) minmax(0, 1fr) var(--agent-chat-w);
-    align-items: stretch;
     gap: 0;
     min-height: min(72vh, 720px);
     border-radius: var(--r-xl);
@@ -621,26 +622,10 @@
     margin-left: 4px;
     vertical-align: middle;
   }
-  .canvas-subtitle-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    min-height: 22px;
-    margin: 2px 0 6px;
-  }
-  .canvas-subtitle {
-    margin: 0;
-    font-size: 12px;
-    color: var(--ink3);
-    line-height: 1.45;
-  }
-  .canvas-subtitle-actions { flex-shrink: 0; }
   .agent-canvas {
     display: flex;
     flex-direction: column;
     min-width: 0;
-    min-height: 100%;
     background: var(--block-bg-muted);
     border-right: 1px solid var(--block-border);
   }
@@ -669,6 +654,38 @@
     margin: 0;
     flex: 1;
     min-width: 0;
+  }
+  .canvas-subtitle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin: 0 0 6px;
+    min-height: 0;
+    flex-wrap: nowrap;
+  }
+  .canvas-subtitle {
+    flex: 1;
+    min-width: 0;
+    font-size: 12px;
+    line-height: 1.45;
+    color: var(--ink3);
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .canvas-subtitle-actions {
+    flex-shrink: 0;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .canvas-subtitle-actions .btn-refresh {
+    font-size: 11px;
+    padding: 5px 12px;
+    min-height: var(--btn-min-h-sm);
+    white-space: nowrap;
   }
   .canvas-title-cta {
     flex-shrink: 0;
@@ -790,7 +807,8 @@
   .agent-chat {
     display: flex;
     flex-direction: column;
-    min-height: 100%;
+    height: 100%;
+    min-height: 0;
     align-self: stretch;
     background: var(--block-bg-muted);
     padding: 12px;
@@ -804,10 +822,9 @@
   .agent-chat-head h3 { font-size: 14px; font-weight: 700; }
   .agent-chat-sub { font-size: 11px; color: var(--ink3); margin-bottom: 10px; }
   .agent-chat-msgs {
-    flex: 1;
+    flex: 1 1 auto;
     overflow-y: auto;
-    min-height: 160px;
-    max-height: min(42vh, 360px);
+    min-height: 0;
     margin-bottom: 10px;
   }
   .agent-chat-bubble {
@@ -3460,6 +3477,9 @@
     pointer-events: none;
     background: linear-gradient(180deg, transparent 0%, transparent 58%, rgba(0, 0, 0, 0.22) 78%, var(--page-bg) 100%);
   }
+  html[data-theme="dark"] .hero-mutter {
+    color: rgba(235, 235, 245, 0.38);
+  }
   html[data-theme="dark"] .hero-compact::before {
     display: none;
   }
@@ -3756,8 +3776,8 @@
   <section class="hero-compact">
     <div class="hero-copy">
       <p class="hero-brand" aria-label="CVassistant"><span class="hb-mind">CV</span><span class="hb-train">assistant</span></p>
+      <p class="hero-mutter" lang="ko">씨발이력서 수정은 왜 이렇게 어려울까요</p>
       <div class="hero-eyebrow-row">
-        <p class="hero-mutter" lang="ko">씨발이력서 수정은 왜 이렇게 어려울까요</p>
         <canvas id="heroWaveform" class="hero-waveform" aria-hidden="true"></canvas>
       </div>
     </div>
@@ -4756,6 +4776,14 @@ function canvasTabsHtml(scene) {
   ).join('');
 }
 
+function canvasSubtitleFor(scene, tab) {
+  if (scene === 'resume' && tab === '评分' && !profileResume.trim()
+      && !resumeScoreResult.loading && !resumeScoreResult.scoreReport && !resumeScoreResult.content) {
+    return '请上传或粘贴简历';
+  }
+  return '';
+}
+
 function canvasTitleFor(scene, tab) {
   const map = {
     resume: { 评分: '简历评分报告', 优化: '简历优化 · Bullet 改写', 文档: '简历优化 · 文档' },
@@ -4764,15 +4792,6 @@ function canvasTitleFor(scene, tab) {
     kb: { 阅读: 'AI 产品经理知识库' }
   };
   return map[scene]?.[tab] || tab;
-}
-
-function canvasSubtitleFor(scene, tab) {
-  if (scene === 'resume' && tab === '评分') {
-    if (!profileResume.trim() && !resumeScoreResult.loading && !resumeScoreResult.scoreReport && !resumeScoreResult.content) {
-      return '请上传或粘贴简历';
-    }
-  }
-  return '';
 }
 
 function agentToolStepsHtml() {
@@ -5062,7 +5081,7 @@ function mountAgentWorkspace(innerHtml) {
     <div class="agent-chat-drawer-backdrop" id="agentChatBackdrop"></div>`;
   bindAgentWorkspace(scene);
   renderAgentChatBubbles(scene);
-  renderCanvasTitleCta(scene, tab);
+  updateCanvasChrome(scene);
 }
 
 function bindAgentChatClone() {
@@ -5201,13 +5220,8 @@ function updateCanvasChrome(scene) {
   const subtitleEl = document.getElementById('canvasSubtitle');
   const subtitle = canvasSubtitleFor(scene, tab);
   if (subtitleEl) {
-    if (subtitle) {
-      subtitleEl.textContent = subtitle;
-      subtitleEl.hidden = false;
-    } else {
-      subtitleEl.textContent = '';
-      subtitleEl.hidden = true;
-    }
+    subtitleEl.textContent = subtitle;
+    subtitleEl.hidden = !subtitle;
   }
   renderCanvasSubtitleActions(scene, tab);
   const tabsEl = document.getElementById('canvasTabs');
@@ -5222,14 +5236,13 @@ function renderCanvasSubtitleActions(scene, tab) {
   const host = document.getElementById('canvasSubtitleActions');
   if (!host) return;
   host.innerHTML = '';
-  if (scene === 'scenario' && tab === '题目') {
-    host.innerHTML = '<button type="button" class="btn-refresh" id="senseNextBtn">换一题</button>';
-    document.getElementById('senseNextBtn')?.addEventListener('click', () => {
-      agentToolSteps = [{ name: 'pick_scenario', status: 'done', detail: '换题' }];
-      renderAgentToolsPanel();
-      startRandomSense();
-    });
-  }
+  if (scene !== 'scenario') return;
+  host.innerHTML = '<button type="button" class="btn-refresh" id="senseNextBtn">换一题</button>';
+  document.getElementById('senseNextBtn')?.addEventListener('click', () => {
+    agentToolSteps = [{ name: 'pick_scenario', status: 'done', detail: '换题' }];
+    renderAgentToolsPanel();
+    startRandomSense();
+  });
 }
 
 function renderCanvasTitleCta(scene, tab) {
@@ -5806,7 +5819,7 @@ async function applyParsedFileToField(file, field) {
     updateUploadDropzoneUI(field, { fileName: file.name, charCount: text.length });
     if (isResume && agentScene === 'resume') {
       renderResumeScorePane();
-      renderCanvasTitleCta('resume', getCanvasTab('resume'));
+      updateCanvasChrome('resume');
     }
   } catch (e) {
     const msg = e.message || '文件解析失败';
@@ -5826,7 +5839,7 @@ function bindProfileUpload() {
       updateUploadDropzoneUI('resume', { charCount: profileResume.trim().length });
       if (agentScene === 'resume') {
         renderResumeScorePane();
-        renderCanvasTitleCta('resume', getCanvasTab('resume'));
+        updateCanvasChrome('resume');
       }
     }
   });
@@ -5898,6 +5911,8 @@ function getResumeCoachHistory(priorChat = []) {
 
 function renderScorePaneContent(report) {
   const overall = report.overallScore ?? (report.overallScore10 != null ? Math.round(report.overallScore10 * 10) : '—');
+  const pass = report.passRate != null ? report.passRate : '—';
+  const optPass = report.optimizedPassRate != null ? report.optimizedPassRate : '—';
   const bars = (report.dimensions || []).map(d => {
     const pct = Math.round((Number(d.score) / 5) * 100);
     return `<div class="score-pane-bar-row">
@@ -5909,6 +5924,8 @@ function renderScorePaneContent(report) {
   const fixes = (report.topFixes || []).slice(0, 3).map(f => `<li>${escapeHtml(f)}</li>`).join('');
   return `<div class="score-pane-metrics">
       <div class="score-pane-metric"><div class="score-pane-metric-label">综合</div><div class="score-pane-metric-value score-pane-metric-value--rose">${escapeHtml(String(overall))}</div></div>
+      <div class="score-pane-metric"><div class="score-pane-metric-label">通过率</div><div class="score-pane-metric-value score-pane-metric-value--blue">${escapeHtml(String(pass))}%</div></div>
+      <div class="score-pane-metric"><div class="score-pane-metric-label">优化后</div><div class="score-pane-metric-value score-pane-metric-value--green">${escapeHtml(String(optPass))}%</div></div>
     </div>
     ${report.summary ? `<p class="score-pane-summary">${escapeHtml(report.summary)}</p>` : ''}
     <div class="score-pane-bars">${bars}</div>
@@ -6112,7 +6129,7 @@ function renderResumeScorePane() {
     if (errEl) errEl.hidden = true;
     return;
   }
-  body.innerHTML = profileResume.trim() ? '' : '';
+  body.innerHTML = '';
   bindResumePaneActions();
 }
 
@@ -6208,8 +6225,6 @@ async function runResumeAction(action, triggerBtnId, triggerBtnLabel) {
       };
     }
     renderResumeCanvasPanels();
-    renderCanvasTitleCta('resume', getCanvasTab('resume'));
-    updateCanvasChrome('resume');
     agentToolSteps = [{
       name: isScore ? 'score_resume' : 'optimize_resume',
       status: 'done',
@@ -6593,8 +6608,7 @@ function renderSenseSession(q) {
   mountAgentWorkspace(senseCanvasInnerHtml(q, tid, meta, draft));
 
   bindSenseBankPicker();
-  renderCanvasTitleCta('scenario', getCanvasTab('scenario'));
-  bindScenarioTitleActions();
+  updateCanvasChrome('scenario');
   initFollowUp(tid);
   bindVoiceInput(tid);
   updateReadingTip(tid, q.text);
