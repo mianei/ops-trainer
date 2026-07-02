@@ -21,7 +21,7 @@
 <meta name="color-scheme" content="light dark" />
 <meta name="format-detection" content="telephone=no" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
-<title>CVassistant � AI ??????</title>
+<title>CVassistant · AI 产品经理训练</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Outfit:wght@600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" />
@@ -90,7 +90,7 @@
     --sidebar-gap: 20px;
     --sans: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'HarmonyOS Sans SC', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     --sans-en: 'Syne', 'Outfit', var(--sans);
-    /* ?? ????/?? token?????�??�??????? */
+    /* —— 统一方块/卡片 token（浅色：白·浅灰·蓝绿描边）—— */
     --block-bg: #ffffff;
     --block-bg-elevated: rgba(255, 255, 255, 0.85);
     --block-bg-subtle: rgba(255, 255, 255, 0.55);
@@ -383,7 +383,7 @@
     line-height: 1.5;
   }
 
-  /* ?? ??? ?? */
+  /* —— 主应用 —— */
   #app { display: none; position: relative; z-index: 1; min-height: 100vh; }
   #app.visible { display: flex; flex-direction: column; }
 
@@ -421,16 +421,14 @@
     line-height: 1.3;
   }
   .hero-mutter {
-    margin: -0.75rem 0 0.85rem;
+    flex: 0 0 auto;
+    margin: 0;
     font-size: 10px;
     font-weight: 400;
     letter-spacing: 0.01em;
     line-height: 1.45;
     color: rgba(60, 60, 67, 0.38);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100%;
+    max-width: 14em;
   }
   .hero-waveform {
     position: relative;
@@ -555,11 +553,10 @@
     box-shadow: var(--shadow-sm), var(--inset-hi);
   }
 
-  /* ?? 3.0 Agent ????? Nav � ? Canvas � ? Chat ?? */
+  /* —— 3.0 Agent 工作台：左 Nav · 中 Canvas · 右 Chat —— */
   .agent-workspace {
     display: grid;
     grid-template-columns: var(--agent-nav-w) minmax(0, 1fr) var(--agent-chat-w);
-    align-items: stretch;
     gap: 0;
     min-height: min(72vh, 720px);
     border-radius: var(--r-xl);
@@ -627,7 +624,6 @@
     display: flex;
     flex-direction: column;
     min-width: 0;
-    min-height: 100%;
     background: var(--block-bg-muted);
     border-right: 1px solid var(--block-border);
   }
@@ -656,38 +652,6 @@
     margin: 0;
     flex: 1;
     min-width: 0;
-  }
-  .canvas-subtitle-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    margin: 0 0 6px;
-    min-height: 0;
-    flex-wrap: nowrap;
-  }
-  .canvas-subtitle {
-    flex: 1;
-    min-width: 0;
-    font-size: 12px;
-    line-height: 1.45;
-    color: var(--ink3);
-    margin: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  .canvas-subtitle-actions {
-    flex-shrink: 0;
-    display: flex;
-    gap: 8px;
-    align-items: center;
-  }
-  .canvas-subtitle-actions .btn-refresh {
-    font-size: 11px;
-    padding: 5px 12px;
-    min-height: var(--btn-min-h-sm);
-    white-space: nowrap;
   }
   .canvas-title-cta {
     flex-shrink: 0;
@@ -809,7 +773,6 @@
   .agent-chat {
     display: flex;
     flex-direction: column;
-    height: 100%;
     min-height: 0;
     background: var(--block-bg-muted);
     padding: 12px;
@@ -823,9 +786,10 @@
   .agent-chat-head h3 { font-size: 14px; font-weight: 700; }
   .agent-chat-sub { font-size: 11px; color: var(--ink3); margin-bottom: 10px; }
   .agent-chat-msgs {
-    flex: 1 1 auto;
+    flex: 1;
     overflow-y: auto;
-    min-height: 0;
+    min-height: 160px;
+    max-height: min(42vh, 360px);
     margin-bottom: 10px;
   }
   .agent-chat-bubble {
@@ -1649,7 +1613,7 @@
     gap: 10px;
     margin-bottom: 12px;
   }
-  /* ?? v2.0 ???? ?? */
+  /* ── v2.0 产品面试 ── */
   .v2-badge {
     display: inline-block;
     font-size: 10px;
@@ -1752,7 +1716,7 @@
   .bank-item-hint { font-size: 11px; color: #5e5ce6; margin-top: 6px; }
   .bank-item-text { font-size: 14px; color: var(--ink); line-height: 1.5; }
 
-  /* ?? Sense ????? ?? */
+  /* ── Sense 训练主流程 ── */
   .sense-home { max-width: 720px; margin: 0 auto; }
   .sense-loop {
     display: flex;
@@ -1799,7 +1763,7 @@
   .sense-session-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
   .feedback-card .feedback-head { font-size: 13px; font-weight: 700; letter-spacing: 0.02em; color: #5e5ce6; }
 
-  /* ?? ???????? / ???? ?? */
+  /* ── 双模块：面试训练 / 简历优化 ── */
   .module-subtabs {
     display: flex;
     gap: 8px;
@@ -1958,7 +1922,7 @@
     gap: 12px;
     margin-bottom: 14px;
     align-items: stretch;
-    /* ?????????????????? */
+    /* 固定同一行高度，左右两栏外框必须等高 */
     height: min(540px, calc(100vh - 260px));
     min-height: 400px;
   }
@@ -2048,22 +2012,11 @@
     padding: 0 14px 10px;
     margin: 0;
   }
-  .score-pane {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    flex: 1;
-    min-height: 0;
-  }
   .score-pane-metrics {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 6px;
     flex-shrink: 0;
-  }
-  .score-pane-metrics--single {
-    grid-template-columns: 1fr;
-    max-width: 108px;
   }
   .score-pane-metric {
     background: #f8fafc;
@@ -2436,7 +2389,7 @@
   }
   .module-intro { font-size: 13px; color: var(--ink2); line-height: 1.6; margin-bottom: 14px; }
 
-  /* ?? AI ???? ?? */
+  /* ── AI 项目教练 ── */
   .coach-layout-single { max-width: 760px; margin: 0 auto; }
   .coach-main { min-width: 0; }
   @media (max-width: 899px) {
@@ -3378,7 +3331,7 @@
 
   html[data-theme="light"] { color-scheme: light; }
 
-  /* ?? ?????? � ? � ? ?? */
+  /* —— 深色模式：黑 · 紫 · 白 —— */
   html[data-theme="dark"] {
     color-scheme: dark;
     --page-bg: #000000;
@@ -3471,11 +3424,11 @@
     background-image: url('/assets/purple-cubes-bg.png');
     background-repeat: no-repeat;
     background-position: top right;
-    background-size: clamp(320px, 48vw, 600px) auto;
+    background-size: clamp(300px, 46vw, 560px) auto;
     opacity: 1;
     mask-image:
-      linear-gradient(180deg, #000 0%, #000 72%, rgba(0, 0, 0, 0.92) 82%, rgba(0, 0, 0, 0.62) 91%, rgba(0, 0, 0, 0.24) 97%, transparent 100%),
-      linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.04) 28%, #000 56%);
+      linear-gradient(180deg, #000 0%, #000 64%, rgba(0, 0, 0, 0.88) 76%, rgba(0, 0, 0, 0.52) 88%, rgba(0, 0, 0, 0.18) 96%, transparent 100%),
+      linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.06) 24%, #000 52%);
     mask-composite: intersect;
     -webkit-mask-composite: source-in;
   }
@@ -3484,13 +3437,10 @@
     position: absolute;
     top: 0;
     right: 0;
-    width: clamp(320px, 48vw, 600px);
-    height: clamp(380px, 62vh, 760px);
+    width: clamp(300px, 46vw, 560px);
+    height: clamp(320px, 52vh, 620px);
     pointer-events: none;
-    background: linear-gradient(180deg, transparent 0%, transparent 48%, rgba(0, 0, 0, 0.18) 68%, rgba(0, 0, 0, 0.55) 84%, var(--page-bg) 100%);
-  }
-  html[data-theme="dark"] .hero-mutter {
-    color: rgba(235, 235, 245, 0.38);
+    background: linear-gradient(180deg, transparent 0%, transparent 58%, rgba(0, 0, 0, 0.22) 78%, var(--page-bg) 100%);
   }
   html[data-theme="dark"] .hero-compact::before {
     display: none;
@@ -3697,16 +3647,44 @@
   html[data-theme="dark"] .score-dash-value--blue { color: #a78bfa; }
   html[data-theme="dark"] .score-dash-value--green { color: #4ade80; }
   html[data-theme="dark"] .score-dim-score { color: #c084fc; }
-  html[data-theme="dark"] .btn-primary:disabled {
-    opacity: 1;
-    color: rgba(255, 255, 255, 0.72);
-    background: linear-gradient(180deg, #6e5a88 0%, #5c4a78 50%, #4a3a66 100%);
+  html[data-theme="dark"] .canvas-title-cta .btn-primary,
+  html[data-theme="dark"] .agent-chat-compose .btn-primary {
+    background: linear-gradient(180deg, #4ae0ad 0%, #32d598 42%, #26c281 100%);
     box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.08),
-      0 2px 0 #3a2d58,
-      0 3px 8px rgba(0, 0, 0, 0.18);
-    cursor: not-allowed;
-    transform: none;
+      inset 0 1px 0 rgba(255, 255, 255, 0.24),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.12),
+      0 3px 0 #1e9e68,
+      0 4px 12px rgba(38, 194, 129, 0.38);
+  }
+  html[data-theme="dark"] .canvas-title-cta .btn-primary:hover:not(:disabled),
+  html[data-theme="dark"] .agent-chat-compose .btn-primary:hover:not(:disabled) {
+    background: linear-gradient(180deg, #55e6b8 0%, #3adba2 42%, #2bcc8a 100%);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.3),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.1),
+      0 4px 0 #1e9e68,
+      0 6px 16px rgba(38, 194, 129, 0.44);
+  }
+  html[data-theme="dark"] .agent-chat-compose .btn-primary {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.24),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.1),
+      0 1px 0 #1e9e68,
+      0 2px 8px rgba(38, 194, 129, 0.38);
+  }
+  html[data-theme="dark"] .agent-chat-compose .btn-primary:hover:not(:disabled) {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.3),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.08),
+      0 2px 0 #1e9e68,
+      0 4px 14px rgba(38, 194, 129, 0.44);
+  }
+  html[data-theme="dark"] .agent-chat-compose .btn-primary:active {
+    box-shadow:
+      inset 0 2px 4px rgba(0, 0, 0, 0.18),
+      inset 0 1px 0 rgba(255, 255, 255, 0.16),
+      0 0 0 #1e9e68,
+      0 2px 8px rgba(38, 194, 129, 0.38);
   }
   @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
     html[data-theme="dark"] .glass,
@@ -3751,17 +3729,17 @@
     <div class="bg-cubes" aria-hidden="true"></div>
   </div>
   <div class="header-actions" id="headerActions" hidden>
-    <button type="button" class="btn-theme" id="btnTheme" aria-label="???????">??</button>
+    <button type="button" class="btn-theme" id="btnTheme" aria-label="切换深浅色主题">深色</button>
     <button type="button" class="btn-trace" id="btnTrace">Trace</button>
-    <button type="button" class="btn-history" id="btnHistory">????</button>
+    <button type="button" class="btn-history" id="btnHistory">练习记录</button>
   </div>
   <div class="page-wrap">
 
   <section class="hero-compact">
     <div class="hero-copy">
       <p class="hero-brand" aria-label="CVassistant"><span class="hb-mind">CV</span><span class="hb-train">assistant</span></p>
-      <p class="hero-mutter" lang="ko">????? ??? ? ??? ?????</p>
       <div class="hero-eyebrow-row">
+        <p class="hero-mutter" lang="ko">씨발이력서 수정은 왜 이렇게 어려울까요</p>
         <canvas id="heroWaveform" class="hero-waveform" aria-hidden="true"></canvas>
       </div>
     </div>
@@ -3769,28 +3747,28 @@
 
   <div class="sync-bar surface" id="syncBar">
     <span class="sync-dot" id="syncDot"></span>
-    <span id="syncText">?????</span>
+    <span id="syncText">正在加载…</span>
   </div>
 
-  <div id="mainContent" class="loading-main">????</div>
+  <div id="mainContent" class="loading-main">加载中…</div>
 
-  <footer class="footer"><span class="footer-brand" aria-label="CVassistant"><span class="hb-mind">CV</span><span class="hb-train">assistant</span></span><span class="v2-badge">3.0</span> � <a class="footer-link" href="/download">??</a> � <a class="footer-link" href="https://github.com/mianei/ops-trainer" target="_blank" rel="noopener noreferrer">GitHub</a></footer>
+  <footer class="footer"><span class="footer-brand" aria-label="CVassistant"><span class="hb-mind">CV</span><span class="hb-train">assistant</span></span><span class="v2-badge">3.0</span> · <a class="footer-link" href="/download">下载</a> · <a class="footer-link" href="https://github.com/mianei/ops-trainer" target="_blank" rel="noopener noreferrer">GitHub</a></footer>
   </div>
 </div>
 
 <div class="history-modal" id="traceModal" aria-hidden="true">
   <div class="history-panel history-panel--wide" role="dialog" aria-labelledby="traceTitle">
-    <button type="button" class="history-close" id="traceClose" aria-label="??">�</button>
+    <button type="button" class="history-close" id="traceClose" aria-label="关闭">×</button>
     <h3 id="traceTitle">Observation Trace</h3>
-    <div id="traceModalBody"><p style="color:var(--ink3)">????</p></div>
+    <div id="traceModalBody"><p style="color:var(--ink3)">加载中…</p></div>
   </div>
 </div>
 
 <div class="history-modal" id="historyModal" aria-hidden="true">
   <div class="history-panel" role="dialog" aria-labelledby="historyTitle">
-    <button type="button" class="history-close" id="historyClose" aria-label="??">�</button>
-    <h3 id="historyTitle">AI PM ????</h3>
-    <div id="historyBody"><p style="color:var(--ink3)">????</p></div>
+    <button type="button" class="history-close" id="historyClose" aria-label="关闭">×</button>
+    <h3 id="historyTitle">AI PM 练习记录</h3>
+    <div id="historyBody"><p style="color:var(--ink3)">加载中…</p></div>
   </div>
 </div>
 
@@ -3805,19 +3783,19 @@ if (LEGACY_WORKSPACE[workspaceMode]) {
   workspaceMode = LEGACY_WORKSPACE[workspaceMode];
   localStorage.setItem('workspaceMode', workspaceMode);
 }
-/** 3.0 Agent ??? */
+/** 3.0 Agent 工作台 */
 let agentScene = workspaceMode === 'resume' ? 'resume' : (localStorage.getItem('interviewSubView') || 'prep') === 'scenario' ? 'scenario' : 'prep';
 const CANVAS_TABS = {
-  resume: ['??', '??', '??'],
-  scenario: ['??', '??', '??'],
-  prep: ['????', '????', '??'],
-  kb: ['??']
+  resume: ['评分', '优化', '文档'],
+  scenario: ['题目', '点评', '解析'],
+  prep: ['准备报告', '追问清单', '文档'],
+  kb: ['阅读']
 };
 const canvasTabByScene = {
-  resume: localStorage.getItem('canvasTab_resume') || '??',
-  scenario: localStorage.getItem('canvasTab_scenario') || '??',
-  prep: localStorage.getItem('canvasTab_prep') || '????',
-  kb: localStorage.getItem('canvasTab_kb') || '??'
+  resume: localStorage.getItem('canvasTab_resume') || '评分',
+  scenario: localStorage.getItem('canvasTab_scenario') || '题目',
+  prep: localStorage.getItem('canvasTab_prep') || '准备报告',
+  kb: localStorage.getItem('canvasTab_kb') || '阅读'
 };
 /** @type {{ name: string, status: string, detail: string }[]} */
 let agentToolSteps = [];
@@ -3838,7 +3816,7 @@ const v2RecorderByTopic = {};
 let knowledgePageId = localStorage.getItem('knowledgePageId') || 'ai-pm';
 let knowledgeFlatIndex = 0;
 let knowledgeBodyPageIndex = 0;
-/** ???????????/?????????? */
+/** 切到知识库前暂存的题目/作答，返回练习时恢复 */
 const scenarioPinByTopic = Object.create(null);
 const answerDraftByTopic = Object.create(null);
 let trainUiReturnTopicId = '';
@@ -3856,16 +3834,16 @@ let interviewDraftMessage = '';
 const KNOWLEDGE_PAGES = [
   {
     id: 'ai-pm',
-    label: 'AI ????',
+    label: 'AI 产品方法',
     cat: 'interview',
-    hint: 'RAG � Agent � Eval � AIGC ??',
+    hint: 'RAG · Agent · Eval · AIGC 产品',
     sectionIds: ['platform-aigc', 'web-ai-pm', 'interview-pm-extra']
   },
   {
     id: 'interview',
-    label: '????',
+    label: '面试表达',
     cat: 'interview',
-    hint: 'STAR � ?? � ?? defense',
+    hint: 'STAR · 框架 · 项目 defense',
     sectionIds: ['interview-skills', 'interview-expr', 'interview-frameworks', 'web-interview-core']
   }
 ];
@@ -3887,11 +3865,11 @@ const mentorSessions = {};
 
 const app = document.getElementById('app');
 
-/** ???? AI ???????? */
+/** 侧栏：仅 AI 产品经理训练模块 */
 const CURRICULUM = {
   aiPm: [
-    { label: 'AI ?????', id: 'iv-pm', desc: 'RAG � Agent � ?? � AIGC � ?????' },
-    { label: '???????', id: 'iv-exp', poolIds: ['iv-exp', 'iv-self', 'iv-career'], desc: 'STAR � ?? defense � ????' }
+    { label: 'AI 产品专业课', id: 'iv-pm', desc: 'RAG · Agent · 评测 · AIGC · 大模型产品' },
+    { label: '求职与项目表达', id: 'iv-exp', poolIds: ['iv-exp', 'iv-self', 'iv-career'], desc: 'STAR · 项目 defense · 动机规划' }
   ]
 };
 
@@ -3907,7 +3885,7 @@ function buildNavMeta() {
 
 function navCategory(id) {
   if (CURRICULUM.aiPm.some(m => m.id === id || curriculumPoolIds(m).includes(id))) {
-    return { cat: 'interview', catLabel: 'AI ????' };
+    return { cat: 'interview', catLabel: 'AI 产品经理' };
   }
   const t = getTopic(id);
   return meta(t);
@@ -3921,8 +3899,8 @@ function getNavModule(id) {
 
 function meta(topicOrId) {
   const t = typeof topicOrId === 'string' ? getTopic(topicOrId) : topicOrId;
-  if (!t) return { cat: 'interview', catLabel: 'AI ????', desc: '' };
-  return { cat: 'interview', catLabel: t.catLabel || 'AI ????', desc: t.desc || '' };
+  if (!t) return { cat: 'interview', catLabel: 'AI 产品经理', desc: '' };
+  return { cat: 'interview', catLabel: t.catLabel || 'AI 产品经理', desc: t.desc || '' };
 }
 
 function topicMap() {
@@ -4008,14 +3986,14 @@ async function loadTopics() {
   if (!topics.length) {
     topics = [{
       id: 'iv-pm',
-      label: 'AI ????',
-      fieldLabel: '? AI ???????????????????',
-      placeholder: '???????',
+      label: 'AI 产品经理',
+      fieldLabel: '从 AI 产品视角作答：场景、方案、评测与迭代。',
+      placeholder: '写下你的分析…',
       scenarios: [],
-      systemPrompt: '???? AI ?????????????????? RAG/Agent/???????????????????300 ??????',
+      systemPrompt: '你是一位 AI 产品经理面试官。点评学员作答是否体现 RAG/Agent/评测思维、产品判断与可辩护的项目叙事。300 字内，中文。',
       cat: 'interview',
-      catLabel: 'AI ????',
-      desc: 'RAG � Agent � Eval'
+      catLabel: 'AI 产品经理',
+      desc: 'RAG · Agent · Eval'
     }];
   }
   for (const file of ['scenarios-interview-pm.json', 'scenarios-interview-misc.json', 'scenarios-interview-open.json']) {
@@ -4046,7 +4024,7 @@ function updateModuleHead(id) {
   const head = document.getElementById('moduleHead');
   if (!head || !t) return;
   const focusBlock = activeGoalFocus
-    ? `<p class="mh-focus"><span class="mh-focus-label">?????</span>${escapeHtml(activeGoalFocus)}</p>`
+    ? `<p class="mh-focus"><span class="mh-focus-label">本次重点：</span>${escapeHtml(activeGoalFocus)}</p>`
     : '';
   head.innerHTML = `
     ${focusBlock}
@@ -4079,7 +4057,7 @@ function renderNavGroup(nav, cat, catLabel, modules, topicById, activeRef) {
   group.className = 'nav-group cat-' + cat;
   const head = document.createElement('div');
   head.className = 'nav-group-head';
-  head.innerHTML = `${escapeHtml(catLabel)}<span class="nav-summary-count">${modules.length} ??</span>`;
+  head.innerHTML = `${escapeHtml(catLabel)}<span class="nav-summary-count">${modules.length} 模块</span>`;
   group.appendChild(head);
   const body = document.createElement('div');
   body.className = 'nav-group-body';
@@ -4095,19 +4073,19 @@ function renderNavGroup(nav, cat, catLabel, modules, topicById, activeRef) {
 
 function scenarioSearchBarHtml() {
   return `<div class="scenario-search-wrap" id="scenarioSearchWrap">
-    <label class="scenario-search-label" for="scenarioSearchInput">????</label>
+    <label class="scenario-search-label" for="scenarioSearchInput">搜索题目</label>
     <div class="scenario-search-field">
       <span class="scenario-search-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></span>
-      <input type="search" class="scenario-search-input" id="scenarioSearchInput" placeholder="????RAG?Agent????????AIGC?STAR?" autocomplete="off" enterkeyhint="search" />
+      <input type="search" class="scenario-search-input" id="scenarioSearchInput" placeholder="关键词：RAG、Agent、评测、大模型、AIGC、STAR…" autocomplete="off" enterkeyhint="search" />
     </div>
     <div class="scenario-search-chips" id="scenarioSearchChips">
       <button type="button" class="scenario-search-chip" data-q="RAG">RAG</button>
       <button type="button" class="scenario-search-chip" data-q="Agent">Agent</button>
-      <button type="button" class="scenario-search-chip" data-q="??">??</button>
+      <button type="button" class="scenario-search-chip" data-q="评测">评测</button>
       <button type="button" class="scenario-search-chip" data-q="AIGC">AIGC</button>
-      <button type="button" class="scenario-search-chip" data-q="???">???</button>
+      <button type="button" class="scenario-search-chip" data-q="大模型">大模型</button>
       <button type="button" class="scenario-search-chip" data-q="STAR">STAR</button>
-      <button type="button" class="scenario-search-chip" data-q="??">??</button>
+      <button type="button" class="scenario-search-chip" data-q="面经">面经</button>
     </div>
     <div class="scenario-search-results" id="scenarioSearchResults" hidden></div>
   </div>`;
@@ -4115,16 +4093,16 @@ function scenarioSearchBarHtml() {
 
 function goalPlanBarHtml() {
   return `<div class="goal-plan-wrap" id="goalPlanWrap">
-    <label class="goal-plan-label" for="goalPlanInput">???? � ???????</label>
+    <label class="goal-plan-label" for="goalPlanInput">备战助手 · 说明目标或困惑</label>
     <div class="goal-plan-row">
-      <input type="text" class="goal-plan-input" id="goalPlanInput" placeholder="??????? AI ???? / ?? AI ???? / ???? RAG ?? defense" autocomplete="off" enterkeyhint="go" />
-      <button type="button" class="btn-primary goal-plan-btn" id="goalPlanBtn">????</button>
+      <input type="text" class="goal-plan-input" id="goalPlanInput" placeholder="如：明天面字节 AI 产品经理 / 诊断 AI 项目简历 / 帮我准备 RAG 项目 defense" autocomplete="off" enterkeyhint="go" />
+      <button type="button" class="btn-primary goal-plan-btn" id="goalPlanBtn">开始训练</button>
     </div>
     <p class="goal-plan-error" id="goalPlanError" role="alert"></p>
   </div>
   <div class="mission-bar" id="missionBar" hidden>
     <div class="mission-bar-head">
-      <span class="mission-bar-title">Agent ???</span>
+      <span class="mission-bar-title">Agent 任务流</span>
       <span class="mission-bar-progress" id="missionProgress"></span>
     </div>
     <p class="mission-bar-focus" id="missionFocus"></p>
@@ -4140,12 +4118,12 @@ function buildScenarioIndex() {
     pool.forEach(scenario => {
       if (!scenario || seen.has(scenario)) return;
       seen.add(scenario);
-      const tagMatch = String(scenario).match(/^?([^�?]+)�([^?]+)?/);
+      const tagMatch = String(scenario).match(/^【([^·】]+)·([^】]+)】/);
       SCENARIO_INDEX.push({
         navId: mod.id,
         moduleLabel: mod.label,
         scenario,
-        tag: tagMatch ? tagMatch[1] + '�' + tagMatch[2].split('�')[0] : ''
+        tag: tagMatch ? tagMatch[1] + '·' + tagMatch[2].split('·')[0] : ''
       });
     });
   }
@@ -4173,7 +4151,7 @@ function searchScenarios(query, limit = 24) {
     const hay = (item.scenario + ' ' + item.moduleLabel + ' ' + item.tag).toLowerCase();
     if (!tokens.every(t => hay.includes(t))) continue;
     let score = 0;
-    if (item.scenario.toLowerCase().startsWith('?' + tokens[0])) score += 3;
+    if (item.scenario.toLowerCase().startsWith('【' + tokens[0])) score += 3;
     if (item.tag.toLowerCase().includes(tokens[0])) score += 2;
     if (item.scenario.toLowerCase().indexOf(q) >= 0) score += 1;
     scored.push({ item, score });
@@ -4255,16 +4233,16 @@ function renderLlmDemoBox(llmGenerate, ragSession) {
   const n = llmGenerate?.count || 0;
   let note = '';
   if (ragN && llmGenerate?.grounded) {
-    note = `??? ${ragN} ????? RAG?????? ${n} ?????????????????????`;
+    note = `已检索 ${ragN} 条面经注入 RAG，并据此生成 ${n} 道题；提交作答时点评也会引用这些面经摘要。`;
   } else if (ragN) {
-    note = `??? ${ragN} ????? RAG??????????????`;
+    note = `已检索 ${ragN} 条面经注入 RAG，点评时会与知识库一并引用。`;
   } else if (llmGenerate?.enabled) {
-    note = `??? ${n} ???????????????????? interview-rag-feed.json?Agent ????? RAG ???`;
+    note = `已生成 ${n} 道仿真题。后续可把优质面经写入项目根目录 interview-rag-feed.json，Agent 会自动当作 RAG 使用。`;
   } else if (ragN) {
-    note = `??? ${ragN} ??????? RAG??????????????`;
+    note = `已加载 ${ragN} 条投喂面经作为 RAG，出题与点评会参考这些内容。`;
   }
   box.innerHTML = `
-    <div class="llm-demo-head">${ragN ? '?? RAG + AI ??' : 'AI ???? � Demo'}</div>
+    <div class="llm-demo-head">${ragN ? '面经 RAG + AI 出题' : 'AI 仿真出题 · Demo'}</div>
     <p class="llm-demo-note">${escapeHtml(note)}</p>
   `;
 }
@@ -4281,18 +4259,18 @@ function renderExternalSearchBox(search) {
   const note = search.message
     ? `<p class="external-search-note">${escapeHtml(search.message)}</p>`
     : search.enabled
-      ? `<p class="external-search-note">???? / ??? / ?????????${escapeHtml(search.query || '')}??????????</p>`
+      ? `<p class="external-search-note">已从牛客 / 小红书 / 知乎公开索引检索「${escapeHtml(search.query || '')}」，并提炼可练题目。</p>`
       : '';
   box.innerHTML = `
-    <div class="external-search-head">??????</div>
+    <div class="external-search-head">外部面经检索</div>
     ${note}
     ${search.results.slice(0, 6).map(r => {
-      const meta = escapeHtml(r.sourceLabel || r.label || r.source || '??');
-      const title = escapeHtml(r.title || '????');
+      const meta = escapeHtml(r.sourceLabel || r.label || r.source || '来源');
+      const title = escapeHtml(r.title || '查看原文');
       const snip = escapeHtml((r.snippet || '').slice(0, 120));
       const url = escapeAttr(r.url || '#');
       return `<a class="external-search-item" href="${url}" target="_blank" rel="noopener noreferrer">
-        <span class="external-search-meta">${meta}${r.external ? ' � ????' : ''}</span>
+        <span class="external-search-meta">${meta}${r.external ? ' · 手动打开' : ''}</span>
         <span class="external-search-title">${title}</span>
         ${snip ? `<span class="external-search-snippet">${snip}</span>` : ''}
       </a>`;
@@ -4313,17 +4291,17 @@ function renderMissionBar() {
   const done = agentMission.steps.filter(s => s.status === 'done').length;
   const cur = agentMission.currentIndex + 1;
   const intent = agentMission.intent || {};
-  let modeLabel = 'Agent ???';
+  let modeLabel = 'Agent 任务流';
   if (intent.mode === 'interview') {
-    modeLabel = intent.urgent ? '??????' : '????';
+    modeLabel = intent.urgent ? '明日面试冲刺' : '面试备战';
     if (intent.roleLabel || intent.company) {
-      modeLabel += ' � ' + [intent.company, intent.roleLabel].filter(Boolean).join(' ');
+      modeLabel += ' · ' + [intent.company, intent.roleLabel].filter(Boolean).join(' ');
     }
   }
   const titleEl = bar.querySelector('.mission-bar-title');
   if (titleEl) titleEl.textContent = modeLabel;
-  if (prog) prog.textContent = `?? ${done}/${total} � ? ${cur} ?`;
-  if (focusEl) focusEl.innerHTML = `<strong>?????</strong>${escapeHtml(agentMission.focus || agentMission.goal)}`;
+  if (prog) prog.textContent = `进度 ${done}/${total} · 第 ${cur} 步`;
+  if (focusEl) focusEl.innerHTML = `<strong>本次重点：</strong>${escapeHtml(agentMission.focus || agentMission.goal)}`;
   activeGoalFocus = agentMission.focus || agentMission.goal;
 }
 
@@ -4340,24 +4318,24 @@ function renderMissionStepList() {
   }
   box.hidden = false;
   box.innerHTML = `
-    <div class="goal-plan-list-head">????</div>
+    <div class="goal-plan-list-head">任务清单</div>
     ${steps.map((step, i) => {
       const isCurrent = i === agentMission.currentIndex && step.status !== 'done';
       const isDone = step.status === 'done';
       let label = '';
       let preview = '';
       if (step.type === 'read') {
-        label = '?? � ' + (step.title || step.cardId || '???');
-        preview = '???????';
+        label = '阅读 · ' + (step.title || step.cardId || '知识卡');
+        preview = '先读框架再练题';
       } else if (step.type === 'practice') {
         const mod = getNavModule(step.topicId);
         const prefix = step.generated
-          ? (step.grounded || (step.scenario && step.scenario.includes('RAG??')) ? 'RAG?? � ' : 'AI ?? � ')
-          : step.external || step.fromSearch ? '???? � ' : '?? � ';
+          ? (step.grounded || (step.scenario && step.scenario.includes('RAG面经')) ? 'RAG面经 · ' : 'AI 生成 · ')
+          : step.external || step.fromSearch ? '外部面经 · ' : '练习 · ';
         label = prefix + (mod ? mod.label : step.topicId);
         preview = step.scenario
-          ? step.scenario.replace(/^?[^?]+?\s*/, '').trim().slice(0, 72) + (step.scenario.length > 72 ? '?' : '')
-          : '?????';
+          ? step.scenario.replace(/^【[^】]+】\s*/, '').trim().slice(0, 72) + (step.scenario.length > 72 ? '…' : '')
+          : '待加载题目';
       } else {
         label = step.type;
         preview = '';
@@ -4405,18 +4383,18 @@ function showMissionReadStep(step, stepIndex) {
     const bodyText = bodyPages[bodyPage] || '';
     const bodyPager = bodyPages.length > 1
       ? `<div class="mission-read-pager">
-          <button type="button" class="kc-nav" id="missionBodyPrev" ${bodyPage <= 0 ? 'disabled' : ''}>???</button>
+          <button type="button" class="kc-nav" id="missionBodyPrev" ${bodyPage <= 0 ? 'disabled' : ''}>上一页</button>
           <span class="knowledge-pager-pos">${bodyPage + 1} / ${bodyPages.length}</span>
-          <button type="button" class="kc-nav" id="missionBodyNext" ${bodyPage >= bodyPages.length - 1 ? 'disabled' : ''}>???</button>
+          <button type="button" class="kc-nav" id="missionBodyNext" ${bodyPage >= bodyPages.length - 1 ? 'disabled' : ''}>下一页</button>
         </div>`
       : '';
     panel.innerHTML = `
       <article class="surface-card mission-read-card">
-        <div class="mission-step-tag">? ${stepIndex + 1} ? � ??</div>
+        <div class="mission-step-tag">第 ${stepIndex + 1} 步 · 阅读</div>
         <h3>${escapeHtml(card.title)}</h3>
         <div class="mission-read-body mission-read-body-paged">${escapeHtml(bodyText)}</div>
         ${bodyPager}
-        <button type="button" class="btn-primary mission-step-done-btn" id="missionStepDoneBtn">??????</button>
+        <button type="button" class="btn-primary mission-step-done-btn" id="missionStepDoneBtn">已读完，继续</button>
       </article>
     `;
     document.getElementById('missionBodyPrev')?.addEventListener('click', () => {
@@ -4444,7 +4422,7 @@ function showMissionPracticeStep(step, stepIndex) {
     step.scenario = resolvePracticeScenario(step.topicId, step.keywords, agentMission.doneKeys);
   }
   if (!step.scenario) {
-    showGoalPlanError('?????????');
+    showGoalPlanError('该模块暂无可用题目');
     completeMissionStep(stepIndex);
     advanceMission();
     return;
@@ -4488,7 +4466,7 @@ function advanceMission() {
   if (idx < 0) {
     showGoalPlanError('');
     const bar = document.getElementById('missionProgress');
-    if (bar) bar.textContent = '???? ?';
+    if (bar) bar.textContent = '任务完成 ✓';
     setMissionViewMode('practice');
     return;
   }
@@ -4537,11 +4515,11 @@ function onMissionPracticeComplete(topicId, rubricAvg, scenario) {
 async function startMission(goal) {
   goal = String(goal || '').trim();
   if (!goal) {
-    showGoalPlanError('???????');
+    showGoalPlanError('请输入学习目标');
     return;
   }
   if (!TOPICS.length) {
-    showGoalPlanError('????????');
+    showGoalPlanError('题目尚未加载完成');
     return;
   }
   const btn = document.getElementById('goalPlanBtn');
@@ -4549,14 +4527,14 @@ async function startMission(goal) {
   showGoalPlanError('');
   const coachIntent = detectCoachIntentLocal(goal);
   if (coachIntent) {
-    if (btn) { btn.disabled = false; btn.textContent = '????'; }
+    if (btn) { btn.disabled = false; btn.textContent = '开始训练'; }
     openCoachFromGoal(goal, coachIntent);
     if (input) input.blur();
     return;
   }
   if (btn) {
     btn.disabled = true;
-    btn.textContent = /?|??|?[??]|??/i.test(goal) ? '??? AI ???' : '????';
+    btn.textContent = /面|面试|明[天日]|后天/i.test(goal) ? '规划并 AI 出题…' : '规划中…';
   }
   try {
     if (workspaceMode !== 'train') {
@@ -4576,13 +4554,13 @@ async function startMission(goal) {
       body: JSON.stringify({ goal, catalog, cardCatalog })
     });
     const data = await res.json().catch(() => ({}));
-    if (!res.ok) throw new Error(data.error || '?????HTTP ' + res.status + '?');
+    if (!res.ok) throw new Error(data.error || '规划失败（HTTP ' + res.status + '）');
     const steps = (Array.isArray(data.steps) ? data.steps : []).map(s => ({
       ...s,
       status: 'pending'
     }));
     if (!steps.length) {
-      showGoalPlanError('?????????????????');
+      showGoalPlanError('未生成有效任务，请换个目标描述再试');
       return;
     }
     agentMission = {
@@ -4607,11 +4585,11 @@ async function startMission(goal) {
     runMissionStep(0);
     if (input) input.blur();
   } catch (e) {
-    showGoalPlanError(e.message || '????');
+    showGoalPlanError(e.message || '规划失败');
   } finally {
     if (btn) {
       btn.disabled = false;
-      btn.textContent = '????';
+      btn.textContent = '开始训练';
     }
   }
 }
@@ -4658,14 +4636,14 @@ function renderScenarioSearchResults(query) {
   scenarioSearchHits = hits;
   if (!hits.length) {
     box.hidden = false;
-    box.innerHTML = '<p class="scenario-search-empty">???????????????????OTA?????</p>';
+    box.innerHTML = '<p class="scenario-search-empty">未找到匹配题目，试试「面经」「数据」「OTA」等关键词</p>';
     return;
   }
   box.hidden = false;
   box.innerHTML = hits.map((item, i) => {
-    const preview = item.scenario.length > 120 ? item.scenario.slice(0, 120) + '?' : item.scenario;
+    const preview = item.scenario.length > 120 ? item.scenario.slice(0, 120) + '…' : item.scenario;
     return `<button type="button" class="scenario-search-item" data-hit="${i}">
-      <span class="scenario-search-item-meta">${escapeHtml(item.moduleLabel)}${item.tag ? ' � ' + escapeHtml(item.tag) : ''}</span>
+      <span class="scenario-search-item-meta">${escapeHtml(item.moduleLabel)}${item.tag ? ' · ' + escapeHtml(item.tag) : ''}</span>
       ${highlightSearchText(preview, q)}
     </button>`;
   }).join('');
@@ -4717,9 +4695,9 @@ function bindScenarioSearch() {
 }
 
 function modeBarHtml() {
-  return `<div class="workspace-mode-bar" role="tablist" aria-label="???">
-    <button type="button" class="mode-btn${workspaceMode === 'interview' ? ' active' : ''}" data-mode="interview" role="tab">????</button>
-    <button type="button" class="mode-btn${workspaceMode === 'resume' ? ' active' : ''}" data-mode="resume" role="tab">????</button>
+  return `<div class="workspace-mode-bar" role="tablist" aria-label="主模块">
+    <button type="button" class="mode-btn${workspaceMode === 'interview' ? ' active' : ''}" data-mode="interview" role="tab">面试训练</button>
+    <button type="button" class="mode-btn${workspaceMode === 'resume' ? ' active' : ''}" data-mode="resume" role="tab">简历优化</button>
   </div>`;
 }
 
@@ -4742,10 +4720,10 @@ function setCanvasTab(scene, tab) {
 
 function agentNavHtml(activeScene) {
   const items = [
-    { id: 'resume', label: '?? Agent' },
-    { id: 'scenario', label: '????' },
-    { id: 'prep', label: '????' },
-    { id: 'kb', label: '???' }
+    { id: 'resume', label: '简历 Agent' },
+    { id: 'scenario', label: '业务场景' },
+    { id: 'prep', label: '面试准备' },
+    { id: 'kb', label: '知识库' }
   ];
   return items.map(it => {
     const cls = 'agent-nav-btn' + (it.id === activeScene ? ' active' : '');
@@ -4760,20 +4738,12 @@ function canvasTabsHtml(scene) {
   ).join('');
 }
 
-function canvasSubtitleFor(scene, tab) {
-  if (scene === 'resume' && tab === '??' && !profileResume.trim()
-      && !resumeScoreResult.loading && !resumeScoreResult.scoreReport && !resumeScoreResult.content) {
-    return '????????';
-  }
-  return '';
-}
-
 function canvasTitleFor(scene, tab) {
   const map = {
-    resume: { ??: '??????', ??: '???? � Bullet ??', ??: '???? � ??' },
-    scenario: { ??: '???? � ????', ??: '??????', ??: '?? / ?? / ??' },
-    prep: { ????: '??????', ????: 'Likely ?? � 5', ??: '???? � ??' },
-    kb: { ??: 'AI ???????' }
+    resume: { 评分: '简历评分报告', 优化: '简历优化 · Bullet 改写', 文档: '简历优化 · 文档' },
+    scenario: { 题目: '业务场景 · 当前题目', 点评: '五维点评结果', 解析: '框架 / 标准 / 对比' },
+    prep: { 准备报告: '面试准备报告', 追问清单: 'Likely 追问 × 5', 文档: '面试话术 · 导出' },
+    kb: { 阅读: 'AI 产品经理知识库' }
   };
   return map[scene]?.[tab] || tab;
 }
@@ -4794,7 +4764,7 @@ function renderAgentToolsPanel() {
     return;
   }
   toolsEl.hidden = false;
-  toolsEl.innerHTML = '<strong>????</strong>' + agentToolStepsHtml();
+  toolsEl.innerHTML = '<strong>工具调用</strong>' + agentToolStepsHtml();
 }
 
 function agentChatMessagesForScene(scene) {
@@ -4809,13 +4779,13 @@ function renderAgentChatBubbles(scene) {
   if (!el) return;
   if (!msgs.length) {
     const hint = scene === 'kb'
-      ? '????????????????? Canvas????????????? RAG?????'
-      : '?????? steer????????? Canvas ???';
+      ? '知识库阅读模式。结构化知识卡在中间 Canvas；稍后可在此询问「帮我解释 RAG」等概念。'
+      : '在右侧发指令 steer；结构化结果在中间 Canvas 展示。';
     el.innerHTML = `<div class="agent-chat-bubble agent"><div class="agent-chat-role">Agent</div>${hint}</div>`;
     return;
   }
   el.innerHTML = msgs.map(m =>
-    `<div class="agent-chat-bubble ${m.role === 'user' ? 'user' : 'agent'}"><div class="agent-chat-role">${m.role === 'user' ? '?' : 'Agent'}</div>${m.role === 'assistant' ? renderCoachBubbleHtml(m.content, m.role) : escapeHtml(m.content).replace(/\n/g, '<br/>')}</div>`
+    `<div class="agent-chat-bubble ${m.role === 'user' ? 'user' : 'agent'}"><div class="agent-chat-role">${m.role === 'user' ? '你' : 'Agent'}</div>${m.role === 'assistant' ? renderCoachBubbleHtml(m.content, m.role) : escapeHtml(m.content).replace(/\n/g, '<br/>')}</div>`
   ).join('');
   el.scrollTop = el.scrollHeight;
 }
@@ -4824,21 +4794,21 @@ function renderDocumentPanelHtml() {
   const report = resumeOptimizeResult.optimizeReport;
   const hasDoc = Boolean(report?.bullets?.length || resumeOptimizeResult.content);
   if (!hasDoc) {
-    return `<div class="resume-pane-empty">???????????????????? / ????</div>`;
+    return `<div class="resume-pane-empty">先完成「优化」标签页中的优化，再在此预览 / 导出文档</div>`;
   }
   const changes = (report?.evalBadcase || []).slice(0, 4);
   const preview = (report?.bullets || []).map(b =>
-    `<p><strong>???</strong>${escapeHtml(b.after || '')}</p>`
+    `<p><strong>改后：</strong>${escapeHtml(b.after || '')}</p>`
   ).join('') || `<p>${escapeHtml(resumeOptimizeResult.content.slice(0, 600))}</p>`;
   return `
     <div class="doc-artifact-card">
       <div class="doc-artifact-icon">W</div>
       <div style="flex:1;min-width:0">
-        <strong>????_v2.docx</strong>
-        <p style="font-size:13px;color:var(--ink2);margin:4px 0 0">Agent ??? bullet ? eval ??</p>
+        <strong>简历优化_v2.docx</strong>
+        <p style="font-size:13px;color:var(--ink2);margin:4px 0 0">Agent 已更新 bullet 与 eval 描述</p>
       </div>
     </div>
-    ${changes.length ? `<div class="surface-card surface-card--flat" style="padding:12px;margin-bottom:12px;font-size:13px"><strong>????</strong><ol style="margin:8px 0 0 18px">${changes.map(c => `<li>${escapeHtml(c)}</li>`).join('')}</ol></div>` : ''}
+    ${changes.length ? `<div class="surface-card surface-card--flat" style="padding:12px;margin-bottom:12px;font-size:13px"><strong>变更摘要</strong><ol style="margin:8px 0 0 18px">${changes.map(c => `<li>${escapeHtml(c)}</li>`).join('')}</ol></div>` : ''}
     <div class="doc-preview-pane">${preview}</div>`;
 }
 
@@ -4856,7 +4826,7 @@ async function fetchTracesFromApi(limit = 50) {
     body: JSON.stringify({ accessCode, userId: userAccountId, recordType: 'traces', limit })
   });
   const data = await res.json();
-  if (!res.ok) throw new Error(data.error || '?? trace ??');
+  if (!res.ok) throw new Error(data.error || '加载 trace 失败');
   traceApiCache.traces = { data, at: now };
   return data;
 }
@@ -4873,7 +4843,7 @@ async function fetchTokenAggregate(period = 'day', days = 7) {
     body: JSON.stringify({ accessCode, userId: userAccountId, recordType: 'token-aggregate', period, days })
   });
   const data = await res.json();
-  if (!res.ok) throw new Error(data.error || '?? token ????');
+  if (!res.ok) throw new Error(data.error || '加载 token 统计失败');
   if (period === 'day' && days === 7) traceApiCache.tokenDay7 = { data, at: now };
   return data;
 }
@@ -4902,21 +4872,21 @@ function traceToolLabel(source) {
     'coach-action-resume-optimize': 'optimize_resume',
     'coach-action-interview-prep': 'prepare_interview'
   };
-  return map[source] || String(source || '?').replace(/^coach-action-/, '');
+  return map[source] || String(source || '—').replace(/^coach-action-/, '');
 }
 
 function traceSummaryHtml(t) {
-  const at = t.at ? t.at.slice(0, 19).replace('T', ' ') : '?';
+  const at = t.at ? t.at.slice(0, 19).replace('T', ' ') : '—';
   const parts = [];
-  if (t.result?.rubricAvg != null) parts.push(`?? ${t.result.rubricAvg}`);
+  if (t.result?.rubricAvg != null) parts.push(`均分 ${t.result.rubricAvg}`);
   const preview = t.result?.summary || t.result?.textPreview;
   if (preview) parts.push(String(preview).slice(0, 100));
-  const body = parts.length ? parts.join(' � ') : (t.userAnswer ? String(t.userAnswer).slice(0, 80) + '?' : '?');
+  const body = parts.length ? parts.join(' · ') : (t.userAnswer ? String(t.userAnswer).slice(0, 80) + '…' : '—');
   return `${escapeHtml(at)}<br/><span style="color:var(--ink2)">${escapeHtml(body)}</span>`;
 }
 
 function traceBadcaseHtml(t) {
-  if (!t.badcase?.tagged) return '?';
+  if (!t.badcase?.tagged) return '—';
   const reasons = (t.badcase.reasons || []).join(', ') || 'tagged';
   return `<span class="trace-badcase" title="${escapeHtml(reasons)}">${escapeHtml(reasons)}</span>`;
 }
@@ -4925,7 +4895,7 @@ function formatTokenBucketsBar(buckets) {
   if (!Array.isArray(buckets) || !buckets.length) return '';
   const total = buckets.reduce((s, b) => s + (Number(b.total) || 0), 0);
   const reqs = buckets.reduce((s, b) => s + (Number(b.requests) || 0), 0);
-  return `<p class="trace-token-bar">? ${buckets.length} ? � ${reqs} ??? � ${total.toLocaleString()} tokens</p>`;
+  return `<p class="trace-token-bar">近 ${buckets.length} 日 · ${reqs} 次请求 · ${total.toLocaleString()} tokens</p>`;
 }
 
 function buildTracePanelHtml(scene, { historyEnabled, traces, badcases, tokenBuckets, error }) {
@@ -4933,27 +4903,27 @@ function buildTracePanelHtml(scene, { historyEnabled, traces, badcases, tokenBuc
     return `<div class="resume-pane-empty" style="color:var(--danger)">${escapeHtml(error)}</div>`;
   }
   if (!historyEnabled) {
-    return `<div class="resume-pane-empty">??????????? Upstash?</div>`;
+    return `<div class="resume-pane-empty">历史存储未启用（需配置 Upstash）</div>`;
   }
   if (!traces.length) {
-    return `<div class="resume-pane-empty">?? trace????????/??/??</div>`;
+    return `<div class="resume-pane-empty">暂无 trace，先完成一次评分/点评/准备</div>`;
   }
   const rows = traces.map((t) => `
     <tr>
-      <td>${escapeHtml(String(t.turn ?? '?'))}</td>
+      <td>${escapeHtml(String(t.turn ?? '—'))}</td>
       <td>${escapeHtml(traceToolLabel(t.source))}</td>
-      <td>${t.tokens?.total != null ? escapeHtml(String(t.tokens.total)) : '?'}</td>
+      <td>${t.tokens?.total != null ? escapeHtml(String(t.tokens.total)) : '—'}</td>
       <td>${traceBadcaseHtml(t)}</td>
       <td>${traceSummaryHtml(t)}</td>
     </tr>`).join('');
   const badcaseHint = badcases?.length
-    ? `<p style="font-size:12px;color:var(--ink3);margin-top:10px">??? badcase ${badcases.length} ????? ${traces.filter(t => t.badcase?.tagged).length} ??</p>`
+    ? `<p style="font-size:12px;color:var(--ink3);margin-top:10px">全账号 badcase ${badcases.length} 条（本场景 ${traces.filter(t => t.badcase?.tagged).length} 条）</p>`
     : '';
   return `
     ${formatTokenBucketsBar(tokenBuckets)}
     <div class="surface-card surface-card--flat" style="padding:0;overflow:hidden">
       <table class="trace-table">
-        <thead><tr><th>??</th><th>Tool</th><th>Token</th><th>Badcase</th><th>??</th></tr></thead>
+        <thead><tr><th>轮次</th><th>Tool</th><th>Token</th><th>Badcase</th><th>摘要</th></tr></thead>
         <tbody>${rows}</tbody>
       </table>
     </div>
@@ -4962,7 +4932,7 @@ function buildTracePanelHtml(scene, { historyEnabled, traces, badcases, tokenBuc
 
 async function loadTracePanel(hostEl, scene) {
   if (!hostEl) return;
-  hostEl.innerHTML = '<div class="trace-panel-loading">?? trace?</div>';
+  hostEl.innerHTML = '<div class="trace-panel-loading">加载 trace…</div>';
   try {
     const [traceData, tokenData] = await Promise.all([
       fetchTracesFromApi(50),
@@ -4982,7 +4952,7 @@ async function loadTracePanel(hostEl, scene) {
       traces: [],
       badcases: [],
       tokenBuckets: [],
-      error: e.message || '????'
+      error: e.message || '加载失败'
     });
   }
 }
@@ -4990,32 +4960,32 @@ async function loadTracePanel(hostEl, scene) {
 function renderPrepFollowUpsPanelHtml() {
   const report = interviewPrepResult.prepReport;
   if (!report?.followUps?.length) {
-    return `<div class="resume-pane-empty">?????????????????</div>`;
+    return `<div class="resume-pane-empty">完成「一键准备面试」后展示追问清单</div>`;
   }
   return report.followUps.map(f =>
     `<div class="surface-card surface-card--flat" style="padding:12px;margin-bottom:10px">
-      <div class="panel-title" style="font-weight:600;margin-bottom:6px">${escapeHtml(f.question || '??')}</div>
-      <p style="font-size:13px;color:var(--ink2)"><strong>Defense?</strong>${escapeHtml(f.defense || '?')}</p>
+      <div class="panel-title" style="font-weight:600;margin-bottom:6px">${escapeHtml(f.question || '追问')}</div>
+      <p style="font-size:13px;color:var(--ink2)"><strong>Defense：</strong>${escapeHtml(f.defense || '—')}</p>
     </div>`
   ).join('');
 }
 
 function renderPrepDocumentPanelHtml() {
   const report = interviewPrepResult.prepReport;
-  if (!report) return `<div class="resume-pane-empty">??????</div>`;
-  const body = [report.opening15s, ...(report.projects || []).map(p => p.name + '?' + (p.structure30s || ''))].filter(Boolean).join('\n\n');
+  if (!report) return `<div class="resume-pane-empty">暂无导出内容</div>`;
+  const body = [report.opening15s, ...(report.projects || []).map(p => p.name + '：' + (p.structure30s || ''))].filter(Boolean).join('\n\n');
   return `
     <div class="doc-artifact-card">
       <div class="doc-artifact-icon">W</div>
-      <div style="flex:1"><strong>????_??.docx</strong>
-        <p style="font-size:13px;color:var(--ink2);margin-top:4px">opening + ?? + ?? defense</p>
+      <div style="flex:1"><strong>面试话术_准备.docx</strong>
+        <p style="font-size:13px;color:var(--ink2);margin-top:4px">opening + 项目 + 追问 defense</p>
       </div>
     </div>
     <div class="doc-preview-pane">${escapeHtml(body).replace(/\n/g, '<br/>')}</div>`;
 }
 
 function applyScenarioCanvasPanels(tab) {
-  const map = { ??: 'scenario-q', ??: 'scenario-review', ??: 'scenario-extras' };
+  const map = { 题目: 'scenario-q', 点评: 'scenario-review', 解析: 'scenario-extras' };
   const show = map[tab] || 'scenario-q';
   document.querySelectorAll('[data-scenario-panel]').forEach(el => {
     el.classList.toggle('canvas-panel', true);
@@ -5031,17 +5001,13 @@ function mountAgentWorkspace(innerHtml) {
   document.querySelector('.page-wrap')?.classList.add('page-wrap--agent');
   main.innerHTML = `
     <div class="agent-workspace" id="agentWorkspace">
-      <nav class="agent-nav" aria-label="????">${agentNavHtml(scene)}</nav>
-      <section class="agent-canvas" aria-label="????">
+      <nav class="agent-nav" aria-label="模块导航">${agentNavHtml(scene)}</nav>
+      <section class="agent-canvas" aria-label="产出画布">
         <div class="canvas-topbar">
           <div class="canvas-topbar-main">
             <div class="canvas-title-row">
               <h2 id="canvasTitle">${escapeHtml(canvasTitleFor(scene, tab))}</h2>
               <div class="canvas-title-cta" id="canvasTitleCta"></div>
-            </div>
-            <div class="canvas-subtitle-row" id="canvasSubtitleRow">
-              <p class="canvas-subtitle" id="canvasSubtitle" hidden></p>
-              <div class="canvas-subtitle-actions" id="canvasSubtitleActions"></div>
             </div>
             <div class="canvas-tabs" id="canvasTabs">${canvasTabsHtml(scene)}</div>
           </div>
@@ -5049,23 +5015,23 @@ function mountAgentWorkspace(innerHtml) {
         </div>
         <div class="canvas-body" id="agentCanvasBody">${innerHtml}</div>
       </section>
-      <aside class="agent-chat" aria-label="??bot">
-        <div class="agent-chat-head"><h3>??bot</h3><span class="agent-nav-badge">???</span></div>
-        <p class="agent-chat-sub">??? � ????? � ??? Canvas</p>
+      <aside class="agent-chat" aria-label="助手bot">
+        <div class="agent-chat-head"><h3>助手bot</h3><span class="agent-nav-badge">控制台</span></div>
+        <p class="agent-chat-sub">发指令 · 看工具步骤 · 结果在 Canvas</p>
         <div class="agent-chat-msgs" id="agentChatMsgs"></div>
         <div class="agent-tools" hidden></div>
         <div class="agent-chat-compose">
-          <input type="text" class="agent-chat-input" id="agentChatInput" placeholder="? Agent ????" />
-          <button type="button" class="btn-primary" id="agentChatSend">??</button>
+          <input type="text" class="agent-chat-input" id="agentChatInput" placeholder="对 Agent 下指令…" />
+          <button type="button" class="btn-primary" id="agentChatSend">发送</button>
         </div>
-        <button type="button" class="btn-frost agent-chat-reset" id="agentChatReset">????</button>
+        <button type="button" class="btn-frost agent-chat-reset" id="agentChatReset">重置会话</button>
       </aside>
     </div>
-    <button type="button" class="agent-chat-fab" id="agentChatFab" aria-label="????bot">Bot</button>
+    <button type="button" class="agent-chat-fab" id="agentChatFab" aria-label="打开助手bot">Bot</button>
     <div class="agent-chat-drawer-backdrop" id="agentChatBackdrop"></div>`;
   bindAgentWorkspace(scene);
   renderAgentChatBubbles(scene);
-  updateCanvasChrome(scene);
+  renderCanvasTitleCta(scene, tab);
 }
 
 function bindAgentChatClone() {
@@ -5104,7 +5070,7 @@ function bindAgentWorkspace(scene) {
     if (!msg) return;
     if (scene === 'resume') {
       if (!resumeScoreResult.content && !resumeOptimizeResult.content) {
-        alert('?????????');
+        alert('请先一键评分或优化');
         return;
       }
       saveProfileFromDom();
@@ -5116,7 +5082,7 @@ function bindAgentWorkspace(scene) {
       });
     } else if (scene === 'prep') {
       if (!interviewPrepResult.content && !interviewPrepResult.prepReport) {
-        alert('????????');
+        alert('请先一键准备面试');
         return;
       }
       saveProfileFromDom();
@@ -5126,8 +5092,8 @@ function bindAgentWorkspace(scene) {
         errId: 'interviewPrepError', btnId: 'agentChatSend', inputId: 'agentChatInput'
       });
     } else if (scene === 'scenario') {
-      if (/?|??|another/i.test(msg)) startRandomSense();
-      else alert('??????????????????? Tab ??????');
+      if (/换|下一|another/i.test(msg)) startRandomSense();
+      else alert('业务场景可先点「换一题」；追问请在点评 Tab 使用下方输入');
     }
     if (input) input.value = '';
   };
@@ -5185,7 +5151,7 @@ function setAgentScene(scene) {
 
 function refreshAgentCanvas() {
   if (agentScene === 'resume') {
-    if (getCanvasTab('resume') !== '??') saveProfileFromDom();
+    if (getCanvasTab('resume') !== '评分') saveProfileFromDom();
     renderResumeCanvasPanels();
   } else if (agentScene === 'prep') {
     renderPrepCanvasPanels();
@@ -5201,13 +5167,6 @@ function updateCanvasChrome(scene) {
   const tab = getCanvasTab(scene);
   const title = document.getElementById('canvasTitle');
   if (title) title.textContent = canvasTitleFor(scene, tab);
-  const subtitleEl = document.getElementById('canvasSubtitle');
-  const subtitle = canvasSubtitleFor(scene, tab);
-  if (subtitleEl) {
-    subtitleEl.textContent = subtitle;
-    subtitleEl.hidden = !subtitle;
-  }
-  renderCanvasSubtitleActions(scene, tab);
   const tabsEl = document.getElementById('canvasTabs');
   if (tabsEl) tabsEl.innerHTML = canvasTabsHtml(scene);
   document.querySelectorAll('#canvasTabs [data-canvas-tab]').forEach(btn => {
@@ -5216,54 +5175,40 @@ function updateCanvasChrome(scene) {
   renderCanvasTitleCta(scene, tab);
 }
 
-function renderCanvasSubtitleActions(scene, tab) {
-  const host = document.getElementById('canvasSubtitleActions');
-  if (!host) return;
-  host.innerHTML = '';
-  if (scene !== 'scenario') return;
-  host.innerHTML = '<button type="button" class="btn-refresh" id="senseNextBtn">???</button>';
-  document.getElementById('senseNextBtn')?.addEventListener('click', () => {
-    agentToolSteps = [{ name: 'pick_scenario', status: 'done', detail: '??' }];
-    renderAgentToolsPanel();
-    startRandomSense();
-  });
-}
-
 function renderCanvasTitleCta(scene, tab) {
   const host = document.getElementById('canvasTitleCta');
   if (!host) return;
   host.innerHTML = '';
   const parts = [];
 
-  if (scene === 'resume' && tab === '??') {
-    if (resumeScoreResult.loading) parts.push('<button type="button" class="btn-primary" disabled>????</button>');
+  if (scene === 'resume' && tab === '评分') {
+    if (resumeScoreResult.loading) parts.push('<button type="button" class="btn-primary" disabled>评分中…</button>');
     else if (!resumeScoreResult.scoreReport && !resumeScoreResult.content) {
       const disabled = !profileResume.trim() ? ' disabled' : '';
-      parts.push(`<button type="button" class="btn-primary" id="resumeStartScoreBtn"${disabled}>????</button>`);
-    } else if (resumeHasScore() && !resumeOptimizeResult.loading && !resumeOptimizeResult.optimizeReport && !resumeOptimizeResult.content) {
-      parts.push('<button type="button" class="btn-primary" id="resumeGoOptimizeBtn">???</button>');
+      parts.push(`<button type="button" class="btn-primary" id="resumeStartScoreBtn"${disabled}>开始评分</button>`);
     }
-  } else if (scene === 'resume' && tab === '??') {
-    if (resumeOptimizeResult.loading) parts.push('<button type="button" class="btn-primary" disabled>????</button>');
+  } else if (scene === 'resume' && tab === '优化') {
+    if (resumeOptimizeResult.loading) parts.push('<button type="button" class="btn-primary" disabled>优化中…</button>');
     else if (!resumeOptimizeResult.optimizeReport && !resumeOptimizeResult.content) {
       const disabled = !resumeHasScore() ? ' disabled' : '';
-      parts.push(`<button type="button" class="btn-primary" id="resumeStartOptimizeBtn"${disabled}>????</button>`);
+      parts.push(`<button type="button" class="btn-primary" id="resumeStartOptimizeBtn"${disabled}>开始优化</button>`);
     }
-  } else if (scene === 'resume' && tab === '??') {
+  } else if (scene === 'resume' && tab === '文档') {
     const hasDoc = Boolean(resumeOptimizeResult.optimizeReport?.bullets?.length || resumeOptimizeResult.content);
-    if (hasDoc) parts.push('<button type="button" class="btn-primary btn-frost" id="docExportMdBtn">?? Markdown</button>');
-  } else if (scene === 'prep' && tab === '????') {
-    if (interviewPrepResult.loading) parts.push('<button type="button" class="btn-primary" disabled>????</button>');
+    if (hasDoc) parts.push('<button type="button" class="btn-primary btn-frost" id="docExportMdBtn">下载 Markdown</button>');
+  } else if (scene === 'prep' && tab === '准备报告') {
+    if (interviewPrepResult.loading) parts.push('<button type="button" class="btn-primary" disabled>准备中…</button>');
     else if (!interviewPrepResult.prepReport && !interviewPrepResult.content) {
-      parts.push('<button type="button" class="btn-primary" id="interviewPrepBtn">??????</button>');
+      parts.push('<button type="button" class="btn-primary" id="interviewPrepBtn">一键准备面试</button>');
     }
-  } else if (scene === 'prep' && tab === '??') {
+  } else if (scene === 'prep' && tab === '文档') {
     if (interviewPrepResult.prepReport || interviewPrepResult.content) {
-      parts.push('<button type="button" class="btn-primary" id="prepDocExportMdBtn">?? Markdown</button>');
+      parts.push('<button type="button" class="btn-primary" id="prepDocExportMdBtn">下载 Markdown</button>');
     }
   } else if (scene === 'scenario') {
     const tid = activeBankQuestion?.topicId || activeTopicId || 'iv-pm';
-    if (tab === '??') parts.push(`<button type="button" class="btn-primary" id="btn-${tid}">?? � ????</button>`);
+    parts.push('<button type="button" class="btn-refresh" id="senseNextBtn">换一题</button>');
+    if (tab === '题目') parts.push(`<button type="button" class="btn-primary" id="btn-${tid}">提交 · 获取点评</button>`);
   }
 
   host.innerHTML = parts.join('');
@@ -5273,14 +5218,15 @@ function renderCanvasTitleCta(scene, tab) {
   document.getElementById('interviewPrepBtn')?.addEventListener('click', () => {
     saveProfileFromDom();
     if (!profileResume.trim() && !coachIntake.extra?.trim()) {
-      alert('?????? Agent?????????????');
+      alert('请先在「简历 Agent」上传简历，或填写补充说明');
       return;
     }
     runInterviewPrepAction();
   });
-  document.getElementById('resumeGoOptimizeBtn')?.addEventListener('click', () => {
-    setCanvasTab('resume', '??');
-    refreshAgentCanvas();
+  document.getElementById('senseNextBtn')?.addEventListener('click', () => {
+    agentToolSteps = [{ name: 'pick_scenario', status: 'done', detail: '换题' }];
+    renderAgentToolsPanel();
+    startRandomSense();
   });
   const tid = activeBankQuestion?.topicId || activeTopicId;
   if (tid) document.getElementById('btn-' + tid)?.addEventListener('click', () => submitAnswer(tid));
@@ -5288,12 +5234,12 @@ function renderCanvasTitleCta(scene, tab) {
 
 function exportResumeMarkdown() {
   const text = resumeOptimizeResult.content || JSON.stringify(resumeOptimizeResult.optimizeReport || {}, null, 2);
-  downloadTextFile('????.md', text);
+  downloadTextFile('简历优化.md', text);
 }
 
 function exportPrepMarkdown() {
   const text = interviewPrepResult.content || JSON.stringify(interviewPrepResult.prepReport || {}, null, 2);
-  downloadTextFile('????.md', text);
+  downloadTextFile('面试准备.md', text);
 }
 
 function downloadTextFile(name, text) {
@@ -5315,12 +5261,12 @@ function renderResumeCanvasPanels() {
     el.classList.toggle('canvas-panel', true);
     el.classList.toggle('active', on);
   });
-  if (tab === '??') {
+  if (tab === '评分') {
     renderResumeScorePane();
     bindProfileUpload();
   }
-  if (tab === '??') renderResumeOptimizePane();
-  if (tab === '??') {
+  if (tab === '优化') renderResumeOptimizePane();
+  if (tab === '文档') {
     const docEl = document.getElementById('resumeDocPanel');
     if (docEl) docEl.innerHTML = renderDocumentPanelHtml();
     document.getElementById('docExportMdBtn')?.addEventListener('click', exportResumeMarkdown);
@@ -5335,12 +5281,12 @@ function renderPrepCanvasPanels() {
     el.classList.toggle('canvas-panel', true);
     el.classList.toggle('active', el.dataset.prepPanel === tab);
   });
-  if (tab === '????') renderInterviewPrepPane();
-  if (tab === '????') {
+  if (tab === '准备报告') renderInterviewPrepPane();
+  if (tab === '追问清单') {
     const el = document.getElementById('prepFollowupsPanel');
     if (el) el.innerHTML = renderPrepFollowUpsPanelHtml();
   }
-  if (tab === '??') {
+  if (tab === '文档') {
     const el = document.getElementById('prepDocPanel');
     if (el) el.innerHTML = renderPrepDocumentPanelHtml();
     document.getElementById('prepDocExportMdBtn')?.addEventListener('click', exportPrepMarkdown);
@@ -5352,13 +5298,13 @@ function resumeCanvasInnerHtml() {
   const tabClass = (name) => `canvas-panel${tab === name ? ' active' : ''}`;
   return `
     <div id="resumeCanvasRoot">
-      <div class="${tabClass('??')}" data-resume-panel="??">
+      <div class="${tabClass('评分')}" data-resume-panel="评分">
         <div class="canvas-profile-compact" id="resumeProfileHost">${profileUploadHtml()}</div>
         <div class="resume-pane-body" id="resumeScoreBody"></div>
         <p class="resume-pane-error" id="resumeScoreError" hidden></p>
       </div>
-      <div class="${tabClass('??')}" data-resume-panel="??"><div class="resume-pane-body" id="resumeOptimizeBody"></div><p class="resume-pane-error" id="resumeOptimizeError" hidden></p></div>
-      <div class="${tabClass('??')}" data-resume-panel="??"><div id="resumeDocPanel"></div></div>
+      <div class="${tabClass('优化')}" data-resume-panel="优化"><div class="resume-pane-body" id="resumeOptimizeBody"></div><p class="resume-pane-error" id="resumeOptimizeError" hidden></p></div>
+      <div class="${tabClass('文档')}" data-resume-panel="文档"><div id="resumeDocPanel"></div></div>
     </div>`;
 }
 
@@ -5367,12 +5313,12 @@ function prepCanvasInnerHtml() {
   const tabClass = (name) => `canvas-panel${tab === name ? ' active' : ''}`;
   const hasResume = profileResume.trim().length > 0;
   return `
-    ${!hasResume ? '<p class="module-intro" style="color:#b45309;margin-bottom:12px">??????? Agent???????????????</p>' : ''}
+    ${!hasResume ? '<p class="module-intro" style="color:#b45309;margin-bottom:12px">提示：在「简历 Agent」上传简历后，此处会自动带入。</p>' : ''}
     ${coachExtraNotesHtml()}
     <div id="prepCanvasRoot">
-      <div class="${tabClass('????')}" data-prep-panel="????"><div class="resume-pane-body" id="interviewPrepBody"></div><p class="resume-pane-error" id="interviewPrepError" hidden></p></div>
-      <div class="${tabClass('????')}" data-prep-panel="????"><div id="prepFollowupsPanel"></div></div>
-      <div class="${tabClass('??')}" data-prep-panel="??"><div id="prepDocPanel"></div></div>
+      <div class="${tabClass('准备报告')}" data-prep-panel="准备报告"><div class="resume-pane-body" id="interviewPrepBody"></div><p class="resume-pane-error" id="interviewPrepError" hidden></p></div>
+      <div class="${tabClass('追问清单')}" data-prep-panel="追问清单"><div id="prepFollowupsPanel"></div></div>
+      <div class="${tabClass('文档')}" data-prep-panel="文档"><div id="prepDocPanel"></div></div>
     </div>`;
 }
 
@@ -5381,8 +5327,8 @@ function kbCanvasInnerHtml() {
   const tabClass = (name) => `canvas-panel${tab === name ? ' active' : ''}`;
   return `
     <div id="kbCanvasRoot">
-      <div class="${tabClass('??')}" data-kb-panel="??">
-        <p class="knowledge-intro">AI ??????? � <strong>??????</strong>?????????????????????</p>
+      <div class="${tabClass('阅读')}" data-kb-panel="阅读">
+        <p class="knowledge-intro">AI 产品经理知识卡 · <strong>阅读记忆即可</strong>，不必提交作答。要练题请切回「业务场景」。</p>
         <div id="kbPagerHost"></div>
         <div id="knowledgeFlatViewer"></div>
       </div>
@@ -5417,7 +5363,7 @@ function renderKbCanvasPanels(scrollToCardId) {
     el.classList.toggle('canvas-panel', true);
     el.classList.toggle('active', el.dataset.kbPanel === tab);
   });
-  if (tab === '??') renderKbReadPanel(scrollToCardId);
+  if (tab === '阅读') renderKbReadPanel(scrollToCardId);
 }
 
 async function renderKbView(scrollToCardId) {
@@ -5447,7 +5393,7 @@ function captureTrainWorkspaceState() {
     const aEl = document.getElementById('answer-' + t.id);
     if (sEl) {
       const text = sEl.textContent.trim();
-      if (text && !text.includes('????')) scenarioPinByTopic[t.id] = text;
+      if (text && !text.includes('暂无题目')) scenarioPinByTopic[t.id] = text;
     }
     if (aEl) answerDraftByTopic[t.id] = aEl.value;
   });
@@ -5465,8 +5411,8 @@ function setWorkspaceMode(mode) {
 
 function coachExtraNotesHtml() {
   return `<details class="coach-extra-details">
-    <summary>????????</summary>
-    <textarea id="coachExtraNotes" rows="2" placeholder="??????????????????????????">${escapeHtml(coachIntake.extra || '')}</textarea>
+    <summary>补充说明（可选）</summary>
+    <textarea id="coachExtraNotes" rows="2" placeholder="如：已收到的反馈、重点想改的项目、担心被问穿的地方…">${escapeHtml(coachIntake.extra || '')}</textarea>
   </details>`;
 }
 
@@ -5546,7 +5492,7 @@ function buildCoachIntakeFromProfile(extra = {}) {
   const trim = (s, max = 18000) => {
     const t = String(s || '').trim();
     if (t.length <= max) return t;
-    return t.slice(0, max) + '\n\n??????????????????';
+    return t.slice(0, max) + '\n\n…（内容过长已截断，核心部分已保留）';
   };
   const intake = {
     resume: trim(profileResume),
@@ -5565,46 +5511,46 @@ function profileUploadHtml() {
   const resumeChars = profileResume.trim().length;
   const resumeDone = resumeChars > 0;
   const resumeDoneHtml = resumeDone
-    ? `<div class="upload-done-title">?????</div>
-       <div class="upload-done-meta">${profileResumeFileName ? escapeHtml(profileResumeFileName) + ' � ' : ''}${resumeChars.toLocaleString()} ?</div>
-       <button type="button" class="upload-done-repick" id="resumeRepickBtn">???</button>`
-    : `<div class="upload-dropzone-icon">?</div>
-       <div class="upload-dropzone-title">?????????</div>
-       <div class="upload-dropzone-hint">PDF � DOCX � TXT</div>`;
+    ? `<div class="upload-done-title">已识别简历</div>
+       <div class="upload-done-meta">${profileResumeFileName ? escapeHtml(profileResumeFileName) + ' · ' : ''}${resumeChars.toLocaleString()} 字</div>
+       <button type="button" class="upload-done-repick" id="resumeRepickBtn">换一份</button>`
+    : `<div class="upload-dropzone-icon">↑</div>
+       <div class="upload-dropzone-title">点击或拖拽上传简历</div>
+       <div class="upload-dropzone-hint">PDF · DOCX · TXT</div>`;
   const jdChars = profileJd.trim().length;
   const jdDoneHtml = jdChars > 0
-    ? `<div class="upload-done-title">??? JD</div>
-       <div class="upload-done-meta">${profileJdFileName ? escapeHtml(profileJdFileName) + ' � ' : ''}${jdChars.toLocaleString()} ?</div>
-       <button type="button" class="upload-done-repick" id="jdRepickBtn">???</button>`
-    : `<div class="upload-dropzone-icon">?</div>
-       <div class="upload-dropzone-title">??????? JD</div>
-       <div class="upload-dropzone-hint">PDF � DOCX � TXT</div>`;
+    ? `<div class="upload-done-title">已识别 JD</div>
+       <div class="upload-done-meta">${profileJdFileName ? escapeHtml(profileJdFileName) + ' · ' : ''}${jdChars.toLocaleString()} 字</div>
+       <button type="button" class="upload-done-repick" id="jdRepickBtn">换一份</button>`
+    : `<div class="upload-dropzone-icon">↑</div>
+       <div class="upload-dropzone-title">点击或拖拽上传 JD</div>
+       <div class="upload-dropzone-hint">PDF · DOCX · TXT</div>`;
   return `<div class="profile-upload-grid">
     <div class="profile-box">
-      <label>?? <span style="color:var(--danger)">*</span></label>
-      <div class="upload-dropzone${resumeDone ? ' upload-dropzone--done' : ''}" id="resumeDropzone" tabindex="0" role="button" aria-label="????">
+      <label>简历 <span style="color:var(--danger)">*</span></label>
+      <div class="upload-dropzone${resumeDone ? ' upload-dropzone--done' : ''}" id="resumeDropzone" tabindex="0" role="button" aria-label="上传简历">
         <input type="file" id="resumeFileInput" accept=".pdf,.doc,.docx,.txt,.md,.text,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" hidden />
         <div class="upload-dropzone-body" id="resumeDropzoneBody">${resumeDoneHtml}</div>
       </div>
-      <p class="profile-file-status${resumeDone ? ' is-ok' : ''}" id="resumeFileStatus">${resumeDone ? '?????????????????' : ''}</p>
+      <p class="profile-file-status${resumeDone ? ' is-ok' : ''}" id="resumeFileStatus">${resumeDone ? '上传完成，点击标题右侧「开始评分」' : ''}</p>
       <details class="upload-paste-fallback">
-        <summary>?????????</summary>
-        <textarea id="profileResumeInput" placeholder="????????">${escapeHtml(profileResume)}</textarea>
+        <summary>没有文件？粘贴文本</summary>
+        <textarea id="profileResumeInput" placeholder="直接粘贴简历全文">${escapeHtml(profileResume)}</textarea>
       </details>
     </div>
     <div class="profile-box">
-      <label>?? JD <span style="color:var(--ink3)">????</span></label>
-      <div class="upload-dropzone${jdChars > 0 ? ' upload-dropzone--done' : ''}" id="jdDropzone" tabindex="0" role="button" aria-label="?? JD">
+      <label>目标 JD <span style="color:var(--ink3)">（可选）</span></label>
+      <div class="upload-dropzone${jdChars > 0 ? ' upload-dropzone--done' : ''}" id="jdDropzone" tabindex="0" role="button" aria-label="上传 JD">
         <input type="file" id="jdFileInput" accept=".pdf,.doc,.docx,.txt,.md,.text,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" hidden />
         <div class="upload-dropzone-body" id="jdDropzoneBody">${jdDoneHtml}</div>
       </div>
       <p class="profile-file-status" id="jdFileStatus"></p>
       <details class="upload-paste-fallback">
-        <summary>??????? JD</summary>
-        <textarea id="profileJdInput" placeholder="?????? JD">${escapeHtml(profileJd)}</textarea>
+        <summary>没有文件？粘贴 JD</summary>
+        <textarea id="profileJdInput" placeholder="粘贴目标岗位 JD">${escapeHtml(profileJd)}</textarea>
       </details>
-      <label for="profileTargetRoleInput" style="margin-top:10px;display:block">????</label>
-      <input type="text" id="profileTargetRoleInput" value="${escapeAttr(profileTargetRole)}" placeholder="???? AI ????" style="width:100%;padding:8px 10px;border:1px solid var(--frost-border);border-radius:var(--r);font-family:inherit;font-size:13px" />
+      <label for="profileTargetRoleInput" style="margin-top:10px;display:block">目标岗位</label>
+      <input type="text" id="profileTargetRoleInput" value="${escapeAttr(profileTargetRole)}" placeholder="如：字节 AI 产品实习" style="width:100%;padding:8px 10px;border:1px solid var(--frost-border);border-radius:var(--r);font-family:inherit;font-size:13px" />
     </div>
   </div>`;
 }
@@ -5638,7 +5584,7 @@ async function loadExternalScript(srcOrList) {
       return;
     } catch { /* try next CDN */ }
   }
-  throw new Error('??????????????????????');
+  throw new Error('无法加载文档解析组件，请检查网络或改粘贴文本');
 }
 
 async function ensureDocParsers() {
@@ -5658,8 +5604,8 @@ function fileExtension(name) {
 }
 
 async function parseUploadedDocument(file) {
-  if (!file) throw new Error('?????');
-  if (file.size > MAX_UPLOAD_BYTES) throw new Error('???? 10MB?????????');
+  if (!file) throw new Error('未选择文件');
+  if (file.size > MAX_UPLOAD_BYTES) throw new Error('文件超过 10MB，请压缩或粘贴文本');
   const ext = fileExtension(file.name);
   const type = String(file.type || '').toLowerCase();
 
@@ -5668,7 +5614,7 @@ async function parseUploadedDocument(file) {
   }
 
   if (ext === 'doc') {
-    throw new Error('?? .doc ??????? Word ???? .docx ??? PDF');
+    throw new Error('旧版 .doc 暂不支持，请在 Word 中另存为 .docx 或导出 PDF');
   }
 
   await ensureDocParsers();
@@ -5683,7 +5629,7 @@ async function parseUploadedDocument(file) {
     }
     const text = parts.join('\n').replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
     if (!text) {
-      throw new Error('PDF ????????????????????????? PDF??????????');
+      throw new Error('PDF 未识别到文字（可能是扫描件图片）。请换可复制文字的 PDF，或直接粘贴简历内容');
     }
     return { text, format: 'pdf' };
   }
@@ -5691,11 +5637,11 @@ async function parseUploadedDocument(file) {
   if (ext === 'docx' || type.includes('wordprocessingml')) {
     const result = await window.mammoth.extractRawText({ arrayBuffer: await file.arrayBuffer() });
     const text = String(result.value || '').trim();
-    if (!text) throw new Error('DOCX ????????????????');
+    if (!text) throw new Error('DOCX 解析结果为空，请检查文件是否损坏');
     return { text, format: 'docx' };
   }
 
-  throw new Error('?????????? PDF?DOCX ? TXT');
+  throw new Error('不支持的格式，请上传 PDF、DOCX 或 TXT');
 }
 
 function updateUploadDropzoneUI(field, { fileName, charCount, parsing, error }) {
@@ -5708,9 +5654,9 @@ function updateUploadDropzoneUI(field, { fileName, charCount, parsing, error }) 
 
   if (parsing) {
     zone.classList.remove('upload-dropzone--done');
-    body.innerHTML = `<div class="upload-dropzone-loading">???? ${escapeHtml(fileName || '??')}?</div>`;
+    body.innerHTML = `<div class="upload-dropzone-loading">正在识别 ${escapeHtml(fileName || '文件')}…</div>`;
     if (statusEl) {
-      statusEl.textContent = '???????';
+      statusEl.textContent = '解析中，请稍候';
       statusEl.classList.remove('is-error', 'is-ok');
     }
     return;
@@ -5718,9 +5664,9 @@ function updateUploadDropzoneUI(field, { fileName, charCount, parsing, error }) 
 
   if (error) {
     zone.classList.remove('upload-dropzone--done');
-    body.innerHTML = `<div class="upload-dropzone-icon">?</div>
-      <div class="upload-dropzone-title">???????${isResume ? '??' : ' JD'}</div>
-      <div class="upload-dropzone-hint">???? PDF � DOCX � TXT</div>`;
+    body.innerHTML = `<div class="upload-dropzone-icon">↑</div>
+      <div class="upload-dropzone-title">点击或拖拽上传${isResume ? '简历' : ' JD'}</div>
+      <div class="upload-dropzone-hint">自动识别 PDF · DOCX · TXT</div>`;
     if (statusEl) {
       statusEl.textContent = error;
       statusEl.classList.add('is-error');
@@ -5731,16 +5677,16 @@ function updateUploadDropzoneUI(field, { fileName, charCount, parsing, error }) 
 
   if (charCount > 0) {
     zone.classList.add('upload-dropzone--done');
-    const label = isResume ? '??' : 'JD';
-    body.innerHTML = `<div class="upload-done-title">???${label}</div>
-      <div class="upload-done-meta">${fileName ? escapeHtml(fileName) + ' � ' : ''}${charCount.toLocaleString()} ?</div>
-      <button type="button" class="upload-done-repick" id="${repickId}">???</button>`;
+    const label = isResume ? '简历' : 'JD';
+    body.innerHTML = `<div class="upload-done-title">已识别${label}</div>
+      <div class="upload-done-meta">${fileName ? escapeHtml(fileName) + ' · ' : ''}${charCount.toLocaleString()} 字</div>
+      <button type="button" class="upload-done-repick" id="${repickId}">换一份</button>`;
     document.getElementById(repickId)?.addEventListener('click', e => {
       e.stopPropagation();
       document.getElementById(isResume ? 'resumeFileInput' : 'jdFileInput')?.click();
     });
     if (statusEl) {
-      statusEl.textContent = isResume ? '???????????????' : 'JD ???';
+      statusEl.textContent = isResume ? '识别完成，可直接点「一键评分」' : 'JD 已导入';
       statusEl.classList.remove('is-error');
       statusEl.classList.add('is-ok');
     }
@@ -5803,10 +5749,10 @@ async function applyParsedFileToField(file, field) {
     updateUploadDropzoneUI(field, { fileName: file.name, charCount: text.length });
     if (isResume && agentScene === 'resume') {
       renderResumeScorePane();
-      updateCanvasChrome('resume');
+      renderCanvasTitleCta('resume', getCanvasTab('resume'));
     }
   } catch (e) {
-    const msg = e.message || '??????';
+    const msg = e.message || '文件解析失败';
     updateUploadDropzoneUI(field, { error: msg });
     alert(msg);
   }
@@ -5823,7 +5769,7 @@ function bindProfileUpload() {
       updateUploadDropzoneUI('resume', { charCount: profileResume.trim().length });
       if (agentScene === 'resume') {
         renderResumeScorePane();
-        updateCanvasChrome('resume');
+        renderCanvasTitleCta('resume', getCanvasTab('resume'));
       }
     }
   });
@@ -5885,18 +5831,18 @@ function renderModuleThread(threadId, messages, emptyHint) {
 function getResumeCoachHistory(priorChat = []) {
   const seed = [];
   if (resumeScoreResult.content) {
-    seed.push({ role: 'assistant', content: `????????\n${resumeScoreResult.content}` });
+    seed.push({ role: 'assistant', content: `【简历评分结果】\n${resumeScoreResult.content}` });
   }
   if (resumeOptimizeResult.content) {
-    seed.push({ role: 'assistant', content: `????????\n${resumeOptimizeResult.content}` });
+    seed.push({ role: 'assistant', content: `【简历优化结果】\n${resumeOptimizeResult.content}` });
   }
   return [...seed, ...priorChat];
 }
 
 function renderScorePaneContent(report) {
-  const overall = report.overallScore ?? (report.overallScore10 != null ? Math.round(report.overallScore10 * 10) : '?');
-  const pass = report.passRate != null ? report.passRate : '?';
-  const optPass = report.optimizedPassRate != null ? report.optimizedPassRate : '?';
+  const overall = report.overallScore ?? (report.overallScore10 != null ? Math.round(report.overallScore10 * 10) : '—');
+  const pass = report.passRate != null ? report.passRate : '—';
+  const optPass = report.optimizedPassRate != null ? report.optimizedPassRate : '—';
   const bars = (report.dimensions || []).map(d => {
     const pct = Math.round((Number(d.score) / 5) * 100);
     return `<div class="score-pane-bar-row">
@@ -5907,30 +5853,30 @@ function renderScorePaneContent(report) {
   }).join('');
   const fixes = (report.topFixes || []).slice(0, 3).map(f => `<li>${escapeHtml(f)}</li>`).join('');
   return `<div class="score-pane-metrics">
-      <div class="score-pane-metric"><div class="score-pane-metric-label">??</div><div class="score-pane-metric-value score-pane-metric-value--rose">${escapeHtml(String(overall))}</div></div>
-      <div class="score-pane-metric"><div class="score-pane-metric-label">???</div><div class="score-pane-metric-value score-pane-metric-value--blue">${escapeHtml(String(pass))}%</div></div>
-      <div class="score-pane-metric"><div class="score-pane-metric-label">???</div><div class="score-pane-metric-value score-pane-metric-value--green">${escapeHtml(String(optPass))}%</div></div>
+      <div class="score-pane-metric"><div class="score-pane-metric-label">综合</div><div class="score-pane-metric-value score-pane-metric-value--rose">${escapeHtml(String(overall))}</div></div>
+      <div class="score-pane-metric"><div class="score-pane-metric-label">通过率</div><div class="score-pane-metric-value score-pane-metric-value--blue">${escapeHtml(String(pass))}%</div></div>
+      <div class="score-pane-metric"><div class="score-pane-metric-label">优化后</div><div class="score-pane-metric-value score-pane-metric-value--green">${escapeHtml(String(optPass))}%</div></div>
     </div>
     ${report.summary ? `<p class="score-pane-summary">${escapeHtml(report.summary)}</p>` : ''}
     <div class="score-pane-bars">${bars}</div>
-    ${fixes ? `<div class="score-pane-fixes"><strong>???</strong><ol>${fixes}</ol></div>` : ''}`;
+    ${fixes ? `<div class="score-pane-fixes"><strong>优先改</strong><ol>${fixes}</ol></div>` : ''}`;
 }
 
 function renderOptimizePaneContent(report) {
   const bullets = (report.bullets || []).map(b =>
     `<div class="opt-pane-bullet">
-      <div class="opt-bullet-pair"><span class="opt-label">??</span><p>${escapeHtml(b.before || '?')}</p></div>
-      <div class="opt-bullet-pair"><span class="opt-label">??</span><p>${escapeHtml(b.after || '?')}</p></div>
+      <div class="opt-bullet-pair"><span class="opt-label">改前</span><p>${escapeHtml(b.before || '—')}</p></div>
+      <div class="opt-bullet-pair"><span class="opt-label">改后</span><p>${escapeHtml(b.after || '—')}</p></div>
     </div>`
   ).join('');
   const evalItems = (report.evalBadcase || []).map(s => `<li>${escapeHtml(s)}</li>`).join('');
   return `<div class="opt-pane-stack">
-    <div class="opt-pane-section"><h4>? ??</h4><p>${escapeHtml(report.weakProject || '?')}</p></div>
-    <div class="opt-pane-section"><h4>? Bullet ??</h4>${bullets || '<p>?</p>'}</div>
-    <div class="opt-pane-section"><h4>? Eval / Badcase</h4>${evalItems ? `<ul>${evalItems}</ul>` : '<p>?</p>'}</div>
-    <div class="opt-pane-section"><h4>? ????</h4>
-      <p><strong>????</strong>${escapeHtml(report.mainDirection || '?')}</p>
-      <p style="margin-top:6px"><strong>????</strong>${escapeHtml(report.backupDirection || '?')}</p>
+    <div class="opt-pane-section"><h4>① 诊断</h4><p>${escapeHtml(report.weakProject || '—')}</p></div>
+    <div class="opt-pane-section"><h4>② Bullet 改写</h4>${bullets || '<p>—</p>'}</div>
+    <div class="opt-pane-section"><h4>③ Eval / Badcase</h4>${evalItems ? `<ul>${evalItems}</ul>` : '<p>—</p>'}</div>
+    <div class="opt-pane-section"><h4>④ 项目方向</h4>
+      <p><strong>主方向：</strong>${escapeHtml(report.mainDirection || '—')}</p>
+      <p style="margin-top:6px"><strong>备方向：</strong>${escapeHtml(report.backupDirection || '—')}</p>
     </div>
   </div>`;
 }
@@ -5956,7 +5902,7 @@ function renderInterviewFollowupThread() {
 function getInterviewCoachHistory(priorChat = []) {
   const seed = [];
   if (interviewPrepResult.content) {
-    seed.push({ role: 'assistant', content: `????????\n${interviewPrepResult.content}` });
+    seed.push({ role: 'assistant', content: `【面试准备结果】\n${interviewPrepResult.content}` });
   }
   return [...seed, ...priorChat];
 }
@@ -5964,26 +5910,26 @@ function getInterviewCoachHistory(priorChat = []) {
 function renderInterviewPrepPaneContent(report) {
   const projects = (report.projects || []).map(p =>
     `<div class="opt-pane-bullet">
-      <p><strong>${escapeHtml(p.name || '??')}</strong></p>
-      <div class="opt-bullet-pair"><span class="opt-label">30 ???</span><p>${escapeHtml(p.structure30s || '?')}</p></div>
-      <div class="opt-bullet-pair"><span class="opt-label">?????</span><p>${escapeHtml(p.keyEvidence || '?')}</p></div>
+      <p><strong>${escapeHtml(p.name || '项目')}</strong></p>
+      <div class="opt-bullet-pair"><span class="opt-label">30 秒结构</span><p>${escapeHtml(p.structure30s || '—')}</p></div>
+      <div class="opt-bullet-pair"><span class="opt-label">可防守证据</span><p>${escapeHtml(p.keyEvidence || '—')}</p></div>
     </div>`
   ).join('');
   const followUps = (report.followUps || []).map(f =>
     `<div class="opt-pane-bullet">
-      <div class="opt-bullet-pair"><span class="opt-label">??</span><p>${escapeHtml(f.question || '?')}</p></div>
-      <div class="opt-bullet-pair"><span class="opt-label">??</span><p>${escapeHtml(f.defense || '?')}</p></div>
+      <div class="opt-bullet-pair"><span class="opt-label">追问</span><p>${escapeHtml(f.question || '—')}</p></div>
+      <div class="opt-bullet-pair"><span class="opt-label">防守</span><p>${escapeHtml(f.defense || '—')}</p></div>
     </div>`
   ).join('');
   const badcases = (report.badcases || []).map(b => `<li>${escapeHtml(b)}</li>`).join('');
   const doNotSay = (report.doNotSay || []).map(s => `<li>${escapeHtml(s)}</li>`).join('');
   return `<div class="opt-pane-stack">
-    ${report.summary ? `<div class="opt-pane-section"><h4>??</h4><p>${escapeHtml(report.summary)}</p></div>` : ''}
-    <div class="opt-pane-section"><h4>? ? 15 ?</h4><p>${escapeHtml(report.opening15s || '?')}</p></div>
-    <div class="opt-pane-section"><h4>? ????</h4>${projects || '<p>?</p>'}</div>
-    <div class="opt-pane-section"><h4>? ?????</h4>${followUps || '<p>?</p>'}</div>
-    <div class="opt-pane-section"><h4>? Badcase</h4>${badcases ? `<ul>${badcases}</ul>` : '<p>?</p>'}</div>
-    <div class="opt-pane-section"><h4>? ?????</h4>${doNotSay ? `<ul>${doNotSay}</ul>` : '<p>?</p>'}</div>
+    ${report.summary ? `<div class="opt-pane-section"><h4>总评</h4><p>${escapeHtml(report.summary)}</p></div>` : ''}
+    <div class="opt-pane-section"><h4>① 前 15 秒</h4><p>${escapeHtml(report.opening15s || '—')}</p></div>
+    <div class="opt-pane-section"><h4>② 项目讲述</h4>${projects || '<p>—</p>'}</div>
+    <div class="opt-pane-section"><h4>③ 追问与防守</h4>${followUps || '<p>—</p>'}</div>
+    <div class="opt-pane-section"><h4>④ Badcase</h4>${badcases ? `<ul>${badcases}</ul>` : '<p>—</p>'}</div>
+    <div class="opt-pane-section"><h4>⑤ 不能说的话</h4>${doNotSay ? `<ul>${doNotSay}</ul>` : '<p>—</p>'}</div>
   </div>`;
 }
 
@@ -5992,7 +5938,7 @@ function renderInterviewPrepPane() {
   const errEl = document.getElementById('interviewPrepError');
   if (!body) return;
   if (interviewPrepResult.loading) {
-    body.innerHTML = '<div class="resume-pane-loading">????????</div>';
+    body.innerHTML = '<div class="resume-pane-loading">面试准备生成中…</div>';
     if (errEl) errEl.hidden = true;
     return;
   }
@@ -6006,7 +5952,7 @@ function renderInterviewPrepPane() {
     if (errEl) errEl.hidden = true;
     return;
   }
-  body.innerHTML = '<div class="resume-pane-empty">???????????????</div>';
+  body.innerHTML = '<div class="resume-pane-empty">点上方「基于简历一键准备面试」</div>';
 }
 
 async function runInterviewPrepAction() {
@@ -6018,7 +5964,7 @@ async function runInterviewPrepAction() {
   if (triggerBtn) {
     triggerBtn.disabled = true;
     triggerBtn.dataset.prevLabel = triggerBtn.textContent;
-    triggerBtn.textContent = '????';
+    triggerBtn.textContent = '准备中…';
   }
   syncExtraNotesFromDom();
   saveProfileFromDom();
@@ -6040,10 +5986,10 @@ async function runInterviewPrepAction() {
     try {
       data = raw ? JSON.parse(raw) : {};
     } catch {
-      if (/FUNCTION_INVOCATION_TIMEOUT/i.test(raw)) throw new Error('?????????????');
-      if (!res.ok) throw new Error(raw.slice(0, 300) || '?????HTTP ' + res.status + '?');
+      if (/FUNCTION_INVOCATION_TIMEOUT/i.test(raw)) throw new Error('生成超时，请缩短简历后重试');
+      if (!res.ok) throw new Error(raw.slice(0, 300) || '请求失败（HTTP ' + res.status + '）');
     }
-    if (!res.ok) throw new Error(data.error || raw.slice(0, 300) || '?????HTTP ' + res.status + '?');
+    if (!res.ok) throw new Error(data.error || raw.slice(0, 300) || '请求失败（HTTP ' + res.status + '）');
     interviewPrepResult = {
       content: data.reply || '',
       prepReport: data.prepReport || null,
@@ -6058,12 +6004,12 @@ async function runInterviewPrepAction() {
     renderPrepCanvasPanels();
     if (errEl) {
       errEl.hidden = false;
-      errEl.textContent = e.message || '????';
+      errEl.textContent = e.message || '生成失败';
     }
   } finally {
     if (triggerBtn) {
       triggerBtn.disabled = false;
-      triggerBtn.textContent = triggerBtn.dataset.prevLabel || '??????????';
+      triggerBtn.textContent = triggerBtn.dataset.prevLabel || '基于简历一键准备面试';
     }
   }
 }
@@ -6075,21 +6021,21 @@ function resumeHasScore() {
 function bindResumePaneActions() {
   document.getElementById('resumeStartScoreBtn')?.addEventListener('click', () => {
     saveProfileFromDom();
-    if (!profileResume.trim()) { alert('?????????'); return; }
-    runResumeAction('resume-score', 'resumeStartScoreBtn', '????');
+    if (!profileResume.trim()) { alert('请先上传或粘贴简历'); return; }
+    runResumeAction('resume-score', 'resumeStartScoreBtn', '开始评分');
   });
   document.getElementById('resumeStartOptimizeBtn')?.addEventListener('click', () => {
     if (!resumeHasScore()) {
-      alert('????????????');
-      setCanvasTab('resume', '??');
+      alert('请先在「评分」页完成评分');
+      setCanvasTab('resume', '评分');
       refreshAgentCanvas();
       return;
     }
     saveProfileFromDom();
-    runResumeAction('resume-optimize', 'resumeStartOptimizeBtn', '????');
+    runResumeAction('resume-optimize', 'resumeStartOptimizeBtn', '开始优化');
   });
   document.getElementById('resumeGoScoreBtn')?.addEventListener('click', () => {
-    setCanvasTab('resume', '??');
+    setCanvasTab('resume', '评分');
     refreshAgentCanvas();
   });
 }
@@ -6099,7 +6045,7 @@ function renderResumeScorePane() {
   const errEl = document.getElementById('resumeScoreError');
   if (!body) return;
   if (resumeScoreResult.loading) {
-    body.innerHTML = '<div class="resume-pane-loading">??????</div>';
+    body.innerHTML = '<div class="resume-pane-loading">评分生成中…</div>';
     if (errEl) errEl.hidden = true;
     return;
   }
@@ -6113,7 +6059,9 @@ function renderResumeScorePane() {
     if (errEl) errEl.hidden = true;
     return;
   }
-  body.innerHTML = '';
+  body.innerHTML = profileResume.trim()
+    ? ''
+    : '<div class="resume-pane-empty"><p>请上传或粘贴简历</p></div>';
   bindResumePaneActions();
 }
 
@@ -6122,7 +6070,7 @@ function renderResumeOptimizePane() {
   const errEl = document.getElementById('resumeOptimizeError');
   if (!body) return;
   if (resumeOptimizeResult.loading) {
-    body.innerHTML = '<div class="resume-pane-loading">??????</div>';
+    body.innerHTML = '<div class="resume-pane-loading">优化生成中…</div>';
     if (errEl) errEl.hidden = true;
     return;
   }
@@ -6137,7 +6085,7 @@ function renderResumeOptimizePane() {
     return;
   }
   if (!resumeHasScore()) {
-    body.innerHTML = `<div class="resume-pane-empty"><p>????????????</p></div>`;
+    body.innerHTML = `<div class="resume-pane-empty"><p>请先在「评分」页完成评分</p></div>`;
     bindResumePaneActions();
     return;
   }
@@ -6164,7 +6112,7 @@ async function runResumeAction(action, triggerBtnId, triggerBtnLabel) {
   if (triggerBtn) {
     triggerBtn.disabled = true;
     triggerBtn.dataset.prevLabel = triggerBtn.textContent;
-    triggerBtn.textContent = (triggerBtnLabel || '???') + '?';
+    triggerBtn.textContent = (triggerBtnLabel || '处理中') + '…';
   }
 
   syncExtraNotesFromDom();
@@ -6188,12 +6136,12 @@ async function runResumeAction(action, triggerBtnId, triggerBtnLabel) {
       data = raw ? JSON.parse(raw) : {};
     } catch {
       if (/FUNCTION_INVOCATION_TIMEOUT/i.test(raw)) {
-        throw new Error('?????????????');
+        throw new Error('生成超时，请缩短简历后重试');
       }
-      if (!res.ok) throw new Error(raw.slice(0, 300) || '?????HTTP ' + res.status + '?');
+      if (!res.ok) throw new Error(raw.slice(0, 300) || '请求失败（HTTP ' + res.status + '）');
     }
     if (!res.ok) {
-      throw new Error(data.error || raw.slice(0, 300) || '?????HTTP ' + res.status + '?');
+      throw new Error(data.error || raw.slice(0, 300) || '请求失败（HTTP ' + res.status + '）');
     }
     if (isScore) {
       resumeScoreResult = {
@@ -6201,6 +6149,7 @@ async function runResumeAction(action, triggerBtnId, triggerBtnLabel) {
         scoreReport: data.scoreReport || null,
         loading: false
       };
+      setCanvasTab('resume', '优化');
     } else {
       resumeOptimizeResult = {
         content: data.reply || '',
@@ -6212,7 +6161,7 @@ async function runResumeAction(action, triggerBtnId, triggerBtnLabel) {
     agentToolSteps = [{
       name: isScore ? 'score_resume' : 'optimize_resume',
       status: 'done',
-      detail: isScore ? '????' : '????'
+      detail: isScore ? '评分完成' : '优化完成'
     }, { name: 'write_trace', status: 'done', detail: '' }];
     renderAgentToolsPanel();
     bindAgentChatClone();
@@ -6225,12 +6174,12 @@ async function runResumeAction(action, triggerBtnId, triggerBtnLabel) {
     renderResumeCanvasPanels();
     if (errEl) {
       errEl.hidden = false;
-      errEl.textContent = e.message || '????';
+      errEl.textContent = e.message || '生成失败';
     }
   } finally {
     if (triggerBtn) {
       triggerBtn.disabled = false;
-      triggerBtn.textContent = triggerBtn.dataset.prevLabel || triggerBtnLabel || '??';
+      triggerBtn.textContent = triggerBtn.dataset.prevLabel || triggerBtnLabel || '完成';
     }
   }
 }
@@ -6246,17 +6195,17 @@ async function sendModuleCoachMessage(opts) {
   const btn = document.getElementById(btnId);
   const input = document.getElementById(inputId);
   const triggerBtn = triggerBtnId ? document.getElementById(triggerBtnId) : null;
-  const threadLabel = displayMessage || (action ? (triggerBtnLabel || '???') : message);
+  const threadLabel = displayMessage || (action ? (triggerBtnLabel || '处理中') : message);
 
   if (errEl) { errEl.hidden = true; errEl.textContent = ''; }
   messages.push({ role: 'user', content: threadLabel });
   if (input) input.value = '';
   renderModuleThread(threadId, messages);
-  if (btn && !triggerBtnId) { btn.disabled = true; btn.textContent = '????'; }
+  if (btn && !triggerBtnId) { btn.disabled = true; btn.textContent = '生成中…'; }
   if (triggerBtn) {
     triggerBtn.disabled = true;
     triggerBtn.dataset.prevLabel = triggerBtn.textContent;
-    triggerBtn.textContent = (triggerBtnLabel || '???') + '?';
+    triggerBtn.textContent = (triggerBtnLabel || '处理中') + '…';
   }
   syncExtraNotesFromDom();
   saveProfileFromDom();
@@ -6287,26 +6236,26 @@ async function sendModuleCoachMessage(opts) {
     try {
       data = raw ? JSON.parse(raw) : {};
     } catch {
-      if (!res.ok) throw new Error(raw.slice(0, 300) || '?????HTTP ' + res.status + '?');
+      if (!res.ok) throw new Error(raw.slice(0, 300) || '请求失败（HTTP ' + res.status + '）');
     }
     if (!res.ok) {
-      throw new Error(data.error || raw.slice(0, 300) || '?????HTTP ' + res.status + '?');
+      throw new Error(data.error || raw.slice(0, 300) || '请求失败（HTTP ' + res.status + '）');
     }
     messages.push({ role: 'assistant', content: data.reply || '' });
     renderModuleThread(threadId, messages);
   } catch (e) {
     if (errEl) {
       errEl.hidden = false;
-      errEl.textContent = e.message || '????';
+      errEl.textContent = e.message || '发送失败';
     }
     messages.pop();
     renderModuleThread(threadId, messages, opts.emptyHint);
     if (restoreInputOnError && input && message) input.value = message;
   } finally {
-    if (btn) { btn.disabled = false; btn.textContent = btnId === 'resumeSendBtn' || btnId === 'interviewSendBtn' ? '??' : '??'; }
+    if (btn) { btn.disabled = false; btn.textContent = btnId === 'resumeSendBtn' || btnId === 'interviewSendBtn' ? '追问' : '发送'; }
     if (triggerBtn) {
       triggerBtn.disabled = false;
-      triggerBtn.textContent = triggerBtn.dataset.prevLabel || triggerBtnLabel || '??';
+      triggerBtn.textContent = triggerBtn.dataset.prevLabel || triggerBtnLabel || '完成';
     }
   }
 }
@@ -6334,7 +6283,7 @@ async function openTraceModal() {
   const titles = { resume: 'Resume Trace', scenario: 'Review Trace', prep: 'Prep Trace', kb: 'Knowledge RAG Trace' };
   const titleEl = document.getElementById('traceTitle');
   if (titleEl) titleEl.textContent = titles[scene] || 'Observation Trace';
-  body.innerHTML = '<p class="trace-panel-loading">?? trace?</p>';
+  body.innerHTML = '<p class="trace-panel-loading">加载 trace…</p>';
   modal.classList.add('open');
   modal.setAttribute('aria-hidden', 'false');
   await loadTracePanel(body, scene);
@@ -6362,12 +6311,12 @@ function detectCoachIntentLocal(text) {
   const t = String(text || '').trim();
   if (!t) return null;
   const rules = [
-    [/??|????|??.*AI\s*??|?\s*AI\s*??/i, 'full-report'],
-    [/??|???|???|demo.*?|??.*??/i, 'project-iteration'],
-    [/??|??|??|????/i, 'resume-diagnosis'],
-    [/????|??|???|???|????/i, 'interview-defense'],
-    [/??.*??|????|???/i, 'project-direction'],
-    [/AI\s*??|RAG|Agent|??|Eval|badcase/i, 'ai-pm-qa']
+    [/完整|落地方案|规划.*AI\s*项目|转\s*AI\s*产品/i, 'full-report'],
+    [/迭代|无面试|没回复|demo.*弱|优化.*项目/i, 'project-iteration'],
+    [/简历|诊断|改写|优化简历/i, 'resume-diagnosis'],
+    [/面试防御|追问|讲项目|被问穿|准备面试/i, 'interview-defense'],
+    [/没有.*项目|项目方向|找方向/i, 'project-direction'],
+    [/AI\s*产品|RAG|Agent|评测|Eval|badcase/i, 'ai-pm-qa']
   ];
   for (const [re, mode] of rules) {
     if (re.test(t)) return mode;
@@ -6393,10 +6342,10 @@ function bindInterviewView() {
   document.getElementById('interviewPrepBtn')?.addEventListener('click', () => {
     saveProfileFromDom();
     if (!profileResume.trim() && !coachIntake.extra?.trim()) {
-      alert('?????? Agent?????????????');
+      alert('请先在「简历 Agent」上传简历，或填写补充说明');
       return;
     }
-    setCanvasTab('prep', '????');
+    setCanvasTab('prep', '准备报告');
     runInterviewPrepAction();
   });
 }
@@ -6425,8 +6374,8 @@ function bankQuestions() {
 
 function interviewSubtabsHtml(activeSub) {
   return `<div class="module-subtabs" role="tablist">
-    <button type="button" class="module-subtab${activeSub === 'prep' ? ' active' : ''}" data-interview-sub="prep">??????</button>
-    <button type="button" class="module-subtab${activeSub === 'scenario' ? ' active' : ''}" data-interview-sub="scenario">??????</button>
+    <button type="button" class="module-subtab${activeSub === 'prep' ? ' active' : ''}" data-interview-sub="prep">根据简历准备</button>
+    <button type="button" class="module-subtab${activeSub === 'scenario' ? ' active' : ''}" data-interview-sub="scenario">业务场景作答</button>
   </div>`;
 }
 
@@ -6442,18 +6391,18 @@ function bindInterviewSubtabs() {
 
 function interviewFlowStepsHtml(activeStep) {
   const order = ['question', 'answer', 'review'];
-  const labels = { question: '??', answer: '??', review: '??' };
+  const labels = { question: '出题', answer: '答题', review: '点评' };
   const activeIdx = Math.max(0, order.indexOf(activeStep));
   return order.map((key, i) => {
     let cls = 'sense-step';
     if (i === activeIdx) cls += ' active';
     else if (i < activeIdx) cls += ' done';
-    return `<span class="${cls}">${labels[key]}</span>${i < order.length - 1 ? '<span class="sense-arrow">?</span>' : ''}`;
+    return `<span class="${cls}">${labels[key]}</span>${i < order.length - 1 ? '<span class="sense-arrow">→</span>' : ''}`;
   }).join('');
 }
 
 function setInterviewFlowStep(_step) {
-  /* ??? Canvas ?????/??/???????????????????? */
+  /* 流程由 Canvas 标签（题目/点评/解析）承担，不再重复展示出题→答题→点评 */
 }
 
 function senseBankPickerHtml() {
@@ -6462,11 +6411,11 @@ function senseBankPickerHtml() {
   const companies = [...new Set(qs.map(q => q.company))].sort();
   const types = [...new Set(qs.map(q => q.type))];
   return `<details class="sense-picker">
-    <summary>??? � ? ${nAi} ?</summary>
+    <summary>选题库 · 共 ${nAi} 题</summary>
     <div class="bank-filters" id="bankFilters">
-      <label class="bank-filter">?? <select id="bankFilterCompany"><option value="">??</option>${companies.map(c => `<option>${escapeHtml(c)}</option>`).join('')}</select></label>
-      <label class="bank-filter">?? <select id="bankFilterType"><option value="">??</option>${types.map(t => `<option value="${escapeAttr(t)}">${escapeHtml(t === 'ai_product' ? 'AI????' : (INTERVIEW_BANK_V2?.typeLabels?.[t] || t))}</option>`).join('')}</select></label>
-      <label class="bank-filter">?? <select id="bankFilterDiff"><option value="">??</option><option value="easy">??</option><option value="medium">??</option><option value="hard">??</option></select></label>
+      <label class="bank-filter">公司 <select id="bankFilterCompany"><option value="">全部</option>${companies.map(c => `<option>${escapeHtml(c)}</option>`).join('')}</select></label>
+      <label class="bank-filter">题型 <select id="bankFilterType"><option value="">全部</option>${types.map(t => `<option value="${escapeAttr(t)}">${escapeHtml(t === 'ai_product' ? 'AI产品经理' : (INTERVIEW_BANK_V2?.typeLabels?.[t] || t))}</option>`).join('')}</select></label>
+      <label class="bank-filter">难度 <select id="bankFilterDiff"><option value="">全部</option><option value="easy">简单</option><option value="medium">中等</option><option value="hard">困难</option></select></label>
     </div>
     <div class="bank-list" id="bankList"></div>
   </details>`;
@@ -6485,9 +6434,9 @@ function bindSenseBankPicker() {
     if (!list) return;
     list.innerHTML = filtered.slice(0, 50).map(q => `
       <button type="button" class="bank-item" data-qid="${escapeAttr(q.id)}">
-        <div class="bank-item-meta">${q.num ? '?' + q.num + ' � ' : ''}${escapeHtml(q.company || '??')} � ${escapeHtml(q.typeLabel || q.type || '')}</div>
-        <div class="bank-item-text">${escapeHtml(q.text.slice(0, 120))}${q.text.length > 120 ? '?' : ''}</div>
-      </button>`).join('') || '<p style="color:var(--ink3)">?????</p>';
+        <div class="bank-item-meta">${q.num ? '题' + q.num + ' · ' : ''}${escapeHtml(q.company || '通用')} · ${escapeHtml(q.typeLabel || q.type || '')}</div>
+        <div class="bank-item-text">${escapeHtml(q.text.slice(0, 120))}${q.text.length > 120 ? '…' : ''}</div>
+      </button>`).join('') || '<p style="color:var(--ink3)">无匹配题目</p>';
     list.querySelectorAll('.bank-item').forEach(btn => {
       btn.onclick = () => {
         const q = qs.find(x => x.id === btn.dataset.qid);
@@ -6509,7 +6458,7 @@ function pickRandomSenseQuestion() {
 
 function startRandomSense() {
   const q = pickRandomSenseQuestion();
-  if (!q) { alert('??????'); return false; }
+  if (!q) { alert('题库尚未加载'); return false; }
   applyBankQuestion(q);
   return true;
 }
@@ -6520,13 +6469,13 @@ async function ensureSenseQuestion() {
     return;
   }
   agentScene = 'scenario';
-  mountAgentWorkspace('<p class="sense-tagline" style="margin:24px 0">???????</p>');
+  mountAgentWorkspace('<p class="sense-tagline" style="margin:24px 0">正在加载题目…</p>');
   if (!AI_PM_BANK?.questions?.length) {
     await loadAiPmBanks();
   }
   if (!startRandomSense()) {
     const body = document.getElementById('agentCanvasBody');
-    if (body) body.innerHTML = '<p class="sense-tagline">??????????????</p>';
+    if (body) body.innerHTML = '<p class="sense-tagline">题库加载失败，请刷新页面重试</p>';
   }
 }
 
@@ -6534,39 +6483,40 @@ function senseCanvasInnerHtml(q, tid, meta, draft) {
   const tab = getCanvasTab('scenario');
   return `
     <div class="sense-session" id="panel-${tid}">
-      <div class="canvas-panel${tab === '??' ? ' active' : ''}" data-scenario-panel="scenario-q">
+      ${meta ? `<p class="sense-q-meta">${escapeHtml(meta)}</p>` : ''}
+      <div class="canvas-panel${tab === '题目' ? ' active' : ''}" data-scenario-panel="scenario-q">
         <article class="surface-card case-card sense-q-card">
-          <div class="wb-label">? ??</div>
+          <div class="wb-label">① 题目</div>
           <div class="case-body" id="scenario-${tid}">${escapeHtml(q.text)}</div>
         </article>
         <div class="surface-card work-card">
           <div class="work-block">
-            <div class="wb-label">? ????</div>
-            <div class="wb-hint">?????????? AI ??</div>
-            <textarea id="answer-${tid}" placeholder="?????????">${escapeHtml(draft)}</textarea>
+            <div class="wb-label">② 你的回答</div>
+            <div class="wb-hint">独立作答后提交，获取 AI 点评</div>
+            <textarea id="answer-${tid}" placeholder="写下你的产品判断…">${escapeHtml(draft)}</textarea>
             <div class="answer-inline-tools">
-              <button type="button" class="btn-voice" id="voice-${tid}">????</button>
+              <button type="button" class="btn-voice" id="voice-${tid}">语音输入</button>
             </div>
           </div>
         </div>
         ${senseBankPickerHtml()}
       </div>
-      <div class="canvas-panel${tab === '??' ? ' active' : ''}" data-scenario-panel="scenario-review">
+      <div class="canvas-panel${tab === '点评' ? ' active' : ''}" data-scenario-panel="scenario-review">
         <div class="surface-card feedback-card" id="resp-${tid}">
-          <div class="feedback-head">? AI ??</div>
+          <div class="feedback-head">③ AI 点评</div>
           <div class="feedback-body" id="resp-body-${tid}"></div>
           <div class="followup-wrap" id="followup-${tid}">
-            <div class="followup-label">??????</div>
+            <div class="followup-label">针对点评追问</div>
             <div class="followup-thread" id="followup-thread-${tid}"></div>
             <div class="followup-compose">
-              <textarea id="followup-input-${tid}" rows="2" maxlength="800" placeholder="???????????" disabled></textarea>
-              <button type="button" class="btn-followup" id="followup-btn-${tid}" disabled>??</button>
+              <textarea id="followup-input-${tid}" rows="2" maxlength="800" placeholder="哪里判断错了？怎么改？" disabled></textarea>
+              <button type="button" class="btn-followup" id="followup-btn-${tid}" disabled>发送</button>
             </div>
           </div>
         </div>
       </div>
-      <div class="canvas-panel${tab === '??' ? ' active' : ''}" data-scenario-panel="scenario-extras">
-        <div id="scenarioExtrasHost-${tid}"><p class="resume-pane-empty">???????? / ?? / ???????</p></div>
+      <div class="canvas-panel${tab === '解析' ? ' active' : ''}" data-scenario-panel="scenario-extras">
+        <div id="scenarioExtrasHost-${tid}"><p class="resume-pane-empty">提交点评后，框架 / 标准 / 对比会出现在此</p></div>
       </div>
     </div>`;
 }
@@ -6582,17 +6532,18 @@ function renderSenseSession(q) {
   if (!t) { startRandomSense(); return; }
   const total = bankQuestions().length || AI_PM_BANK?.total || 0;
   const meta = [
-    q.num ? `?${q.num}?` : '',
-    total ? `?${total}?` : '',
+    q.num ? `第${q.num}题` : '',
+    total ? `共${total}题` : '',
     q.company,
     q.typeLabel || q.type
-  ].filter(Boolean).join(' � ');
+  ].filter(Boolean).join(' · ');
   const draft = answerDraftByTopic[tid] || '';
 
   mountAgentWorkspace(senseCanvasInnerHtml(q, tid, meta, draft));
 
   bindSenseBankPicker();
-  updateCanvasChrome('scenario');
+  renderCanvasTitleCta('scenario', getCanvasTab('scenario'));
+  bindScenarioTitleActions();
   initFollowUp(tid);
   bindVoiceInput(tid);
   updateReadingTip(tid, q.text);
@@ -6619,7 +6570,7 @@ async function fetchV2Analyze(topicId, mode, answer) {
   try {
     const res = await fetch('/api/chat', { method: 'POST', headers: authHeaders(), body: JSON.stringify(payload) });
     const data = await res.json();
-    if (!res.ok) return { error: data.error || '??' };
+    if (!res.ok) return { error: data.error || '失败' };
     return data;
   } catch (e) {
     return { error: e.message };
@@ -6631,14 +6582,14 @@ async function loadReviewExtras(topicId, scenario, answer) {
   const respHost = document.getElementById('resp-body-' + topicId);
   const host = extrasHost || respHost;
   if (!host) return;
-  const labels = { framework: '????', rubric: '????', compare: '????' };
-  const loadingHtml = '<div class="review-extras"><p class="stream-status">????????</p></div>';
+  const labels = { framework: '回答框架', rubric: '评分标准', compare: '参考对比' };
+  const loadingHtml = '<div class="review-extras"><p class="stream-status">加载框架与对照…</p></div>';
   if (extrasHost) {
     extrasHost.innerHTML = loadingHtml;
   } else {
     const extras = document.createElement('div');
     extras.className = 'review-extras';
-    extras.innerHTML = '<p class="stream-status">????????</p>';
+    extras.innerHTML = '<p class="stream-status">加载框架与对照…</p>';
     host.appendChild(extras);
   }
 
@@ -6667,7 +6618,7 @@ async function loadReviewExtras(topicId, scenario, answer) {
   renderAgentToolsPanel();
 
   if (extrasHost && agentScene === 'scenario') {
-    setCanvasTab('scenario', '??');
+    setCanvasTab('scenario', '解析');
     refreshAgentCanvas();
   }
 }
@@ -6675,17 +6626,17 @@ async function loadReviewExtras(topicId, scenario, answer) {
 function renderV2PrepHtml(mode, st, raw) {
   if (!st) return escapeHtml(raw || '').replace(/\n/g, '<br/>');
   if (mode === 'framework') {
-    return `<h5>${escapeHtml(st.frameworkName || '????')}</h5>` +
+    return `<h5>${escapeHtml(st.frameworkName || '回答框架')}</h5>` +
       (st.steps || []).map(s => `<p><strong>${escapeHtml(s.title)}</strong> ${escapeHtml(s.hint)}</p>`).join('') +
-      (st.mustMention?.length ? `<h5>????</h5><p>${st.mustMention.map(escapeHtml).join(' � ')}</p>` : '');
+      (st.mustMention?.length ? `<h5>必须覆盖</h5><p>${st.mustMention.map(escapeHtml).join(' · ')}</p>` : '');
   }
   if (mode === 'rubric') {
-    return `<h5>???${escapeHtml(st.questionType || '')}</h5>` +
-      (st.dimensions || []).map(d => `<p><strong>${escapeHtml(d.name)}</strong> � 5??${escapeHtml(d.excellent || '')}</p>`).join('');
+    return `<h5>题型：${escapeHtml(st.questionType || '')}</h5>` +
+      (st.dimensions || []).map(d => `<p><strong>${escapeHtml(d.name)}</strong> · 5分：${escapeHtml(d.excellent || '')}</p>`).join('');
   }
   if (mode === 'compare') {
-    return `<p>??? ${st.coverageScore || '?'}/5</p>` +
-      (st.missing?.length ? `<h5>??</h5><p>${st.missing.map(escapeHtml).join(' � ')}</p>` : '') +
+    return `<p>覆盖度 ${st.coverageScore || '?'}/5</p>` +
+      (st.missing?.length ? `<h5>遗漏</h5><p>${st.missing.map(escapeHtml).join(' · ')}</p>` : '') +
       (st.rewriteHint ? `<p>${escapeHtml(st.rewriteHint)}</p>` : '');
   }
   return escapeHtml(JSON.stringify(st));
@@ -6702,26 +6653,26 @@ async function toggleV2Voice(topicId) {
     const chunks = [];
     recorder.ondataavailable = e => { if (e.data.size) chunks.push(e.data); };
     recorder.onstop = async () => {
-      btn.classList.remove('recording'); btn.textContent = '????';
+      btn.classList.remove('recording'); btn.textContent = '语音输入';
       v2RecorderByTopic[topicId] = { recording: false };
       stream.getTracks().forEach(tr => tr.stop());
       const blob = new Blob(chunks, { type: 'audio/webm' });
       const b64 = await new Promise((resolve, reject) => {
         const r = new FileReader(); r.onload = () => resolve(String(r.result).split(',')[1]); r.onerror = reject; r.readAsDataURL(blob);
       });
-      btn.textContent = '????';
+      btn.textContent = '转写中…';
       try {
         const res = await fetch('/api/chat', { method: 'POST', headers: authHeaders(), body: JSON.stringify({ accessCode, userId: userAccountId, tool: 'transcribe', audioBase64: b64, mimeType: 'audio/webm' }) });
         const data = await res.json();
         if (res.ok && data.text) ta.value = (ta.value ? ta.value + '\n' : '') + data.text;
-        else alert(data.error || '????');
+        else alert(data.error || '转写失败');
       } catch (e) { alert(e.message); }
-      btn.textContent = '????';
+      btn.textContent = '语音输入';
     };
     recorder.start();
     v2RecorderByTopic[topicId] = { recording: true, recorder };
-    btn.classList.add('recording'); btn.textContent = '????';
-  } catch { alert('???????'); }
+    btn.classList.add('recording'); btn.textContent = '停止录音';
+  } catch { alert('无法访问麦克风'); }
 }
 
 async function openAnalyticsModal() {
@@ -6730,18 +6681,18 @@ async function openAnalyticsModal() {
     modal = document.createElement('div');
     modal.id = 'analyticsModal';
     modal.className = 'history-modal';
-    modal.innerHTML = '<div class="history-panel"><h3>????</h3><div id="analyticsBody"></div><button type="button" class="btn-primary" id="analyticsClose">??</button></div>';
+    modal.innerHTML = '<div class="history-panel"><h3>练习记录</h3><div id="analyticsBody"></div><button type="button" class="btn-primary" id="analyticsClose">关闭</button></div>';
     document.body.appendChild(modal);
     modal.onclick = e => { if (e.target === modal) modal.classList.remove('open'); };
     modal.querySelector('#analyticsClose').onclick = () => modal.classList.remove('open');
   }
   const body = document.getElementById('analyticsBody');
-  body.innerHTML = '<p style="color:var(--ink3)">????</p>';
+  body.innerHTML = '<p style="color:var(--ink3)">加载中…</p>';
   modal.classList.add('open');
   try {
     const res = await fetch('/api/records', { method: 'POST', headers: authHeaders(), body: JSON.stringify({ accessCode, userId: userAccountId, recordType: 'analytics', topicIds: TOPICS.map(t => t.id) }) });
     const data = await res.json();
-    if (!data.progressCurve?.length) { body.innerHTML = '<p>' + escapeHtml(data.summary || '????') + '</p>'; return; }
+    if (!data.progressCurve?.length) { body.innerHTML = '<p>' + escapeHtml(data.summary || '暂无数据') + '</p>'; return; }
     const max = Math.max(...data.progressCurve.map(p => p.score), 5);
     body.innerHTML = `<p>${escapeHtml(data.summary || '')}</p><div class="analytics-chart">${data.progressCurve.map(p => `<div class="analytics-bar" style="height:${Math.round((p.score / max) * 100)}%"></div>`).join('')}</div><ul>${(data.weakTypes || []).map(w => `<li>${escapeHtml(w.typeLabel)} ${w.avgScore}/5</li>`).join('')}</ul>`;
   } catch (e) { body.innerHTML = '<p>' + escapeHtml(e.message) + '</p>'; }
@@ -6750,7 +6701,7 @@ async function openAnalyticsModal() {
 async function loadKnowledge() {
   if (KNOWLEDGE.length) return KNOWLEDGE;
   const res = await fetch('knowledge.json?t=' + Date.now(), { cache: 'no-store' });
-  if (!res.ok) throw new Error('???? knowledge.json');
+  if (!res.ok) throw new Error('无法加载 knowledge.json');
   const data = await res.json();
   KNOWLEDGE = Array.isArray(data.sections) ? data.sections : [];
   return KNOWLEDGE;
@@ -6774,42 +6725,42 @@ function knowledgeCardById(cardId) {
 
 function resolveSystemPrompt(scenario, fallbackPrompt) {
   const text = String(scenario || '');
-  const tag = text.match(/^?([^�?]+)�([^?]+)?/);
+  const tag = text.match(/^【([^·】]+)·([^】]+)】/);
   const map = topicMap();
   if (tag) {
     const industry = tag[1];
-    const kind = tag[2].split('�')[0];
+    const kind = tag[2].split('·')[0];
     const mianjingMap = {
-      ??: 'user', ??: 'decision', ??: 'data', ??: 'growth', ??: 'retention',
-      ??: 'competitor', ??: 'feature', ??: 'crisis', ??: 'content',
-      ??: 'iv-exp', ??: 'iv-self', ??: 'iv-career', ??: 'iv-pm', AI: 'iv-pm',
-      ??: 'iv-skills', ??: 'iv-skills', ??: 'iv-ops', ??: 'iv-misc',
-      ??: 'iv-open', ??: 'prod-open', ??: 'biz-monetize', ??: 'iv-misc'
+      需求: 'user', 决策: 'decision', 数据: 'data', 增长: 'growth', 留存: 'retention',
+      竞品: 'competitor', 功能: 'feature', 危机: 'crisis', 活动: 'content',
+      实习: 'iv-exp', 行为: 'iv-self', 规划: 'iv-career', 产品: 'iv-pm', AI: 'iv-pm',
+      实操: 'iv-skills', 估算: 'iv-skills', 运营: 'iv-ops', 综合: 'iv-misc',
+      策略: 'iv-open', 设计: 'prod-open', 变现: 'biz-monetize', 笔试: 'iv-misc'
     };
-    if (industry === '??') {
+    if (industry === '面经') {
       const topicId = mianjingMap[kind];
       const tp = topicId && map.get(topicId);
       if (tp?.systemPrompt) return tp.systemPrompt;
     }
     const industryMap = {
-      OTA: { ??: 'user', ??: 'decision', ??: 'data', ??: 'competitor', ??: 'growth', ??: 'feature', ??: 'crisis', ??: 'iv-open' },
-      ??: { ??: 'user', ??: 'decision', ??: 'data', ??: 'competitor', ??: 'growth', ??: 'feature', ??: 'crisis' },
-      ??: { ??: 'user', ??: 'decision', ??: 'data', ??: 'competitor', ??: 'growth', ??: 'feature', ??: 'crisis' },
-      ????: { ??: 'user', ??: 'decision', ??: 'data' }
+      OTA: { 需求: 'user', 决策: 'decision', 数据: 'data', 竞品: 'competitor', 增长: 'growth', 功能: 'feature', 危机: 'crisis', 开放: 'iv-open' },
+      电商: { 需求: 'user', 决策: 'decision', 数据: 'data', 竞品: 'competitor', 增长: 'growth', 功能: 'feature', 危机: 'crisis' },
+      社区: { 需求: 'user', 决策: 'decision', 数据: 'data', 竞品: 'competitor', 增长: 'growth', 功能: 'feature', 危机: 'crisis' },
+      即时零售: { 需求: 'user', 决策: 'decision', 数据: 'data' }
     };
     const topicId = industryMap[industry]?.[kind];
     const tp = topicId && map.get(topicId);
     if (tp?.systemPrompt) return tp.systemPrompt;
   }
-  if (/^?AI PM/.test(text) || /^?AI�/.test(text)) {
+  if (/^【AI PM/.test(text) || /^【AI·/.test(text)) {
     const pm = map.get('iv-pm');
     if (pm?.systemPrompt) return pm.systemPrompt;
   }
-  if (/^??????/.test(text)) {
+  if (/^【创作者运营/.test(text)) {
     const ops = map.get('iv-ops');
     if (ops?.systemPrompt) return ops.systemPrompt;
   }
-  if (/^???/.test(text) || /^???/.test(text) || /???/.test(text)) {
+  if (/^【面经/.test(text) || /^【面试/.test(text) || /面试题/.test(text)) {
     const pm = map.get('iv-pm');
     if (pm?.systemPrompt) return pm.systemPrompt;
   }
@@ -6818,28 +6769,28 @@ function resolveSystemPrompt(scenario, fallbackPrompt) {
 
 function readingIdsForNav(navId, scenario) {
   const ids = [...(KNOWLEDGE_MAP.readingByNav?.[navId] || [])];
-  const tag = String(scenario || '').match(/^?([^�]+)/);
+  const tag = String(scenario || '').match(/^【([^·]+)/);
   if (tag) {
     const extra = {
       OTA: ['ota-hotel-modes', 'ota-cross-sell'],
-      ??: ['ecom-shelf-vs-content'],
-      ??: ['community-triangle'],
-      ??: ['starr-framework', 'prep-framework', 'metric-selection-chain']
+      电商: ['ecom-shelf-vs-content'],
+      社区: ['community-triangle'],
+      面经: ['starr-framework', 'prep-framework', 'metric-selection-chain']
     };
-    const kind = String(scenario || '').match(/^???�([^�?]+)/);
+    const kind = String(scenario || '').match(/^【面经·([^·】]+)/);
     const kindExtra = {
-      ??: ['impact-coefficient', 'data-anomaly-debug', 'renhuochang-analysis'],
-      ??: ['priority-rice', 'goal-path-resource-risk'],
-      ??: ['competitor-four-layers', 'competitor-analysis'],
-      ??: ['activity-review-loop', 'renhuochang-analysis'],
-      ??: ['ops-plan-5w1h', 'activity-review-loop'],
+      数据: ['impact-coefficient', 'data-anomaly-debug', 'renhuochang-analysis'],
+      决策: ['priority-rice', 'goal-path-resource-risk'],
+      竞品: ['competitor-four-layers', 'competitor-analysis'],
+      运营: ['activity-review-loop', 'renhuochang-analysis'],
+      活动: ['ops-plan-5w1h', 'activity-review-loop'],
       AI: ['ai-project-four-steps', 'llm-output-constraints'],
-      ??: ['fermi-estimation', 'written-exam-five-types'],
-      ??: ['starr-framework', 'quantify-resume'],
-      ??: ['starr-framework', 'prep-framework'],
-      ??: ['self-intro-four', 'career-stages'],
-      ??: ['arpu-ltv-dau', 'north-star-guardrails'],
-      ??: ['gmv-decomposition', 'influence-without-authority']
+      估算: ['fermi-estimation', 'written-exam-five-types'],
+      实习: ['starr-framework', 'quantify-resume'],
+      行为: ['starr-framework', 'prep-framework'],
+      规划: ['self-intro-four', 'career-stages'],
+      变现: ['arpu-ltv-dau', 'north-star-guardrails'],
+      策略: ['gmv-decomposition', 'influence-without-authority']
     };
     (extra[tag[1]] || []).forEach(id => { if (!ids.includes(id)) ids.push(id); });
     if (kind) (kindExtra[kind[1]] || []).forEach(id => { if (!ids.includes(id)) ids.push(id); });
@@ -6862,11 +6813,11 @@ function renderStructuredReview(review, metaHtml) {
     html += `<div class="rubric-dim"><div class="rubric-dim-head"><span>${escapeHtml(d.name)}</span><span>${d.score}/5</span></div><div class="rubric-bar"><span style="width:${pct}%"></span></div><p>${escapeHtml(d.comment)}</p></div>`;
   });
   html += '<div class="rubric-lists">';
-  if (review.strengths?.length) html += `<h5>??</h5><p>${review.strengths.map(s => escapeHtml(s)).join(' � ')}</p>`;
-  if (review.gaps?.length) html += `<h5>???</h5><p>${review.gaps.map(s => escapeHtml(s)).join(' � ')}</p>`;
-  if (review.actions?.length) html += `<h5>????</h5><p>${review.actions.map(s => escapeHtml(s)).join(' � ')}</p>`;
-  if (review.growth) html += `<h5>????</h5><p>${escapeHtml(review.growth)}</p>`;
-  if (review.referenceGap) html += `<h5>?????</h5><p>${escapeHtml(review.referenceGap)}</p>`;
+  if (review.strengths?.length) html += `<h5>亮点</h5><p>${review.strengths.map(s => escapeHtml(s)).join(' · ')}</p>`;
+  if (review.gaps?.length) html += `<h5>待加强</h5><p>${review.gaps.map(s => escapeHtml(s)).join(' · ')}</p>`;
+  if (review.actions?.length) html += `<h5>建议行动</h5><p>${review.actions.map(s => escapeHtml(s)).join(' · ')}</p>`;
+  if (review.growth) html += `<h5>思维成长</h5><p>${escapeHtml(review.growth)}</p>`;
+  if (review.referenceGap) html += `<h5>与参考相比</h5><p>${escapeHtml(review.referenceGap)}</p>`;
   html += '</div></div>';
   return html;
 }
@@ -6875,14 +6826,14 @@ function reviewMetaHtml(data) {
   let metaHtml = '';
   if (data.historyEnabled !== false) {
     if (data.comparedWith > 0) {
-      metaHtml = `<p class="review-meta">???????? ${data.comparedWith} ???</p>`;
+      metaHtml = `<p class="review-meta">已对照本模块最近 ${data.comparedWith} 次作答</p>`;
     } else {
-      metaHtml = '<p class="review-meta">??????? � ????????????</p>';
+      metaHtml = '<p class="review-meta">已记录本次作答 · 下次会对比思路是否在进步</p>';
     }
   }
-  if (data.rubricAvg) metaHtml += `<p class="review-meta">?? ${data.rubricAvg}/5</p>`;
-  if (data.ragRefs?.length) metaHtml += `<p class="review-meta">RAG?${escapeHtml(data.ragRefs.join('?'))}</p>`;
-  if (data.interviewRagCount > 0) metaHtml += `<p class="review-meta">???? ${data.interviewRagCount} ?</p>`;
+  if (data.rubricAvg) metaHtml += `<p class="review-meta">综合 ${data.rubricAvg}/5</p>`;
+  if (data.ragRefs?.length) metaHtml += `<p class="review-meta">RAG：${escapeHtml(data.ragRefs.join('、'))}</p>`;
+  if (data.interviewRagCount > 0) metaHtml += `<p class="review-meta">引用面经 ${data.interviewRagCount} 条</p>`;
   return metaHtml;
 }
 
@@ -6896,7 +6847,7 @@ async function openHistoryModal() {
   if (!modal || !body) return;
   modal.classList.add('open');
   modal.setAttribute('aria-hidden', 'false');
-  body.innerHTML = '<p style="color:var(--ink3)">????</p>';
+  body.innerHTML = '<p style="color:var(--ink3)">加载中…</p>';
   try {
     const res = await fetch('/api/records', {
       method: 'POST',
@@ -6905,18 +6856,18 @@ async function openHistoryModal() {
     });
     const data = await res.json();
     if (!res.ok || !data.timeline?.length) {
-      body.innerHTML = '<p style="color:var(--ink3)">?????????????????</p>';
+      body.innerHTML = '<p style="color:var(--ink3)">暂无记录。提交分析后会出现在这里。</p>';
       return;
     }
     body.innerHTML = data.timeline.map(item => {
       const label = getTopic(item.topicId)?.label || item.topicId;
       const when = item.at ? item.at.slice(0, 16).replace('T', ' ') : '';
-      const score = item.rubricAvg ? ` � ${item.rubricAvg}/5` : '';
+      const score = item.rubricAvg ? ` · ${item.rubricAvg}/5` : '';
       const scene = String(item.scenario || '').slice(0, 60);
-      return `<div class="history-item"><strong>${escapeHtml(label)}</strong>${escapeHtml(score)}<br/><span>${escapeHtml(when)}</span><br/>${escapeHtml(scene)}?</div>`;
+      return `<div class="history-item"><strong>${escapeHtml(label)}</strong>${escapeHtml(score)}<br/><span>${escapeHtml(when)}</span><br/>${escapeHtml(scene)}…</div>`;
     }).join('');
   } catch (e) {
-    body.innerHTML = '<p style="color:var(--danger)">?????' + escapeHtml(e.message) + '</p>';
+    body.innerHTML = '<p style="color:var(--danger)">加载失败：' + escapeHtml(e.message) + '</p>';
   }
 }
 
@@ -6944,7 +6895,7 @@ function paginateCardBody(text, maxChars = 240) {
   const pushLong = (p) => {
     let rest = p;
     while (rest.length > maxChars) {
-      let cut = rest.lastIndexOf('?', maxChars);
+      let cut = rest.lastIndexOf('。', maxChars);
       if (cut < maxChars * 0.35) cut = rest.lastIndexOf('\n', maxChars);
       if (cut < maxChars * 0.35) cut = maxChars;
       pages.push(rest.slice(0, cut).trim());
@@ -6980,7 +6931,7 @@ function knowledgeFlatCardsForPage(pageId) {
 
 function renderKnowledgeFlatViewerHtml(flat, cardIndex, bodyPageIndex) {
   if (!flat.length) {
-    return '<p style="color:var(--ink3)">??????</p>';
+    return '<p style="color:var(--ink3)">本页暂无条目</p>';
   }
   const ci = Math.max(0, Math.min(cardIndex, flat.length - 1));
   const card = flat[ci];
@@ -6988,9 +6939,9 @@ function renderKnowledgeFlatViewerHtml(flat, cardIndex, bodyPageIndex) {
   const bi = Math.max(0, Math.min(bodyPageIndex, bodyPages.length - 1));
   const bodyText = bodyPages[bi];
   const bodyNav = bodyPages.length > 1
-    ? `<button type="button" class="kc-nav kc-body-prev" ${bi <= 0 ? 'disabled' : ''}>???</button>
+    ? `<button type="button" class="kc-nav kc-body-prev" ${bi <= 0 ? 'disabled' : ''}>上一页</button>
        <span class="knowledge-pager-pos">${bi + 1} / ${bodyPages.length}</span>
-       <button type="button" class="kc-nav kc-body-next" ${bi >= bodyPages.length - 1 ? 'disabled' : ''}>???</button>`
+       <button type="button" class="kc-nav kc-body-next" ${bi >= bodyPages.length - 1 ? 'disabled' : ''}>下一页</button>`
     : '';
   return `<section class="knowledge-flat-viewer cat-${escapeHtml(card.sectionCat || 'ops')}" data-card-id="${escapeAttr(card.id || '')}">
     <div class="knowledge-section-head">
@@ -7003,10 +6954,10 @@ function renderKnowledgeFlatViewerHtml(flat, cardIndex, bodyPageIndex) {
       <div class="kc-body kc-body-paged">${renderKnowledgeMarkdownish(bodyText)}</div>
     </article>
     ${bodyNav ? `<div class="mission-read-pager">${bodyNav}</div>` : ''}
-    <div class="knowledge-stack-nav" aria-label="????">
-      <button type="button" class="kc-nav kc-card-prev" ${ci <= 0 ? 'disabled' : ''} aria-label="???">? ???</button>
+    <div class="knowledge-stack-nav" aria-label="卡片翻页">
+      <button type="button" class="kc-nav kc-card-prev" ${ci <= 0 ? 'disabled' : ''} aria-label="上一张">← 上一张</button>
       <span class="knowledge-pager-pos">${ci + 1} / ${flat.length}</span>
-      <button type="button" class="kc-nav kc-card-next" ${ci >= flat.length - 1 ? 'disabled' : ''} aria-label="???">??? ?</button>
+      <button type="button" class="kc-nav kc-card-next" ${ci >= flat.length - 1 ? 'disabled' : ''} aria-label="下一张">下一张 →</button>
     </div>
   </section>`;
 }
@@ -7108,14 +7059,14 @@ function knowledgePagerHtml() {
   ).join('');
   const prev = pageIndex > 0 ? KNOWLEDGE_PAGES[pageIndex - 1] : null;
   const next = pageIndex < KNOWLEDGE_PAGES.length - 1 ? KNOWLEDGE_PAGES[pageIndex + 1] : null;
-  return `<nav class="knowledge-pager" id="knowledgePager" aria-label="?????">
+  return `<nav class="knowledge-pager" id="knowledgePager" aria-label="知识库分页">
     ${btns}
-    <p class="knowledge-page-hint">${escapeHtml(page.hint)} � ?? ${knowledgeCardCountForPage(page)} ??</p>
+    <p class="knowledge-page-hint">${escapeHtml(page.hint)} · 本页 ${knowledgeCardCountForPage(page)} 张卡</p>
   </nav>
-  <div class="knowledge-pager-nav" aria-label="??">
-    <button type="button" id="knowledgePrevPage" ${prev ? '' : 'disabled'}>${prev ? '? ' + escapeHtml(prev.label) : '?????'}</button>
+  <div class="knowledge-pager-nav" aria-label="翻页">
+    <button type="button" id="knowledgePrevPage" ${prev ? '' : 'disabled'}>${prev ? '← ' + escapeHtml(prev.label) : '已是第一页'}</button>
     <span class="knowledge-pager-pos">${pageIndex + 1} / ${KNOWLEDGE_PAGES.length}</span>
-    <button type="button" id="knowledgeNextPage" ${next ? '' : 'disabled'}>${next ? escapeHtml(next.label) + ' ?' : '??????'}</button>
+    <button type="button" id="knowledgeNextPage" ${next ? '' : 'disabled'}>${next ? escapeHtml(next.label) + ' →' : '已是最后一页'}</button>
   </div>`;
 }
 
@@ -7174,10 +7125,10 @@ function renderTopics() {
       ${modeBarHtml()}
       <div class="workspace">
         <div class="train-toolbar">
-          <button type="button" class="btn-frost" id="backToBankBtn">? ????</button>
+          <button type="button" class="btn-frost" id="backToBankBtn">← 返回面经</button>
           ${scenarioSearchBarHtml()}
         </div>
-        <aside class="workspace-aside" aria-label="????">
+        <aside class="workspace-aside" aria-label="训练模块">
           <nav class="module-nav" id="moduleNav"></nav>
         </aside>
         <div class="train-main">
@@ -7195,7 +7146,7 @@ function renderTopics() {
   const nav = document.getElementById('moduleNav');
   const panels = document.getElementById('panels');
   const activeRef = { activeId };
-  renderNavGroup(nav, 'interview', 'AI ????', CURRICULUM.aiPm, topicById, activeRef);
+  renderNavGroup(nav, 'interview', 'AI 产品经理', CURRICULUM.aiPm, topicById, activeRef);
 
   document.getElementById('backToBankBtn')?.addEventListener('click', () => {
     interviewSubView = 'scenario';
@@ -7210,37 +7161,37 @@ function renderTopics() {
       <div class="train-flow">
         <article class="surface-card case-card">
           <div class="case-head">
-            <span>????</span>
-            <button type="button" class="btn-refresh" data-reload="${t.id}">???</button>
+            <span>业务场景</span>
+            <button type="button" class="btn-refresh" data-reload="${t.id}">换一题</button>
       </div>
           <div class="case-body" id="scenario-${t.id}"></div>
         </article>
         <div class="reading-tip" id="reading-${t.id}" style="display:none"></div>
         <div class="surface-card work-card">
           <div class="work-block">
-            <div class="wb-label">????</div>
+            <div class="wb-label">你的分析</div>
             <div class="wb-hint">${escapeHtml(t.fieldLabel)}</div>
             <textarea id="answer-${t.id}" placeholder="${escapeAttr(t.placeholder)}"></textarea>
             <div class="answer-inline-tools">
-              <button type="button" class="btn-voice" id="voice-${t.id}">????</button>
+              <button type="button" class="btn-voice" id="voice-${t.id}">语音输入</button>
             </div>
           </div>
         </div>
         <div class="surface-card surface-card--flat action-card">
       <div class="btn-row">
-            <button class="btn-primary" id="btn-${t.id}" type="button">?? � ?? AI ??</button>
+            <button class="btn-primary" id="btn-${t.id}" type="button">提交 · 获取 AI 点评</button>
       </div>
         </div>
         <div class="surface-card feedback-card" id="resp-${t.id}">
-          <div class="feedback-head">AI ????</div>
+          <div class="feedback-head">AI 导师点评</div>
           <div class="feedback-body" id="resp-body-${t.id}"></div>
           <div class="followup-wrap" id="followup-${t.id}">
-            <div class="followup-label">??????</div>
+            <div class="followup-label">继续追问导师</div>
             <div class="followup-thread" id="followup-thread-${t.id}"></div>
             <div class="followup-compose">
-              <textarea id="followup-input-${t.id}" rows="2" maxlength="800" placeholder="?????????" disabled></textarea>
-              <p class="followup-hint">Enter ?? � Shift+Enter ??</p>
-              <button type="button" class="btn-followup" id="followup-btn-${t.id}" disabled>????</button>
+              <textarea id="followup-input-${t.id}" rows="2" maxlength="800" placeholder="针对点评继续提问…" disabled></textarea>
+              <p class="followup-hint">Enter 发送 · Shift+Enter 换行</p>
+              <button type="button" class="btn-followup" id="followup-btn-${t.id}" disabled>发送追问</button>
             </div>
           </div>
         </div>
@@ -7286,12 +7237,12 @@ async function loadTopicsAndRender() {
   } catch (e) {
     const isFile = location.protocol === 'file:';
     const hint = isFile
-      ? '?????? HTML????????? <code>npx vercel dev</code>??????? http://localhost ?????'
-      : '?????? <code>npx vercel dev</code>???????? <a href="https://cvassistant-ai.vercel.app">cvassistant-ai.vercel.app</a>?';
-    setSyncStatus(false, '?????' + (e.message || '????'));
+      ? '不能双击打开 HTML。请在项目目录运行 <code>npx vercel dev</code>，再用终端里的 http://localhost 地址访问。'
+      : '请确认已运行 <code>npx vercel dev</code>，或访问已部署的 <a href="https://cvassistant-ai.vercel.app">cvassistant-ai.vercel.app</a>。';
+    setSyncStatus(false, '加载失败：' + (e.message || '网络错误'));
     document.getElementById('mainContent').innerHTML =
       `<div style="color:var(--danger);text-align:center;padding:2rem 1.5rem;max-width:520px;margin:0 auto;line-height:1.6">
-        <p style="font-weight:600;margin-bottom:12px">????????</p>
+        <p style="font-weight:600;margin-bottom:12px">无法加载场景数据</p>
         <p style="font-size:14px;color:var(--ink2);margin-bottom:16px">${hint}</p>
         <p style="font-size:12px;color:var(--ink3)">${escapeHtml(e.message || 'Failed to fetch')}</p>
       </div>`;
@@ -7344,7 +7295,7 @@ function setupMobileModuleNav(ordered) {
     label.id = 'mobileModuleLabel';
     label.className = 'mobile-module-label';
     label.htmlFor = 'mobileModuleSelect';
-    label.textContent = '??????';
+    label.textContent = '切换训练模块';
     aside.insertBefore(label, nav);
   }
   let select = existing;
@@ -7352,7 +7303,7 @@ function setupMobileModuleNav(ordered) {
     select = document.createElement('select');
     select.id = 'mobileModuleSelect';
     select.className = 'mobile-module-select';
-    select.setAttribute('aria-label', '??????');
+    select.setAttribute('aria-label', '选择训练模块');
     aside.insertBefore(select, nav);
     select.addEventListener('change', () => {
       switchTab(select.value, null);
@@ -7371,15 +7322,15 @@ function setupMobileModuleNav(ordered) {
 
 function filterScenarioPool(navId, list) {
   if (navId === 'prod-open') {
-    const pd = list.filter(s => typeof s === 'string' && (s.includes('???�????�') || s.includes('???�')));
+    const pd = list.filter(s => typeof s === 'string' && (s.includes('【面试·产品设计·') || s.includes('【面试·')));
     return pd.length ? pd : list;
   }
   if (navId === 'iv-exp' || navId.startsWith('iv-')) {
-    const iv = list.filter(s => typeof s === 'string' && s.includes('???�'));
+    const iv = list.filter(s => typeof s === 'string' && s.includes('【面试·'));
     return iv.length ? iv : list;
   }
   if (navId === 'biz-platform' || navId.startsWith('biz-') || navId.startsWith('map-')) {
-    const bz = list.filter(s => typeof s === 'string' && (s.includes('?????�') || s.includes('???�')));
+    const bz = list.filter(s => typeof s === 'string' && (s.includes('【业务分析·') || s.includes('【地图·')));
     return bz.length ? bz : list;
   }
   return list;
@@ -7407,22 +7358,22 @@ function pickScenarios(topic) {
 }
 
 function answerHintForScenario(scenarioText, fallback) {
-  if (!scenarioText) return fallback || '??????????????????';
-  const body = scenarioText.replace(/^?[^?]+?\s*/, '').trim();
-  const ask = body.match(/?[^???]+[???]?/);
-  if (ask) return ask[0].replace(/[??]$/, '') + '?';
-  const q = body.match(/[^??]*?/);
-  if (q) return '????' + q[0].trim();
-  if (/?????/.test(body)) {
-    const part = body.split(/[??]/)[0];
-    return part + '?';
+  if (!scenarioText) return fallback || '请阅读上方场景，结构化写出你的分析。';
+  const body = scenarioText.replace(/^【[^】]+】\s*/, '').trim();
+  const ask = body.match(/请[^。；？]+[。；？]?/);
+  if (ask) return ask[0].replace(/[。；]$/, '') + '。';
+  const q = body.match(/[^。；]*？/);
+  if (q) return '请回答：' + q[0].trim();
+  if (/面试官问：/.test(body)) {
+    const part = body.split(/[。；]/)[0];
+    return part + '。';
   }
-  if (/?[^?]{10,}/.test(body) && !body.includes('?') && !/?|??|??|???/.test(body)) {
-    const idx = body.indexOf('?');
+  if (/：[^：]{10,}/.test(body) && !body.includes('？') && !/请|如何|怎么|面试官/.test(body)) {
+    const idx = body.indexOf('：');
     const head = body.slice(0, idx);
-  return '????' + head + '???????' + body.slice(idx + 1).replace(/[?.]$/, '') + '?';
+  return '请围绕「' + head + '」按要求作答：' + body.slice(idx + 1).replace(/[。.]$/, '') + '。';
   }
-  return fallback || '????????????????????????????';
+  return fallback || '请阅读上方场景，写出你的分析思路、依据与可验证的下一步。';
 }
 
 function loadScenario(id, preferredScenario, opts) {
@@ -7431,7 +7382,7 @@ function loadScenario(id, preferredScenario, opts) {
   const pool = pickScenarios(t);
   const allowExternal = opts.allowExternal && preferredScenario;
   if (!pool.length && !allowExternal) {
-    document.getElementById('scenario-' + id).textContent = '??????????? scenarios-interview-pm.json';
+    document.getElementById('scenario-' + id).textContent = '本题库暂无题目，请检查 scenarios-interview-pm.json';
     return;
   }
   let scenario;
@@ -7467,7 +7418,7 @@ function clearMentorSession(id) {
   if (wrap) wrap.classList.remove('visible');
   if (thread) thread.innerHTML = '';
   if (input) { input.value = ''; input.disabled = true; }
-  if (btn) { btn.disabled = true; btn.textContent = '????'; }
+  if (btn) { btn.disabled = true; btn.textContent = '发送追问'; }
 }
 
 function initFollowUp(id) {
@@ -7511,18 +7462,18 @@ async function submitFollowUp(id) {
   if (!accessCode) { accessCode = 'guest'; userAccountId = userAccountId || 'guest'; }
   const session = mentorSessions[id];
   if (!session?.feedback) {
-    alert('??????????? AI ??');
+    alert('请先完成首轮作答并获取 AI 点评');
     return;
   }
   const input = document.getElementById('followup-input-' + id);
   const btn = document.getElementById('followup-btn-' + id);
   const question = (input?.value || '').trim();
-  if (!question) { alert('???????'); return; }
+  if (!question) { alert('请输入追问内容'); return; }
 
   const t = getTopic(id);
   btn.disabled = true;
   input.disabled = true;
-  btn.textContent = '????';
+  btn.textContent = '回复中…';
   appendFollowUpBubble(id, 'user', question, false);
   input.value = '';
   const pending = appendFollowUpBubble(id, 'assistant', '', true);
@@ -7555,20 +7506,20 @@ async function submitFollowUp(id) {
       session.history.push({ q: question, a: data.text });
       appendFollowUpBubble(id, 'assistant', data.text, false);
     } else if (res.status === 401) {
-      appendFollowUpBubble(id, 'assistant', data.error || '???????????', false);
+      appendFollowUpBubble(id, 'assistant', data.error || '请求失败，请稍后重试。', false);
     } else if (res.status === 429) {
-      appendFollowUpBubble(id, 'assistant', data.error || '????????', false);
+      appendFollowUpBubble(id, 'assistant', data.error || '今日次数已达上限', false);
     } else {
-      appendFollowUpBubble(id, 'assistant', data.error || ('?????HTTP ' + res.status + '?'), false);
+      appendFollowUpBubble(id, 'assistant', data.error || ('请求失败（HTTP ' + res.status + '）'), false);
     }
   } catch (e) {
     if (pending) pending.remove();
-    appendFollowUpBubble(id, 'assistant', '?????' + e.message, false);
+    appendFollowUpBubble(id, 'assistant', '网络错误：' + e.message, false);
   }
 
   btn.disabled = false;
   input.disabled = false;
-  btn.textContent = '????';
+  btn.textContent = '发送追问';
   input.focus();
 }
 
@@ -7586,7 +7537,7 @@ function finishReviewForTopic(id, scenario, data) {
   setInterviewFlowStep('review');
   onMissionPracticeComplete(id, data.rubricAvg, scenario);
   loadReviewExtras(id, scenario, answer);
-  setCanvasTab('scenario', '??');
+  setCanvasTab('scenario', '点评');
   refreshAgentCanvas();
   agentToolSteps = [{ name: 'review_answer', status: 'done', detail: String(id) }, { name: 'analyze_extras', status: 'running', detail: '' }];
   renderAgentToolsPanel();
@@ -7596,7 +7547,7 @@ function finishReviewForTopic(id, scenario, data) {
 async function submitAnswer(id) {
   if (!accessCode) { accessCode = 'guest'; userAccountId = userAccountId || 'guest'; }
   const answer = document.getElementById('answer-' + id).value.trim();
-  if (!answer) { alert('????????'); return; }
+  if (!answer) { alert('请先写下你的回答'); return; }
 
   const t = getTopic(id);
   const scenario = document.getElementById('scenario-' + id).textContent;
@@ -7606,9 +7557,9 @@ async function submitAnswer(id) {
   const systemPrompt = resolveSystemPrompt(scenario, t.systemPrompt);
 
   btn.disabled = true;
-  btn.textContent = '??????';
+  btn.textContent = '点评生成中…';
   respArea.classList.add('visible');
-  respBody.innerHTML = '<p class="stream-status">???? AI ???</p>';
+  respBody.innerHTML = '<p class="stream-status">正在生成 AI 点评…</p>';
   setInterviewFlowStep('review');
 
   const payload = {
@@ -7653,7 +7604,7 @@ async function submitAnswer(id) {
           if (evt.type === 'done') {
             finishReviewForTopic(id, scenario, evt);
           } else if (evt.type === 'error') {
-            respBody.textContent = evt.error || '????';
+            respBody.textContent = evt.error || '生成失败';
             clearMentorSession(id);
           }
         }
@@ -7662,27 +7613,27 @@ async function submitAnswer(id) {
       let data = {};
       const raw = await res.text();
       try { data = raw ? JSON.parse(raw) : {}; } catch {
-        respBody.textContent = '?????????';
+        respBody.textContent = '服务端返回格式异常';
         return;
       }
       if (res.ok && data.text) {
         finishReviewForTopic(id, scenario, data);
       } else if (res.status === 401) {
-        respBody.textContent = '???????????';
+        respBody.textContent = '请求失败，请稍后重试。';
       } else if (res.status === 429) {
-        respBody.textContent = data.error || '????????';
+        respBody.textContent = data.error || '今日次数已达上限';
       } else {
-        respBody.textContent = data.error || ('?????HTTP ' + res.status + '?');
+        respBody.textContent = data.error || ('请求失败（HTTP ' + res.status + '）');
         clearMentorSession(id);
       }
     }
   } catch (e) {
-    respBody.textContent = '?????' + e.message;
+    respBody.textContent = '网络错误：' + e.message;
     clearMentorSession(id);
   }
 
   btn.disabled = false;
-  btn.textContent = '???? � ????';
+  btn.textContent = '提交答案 · 获取点评';
 }
 
 
@@ -7828,8 +7779,8 @@ function updateThemeButton() {
   const btn = document.getElementById('btnTheme');
   if (!btn) return;
   const dark = getTheme() === 'dark';
-  btn.textContent = dark ? '??' : '??';
-  btn.setAttribute('aria-label', dark ? '???????' : '???????');
+  btn.textContent = dark ? '浅色' : '深色';
+  btn.setAttribute('aria-label', dark ? '切换到浅色模式' : '切换到深色模式');
   btn.classList.toggle('active', dark);
 }
 
