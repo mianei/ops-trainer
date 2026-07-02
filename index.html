@@ -4564,6 +4564,7 @@ function setAgentScene(scene) {
 
 function refreshAgentCanvas() {
   if (agentScene === 'resume') {
+    if (getCanvasTab('resume') !== '评分') saveProfileFromDom();
     renderResumeCanvasPanels();
   } else if (agentScene === 'prep') {
     renderPrepCanvasPanels();
@@ -4617,7 +4618,10 @@ function renderResumeCanvasPanels() {
     el.classList.toggle('canvas-panel', true);
     el.classList.toggle('active', on);
   });
-  if (tab === '评分') renderResumeScorePane();
+  if (tab === '评分') {
+    renderResumeScorePane();
+    bindProfileUpload();
+  }
   if (tab === '优化') renderResumeOptimizePane();
   if (tab === '文档') {
     const docEl = document.getElementById('resumeDocPanel');
@@ -4650,9 +4654,12 @@ function resumeCanvasInnerHtml() {
   const tab = getCanvasTab('resume');
   const tabClass = (name) => `canvas-panel${tab === name ? ' active' : ''}`;
   return `
-    <div class="canvas-profile-compact">${profileUploadHtml()}</div>
     <div id="resumeCanvasRoot">
-      <div class="${tabClass('评分')}" data-resume-panel="评分"><div class="resume-pane-body" id="resumeScoreBody"></div><p class="resume-pane-error" id="resumeScoreError" hidden></p></div>
+      <div class="${tabClass('评分')}" data-resume-panel="评分">
+        <div class="canvas-profile-compact" id="resumeProfileHost">${profileUploadHtml()}</div>
+        <div class="resume-pane-body" id="resumeScoreBody"></div>
+        <p class="resume-pane-error" id="resumeScoreError" hidden></p>
+      </div>
       <div class="${tabClass('优化')}" data-resume-panel="优化"><div class="resume-pane-body" id="resumeOptimizeBody"></div><p class="resume-pane-error" id="resumeOptimizeError" hidden></p></div>
       <div class="${tabClass('文档')}" data-resume-panel="文档"><div id="resumeDocPanel"></div></div>
     </div>`;
@@ -4885,7 +4892,7 @@ function profileUploadHtml() {
         <input type="file" id="resumeFileInput" accept=".pdf,.doc,.docx,.txt,.md,.text,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" hidden />
         <div class="upload-dropzone-body" id="resumeDropzoneBody">${resumeDoneHtml}</div>
       </div>
-      <p class="profile-file-status${resumeDone ? ' is-ok' : ''}" id="resumeFileStatus">${resumeDone ? '上传完成，切换到「评分」标签开始' : ''}</p>
+      <p class="profile-file-status${resumeDone ? ' is-ok' : ''}" id="resumeFileStatus">${resumeDone ? '上传完成，点击下方「开始评分」' : ''}</p>
       <details class="upload-paste-fallback">
         <summary>没有文件？粘贴文本</summary>
         <textarea id="profileResumeInput" placeholder="直接粘贴简历全文">${escapeHtml(profileResume)}</textarea>
@@ -4905,11 +4912,7 @@ function profileUploadHtml() {
       <label for="profileTargetRoleInput" style="margin-top:10px;display:block">目标岗位</label>
       <input type="text" id="profileTargetRoleInput" value="${escapeAttr(profileTargetRole)}" placeholder="如：字节 AI 产品实习" style="width:100%;padding:8px 10px;border:1px solid var(--frost-border);border-radius:var(--r);font-family:inherit;font-size:13px" />
     </div>
-  </div>
-  <details class="upload-extra-notes">
-    <summary>补充说明（可选）</summary>
-    <textarea id="coachExtraNotes" rows="2" placeholder="已收到的反馈、重点想改的项目、担心被问穿的地方…">${escapeHtml(coachIntake.extra || '')}</textarea>
-  </details>`;
+  </div>`;
 }
 
 const DOC_PARSER_SCRIPTS = {
@@ -5409,10 +5412,14 @@ function renderResumeScorePane() {
     if (errEl) errEl.hidden = true;
     return;
   }
-  body.innerHTML = `<div class="resume-pane-empty">
-    <p>上传简历后，在此生成五维评分报告</p>
-    <button type="button" class="btn-primary resume-tab-cta" id="resumeStartScoreBtn">开始评分</button>
-  </div>`;
+  body.innerHTML = profileResume.trim()
+    ? `<div class="resume-pane-empty">
+        <p>简历已就绪，生成五维评分报告</p>
+        <button type="button" class="btn-primary resume-tab-cta" id="resumeStartScoreBtn">开始评分</button>
+      </div>`
+    : `<div class="resume-pane-empty">
+        <p>先在上方上传或粘贴简历</p>
+      </div>`;
   bindResumePaneActions();
 }
 
