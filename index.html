@@ -640,8 +640,55 @@
   .canvas-body .knowledge-pager { margin-bottom: 12px; padding-bottom: 10px; }
   .canvas-panel { display: none; }
   .canvas-panel.active { display: block; }
-  .canvas-profile-compact { margin-bottom: 14px; }
-  .canvas-profile-compact .profile-upload-grid { margin-bottom: 0; }
+  .canvas-profile-compact { margin-bottom: 10px; }
+  .canvas-profile-compact .profile-upload-grid {
+    margin-bottom: 0;
+    gap: 8px;
+  }
+  .canvas-profile-compact .profile-box {
+    padding: 8px 10px;
+    border-radius: var(--r);
+  }
+  .canvas-profile-compact .profile-box label {
+    font-size: 11px;
+    margin-bottom: 4px;
+  }
+  .canvas-profile-compact .upload-dropzone {
+    padding: 10px 8px;
+    border-radius: 10px;
+    border-width: 1.5px;
+  }
+  .canvas-profile-compact .upload-dropzone-icon {
+    width: 28px;
+    height: 28px;
+    margin: 0 auto 6px;
+    border-radius: 8px;
+    font-size: 14px;
+  }
+  .canvas-profile-compact .upload-dropzone-title {
+    font-size: 12px;
+    margin-bottom: 2px;
+  }
+  .canvas-profile-compact .upload-dropzone-hint {
+    font-size: 11px;
+    line-height: 1.35;
+  }
+  .canvas-profile-compact .upload-done-title { font-size: 12px; margin-bottom: 2px; }
+  .canvas-profile-compact .upload-done-meta { font-size: 11px; margin-bottom: 6px; }
+  .canvas-profile-compact .upload-done-repick { font-size: 11px; padding: 4px 10px; }
+  .canvas-profile-compact .profile-file-status { font-size: 11px; margin-top: 4px; min-height: 0; }
+  .canvas-profile-compact .upload-paste-fallback { margin-top: 6px; }
+  .canvas-profile-compact .upload-paste-fallback summary { font-size: 11px; }
+  .canvas-profile-compact .profile-box textarea { min-height: 72px; font-size: 12px; padding: 6px 8px; }
+  .canvas-profile-compact #profileTargetRoleInput {
+    padding: 6px 8px !important;
+    font-size: 12px !important;
+    margin-top: 6px !important;
+  }
+  .canvas-profile-compact .profile-box label[for="profileTargetRoleInput"] {
+    margin-top: 6px !important;
+    font-size: 11px;
+  }
   .canvas-quick-actions {
     display: flex;
     flex-wrap: wrap;
@@ -4935,7 +4982,7 @@ function profileUploadHtml() {
        <button type="button" class="upload-done-repick" id="resumeRepickBtn">换一份</button>`
     : `<div class="upload-dropzone-icon">↑</div>
        <div class="upload-dropzone-title">点击或拖拽上传简历</div>
-       <div class="upload-dropzone-hint">自动识别 PDF · DOCX · TXT，无需复制粘贴</div>`;
+       <div class="upload-dropzone-hint">PDF · DOCX · TXT</div>`;
   const jdChars = profileJd.trim().length;
   const jdDoneHtml = jdChars > 0
     ? `<div class="upload-done-title">已识别 JD</div>
@@ -4943,7 +4990,7 @@ function profileUploadHtml() {
        <button type="button" class="upload-done-repick" id="jdRepickBtn">换一份</button>`
     : `<div class="upload-dropzone-icon">↑</div>
        <div class="upload-dropzone-title">点击或拖拽上传 JD</div>
-       <div class="upload-dropzone-hint">PDF · DOCX · TXT（可选）</div>`;
+       <div class="upload-dropzone-hint">PDF · DOCX · TXT</div>`;
   return `<div class="profile-upload-grid">
     <div class="profile-box">
       <label>简历 <span style="color:var(--danger)">*</span></label>
