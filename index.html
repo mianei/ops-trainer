@@ -2070,6 +2070,57 @@
   .score-pane-bar-track { height: 6px; background: #e2e8f0; border-radius: 999px; overflow: hidden; }
   .score-pane-bar-fill { height: 100%; background: linear-gradient(90deg, #2563eb, #60a5fa); border-radius: 999px; }
   .score-pane-bar-num { font-weight: 700; color: #2563eb; text-align: right; font-variant-numeric: tabular-nums; }
+  .score-pane-metrics--single {
+    grid-template-columns: 1fr;
+    max-width: 108px;
+  }
+  .score-pane-bar-fill {
+    transition: width 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .score-pane-bar-track--shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+  .score-pane-bar-track--shimmer::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+    animation: scoreShimmer 1.3s ease-in-out infinite;
+  }
+  @keyframes scoreShimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+  .score-pane-metric-value--pulse {
+    animation: scorePulse 1.4s ease-in-out infinite;
+    color: var(--ink3);
+    font-size: 0.82rem;
+    font-weight: 600;
+  }
+  @keyframes scorePulse {
+    0%, 100% { opacity: 0.45; }
+    50% { opacity: 1; }
+  }
+  .score-pane-bar-num--pulse { color: var(--ink3); }
+  .score-pane-fixes--shell ol { list-style: none; padding: 0; margin: 6px 0 0; }
+  .score-pane-fixes--shell .score-fix-line {
+    display: block;
+    height: 10px;
+    background: #e2e8f0;
+    border-radius: 4px;
+    margin: 7px 0;
+  }
+  .score-reveal-delayed {
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.45s ease, transform 0.45s ease;
+  }
+  .score-reveal-delayed--2 { transition-delay: 0.2s; }
+  .score-reveal-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
   .score-pane-fixes {
     font-size: 11px;
     color: var(--ink2);
@@ -3867,6 +3918,8 @@ let resumeScoreResult = { content: '', scoreReport: null, loading: false };
 let resumeOptimizeResult = { content: '', optimizeReport: null, loading: false };
 const interviewPrepMessages = [];
 let interviewPrepResult = { content: '', prepReport: null, loading: false };
+const SCORE_DIMENSION_NAMES = ['AI产品信号', '项目可信度', '叙述结构', '证据完整度', '面试可防守性'];
+let lastAnimatedScoreKey = '';
 let resumeDraftMessage = '';
 let interviewDraftMessage = '';
 const KNOWLEDGE_PAGES = [
@@ -5909,27 +5962,103 @@ function getResumeCoachHistory(priorChat = []) {
   return [...seed, ...priorChat];
 }
 
-function renderScorePaneContent(report) {
+function scoreReportKey(report) {
+  if (!report) return '';
+  const overall = report.overallScore ?? report.overallScore10;
+  return String(overall ?? '') + '|' + (report.dimensions || []).map(d => d.name + ':' + d.score).join(',');
+}
+
+function renderScoreSkeletonHtml() {
+  const bars = SCORE_DIMENSION_NAMES.map(name => `
+    <div class="score-pane-bar-row">
+      <span class="score-pane-bar-name">${escapeHtml(name)}</span>
+      <div class="score-pane-bar-track score-pane-bar-track--shimmer"><div class="score-pane-bar-fill" style="width:0"></div></div>
+      <span class="score-pane-bar-num score-pane-bar-num--pulse">—</span>
+    </div>`).join('');
+  return `<div class="score-pane score-pane--skeleton">
+    <div class="score-pane-metrics score-pane-metrics--single">
+      <div class="score-pane-metric"><div class="score-pane-metric-label">综合</div><div class="score-pane-metric-value score-pane-metric-value--pulse">评分中…</div></div>
+    </div>
+    <div class="score-pane-bars">${bars}</div>
+    <div class="score-pane-fixes score-pane-fixes--shell"><strong>优先改</strong><ol><li class="score-fix-line"></li><li class="score-fix-line"></li><li class="score-fix-line"></li></ol></div>
+  </div>`;
+}
+
+function renderScorePaneContent(report, opts) {
+  const options = opts || {};
+  if (options.skeleton) return renderScoreSkeletonHtml();
   const overall = report.overallScore ?? (report.overallScore10 != null ? Math.round(report.overallScore10 * 10) : '—');
-  const pass = report.passRate != null ? report.passRate : '—';
-  const optPass = report.optimizedPassRate != null ? report.optimizedPassRate : '—';
-  const bars = (report.dimensions || []).map(d => {
+  const overallNum = typeof overall === 'number' ? overall : parseInt(String(overall), 10);
+  const animate = Boolean(options.animate);
+  const dims = (report.dimensions && report.dimensions.length)
+    ? report.dimensions
+    : SCORE_DIMENSION_NAMES.map(name => ({ name, score: 0 }));
+  const bars = dims.map((d, i) => {
     const pct = Math.round((Number(d.score) / 5) * 100);
-    return `<div class="score-pane-bar-row">
+    const fillW = animate ? 0 : pct;
+    const delay = animate ? ` transition-delay:${i * 90}ms;` : '';
+    return `<div class="score-pane-bar-row" data-target-pct="${pct}" data-target-score="${escapeAttr(String(d.score))}">
       <span class="score-pane-bar-name" title="${escapeAttr(d.name)}">${escapeHtml(d.name)}</span>
-      <div class="score-pane-bar-track"><div class="score-pane-bar-fill" style="width:${pct}%"></div></div>
-      <span class="score-pane-bar-num">${escapeHtml(String(d.score))}</span>
+      <div class="score-pane-bar-track"><div class="score-pane-bar-fill" style="width:${fillW}%;${delay}"></div></div>
+      <span class="score-pane-bar-num" data-target-num="${escapeAttr(String(d.score))}">${escapeHtml(animate ? '0' : String(d.score))}</span>
     </div>`;
   }).join('');
   const fixes = (report.topFixes || []).slice(0, 3).map(f => `<li>${escapeHtml(f)}</li>`).join('');
-  return `<div class="score-pane-metrics">
-      <div class="score-pane-metric"><div class="score-pane-metric-label">综合</div><div class="score-pane-metric-value score-pane-metric-value--rose">${escapeHtml(String(overall))}</div></div>
-      <div class="score-pane-metric"><div class="score-pane-metric-label">通过率</div><div class="score-pane-metric-value score-pane-metric-value--blue">${escapeHtml(String(pass))}%</div></div>
-      <div class="score-pane-metric"><div class="score-pane-metric-label">优化后</div><div class="score-pane-metric-value score-pane-metric-value--green">${escapeHtml(String(optPass))}%</div></div>
+  const summaryCls = animate ? ' score-reveal-delayed' : '';
+  const fixesCls = animate ? ' score-reveal-delayed score-reveal-delayed--2' : '';
+  const countAttr = animate && !Number.isNaN(overallNum) ? ` data-count-target="${overallNum}"` : '';
+  const overallText = animate && !Number.isNaN(overallNum) ? '0' : String(overall);
+  return `<div class="score-pane${animate ? ' score-pane--animating' : ''}">
+    <div class="score-pane-metrics score-pane-metrics--single">
+      <div class="score-pane-metric"><div class="score-pane-metric-label">综合</div><div class="score-pane-metric-value score-pane-metric-value--rose"${countAttr}>${escapeHtml(overallText)}</div></div>
     </div>
-    ${report.summary ? `<p class="score-pane-summary">${escapeHtml(report.summary)}</p>` : ''}
+    ${report.summary ? `<p class="score-pane-summary${summaryCls}">${escapeHtml(report.summary)}</p>` : ''}
     <div class="score-pane-bars">${bars}</div>
-    ${fixes ? `<div class="score-pane-fixes"><strong>优先改</strong><ol>${fixes}</ol></div>` : ''}`;
+    ${fixes ? `<div class="score-pane-fixes${fixesCls}"><strong>优先改</strong><ol>${fixes}</ol></div>` : ''}
+  </div>`;
+}
+
+function animateScorePane(root) {
+  if (!root) return;
+  requestAnimationFrame(() => {
+    const overallEl = root.querySelector('[data-count-target]');
+    if (overallEl) {
+      const target = Number(overallEl.dataset.countTarget);
+      const start = performance.now();
+      const dur = 780;
+      const step = (now) => {
+        const p = Math.min(1, (now - start) / dur);
+        const eased = 1 - Math.pow(1 - p, 3);
+        overallEl.textContent = String(Math.round(target * eased));
+        if (p < 1) requestAnimationFrame(step);
+        else overallEl.textContent = String(target);
+      };
+      requestAnimationFrame(step);
+    }
+    root.querySelectorAll('.score-pane-bar-row').forEach((row, i) => {
+      window.setTimeout(() => {
+        const fill = row.querySelector('.score-pane-bar-fill');
+        const numEl = row.querySelector('.score-pane-bar-num');
+        if (fill) fill.style.width = row.dataset.targetPct + '%';
+        const targetScore = Number(row.dataset.targetScore);
+        if (numEl && !Number.isNaN(targetScore)) {
+          let stepN = 0;
+          const steps = 10;
+          const iv = window.setInterval(() => {
+            stepN++;
+            numEl.textContent = String(Math.round(targetScore * stepN / steps));
+            if (stepN >= steps) {
+              window.clearInterval(iv);
+              numEl.textContent = String(targetScore);
+            }
+          }, 45);
+        }
+      }, i * 90);
+    });
+    window.setTimeout(() => {
+      root.querySelectorAll('.score-reveal-delayed').forEach(el => el.classList.add('score-reveal-visible'));
+    }, 380);
+  });
 }
 
 function renderOptimizePaneContent(report) {
@@ -6115,12 +6244,20 @@ function renderResumeScorePane() {
   const errEl = document.getElementById('resumeScoreError');
   if (!body) return;
   if (resumeScoreResult.loading) {
-    body.innerHTML = '<div class="resume-pane-loading">评分生成中…</div>';
+    body.innerHTML = renderScorePaneContent(null, { skeleton: true });
     if (errEl) errEl.hidden = true;
     return;
   }
   if (resumeScoreResult.scoreReport) {
-    body.innerHTML = renderScorePaneContent(resumeScoreResult.scoreReport);
+    const key = scoreReportKey(resumeScoreResult.scoreReport);
+    const shouldAnimate = key && key !== lastAnimatedScoreKey;
+    body.innerHTML = renderScorePaneContent(resumeScoreResult.scoreReport, { animate: shouldAnimate });
+    if (shouldAnimate) {
+      lastAnimatedScoreKey = key;
+      animateScorePane(body.querySelector('.score-pane'));
+    } else {
+      body.querySelectorAll('.score-reveal-delayed').forEach(el => el.classList.add('score-reveal-visible'));
+    }
     if (errEl) errEl.hidden = true;
     return;
   }
