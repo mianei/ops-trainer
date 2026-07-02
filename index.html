@@ -6145,11 +6145,7 @@ function setInterviewFlowStep(_step) {
   /* 流程由 Canvas 标签（题目/点评/解析）承担，不再重复展示出题→答题→点评 */
 }
 
-function senseCanvasInnerHtml(q, tid, meta, draft) {
-  const tab = getCanvasTab('scenario');
-  return `
-    <div class="sense-session" id="panel-${tid}">
-      ${meta ? `<p class="sense-q-meta">${escapeHtml(meta)}</p>` : ''}
+function senseBankPickerHtml() {
   const qs = bankQuestions();
   const nAi = qs.length || AI_PM_BANK?.questions?.length || 0;
   const companies = [...new Set(qs.map(q => q.company))].sort();
