@@ -598,6 +598,11 @@
     padding: 6px 14px;
     white-space: nowrap;
   }
+  .canvas-title-cta .btn-primary:disabled,
+  .canvas-title-cta .btn-frost:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
   .canvas-crumb { font-size: 11px; color: var(--ink3); margin-bottom: 10px; }
   .canvas-topbar-actions { display: flex; gap: 8px; flex-wrap: wrap; }
   .canvas-tabs {
@@ -4617,22 +4622,28 @@ function renderCanvasTitleCta(scene, tab) {
   if (scene === 'resume' && tab === '评分') {
     if (resumeScoreResult.loading) {
       host.innerHTML = '<button type="button" class="btn-primary" disabled>评分中…</button>';
+      bindResumePaneActions();
       return;
     }
-    if (resumeScoreResult.scoreReport || resumeScoreResult.content) return;
-    if (profileResume.trim()) {
-      host.innerHTML = '<button type="button" class="btn-primary" id="resumeStartScoreBtn">开始评分</button>';
+    if (resumeScoreResult.scoreReport || resumeScoreResult.content) {
+      bindResumePaneActions();
+      return;
     }
-  }
-  if (scene === 'resume' && tab === '优化') {
+    const disabled = !profileResume.trim() ? ' disabled' : '';
+    const title = profileResume.trim() ? '开始评分' : '开始评分';
+    host.innerHTML = `<button type="button" class="btn-primary" id="resumeStartScoreBtn"${disabled}>${title}</button>`;
+  } else if (scene === 'resume' && tab === '优化') {
     if (resumeOptimizeResult.loading) {
       host.innerHTML = '<button type="button" class="btn-primary" disabled>优化中…</button>';
+      bindResumePaneActions();
       return;
     }
-    if (resumeOptimizeResult.optimizeReport || resumeOptimizeResult.content) return;
-    if (resumeHasScore()) {
-      host.innerHTML = '<button type="button" class="btn-primary" id="resumeStartOptimizeBtn">开始优化</button>';
+    if (resumeOptimizeResult.optimizeReport || resumeOptimizeResult.content) {
+      bindResumePaneActions();
+      return;
     }
+    const disabled = !resumeHasScore() ? ' disabled' : '';
+    host.innerHTML = `<button type="button" class="btn-primary" id="resumeStartOptimizeBtn"${disabled}>开始优化</button>`;
   }
   bindResumePaneActions();
 }
