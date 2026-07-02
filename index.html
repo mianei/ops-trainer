@@ -815,12 +815,12 @@
     font-family: inherit;
     font-size: 13px;
     padding: 8px 10px;
-    border: 1px solid var(--frost-border);
-    border-radius: var(--r);
-    background: var(--white);
+    border: 1px solid var(--block-border);
+    border-radius: var(--block-radius-sm);
+    background: var(--block-bg);
     outline: none;
   }
-  .agent-chat-input:focus { border-color: rgba(0, 113, 227, 0.35); }
+  .agent-chat-input:focus { border-color: var(--block-border-accent); }
   .agent-chat-compose .btn-primary { font-size: 12px; padding: 8px 14px; }
   .agent-chat-compose .btn-frost { font-size: 12px; padding: 8px 10px; }
   .doc-artifact-card {
@@ -1199,9 +1199,10 @@
   .mission-bar {
     margin-bottom: 1rem;
     padding: 12px 14px;
-    border-radius: var(--r-lg);
-    background: linear-gradient(135deg, rgba(38, 194, 129, 0.08) 0%, rgba(255, 255, 255, 0.65) 100%);
-    border: 1px solid rgba(38, 194, 129, 0.22);
+    border-radius: var(--block-radius-lg);
+    background: linear-gradient(135deg, var(--block-accent-soft) 0%, var(--block-bg-elevated) 100%);
+    border: 1px solid var(--block-border-accent);
+    box-shadow: var(--block-shadow);
   }
   .mission-bar[hidden] { display: none !important; }
   .mission-bar-head {
@@ -1273,9 +1274,10 @@
   .external-search-box {
     margin-bottom: 1rem;
     padding: 12px 14px;
-    border-radius: var(--r-lg);
-    background: rgba(255, 255, 255, 0.5);
-    border: 1px solid var(--frost-border);
+    border-radius: var(--block-radius-lg);
+    background: var(--block-bg-inset);
+    border: 1px solid var(--block-border);
+    box-shadow: var(--block-shadow);
   }
   .external-search-box[hidden] { display: none !important; }
   .external-search-head {
@@ -2523,7 +2525,8 @@
     font-weight: 600;
     padding: 2px 8px;
     border-radius: 6px;
-    background: rgba(0, 0, 0, 0.05);
+    background: var(--block-bg-inset);
+    border: 1px solid var(--block-border-subtle);
     color: var(--ink3);
   }
   .knowledge-card .kc-body {
@@ -2535,9 +2538,9 @@
   .reading-tip {
     margin: 0 0 12px;
     padding: 12px 14px;
-    border-radius: var(--r-lg);
-    background: rgba(255, 255, 255, 0.55);
-    border: 1px dashed var(--frost-border);
+    border-radius: var(--block-radius-lg);
+    background: var(--block-bg-subtle);
+    border: 1px dashed var(--block-border);
     font-size: 13px;
     color: var(--ink2);
     line-height: 1.55;
@@ -2666,11 +2669,11 @@
     border-radius: var(--r-xl);
     padding: 8px;
     flex-shrink: 0;
-    background: var(--frost);
+    background: var(--block-bg-inset);
     backdrop-filter: var(--blur-md);
     -webkit-backdrop-filter: var(--blur-md);
-    border: 1px solid var(--frost-border);
-    box-shadow: var(--inset-hi), 0 4px 20px rgba(0, 0, 0, 0.04);
+    border: 1px solid var(--block-border);
+    box-shadow: var(--block-shadow);
   }
   @media (min-width: 900px) {
     .module-nav {
@@ -2678,12 +2681,12 @@
     }
   }
   .nav-group {
-    border-radius: var(--r-md);
+    border-radius: var(--block-radius-lg);
     margin-bottom: 8px;
-    background: rgba(255, 255, 255, 0.28);
+    background: var(--block-bg-muted);
     backdrop-filter: var(--blur-sm);
     -webkit-backdrop-filter: var(--blur-sm);
-    border: 1px solid rgba(255, 255, 255, 0.45);
+    border: 1px solid var(--block-border);
   }
   .nav-group-head {
     padding: 8px 10px 4px;
@@ -2962,8 +2965,8 @@
     padding: 12px 20px;
     font-size: 13px; font-weight: 600; letter-spacing: 0.02em;
     color: var(--ink3);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.35);
-    background: rgba(255, 255, 255, 0.2);
+    border-bottom: 1px solid var(--block-border);
+    background: var(--block-bg-subtle);
     backdrop-filter: var(--blur-sm);
     -webkit-backdrop-filter: var(--blur-sm);
     display: flex; align-items: center; gap: 8px;
@@ -3028,7 +3031,7 @@
   }
   .followup-compose { padding: 0 22px 20px; }
   .followup-wrap { padding: 0 22px 0; }
-  .feedback-head { background: var(--wash); }
+  .feedback-head { background: var(--block-bg-subtle); }
   .fu-msg.pending {
     align-self: flex-start;
     background: transparent;
@@ -3388,29 +3391,33 @@
   html[data-theme="dark"] .agent-canvas,
   html[data-theme="dark"] .agent-nav,
   html[data-theme="dark"] .agent-chat {
-    background: rgba(12, 12, 16, 0.72);
-    border-color: rgba(255, 255, 255, 0.08);
+    background: var(--block-bg-muted);
+    border-color: var(--block-border);
   }
   html[data-theme="dark"] .canvas-topbar {
-    background: rgba(16, 16, 20, 0.85);
-    border-bottom-color: rgba(255, 255, 255, 0.08);
+    background: var(--block-bg-subtle);
+    border-bottom-color: var(--block-border-subtle);
   }
-  html[data-theme="dark"] .profile-box,
-  html[data-theme="dark"] .history-panel {
-    background: var(--frost-solid);
-    border-color: var(--frost-border);
-    color: var(--ink);
+  html[data-theme="dark"] .agent-workspace {
+    background: var(--block-bg-inset);
+    border-color: var(--block-border);
+    box-shadow: var(--block-shadow), var(--block-glow);
   }
-  html[data-theme="dark"] .upload-dropzone {
-    border-color: rgba(168, 85, 247, 0.35);
-    background: rgba(168, 85, 247, 0.06);
+  html[data-theme="dark"] .surface-card,
+  html[data-theme="dark"] .goal-plan-list,
+  html[data-theme="dark"] .score-dash-card,
+  html[data-theme="dark"] .score-dash-chart-wrap,
+  html[data-theme="dark"] .score-dim-row,
+  html[data-theme="dark"] .score-dash-fixes,
+  html[data-theme="dark"] .doc-artifact-card,
+  html[data-theme="dark"] .resume-result-panel {
+    box-shadow: var(--block-shadow), var(--block-glow);
   }
-  html[data-theme="dark"] .upload-dropzone:hover,
-  html[data-theme="dark"] .upload-dropzone.is-dragover {
-    border-color: #a855f7;
-    background: rgba(168, 85, 247, 0.12);
+  html[data-theme="dark"] .upload-dropzone-icon {
+    color: #c084fc;
+    border-color: var(--block-border);
+    background: var(--block-bg-subtle);
   }
-  html[data-theme="dark"] .upload-dropzone-icon { color: #c084fc; border-color: rgba(255,255,255,0.12); background: rgba(255,255,255,0.06); }
   html[data-theme="dark"] .trace-table th { background: rgba(255, 255, 255, 0.05); }
   html[data-theme="dark"] .score-pane-bar-fill {
     background: linear-gradient(90deg, #9333ea, #c084fc);
