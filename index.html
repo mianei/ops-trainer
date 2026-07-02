@@ -661,7 +661,6 @@
     flex-wrap: wrap;
     justify-content: flex-end;
   }
-  .canvas-title-cta .btn-primary,
   .canvas-title-cta .btn-frost,
   .canvas-title-cta .btn-refresh {
     font-size: 11px;
@@ -672,50 +671,13 @@
     white-space: nowrap;
   }
   .canvas-title-cta .btn-primary {
-    opacity: 1;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    background: linear-gradient(
-      180deg,
-      var(--btn-green-top) 0%,
-      var(--btn-green-mid) 44%,
-      var(--btn-green-base) 100%
-    );
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.2),
-      inset 0 -1px 0 rgba(0, 0, 0, 0.14),
-      0 3px 0 var(--btn-green-lip),
-      0 4px 10px rgba(0, 0, 0, 0.12);
-  }
-  .canvas-title-cta .btn-primary:hover:not(:disabled) {
-    background: linear-gradient(
-      180deg,
-      var(--btn-green-hover-top) 0%,
-      var(--btn-green-hover-mid) 44%,
-      var(--btn-green-hover-base) 100%
-    );
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.26),
-      inset 0 -1px 0 rgba(0, 0, 0, 0.12),
-      0 4px 0 var(--btn-green-lip),
-      0 6px 14px var(--btn-green-hover-glow);
-  }
-  .canvas-title-cta .btn-primary:disabled {
-    opacity: 1;
-    cursor: not-allowed;
-    color: rgba(255, 255, 255, 0.88);
-    background: linear-gradient(180deg, #7ecfb0 0%, #5db896 55%, #4aa885 100%);
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.12),
-      0 2px 0 #3d8f72,
-      0 3px 8px rgba(0, 0, 0, 0.08);
-    transform: none;
+    white-space: nowrap;
   }
   .canvas-title-cta .btn-frost:disabled {
     opacity: 0.55;
     cursor: not-allowed;
   }
-  .canvas-crumb { font-size: 11px; color: var(--ink3); margin-bottom: 10px; }
+  .canvas-crumb { display: none; }
   .canvas-topbar-actions { display: flex; gap: 8px; flex-wrap: wrap; }
   .canvas-tabs {
     display: flex;
@@ -892,11 +854,30 @@
   .agent-chat-input:focus { border-color: var(--block-border-accent); }
   .agent-chat-compose .btn-primary {
     font-size: 12px;
-    padding: 0 14px;
-    min-height: var(--btn-min-h);
-    height: var(--btn-min-h);
+    padding: 6px 12px;
+    min-height: calc(var(--btn-min-h) - 4px);
+    height: calc(var(--btn-min-h) - 4px);
     flex-shrink: 0;
     border-radius: var(--btn-pill-radius);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.24),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.1),
+      0 1px 0 var(--btn-green-lip),
+      0 2px 8px var(--btn-green-glow);
+  }
+  .agent-chat-compose .btn-primary:hover {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.3),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.08),
+      0 2px 0 var(--btn-green-lip),
+      0 4px 14px var(--btn-green-hover-glow);
+  }
+  .agent-chat-compose .btn-primary:active {
+    box-shadow:
+      inset 0 2px 4px rgba(0, 0, 0, 0.18),
+      inset 0 1px 0 rgba(255, 255, 255, 0.16),
+      0 0 0 var(--btn-green-lip),
+      0 2px 8px var(--btn-green-glow);
   }
   .agent-chat-compose .btn-frost { font-size: 12px; padding: 6px 10px; }
   .agent-chat-reset {
@@ -3354,9 +3335,9 @@
   /* —— 深色模式：黑 · 紫 · 白 —— */
   html[data-theme="dark"] {
     color-scheme: dark;
-    --bg: #050507;
+    --bg: #000000;
     --white: #111114;
-    --wash: #0c0c10;
+    --wash: #000000;
     --ink: #f5f5f7;
     --ink2: #a1a1a6;
     --ink3: #6e6e73;
@@ -3410,19 +3391,10 @@
     --block-glow: 0 0 28px rgba(147, 51, 234, 0.14);
   }
   html[data-theme="dark"] .bg-scene {
-    background: radial-gradient(ellipse 130% 85% at 42% -8%, rgba(147, 51, 234, 0.07), transparent 72%),
-                linear-gradient(180deg, #050507 0%, #0a0812 45%, #050507 100%);
+    background: #000000;
   }
   html[data-theme="dark"] .bg-scene::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
-    background-size: 56px 56px;
-    mask-image: linear-gradient(180deg, #000 0%, transparent 72%);
-    pointer-events: none;
+    display: none;
   }
   html[data-theme="dark"] .bg-horizon-svg,
   html[data-theme="dark"] .bg-wave-svg,
@@ -3438,14 +3410,15 @@
   }
   html[data-theme="dark"] .bg-cubes {
     display: block;
+    background-color: #000000;
     background-image: url('/assets/purple-cubes-bg.png');
     background-repeat: no-repeat;
     background-position: top right;
     background-size: clamp(280px, 42vw, 520px);
-    opacity: 0.72;
+    opacity: 1;
     mask-image:
-      linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.2) 10%, rgba(0, 0, 0, 0.55) 22%, #000 38%),
-      linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.18) 20%, #000 48%);
+      linear-gradient(180deg, #000 0%, #000 52%, rgba(0, 0, 0, 0.72) 68%, rgba(0, 0, 0, 0.28) 82%, transparent 100%),
+      linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.12) 18%, #000 46%);
     mask-composite: intersect;
     -webkit-mask-composite: source-in;
   }
@@ -3614,27 +3587,44 @@
   html[data-theme="dark"] .score-dash-value--blue { color: #a78bfa; }
   html[data-theme="dark"] .score-dash-value--green { color: #4ade80; }
   html[data-theme="dark"] .score-dim-score { color: #c084fc; }
-  html[data-theme="dark"] .canvas-title-cta .btn-primary {
+  html[data-theme="dark"] .canvas-title-cta .btn-primary,
+  html[data-theme="dark"] .agent-chat-compose .btn-primary {
+    background: linear-gradient(180deg, #4ae0ad 0%, #32d598 42%, #26c281 100%);
     box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.12),
-      inset 0 -1px 0 rgba(0, 0, 0, 0.24),
-      0 3px 0 var(--btn-green-lip),
-      0 4px 12px var(--btn-green-glow);
+      inset 0 1px 0 rgba(255, 255, 255, 0.24),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.12),
+      0 3px 0 #1e9e68,
+      0 4px 12px rgba(38, 194, 129, 0.38);
   }
-  html[data-theme="dark"] .canvas-title-cta .btn-primary:hover:not(:disabled) {
+  html[data-theme="dark"] .canvas-title-cta .btn-primary:hover:not(:disabled),
+  html[data-theme="dark"] .agent-chat-compose .btn-primary:hover:not(:disabled) {
+    background: linear-gradient(180deg, #55e6b8 0%, #3adba2 42%, #2bcc8a 100%);
     box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.3),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.1),
+      0 4px 0 #1e9e68,
+      0 6px 16px rgba(38, 194, 129, 0.44);
+  }
+  html[data-theme="dark"] .agent-chat-compose .btn-primary {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.24),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.1),
+      0 1px 0 #1e9e68,
+      0 2px 8px rgba(38, 194, 129, 0.38);
+  }
+  html[data-theme="dark"] .agent-chat-compose .btn-primary:hover:not(:disabled) {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.3),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.08),
+      0 2px 0 #1e9e68,
+      0 4px 14px rgba(38, 194, 129, 0.44);
+  }
+  html[data-theme="dark"] .agent-chat-compose .btn-primary:active {
+    box-shadow:
+      inset 0 2px 4px rgba(0, 0, 0, 0.18),
       inset 0 1px 0 rgba(255, 255, 255, 0.16),
-      inset 0 -1px 0 rgba(0, 0, 0, 0.2),
-      0 4px 0 var(--btn-green-lip),
-      0 6px 16px var(--btn-green-hover-glow);
-  }
-  html[data-theme="dark"] .canvas-title-cta .btn-primary:disabled {
-    color: rgba(255, 255, 255, 0.78);
-    background: linear-gradient(180deg, #5c3d78 0%, #45245f 55%, #381a50 100%);
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.06),
-      0 2px 0 #2a1240,
-      0 3px 8px rgba(0, 0, 0, 0.28);
+      0 0 0 #1e9e68,
+      0 2px 8px rgba(38, 194, 129, 0.38);
   }
   @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
     html[data-theme="dark"] .glass,
@@ -4677,8 +4667,7 @@ function agentNavHtml(activeScene) {
   ];
   return items.map(it => {
     const cls = 'agent-nav-btn' + (it.id === activeScene ? ' active' : '');
-    const badge = it.id === 'resume' && it.id !== activeScene ? '<span class="agent-nav-badge">3.0</span>' : '';
-    return `<button type="button" class="${cls}" data-agent-scene="${it.id}">${it.label}${badge}</button>`;
+    return `<button type="button" class="${cls}" data-agent-scene="${it.id}">${it.label}</button>`;
   }).join('');
 }
 
@@ -4960,7 +4949,6 @@ function mountAgentWorkspace(innerHtml) {
               <h2 id="canvasTitle">${escapeHtml(canvasTitleFor(scene, tab))}</h2>
               <div class="canvas-title-cta" id="canvasTitleCta"></div>
             </div>
-            <div class="canvas-crumb" id="canvasCrumb">CVassistant 3.0 · ${escapeHtml(scene)} · ${escapeHtml(tab)}</div>
             <div class="canvas-tabs" id="canvasTabs">${canvasTabsHtml(scene)}</div>
           </div>
           <div class="canvas-topbar-actions" id="canvasTopActions"></div>
@@ -5118,9 +5106,7 @@ function refreshAgentCanvas() {
 function updateCanvasChrome(scene) {
   const tab = getCanvasTab(scene);
   const title = document.getElementById('canvasTitle');
-  const crumb = document.getElementById('canvasCrumb');
   if (title) title.textContent = canvasTitleFor(scene, tab);
-  if (crumb) crumb.textContent = `CVassistant 3.0 · ${scene} · ${tab}`;
   const tabsEl = document.getElementById('canvasTabs');
   if (tabsEl) tabsEl.innerHTML = canvasTabsHtml(scene);
   document.querySelectorAll('#canvasTabs [data-canvas-tab]').forEach(btn => {
@@ -6015,7 +6001,7 @@ function renderResumeScorePane() {
   }
   body.innerHTML = profileResume.trim()
     ? ''
-    : '<div class="resume-pane-empty"><p>先在上方上传或粘贴简历</p></div>';
+    : '<div class="resume-pane-empty"><p>请上传或粘贴简历</p></div>';
   bindResumePaneActions();
 }
 
