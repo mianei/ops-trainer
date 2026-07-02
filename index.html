@@ -109,6 +109,9 @@
     --block-radius-lg: 16px;
     --block-shadow: var(--shadow-sm), var(--inset-hi);
     --block-glow: none;
+    --btn-pill-radius: 10px;
+    --btn-min-h: 36px;
+    --btn-min-h-sm: 32px;
   }
 
   html {
@@ -270,6 +273,12 @@
   }
   .btn-frost {
     font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.3;
+    min-height: var(--btn-min-h-sm);
+    padding: 6px 12px;
+    border-radius: var(--btn-pill-radius);
     cursor: pointer;
     background: var(--frost);
     backdrop-filter: var(--blur-sm);
@@ -289,10 +298,13 @@
   }
 
   .btn-primary {
-    font-size: 15px; font-weight: 600; font-family: inherit;
+    font-size: 13px; font-weight: 600; font-family: inherit;
+    line-height: 1.3;
+    min-height: var(--btn-min-h);
+    padding: 8px 16px;
     color: #fff;
     border: none;
-    border-radius: 980px;
+    border-radius: var(--btn-pill-radius);
     cursor: pointer;
     position: relative;
     backdrop-filter: none;
@@ -306,8 +318,8 @@
     box-shadow:
       inset 0 1px 0 rgba(255, 255, 255, 0.24),
       inset 0 -1px 0 rgba(0, 0, 0, 0.12),
-      0 4px 0 var(--btn-green-lip),
-      0 6px 16px var(--btn-green-glow);
+      0 3px 0 var(--btn-green-lip),
+      0 4px 12px var(--btn-green-glow);
     text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
     transition: transform 0.15s ease, box-shadow 0.15s ease;
   }
@@ -524,9 +536,10 @@
   }
   .mode-btn {
     font-family: inherit;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 600;
-    padding: 8px 18px;
+    padding: 6px 14px;
+    min-height: var(--btn-min-h-sm);
     border: none;
     border-radius: var(--r);
     background: transparent;
@@ -573,10 +586,11 @@
   .agent-nav-brand span { color: var(--product); }
   .agent-nav-btn {
     font-family: inherit;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 500;
     text-align: left;
-    padding: 9px 11px;
+    padding: 7px 10px;
+    min-height: var(--btn-min-h-sm);
     border-radius: var(--r);
     border: 1px solid transparent;
     background: transparent;
@@ -650,10 +664,10 @@
   .canvas-title-cta .btn-primary,
   .canvas-title-cta .btn-frost,
   .canvas-title-cta .btn-refresh {
-    font-size: 12px;
-    padding: 6px 14px;
+    font-size: 11px;
+    padding: 5px 12px;
+    min-height: var(--btn-min-h-sm);
     height: auto;
-    min-height: 0;
     line-height: 1.35;
     white-space: nowrap;
   }
@@ -712,10 +726,11 @@
   }
   .canvas-tab {
     font-family: inherit;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 600;
-    padding: 5px 12px;
-    border-radius: 980px;
+    padding: 4px 10px;
+    min-height: 28px;
+    border-radius: var(--btn-pill-radius);
     border: 1px solid var(--frost-border);
     background: rgba(255, 255, 255, 0.45);
     color: var(--ink2);
@@ -861,21 +876,38 @@
   .agent-chat-compose {
     display: flex;
     gap: 6px;
-    align-items: stretch;
+    align-items: center;
   }
   .agent-chat-input {
     flex: 1;
     font-family: inherit;
     font-size: 13px;
     padding: 8px 10px;
+    min-height: var(--btn-min-h);
     border: 1px solid var(--block-border);
     border-radius: var(--block-radius-sm);
     background: var(--block-bg);
     outline: none;
   }
   .agent-chat-input:focus { border-color: var(--block-border-accent); }
-  .agent-chat-compose .btn-primary { font-size: 12px; padding: 8px 14px; }
-  .agent-chat-compose .btn-frost { font-size: 12px; padding: 8px 10px; }
+  .agent-chat-compose .btn-primary {
+    font-size: 12px;
+    padding: 0 14px;
+    min-height: var(--btn-min-h);
+    height: var(--btn-min-h);
+    flex-shrink: 0;
+    border-radius: var(--btn-pill-radius);
+  }
+  .agent-chat-compose .btn-frost { font-size: 12px; padding: 6px 10px; }
+  .agent-chat-reset {
+    margin-top: 8px;
+    width: 100%;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 6px 12px;
+    min-height: var(--btn-min-h-sm);
+    border-radius: var(--btn-pill-radius);
+  }
   .doc-artifact-card {
     display: flex;
     gap: 14px;
@@ -944,15 +976,15 @@
     right: 16px;
     bottom: 72px;
     z-index: 90;
-    width: 52px;
-    height: 52px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
     border: none;
     background: linear-gradient(180deg, var(--btn-green-top), var(--btn-green-base));
     color: #fff;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 700;
-    box-shadow: 0 6px 20px var(--btn-green-glow);
+    box-shadow: 0 4px 14px var(--btn-green-glow);
     cursor: pointer;
   }
   .agent-chat-drawer-backdrop {
@@ -1169,8 +1201,9 @@
   .goal-plan-btn {
     flex-shrink: 0;
     height: auto;
-    padding: 10px 18px;
-    font-size: 14px;
+    min-height: var(--btn-min-h);
+    padding: 8px 14px;
+    font-size: 13px;
     white-space: nowrap;
   }
   .goal-plan-btn:disabled { opacity: 0.55; cursor: not-allowed; }
@@ -1246,7 +1279,7 @@
   }
   @media (max-width: 899px) {
     .goal-plan-row { flex-direction: column; }
-    .goal-plan-btn { width: 100%; min-height: 44px; }
+    .goal-plan-btn { width: 100%; min-height: var(--btn-min-h); }
     .goal-plan-input { font-size: 16px; }
   }
   .mission-bar {
@@ -1314,7 +1347,7 @@
   }
   .mission-step-done-btn {
     width: 100%;
-    min-height: 44px;
+    min-height: var(--btn-min-h);
   }
   .goal-plan-item.done {
     opacity: 0.55;
@@ -3330,15 +3363,15 @@
     --accent-soft: rgba(168, 85, 247, 0.16);
     --product: #c084fc;
     --product-soft: rgba(192, 132, 252, 0.14);
-    --btn-green-top: #d8b4fe;
+    --btn-green-top: #b87cf7;
     --btn-green-mid: #a855f7;
     --btn-green-base: #9333ea;
     --btn-green-lip: #6b21a8;
-    --btn-green-glow: rgba(168, 85, 247, 0.45);
-    --btn-green-hover-top: #e9d5ff;
-    --btn-green-hover-mid: #c084fc;
+    --btn-green-glow: rgba(147, 51, 234, 0.34);
+    --btn-green-hover-top: #c891fc;
+    --btn-green-hover-mid: #b87cf7;
     --btn-green-hover-base: #a855f7;
-    --btn-green-hover-glow: rgba(192, 132, 252, 0.5);
+    --btn-green-hover-glow: rgba(168, 85, 247, 0.42);
     --ops: #a78bfa;
     --ops-soft: rgba(167, 139, 250, 0.12);
     --interview: #c084fc;
@@ -3406,10 +3439,10 @@
     background-repeat: no-repeat;
     background-position: top right;
     background-size: clamp(280px, 42vw, 520px);
-    opacity: 0.92;
+    opacity: 0.72;
     mask-image:
-      linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.45) 12%, #000 30%),
-      linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.25) 18%, #000 42%);
+      linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.2) 10%, rgba(0, 0, 0, 0.55) 22%, #000 38%),
+      linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.18) 20%, #000 48%);
     mask-composite: intersect;
     -webkit-mask-composite: source-in;
   }
@@ -3578,6 +3611,28 @@
   html[data-theme="dark"] .score-dash-value--blue { color: #a78bfa; }
   html[data-theme="dark"] .score-dash-value--green { color: #4ade80; }
   html[data-theme="dark"] .score-dim-score { color: #c084fc; }
+  html[data-theme="dark"] .canvas-title-cta .btn-primary {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.12),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.24),
+      0 3px 0 var(--btn-green-lip),
+      0 4px 12px var(--btn-green-glow);
+  }
+  html[data-theme="dark"] .canvas-title-cta .btn-primary:hover:not(:disabled) {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.16),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.2),
+      0 4px 0 var(--btn-green-lip),
+      0 6px 16px var(--btn-green-hover-glow);
+  }
+  html[data-theme="dark"] .canvas-title-cta .btn-primary:disabled {
+    color: rgba(255, 255, 255, 0.78);
+    background: linear-gradient(180deg, #5c3d78 0%, #45245f 55%, #381a50 100%);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.06),
+      0 2px 0 #2a1240,
+      0 3px 8px rgba(0, 0, 0, 0.28);
+  }
   @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
     html[data-theme="dark"] .glass,
     html[data-theme="dark"] .surface,
@@ -5099,7 +5154,7 @@ function renderCanvasTitleCta(scene, tab) {
     }
   } else if (scene === 'prep' && tab === '文档') {
     if (interviewPrepResult.prepReport || interviewPrepResult.content) {
-      parts.push('<button type="button" class="btn-primary btn-frost" id="prepDocExportMdBtn">下载 Markdown</button>');
+      parts.push('<button type="button" class="btn-primary" id="prepDocExportMdBtn">下载 Markdown</button>');
     }
   } else if (scene === 'scenario') {
     const tid = activeBankQuestion?.topicId || activeTopicId || 'iv-pm';
