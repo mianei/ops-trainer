@@ -653,6 +653,12 @@
     flex: 1;
     min-width: 0;
   }
+  .canvas-subtitle {
+    font-size: 12px;
+    line-height: 1.45;
+    color: var(--ink3);
+    margin: 0 0 6px;
+  }
   .canvas-title-cta {
     flex-shrink: 0;
     display: flex;
@@ -4720,6 +4726,14 @@ function canvasTitleFor(scene, tab) {
   return map[scene]?.[tab] || tab;
 }
 
+function canvasSubtitleFor(scene, tab) {
+  if (scene === 'resume' && tab === '??' && !profileResume.trim()
+      && !resumeScoreResult.loading && !resumeScoreResult.scoreReport && !resumeScoreResult.content) {
+    return '请上传或粘贴简历';
+  }
+  return '';
+}
+
 function agentToolStepsHtml() {
   if (!agentToolSteps.length) return '';
   return agentToolSteps.map(s =>
@@ -4981,6 +4995,7 @@ function mountAgentWorkspace(innerHtml) {
               <h2 id="canvasTitle">${escapeHtml(canvasTitleFor(scene, tab))}</h2>
               <div class="canvas-title-cta" id="canvasTitleCta"></div>
             </div>
+            <p class="canvas-subtitle" id="canvasSubtitle" hidden></p>
             <div class="canvas-tabs" id="canvasTabs">${canvasTabsHtml(scene)}</div>
           </div>
           <div class="canvas-topbar-actions" id="canvasTopActions"></div>
@@ -5003,7 +5018,7 @@ function mountAgentWorkspace(innerHtml) {
     <div class="agent-chat-drawer-backdrop" id="agentChatBackdrop"></div>`;
   bindAgentWorkspace(scene);
   renderAgentChatBubbles(scene);
-  renderCanvasTitleCta(scene, tab);
+  updateCanvasChrome(scene);
 }
 
 function bindAgentChatClone() {
@@ -5139,6 +5154,12 @@ function updateCanvasChrome(scene) {
   const tab = getCanvasTab(scene);
   const title = document.getElementById('canvasTitle');
   if (title) title.textContent = canvasTitleFor(scene, tab);
+  const subtitleEl = document.getElementById('canvasSubtitle');
+  const subtitle = canvasSubtitleFor(scene, tab);
+  if (subtitleEl) {
+    subtitleEl.textContent = subtitle;
+    subtitleEl.hidden = !subtitle;
+  }
   const tabsEl = document.getElementById('canvasTabs');
   if (tabsEl) tabsEl.innerHTML = canvasTabsHtml(scene);
   document.querySelectorAll('#canvasTabs [data-canvas-tab]').forEach(btn => {
@@ -5721,7 +5742,7 @@ async function applyParsedFileToField(file, field) {
     updateUploadDropzoneUI(field, { fileName: file.name, charCount: text.length });
     if (isResume && agentScene === 'resume') {
       renderResumeScorePane();
-      renderCanvasTitleCta('resume', getCanvasTab('resume'));
+      updateCanvasChrome('resume');
     }
   } catch (e) {
     const msg = e.message || '??????';
@@ -5739,10 +5760,13 @@ function bindProfileUpload() {
     if (profileResume.trim()) {
       profileResumeFileName = '';
       updateUploadDropzoneUI('resume', { charCount: profileResume.trim().length });
-      if (agentScene === 'resume') {
-        renderResumeScorePane();
-        renderCanvasTitleCta('resume', getCanvasTab('resume'));
-      }
+    } else {
+      profileResumeFileName = '';
+      updateUploadDropzoneUI('resume', { charCount: 0 });
+    }
+    if (agentScene === 'resume') {
+      renderResumeScorePane();
+      updateCanvasChrome('resume');
     }
   });
   document.getElementById('profileJdInput')?.addEventListener('input', e => {
@@ -6031,9 +6055,7 @@ function renderResumeScorePane() {
     if (errEl) errEl.hidden = true;
     return;
   }
-  body.innerHTML = profileResume.trim()
-    ? ''
-    : '<div class="resume-pane-empty"><p>????????</p></div>';
+  body.innerHTML = '';
   bindResumePaneActions();
 }
 
