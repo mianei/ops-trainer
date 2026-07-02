@@ -2098,7 +2098,12 @@
     font-size: 0.82rem;
     font-weight: 600;
   }
-  @keyframes scorePulse {
+  .score-pane-metric-value--idle {
+    color: var(--ink3);
+    font-size: 1.2rem;
+    font-weight: 700;
+  }
+    @keyframes scorePulse {
     0%, 100% { opacity: 0.45; }
     50% { opacity: 1; }
   }
@@ -5968,16 +5973,24 @@ function scoreReportKey(report) {
   return String(overall ?? '') + '|' + (report.dimensions || []).map(d => d.name + ':' + d.score).join(',');
 }
 
-function renderScoreSkeletonHtml() {
+function renderScoreSkeletonHtml(mode) {
+  const loading = mode === 'loading';
+  const trackCls = loading ? 'score-pane-bar-track score-pane-bar-track--shimmer' : 'score-pane-bar-track';
+  const numCls = loading ? 'score-pane-bar-num score-pane-bar-num--pulse' : 'score-pane-bar-num';
+  const overallCls = loading
+    ? 'score-pane-metric-value score-pane-metric-value--pulse'
+    : 'score-pane-metric-value score-pane-metric-value--idle';
+  const overallText = loading ? '评分中…' : '—';
+  const paneCls = loading ? 'score-pane score-pane--skeleton' : 'score-pane score-pane--idle';
   const bars = SCORE_DIMENSION_NAMES.map(name => `
     <div class="score-pane-bar-row">
       <span class="score-pane-bar-name">${escapeHtml(name)}</span>
-      <div class="score-pane-bar-track score-pane-bar-track--shimmer"><div class="score-pane-bar-fill" style="width:0"></div></div>
-      <span class="score-pane-bar-num score-pane-bar-num--pulse">—</span>
+      <div class="${trackCls}"><div class="score-pane-bar-fill" style="width:0"></div></div>
+      <span class="${numCls}">—</span>
     </div>`).join('');
-  return `<div class="score-pane score-pane--skeleton">
+  return `<div class="${paneCls}">
     <div class="score-pane-metrics score-pane-metrics--single">
-      <div class="score-pane-metric"><div class="score-pane-metric-label">综合</div><div class="score-pane-metric-value score-pane-metric-value--pulse">评分中…</div></div>
+      <div class="score-pane-metric"><div class="score-pane-metric-label">综合</div><div class="${overallCls}">${overallText}</div></div>
     </div>
     <div class="score-pane-bars">${bars}</div>
     <div class="score-pane-fixes score-pane-fixes--shell"><strong>优先改</strong><ol><li class="score-fix-line"></li><li class="score-fix-line"></li><li class="score-fix-line"></li></ol></div>
@@ -5986,7 +5999,10 @@ function renderScoreSkeletonHtml() {
 
 function renderScorePaneContent(report, opts) {
   const options = opts || {};
-  if (options.skeleton) return renderScoreSkeletonHtml();
+  if (options.skeleton) {
+    const skMode = options.skeleton === true ? 'loading' : options.skeleton;
+    return renderScoreSkeletonHtml(skMode);
+  }
   const overall = report.overallScore ?? (report.overallScore10 != null ? Math.round(report.overallScore10 * 10) : '—');
   const overallNum = typeof overall === 'number' ? overall : parseInt(String(overall), 10);
   const animate = Boolean(options.animate);
@@ -6244,7 +6260,7 @@ function renderResumeScorePane() {
   const errEl = document.getElementById('resumeScoreError');
   if (!body) return;
   if (resumeScoreResult.loading) {
-    body.innerHTML = renderScorePaneContent(null, { skeleton: true });
+    body.innerHTML = renderScorePaneContent(null, { skeleton: 'loading' });
     if (errEl) errEl.hidden = true;
     return;
   }
@@ -6266,7 +6282,7 @@ function renderResumeScorePane() {
     if (errEl) errEl.hidden = true;
     return;
   }
-  body.innerHTML = '';
+  body.innerHTML = renderScorePaneContent(null, { skeleton: 'idle' });
   bindResumePaneActions();
 }
 
