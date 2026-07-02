@@ -5994,7 +5994,7 @@ function renderScoreSkeletonHtml(mode) {
     </div>`).join('');
   return `<div class="${paneCls}">
     <div class="score-pane-metrics score-pane-metrics--single">
-      <div class="score-pane-metric"><div class="score-pane-metric-label">综合</div><div class="${overallCls}">${overallText}</div></div>
+      <div class="score-pane-metric"><div class="score-pane-metric-label">评分</div><div class="${overallCls}">${overallText}</div></div>
     </div>
     <div class="score-pane-bars">${bars}</div>
     <div class="score-pane-fixes score-pane-fixes--shell"><strong>优先改</strong><ol><li class="score-fix-line"></li><li class="score-fix-line"></li><li class="score-fix-line"></li></ol></div>
@@ -6030,7 +6030,7 @@ function renderScorePaneContent(report, opts) {
   const overallText = animate && !Number.isNaN(overallNum) ? '0' : String(overall);
   return `<div class="score-pane${animate ? ' score-pane--animating' : ''}">
     <div class="score-pane-metrics score-pane-metrics--single">
-      <div class="score-pane-metric"><div class="score-pane-metric-label">综合</div><div class="score-pane-metric-value score-pane-metric-value--rose"${countAttr}>${escapeHtml(overallText)}</div></div>
+      <div class="score-pane-metric"><div class="score-pane-metric-label">评分</div><div class="score-pane-metric-value score-pane-metric-value--rose"${countAttr}>${escapeHtml(overallText)}</div></div>
     </div>
     ${report.summary ? `<p class="score-pane-summary${summaryCls}">${escapeHtml(report.summary)}</p>` : ''}
     <div class="score-pane-bars">${bars}</div>
