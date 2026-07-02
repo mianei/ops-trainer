@@ -12,20 +12,32 @@ import {
   HISTORY_PROMPT_SUFFIX,
   formatPriorForPrompt,
   upstashCall
-} from './lib/store.js';
-import { ragEnabled, retrieveRagContext } from './lib/rag.js';
+} from '../lib/store.js';
+import { ragEnabled, retrieveRagContext } from '../lib/rag.js';
 import {
   structuredReviewEnabled,
   STRUCTURED_REVIEW_SUFFIX,
   parseStructuredReview,
   reviewToPlainText
-} from './lib/review-format.js';
+} from '../lib/review-format.js';
 import {
   pmReviewEnabled,
   isPmInterviewContext,
-  PM_STRUCTURED_REVIEW_SUFFIX
-} from './lib/pm-review.js';
-import { resolveSystemPrompt } from './lib/prompt-route.js';
+  PM_STRUCTURED_REVIEW_SUFFIX,
+  PM_COACH_REVIEW_PRINCIPLES,
+  buildBankReviewContext
+} from '../lib/pm-review.js';
+import { resolveSystemPrompt } from '../lib/prompt-route.js';
+import { handleAnalyze } from '../lib/analyze-tool.js';
+import { handleTranscribe } from '../lib/transcribe-tool.js';
+import { guardFollowupHistory, getGuardConfig } from '../lib/context-guard.js';
+import {
+  newTraceId,
+  extractTokenUsage,
+  buildTraceTurn,
+  saveTraceToStore,
+  recordTokenUsageToStore
+} from '../lib/observation-trace.js';
 
 function getClientIp(req) {
   const xff = getHeader(req, 'x-forwarded-for');
@@ -140,7 +152,7 @@ async function callDeepSeek(cfg, systemPrompt, userContent, multiTurn, jsonMode)
   }
   const text = data?.choices?.[0]?.message?.content;
   if (!text) return { error: 'DeepSeek 返回为空', status: 502 };
-  return { text };
+  return { text, tokens: extractTokenUsage(data), raw: data };
 }
 
 function streamEnabled(body, mode) {
@@ -267,7 +279,24 @@ async function callAnthropic(cfg, systemPrompt, userContent, multiTurn) {
   }
   const text = data?.content?.[0]?.text;
   if (!text) return { error: 'Anthropic 返回为空', status: 502 };
-  return { text };
+  return {
+    text,
+    tokens: extractTokenUsage(data) || {
+      prompt: data?.usage?.input_tokens ?? 0,
+      completion: data?.usage?.output_tokens ?? 0,
+      total: (data?.usage?.input_tokens ?? 0) + (data?.usage?.output_tokens ?? 0)
+    },
+    raw: data
+  };
+}
+
+async function persistChatTrace(auth, payload) {
+  const record = buildTraceTurn(payload);
+  await saveTraceToStore(auth.userId, record);
+  if (payload.tokens?.total) {
+    await recordTokenUsageToStore(payload.tokens, payload.source || 'chat');
+  }
+  return record.traceId;
 }
 
 export default async function handler(req) {
@@ -288,6 +317,10 @@ export default async function handler(req) {
     return json({ ok: true, userId: auth.userId });
   }
 
+  const tool = String(body?.tool || '').trim();
+  if (tool === 'analyze') return handleAnalyze(body);
+  if (tool === 'transcribe') return handleTranscribe(body);
+
   const llm = getLlmConfig();
   if (llm.error) {
     return json({ error: llm.error }, 500);
@@ -306,6 +339,7 @@ export default async function handler(req) {
   let reviewSystemPrompt = systemPrompt;
   let attemptNumber = 1;
   let comparedWith = 0;
+  let guardResult = null;
 
   if (mode === 'followup') {
     const { priorFeedback, question, history } = body;
@@ -315,10 +349,12 @@ export default async function handler(req) {
     if (typeof question !== 'string' || question.length > 800) {
       return json({ error: '追问过长或格式错误' }, 400);
     }
-    if (!Array.isArray(history) || history.length > 12) {
+    if (!Array.isArray(history) || history.length > 50) {
       return json({ error: '对话历史异常' }, 400);
     }
-    for (const h of history) {
+    guardResult = guardFollowupHistory(history, getGuardConfig());
+    const guardedHistory = guardResult.history;
+    for (const h of guardedHistory) {
       if (!h?.q || !h?.a || String(h.q).length > 800 || String(h.a).length > 4000) {
         return json({ error: '对话历史格式错误' }, 400);
       }
@@ -331,7 +367,7 @@ export default async function handler(req) {
       { role: 'user', content: `业务场景：${scenario}\n\n学员初答：${answer}` },
       { role: 'assistant', content: priorFeedback }
     ];
-    for (const h of history) {
+    for (const h of guardedHistory) {
       multiTurn.push({ role: 'user', content: h.q });
       multiTurn.push({ role: 'assistant', content: h.a });
     }
@@ -400,6 +436,9 @@ export default async function handler(req) {
   if (useStructured) {
     reviewSystemPrompt += usePmDims ? PM_STRUCTURED_REVIEW_SUFFIX : STRUCTURED_REVIEW_SUFFIX;
   }
+  if (mode === 'review' && usePmDims && body.bankMeta) {
+    reviewSystemPrompt += PM_COACH_REVIEW_PRINCIPLES + buildBankReviewContext(body.bankMeta);
+  }
 
   const wantStream = streamEnabled(body, mode) && llm.provider === 'deepseek';
 
@@ -415,6 +454,30 @@ export default async function handler(req) {
           dimensions: fin.dimensions
         });
       }
+      const traceId = await persistChatTrace(auth, {
+        traceId: newTraceId(),
+        runId: `chat-${topicId || 'review'}-${todayKey()}`,
+        turn: attemptNumber,
+        source: 'chat-review',
+        userAnswer: answer,
+        context: {
+          scenario,
+          topicId,
+          mode: 'review',
+          useStructured,
+          usePmDims,
+          ragRefs,
+          systemPromptTail: reviewSystemPrompt.slice(-800)
+        },
+        result: {
+          parseOk: Boolean(fin.structured),
+          rubricAvg: fin.rubricAvg,
+          dimensions: fin.dimensions,
+          summary: fin.structured?.summary?.slice(0, 300) || null
+        },
+        tokens: null,
+        meta: { streamed: true }
+      });
       return {
         text: fin.text,
         structured: fin.structured,
@@ -424,7 +487,8 @@ export default async function handler(req) {
         historyEnabled: historyEnabled(),
         ragEnabled: ragEnabled(),
         ragRefs,
-        interviewRagCount
+        interviewRagCount,
+        traceId
       };
     });
     if (streamed instanceof Response) return streamed;
@@ -455,6 +519,31 @@ export default async function handler(req) {
       });
     }
 
+    const tracePayload = {
+      traceId: newTraceId(),
+      runId: `chat-${topicId || mode}-${todayKey()}`,
+      turn: mode === 'followup' ? (body.history?.length || 0) + 1 : attemptNumber,
+      source: mode === 'followup' ? 'chat-followup' : 'chat-review',
+      userAnswer: mode === 'followup' ? body.question : answer,
+      context: {
+        scenario,
+        topicId,
+        mode,
+        useStructured: mode === 'review' ? useStructured : false,
+        usePmDims: mode === 'review' ? usePmDims : false,
+        ragRefs,
+        contextGuard: guardResult?.meta || null
+      },
+      result: {
+        parseOk: mode === 'review' ? Boolean(fin.structured) : true,
+        rubricAvg: fin.rubricAvg,
+        dimensions: fin.dimensions,
+        textPreview: fin.text?.slice(0, 400) || null
+      },
+      tokens: result.tokens || null
+    };
+    const traceId = await persistChatTrace(auth, tracePayload);
+
     return json({
       text: fin.text,
       structured: fin.structured,
@@ -464,7 +553,9 @@ export default async function handler(req) {
       historyEnabled: historyEnabled(),
       ragEnabled: ragEnabled(),
       ragRefs,
-      interviewRagCount
+      interviewRagCount,
+      traceId,
+      contextGuard: tracePayload.context.contextGuard || undefined
     });
   } catch (e) {
     return json({ error: '上游调用失败：' + e.message }, 502);

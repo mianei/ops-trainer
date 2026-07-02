@@ -1,25 +1,31 @@
-# CVassistant
+# CVassistant 3.0
 
-AI 产品经理简历优化与面试训练：简历评分与一键优化、基于简历准备面试、业务场景判断练习。
+AI 产品经理简历优化与面试训练：Agent 工作台（三栏布局）、简历评分与一键优化、基于简历准备面试、业务场景判断练习。
 
 ## 链接
 
 | | |
 |---|---|
-| 在线训练 | https://ops-trainer.vercel.app |
-| 下载与说明 | https://ops-trainer.vercel.app/download |
+| 在线训练 | https://cvassistant-ai.vercel.app |
+| 下载与说明 | https://cvassistant-ai.vercel.app/download |
 | 源码仓库 | https://github.com/mianei/ops-trainer |
 | 版本发布 | https://github.com/mianei/ops-trainer/releases |
 
-## 功能
+> 仓库名仍为 `ops-trainer`（历史别名）；Vercel 项目名为 `cvassistant`。旧域名 `ops-trainer.vercel.app` 仍可访问。
 
-- **简历优化**：上传简历/JD、一键评分、一键优化
-- **面试训练**：基于简历准备、业务场景作答
-- 免注册，打开即用（单人使用，无需访问码）
+## 功能（3.0）
+
+- **Agent 工作台**：左 Nav · 中 Canvas（Artifact）· 右 Chat；一键评分/准备面试结果直接进画布，Chat 作 steering
+- **简历优化**：上传简历/JD、一键评分、一键优化、局部改写指令
+- **面试训练**：基于简历准备报告、218+ 面经题、业务场景五维点评
+- **项目教练**：`/api/coach` 六种辅导模式（简历诊断、面试防御、项目迭代等）
+- **训练计划**：`/api/plan` 生成阶段性训练步骤
+- **成长与观测**：配置 Upstash 后支持答题历史、进步曲线、Observation Trace（badcase 打标、Token 聚合）
+- **免注册访客模式**：打开即用（`AUTH_DISABLED=1`，无登录 UI）
 
 ## 使用方式
 
-在浏览器打开 [在线训练地址](https://ops-trainer.vercel.app) 即可使用，无需注册或登录。
+在浏览器打开 [在线训练地址](https://cvassistant-ai.vercel.app) 即可使用，无需注册或登录。
 
 1. 克隆或 [下载源码 ZIP](https://github.com/mianei/ops-trainer/archive/refs/heads/main.zip)
 2. 在项目根目录复制 `.env.example` → `.env.local`，填入 `DEEPSEEK_API_KEY`，保持 `AUTH_DISABLED=1`
@@ -32,13 +38,35 @@ npx vercel dev
 浏览器打开终端里显示的地址（通常是 `http://localhost:3000`）。
 
 > **为什么不能直接打开 HTML？**  
-> 页面会请求 `/api/chat`、`/api/coach`、`/api/plan` 等接口。用 `file://` 或普通静态服务器打开时，这些 API 不存在，AI 点评、项目教练、智能体规划都会失败。必须用 `vercel dev` 同时跑前端 + Serverless API。
+> 页面会请求 `/api/chat`、`/api/coach`、`/api/plan`、`/api/records` 等接口。用 `file://` 或普通静态服务器打开时，这些 API 不存在，AI 点评、项目教练、智能体规划都会失败。必须用 `vercel dev` 同时跑前端 + Serverless API。
 
 4. 部署到 Vercel 时按下方「部署」章节配置环境变量
 
 题目数据位于 `topics.json` 及配套的 `scenarios-*.json`、`topics-*.json` 文件。
 
 **框架与定义** 在 `knowledge.json`，App 内 **知识库** Tab 阅读，不当作练习题。内容规范见 [docs/content-audit.md](./docs/content-audit.md)。
+
+3.0 布局与 Agent 方案见 [docs/v3.0-agent-workspace.md](./docs/v3.0-agent-workspace.md)；观测追踪见 [docs/observation-trace.md](./docs/observation-trace.md)。
+
+## API（4 个 Serverless 端点）
+
+| 端点 | 用途 |
+|------|------|
+| `POST /api/chat` | 五维点评、追问、框架/标准解析（`tool: analyze`）、语音转写（`tool: transcribe`） |
+| `POST /api/coach` | 项目教练：简历评分/优化、面试准备等 `action` |
+| `POST /api/plan` | 训练计划生成 |
+| `POST /api/records` | 统一记录接口，通过 `recordType` 路由 |
+
+### `/api/records` 的 `recordType`
+
+| recordType | 说明 |
+|------------|------|
+| `history`（默认） | 各模块近期作答列表 |
+| `analytics` | 进步曲线、薄弱题型 |
+| `traces` | Observation Trace 列表（`badcasesOnly: true` 仅 badcase） |
+| `token-aggregate` / `tokens` | Token 按日/周/月聚合 |
+
+共享业务逻辑在根目录 `lib/`（由 Edge 函数 import）。
 
 ## Windows 桌面版
 
@@ -49,9 +77,9 @@ npx vercel dev
 
 ## 部署
 
-本项目为静态前端 + Serverless API（`/api/verify`、`/api/chat`），推荐使用 [Vercel](https://vercel.com) 部署。纯 GitHub Pages 无法运行 API 路由。
+本项目为静态前端 + Serverless API（4 个 `/api/*` 端点），推荐使用 [Vercel](https://vercel.com) 部署。纯 GitHub Pages 无法运行 API 路由。
 
-1. 将仓库导入 Vercel
+1. 将仓库导入 Vercel（项目名建议 `cvassistant`）
 2. 在 **Settings → Environment Variables** 配置：
 
 | 变量 | 说明 |
@@ -62,7 +90,8 @@ npx vercel dev
 | `ANTHROPIC_API_KEY` | Claude API Key（与 DeepSeek 二选一） |
 | `ANTHROPIC_MODEL` | 可选 |
 | `AI_PROVIDER` | 可选，`deepseek` 或 `anthropic` |
-| `UPSTASH_REDIS_REST_URL` | 可选，答题历史（不配也能练题） |
+| `OPENAI_API_KEY` | 可选，语音转写（Whisper） |
+| `UPSTASH_REDIS_REST_URL` | 可选，答题历史 / Trace（不配也能练题） |
 | `UPSTASH_REDIS_REST_TOKEN` | Upstash Token |
 | `ACCESS_CODE` | 可选，仅当 `AUTH_DISABLED=0` 时启用密码保护 |
 | `ACCESS_USERS` | 可选，多用户 `user:pass` 预分配 |
@@ -81,10 +110,11 @@ npx vercel dev
 
 打开页面即以访客身份使用，无登录门禁。若需密码保护，设置 `ACCESS_CODE` 并将 `AUTH_DISABLED=0`。
 
-### 答题记录（可选）
+### 答题记录与 Trace（可选）
 
 - 配置 Upstash 后，系统按「用户 ID + 模块」保存近期作答（访客默认为 `guest`）
 - 再次在本模块作答时，AI 点评会自动增加 **「思维成长」** 小节：对照你最近几次作答（不必同一道题），看是否想到更多、想得更深
+- `/api/chat`、`/api/coach` 响应含 `traceId`；Trace 与 Token 聚合经 `/api/records` 查询。详见 [docs/observation-trace.md](./docs/observation-trace.md)
 
 ### 知识库 RAG
 
@@ -97,18 +127,17 @@ npx vercel dev
 
 扩充知识：只改 `knowledge.json` 并部署即可。DeepSeek 暂无 embedding API，当前为 BM25 关键词检索。
 
-### v4.42 产品能力
+### 评测集（Golden Set）
 
-- **知识库 61+ 卡**：含 OTA / 电商 / 社区等行业框架
-- **作答前推荐阅读**：按模块与场景标签提示 1–3 张知识卡
-- **结构化点评**：五维 rubric（1–5）+ 亮点 / 待加强 / 行动建议
-- **思维成长时间线**：右上角「我的成长」查看历史作答
-- **流式生成**：DeepSeek 点评 NDJSON 流式返回
-- **场景 prompt 路由**：`【OTA·决策】` 类题自动匹配对应模块 systemPrompt
+```bash
+# 跑 30 条评测并写入 eval/traces/run-*.jsonl
+DEEPSEEK_API_KEY=sk-xxx node scripts/eval-scoring.js
 
-扩充知识：`node scripts/expand-knowledge-web.js` · `node scripts/expand-knowledge-web-batch2.js`
+# Token 聚合
+node scripts/aggregate-tokens.js --period week --badcases
+```
 
-**v4.45** 面经第二批 +12 知识卡：`scenarios-web-curated-batch2.json`（+37 题，面经合计 **85** 题）· 知识库 **108** 张卡。
+说明见 [eval/评测集说明.md](./eval/评测集说明.md)。
 
 请勿将密钥写入代码或提交至仓库；`.env` 已列入 `.gitignore`。
 

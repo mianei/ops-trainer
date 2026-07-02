@@ -1,12 +1,23 @@
 export const config = { runtime: 'edge', maxDuration: 60 };
 
-import { json, getHeader, readJsonBody, verifyUserCredentials } from './lib/store.js';
-import { getLlmConfig } from './lib/scenario-generate.js';
-import { VALID_COACH_MODES, detectCoachIntent } from './lib/coach-modes.js';
-import { buildCoachSystemPrompt, buildActionCoachSystemPrompt, buildCoachUserMessage } from './lib/coach-prompts.js';
-import { resolveCoachAction } from './lib/coach-actions.js';
+import { json, getHeader, readJsonBody, verifyUserCredentials } from '../lib/store.js';
+import { getLlmConfig } from '../lib/scenario-generate.js';
+import { VALID_COACH_MODES, detectCoachIntent } from '../lib/coach-modes.js';
+import { buildCoachSystemPrompt, buildActionCoachSystemPrompt, buildCoachUserMessage, slimIntakeForAction } from '../lib/coach-prompts.js';
+import { resolveCoachAction } from '../lib/coach-actions.js';
+import { parseResumeScoreReport, formatResumeScoreReply } from '../lib/resume-score-parse.js';
+import { parseResumeOptimizeReport, formatResumeOptimizeReply } from '../lib/resume-optimize-parse.js';
+import { parseInterviewPrepReport, formatInterviewPrepReply } from '../lib/interview-prep-parse.js';
+import { guardCoachHistory, getGuardConfig } from '../lib/context-guard.js';
+import {
+  newTraceId,
+  extractTokenUsage,
+  buildTraceTurn,
+  saveTraceToStore,
+  recordTokenUsageToStore
+} from '../lib/observation-trace.js';
 
-async function callDeepSeekCoach(cfg, systemPrompt, messages, maxTokens = 4096) {
+async function callDeepSeekCoach(cfg, systemPrompt, messages, maxTokens = 4096, temperature = 0.7) {
   const res = await fetch(`${cfg.baseUrl}/chat/completions`, {
     method: 'POST',
     headers: {
@@ -16,7 +27,7 @@ async function callDeepSeekCoach(cfg, systemPrompt, messages, maxTokens = 4096) 
     body: JSON.stringify({
       model: cfg.model,
       max_tokens: maxTokens,
-      temperature: 0.7,
+      temperature,
       messages: [{ role: 'system', content: systemPrompt }, ...messages]
     })
   });
@@ -27,7 +38,7 @@ async function callDeepSeekCoach(cfg, systemPrompt, messages, maxTokens = 4096) 
   }
   const text = data?.choices?.[0]?.message?.content;
   if (!text) return { error: 'DeepSeek 返回为空', status: 502 };
-  return { text };
+  return { text, tokens: extractTokenUsage(data) };
 }
 
 async function callAnthropicCoach(cfg, systemPrompt, messages, maxTokens = 4096) {
@@ -53,7 +64,23 @@ async function callAnthropicCoach(cfg, systemPrompt, messages, maxTokens = 4096)
   }
   const text = data?.content?.[0]?.text;
   if (!text) return { error: 'Anthropic 返回为空', status: 502 };
-  return { text };
+  return {
+    text,
+    tokens: extractTokenUsage(data) || {
+      prompt: data?.usage?.input_tokens ?? 0,
+      completion: data?.usage?.output_tokens ?? 0,
+      total: (data?.usage?.input_tokens ?? 0) + (data?.usage?.output_tokens ?? 0)
+    }
+  };
+}
+
+async function persistCoachTrace(auth, payload) {
+  const record = buildTraceTurn(payload);
+  await saveTraceToStore(auth.userId, record);
+  if (payload.tokens?.total) {
+    await recordTokenUsageToStore(payload.tokens, payload.source || 'coach');
+  }
+  return record.traceId;
 }
 
 export default async function handler(req) {
@@ -101,29 +128,104 @@ export default async function handler(req) {
     }
 
     const compact = Boolean(action);
-    const maxTokens = compact ? 2048 : 4096;
+    const actionLimits = {
+      'resume-score': { maxTokens: 1100, temperature: 0.25 },
+      'resume-optimize': { maxTokens: 1000, temperature: 0.3 },
+      'interview-prep': { maxTokens: 1600, temperature: 0.5 }
+    };
+    const limits = action ? (actionLimits[action] || { maxTokens: 1200, temperature: 0.5 }) : null;
+    const maxTokens = limits?.maxTokens ?? (compact ? 2048 : 4096);
+    const temperature = limits?.temperature ?? 0.7;
+    const actionIntake = action ? slimIntakeForAction(intake, action) : intake;
     const systemPrompt = action
       ? buildActionCoachSystemPrompt(action)
       : buildCoachSystemPrompt(mode, { compact });
-    const userContent = buildCoachUserMessage(mode, intake, message);
+    const userContent = buildCoachUserMessage(mode, actionIntake, message);
+    const guardResult = action
+      ? { history: [], compressed: false, meta: { turnCount: 0 } }
+      : guardCoachHistory(history, intake, getGuardConfig());
     const chatMessages = [
-      ...history
-        .slice(-6)
+      ...(action ? [] : guardResult.history
+        .slice(-20)
         .filter(m => m && (m.role === 'user' || m.role === 'assistant') && m.content)
-        .map(m => ({ role: m.role, content: String(m.content) })),
+        .map(m => ({ role: m.role, content: String(m.content) }))),
       { role: 'user', content: userContent }
     ];
 
     const result =
       cfg.provider === 'anthropic'
         ? await callAnthropicCoach(cfg, systemPrompt, chatMessages, maxTokens)
-        : await callDeepSeekCoach(cfg, systemPrompt, chatMessages, maxTokens);
+        : await callDeepSeekCoach(cfg, systemPrompt, chatMessages, maxTokens, temperature);
 
     if (result.error) {
       return json({ error: result.error }, result.status >= 400 && result.status < 600 ? result.status : 502);
     }
 
-    return json({ ok: true, reply: result.text, mode, action: action || undefined });
+    const traceId = await persistCoachTrace(auth, {
+      traceId: newTraceId(),
+      runId: `coach-${mode}-${new Date().toISOString().slice(0, 10)}`,
+      turn: (history?.length || 0) + 1,
+      source: action ? `coach-action-${action}` : 'coach',
+      userAnswer: message,
+      context: {
+        mode,
+        action: action || null,
+        contextModule,
+        contextGuard: guardResult.meta,
+        intakePinned: Boolean(intake?.targetRole || intake?.resume)
+      },
+      result: {
+        parseOk: true,
+        textPreview: result.text?.slice(0, 400) || null
+      },
+      tokens: result.tokens || null
+    });
+
+    if (action === 'resume-score') {
+      const scoreReport = parseResumeScoreReport(result.text);
+      return json({
+        ok: true,
+        reply: scoreReport ? formatResumeScoreReply(scoreReport) : result.text,
+        scoreReport: scoreReport || undefined,
+        mode,
+        action,
+        traceId,
+        contextGuard: guardResult.compressed ? guardResult.meta : undefined
+      });
+    }
+
+    if (action === 'resume-optimize') {
+      const optimizeReport = parseResumeOptimizeReport(result.text);
+      return json({
+        ok: true,
+        reply: optimizeReport ? formatResumeOptimizeReply(optimizeReport) : result.text,
+        optimizeReport: optimizeReport || undefined,
+        mode,
+        action,
+        traceId
+      });
+    }
+
+    if (action === 'interview-prep') {
+      const prepReport = parseInterviewPrepReport(result.text);
+      return json({
+        ok: true,
+        reply: prepReport ? formatInterviewPrepReply(prepReport) : result.text,
+        prepReport: prepReport || undefined,
+        mode,
+        action,
+        traceId
+      });
+    }
+
+    return json({
+      ok: true,
+      reply: result.text,
+      mode,
+      action: action || undefined,
+      traceId,
+      contextGuard: guardResult.compressed ? guardResult.meta : undefined
+    });
   } catch (e) {
     console.error('[coach]', e);
     return json({ error: e?.message || '服务内部错误，请稍后重试' }, 500);

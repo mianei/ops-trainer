@@ -5,7 +5,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { buildChunksFromKnowledge, retrieveChunks } from '../api/lib/rag.js';
+import { buildChunksFromKnowledge, retrieveChunks } from '../lib/rag.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const knowledge = JSON.parse(fs.readFileSync(path.join(__dirname, '../knowledge.json'), 'utf8'));

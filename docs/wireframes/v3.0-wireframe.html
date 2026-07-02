@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CVassistant 3.0 低保真原型</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Segoe UI", system-ui, sans-serif;
+      background: #f1f5f9;
+      color: #0f172a;
+      line-height: 1.55;
+      padding: 16px;
+    }
+    h1 { font-size: 1.25rem; margin-bottom: 4px; }
+    .hint { font-size: 13px; color: #64748b; margin-bottom: 16px; }
+    .shell {
+      display: grid;
+      grid-template-columns: 180px 1fr 300px;
+      gap: 0;
+      min-height: 680px;
+      background: #fff;
+      border: 1px solid #cbd5e1;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    @media (max-width: 900px) {
+      .shell { grid-template-columns: 1fr; min-height: auto; }
+      .col-chat { border-top: 1px solid #e2e8f0; }
+      .col-nav { display: none; }
+      .canvas-split { grid-template-columns: 1fr !important; }
+    }
+    .col-nav {
+      background: #f8fafc;
+      border-right: 1px solid #e2e8f0;
+      padding: 12px;
+    }
+    .brand {
+      font-weight: 700;
+      font-size: 14px;
+      padding: 8px;
+      margin-bottom: 8px;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+    }
+    .nav-btn {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 8px 10px;
+      margin-bottom: 4px;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      background: #fff;
+      cursor: pointer;
+      font-size: 13px;
+    }
+    .nav-btn.active { border-color: #2563eb; background: #eff6ff; color: #1d4ed8; }
+    .nav-btn.disabled { opacity: 0.45; cursor: default; }
+    .col-canvas {
+      padding: 0;
+      border-right: 1px solid #e2e8f0;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      background: #f8fafc;
+    }
+    .canvas-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 16px;
+      background: #fff;
+      border-bottom: 1px solid #e2e8f0;
+      flex-wrap: wrap;
+    }
+    .canvas-topbar h2 { font-size: 15px; font-weight: 600; }
+    .breadcrumb { font-size: 12px; color: #64748b; margin-top: 2px; }
+    .topbar-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+    .canvas-body-inner {
+      flex: 1;
+      padding: 14px 16px 16px;
+      overflow-y: auto;
+    }
+    .tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+    .tab {
+      padding: 5px 12px;
+      font-size: 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      background: #fff;
+      cursor: pointer;
+    }
+    .tab.active { background: #2563eb; color: #fff; border-color: #2563eb; }
+    .panel {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-bottom: 12px;
+    }
+    .panel-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .panel-title { font-size: 13px; font-weight: 600; color: #334155; }
+    .panel-tag { font-size: 11px; color: #64748b; background: #f1f5f9; padding: 2px 8px; border-radius: 99px; }
+    .canvas-split {
+      display: grid;
+      grid-template-columns: 1fr 240px;
+      gap: 12px;
+      align-items: start;
+    }
+    .score-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .score-card {
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 14px;
+      background: linear-gradient(180deg, #fff 0%, #f8fafc 100%);
+    }
+    .score-card .label { font-size: 11px; color: #64748b; margin-bottom: 4px; }
+    .score-card .value { font-size: 22px; font-weight: 700; color: #1e40af; }
+    .score-card .sub { font-size: 11px; color: #64748b; margin-top: 4px; }
+    .dim-row {
+      display: grid;
+      grid-template-columns: 100px 1fr 36px;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 8px;
+      font-size: 13px;
+    }
+    .bar-track { height: 8px; background: #e2e8f0; border-radius: 99px; overflow: hidden; }
+    .bar-fill { height: 100%; background: #3b82f6; border-radius: 99px; }
+    .bar-fill.warn { background: #f59e0b; }
+    .bar-fill.bad { background: #ef4444; }
+    .fix-list { list-style: none; font-size: 13px; }
+    .fix-list li {
+      padding: 8px 0;
+      border-bottom: 1px solid #f1f5f9;
+      display: flex;
+      gap: 8px;
+    }
+    .fix-list li:last-child { border-bottom: none; }
+    .fix-num {
+      width: 20px; height: 20px;
+      background: #eff6ff;
+      color: #2563eb;
+      border-radius: 50%;
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .meta-list { font-size: 12px; color: #475569; }
+    .meta-list dt { color: #94a3b8; font-size: 11px; margin-top: 8px; }
+    .meta-list dd { margin-top: 2px; }
+    .diff-block { font-size: 13px; margin-bottom: 10px; }
+    .diff-before {
+      background: #fef2f2;
+      border-left: 3px solid #fca5a5;
+      padding: 8px 10px;
+      border-radius: 0 6px 6px 0;
+      margin-bottom: 6px;
+    }
+    .diff-after {
+      background: #f0fdf4;
+      border-left: 3px solid #86efac;
+      padding: 8px 10px;
+      border-radius: 0 6px 6px 0;
+    }
+    .doc-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 14px;
+      min-height: 380px;
+    }
+    .doc-sidebar { display: flex; flex-direction: column; gap: 10px; }
+    .doc-item {
+      display: flex;
+      gap: 10px;
+      padding: 10px;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      background: #fff;
+      cursor: pointer;
+    }
+    .doc-item.active { border-color: #2563eb; background: #eff6ff; }
+    .doc-icon {
+      width: 36px; height: 44px;
+      background: #2563eb;
+      color: #fff;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .doc-preview-pane {
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      background: #fff;
+      padding: 20px 24px;
+      font-size: 13px;
+      line-height: 1.7;
+      min-height: 380px;
+    }
+    .doc-preview-pane h3 { font-size: 16px; margin-bottom: 12px; }
+    .doc-preview-pane p { margin-bottom: 10px; color: #334155; }
+    .doc-preview-pane .hl { background: #fef08a; padding: 0 2px; }
+    .scenario-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    @media (max-width: 1100px) { .scenario-grid { grid-template-columns: 1fr; } }
+    .answer-box {
+      min-height: 120px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 10px;
+      background: #fff;
+      font-size: 13px;
+      color: #64748b;
+    }
+    .review-dims {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      text-align: center;
+      font-size: 12px;
+    }
+    .review-dim {
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 10px 6px;
+      background: #fff;
+    }
+    .review-dim strong { display: block; font-size: 18px; color: #2563eb; }
+    .trace-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+    .trace-table th, .trace-table td {
+      border: 1px solid #e2e8f0;
+      padding: 8px 10px;
+      text-align: left;
+    }
+    .trace-table th { background: #f8fafc; color: #64748b; font-weight: 600; }
+    .artifact-strip {
+      display: flex;
+      gap: 8px;
+      padding: 10px 16px;
+      background: #fff;
+      border-top: 1px solid #e2e8f0;
+      overflow-x: auto;
+      font-size: 11px;
+    }
+    .artifact-chip {
+      padding: 4px 10px;
+      border: 1px solid #e2e8f0;
+      border-radius: 99px;
+      white-space: nowrap;
+      background: #f8fafc;
+    }
+    .artifact-chip.active { border-color: #2563eb; background: #eff6ff; color: #1d4ed8; }
+    .btn {
+      display: inline-block;
+      padding: 5px 12px;
+      font-size: 12px;
+      border-radius: 6px;
+      border: 1px solid #cbd5e1;
+      background: #fff;
+      cursor: pointer;
+    }
+    .btn.primary { background: #2563eb; color: #fff; border-color: #2563eb; }
+    .col-chat {
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      background: #fafafa;
+      min-height: 680px;
+    }
+    .col-chat h3 { font-size: 14px; margin-bottom: 4px; }
+    .chat-sub { font-size: 11px; color: #64748b; margin-bottom: 10px; }
+    .msgs { flex: 1; overflow-y: auto; margin-bottom: 10px; min-height: 200px; }
+    .msg {
+      max-width: 92%;
+      padding: 8px 10px;
+      border-radius: 10px;
+      margin-bottom: 8px;
+      font-size: 13px;
+      border: 1px solid #e2e8f0;
+    }
+    .msg.user { margin-left: auto; background: #eff6ff; }
+    .msg.agent { background: #fff; }
+    .msg-role { font-size: 10px; color: #64748b; margin-bottom: 2px; }
+    .tools {
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 8px;
+      margin-bottom: 10px;
+      background: #fff;
+      font-size: 12px;
+    }
+    .tool-row { display: flex; gap: 8px; align-items: center; margin-top: 4px; }
+    .pill { font-size: 10px; padding: 2px 6px; border-radius: 4px; background: #dcfce7; color: #166534; }
+    .pill.run { background: #fef9c3; color: #854d0e; }
+    .chat-input { display: flex; gap: 6px; }
+    .chat-input input {
+      flex: 1;
+      padding: 8px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 13px;
+    }
+    footer { margin-top: 16px; font-size: 12px; color: #64748b; }
+  </style>
+</head>
+<body>
+  <h1>CVassistant 3.0 低保真原型</h1>
+  <p class="hint">中间 Canvas 已补全：工具栏、主内容区、侧栏元信息、文档预览、产物历史条。</p>
+
+  <div class="shell">
+    <aside class="col-nav">
+      <div class="brand">CVassistant <span style="color:#2563eb">3.0</span></div>
+      <button type="button" class="nav-btn active" data-scene="resume">简历 Agent</button>
+      <button type="button" class="nav-btn" data-scene="scenario">业务场景</button>
+      <button type="button" class="nav-btn" data-scene="prep">面试准备</button>
+      <button type="button" class="nav-btn disabled">训练计划</button>
+      <button type="button" class="nav-btn disabled">知识库</button>
+    </aside>
+
+    <main class="col-canvas">
+      <div class="canvas-topbar">
+        <div>
+          <h2 id="canvasTitle">简历优化 · 文档</h2>
+          <div class="breadcrumb" id="canvasCrumb">简历 Agent / 第二段项目 / export_document</div>
+        </div>
+        <div class="topbar-actions">
+          <button type="button" class="btn">复制摘要</button>
+          <button type="button" class="btn primary">下载 docx</button>
+        </div>
+      </div>
+      <div class="canvas-body-inner">
+        <div class="tabs" id="tabs"></div>
+        <div id="canvasBody"></div>
+      </div>
+      <div class="artifact-strip" id="artifactStrip"></div>
+    </main>
+
+    <aside class="col-chat">
+      <h3>Agent 对话</h3>
+      <p class="chat-sub">发指令 · 看工具步骤 · 结果在中间 Canvas</p>
+      <div class="msgs">
+        <div class="msg user"><div class="msg-role">你</div>把简历第二段改成 STAR，并导出 Word</div>
+        <div class="msg agent"><div class="msg-role">Agent</div>已完成 optimize_resume，正在 export_document。请在中间「文档」Tab 查看预览。</div>
+      </div>
+      <div class="tools">
+        <strong>工具调用</strong>
+        <div class="tool-row"><span class="pill">done</span> optimize_resume</div>
+        <div class="tool-row"><span class="pill run">running</span> export_document</div>
+        <div class="tool-row"><span class="pill">done</span> write_trace</div>
+      </div>
+      <div class="chat-input">
+        <input type="text" placeholder="对 Agent 下指令…" />
+        <button type="button" class="btn primary">发送</button>
+      </div>
+    </aside>
+  </div>
+
+  <footer>刷新页面或重新打开 docs/wireframes/v3.0-wireframe.html</footer>
+
+  <script>
+    const TAB_MAP = {
+      resume: ['评分', '优化', '文档', 'Trace'],
+      scenario: ['题目', '点评', '解析', 'Trace'],
+      prep: ['准备报告', '追问清单', '文档', 'Trace']
+    };
+    const TITLES = {
+      resume: { 评分: '简历评分报告', 优化: '简历优化 · Bullet 改写', 文档: '简历优化 · 文档', Trace: 'Observation Trace' },
+      scenario: { 题目: '业务场景 · 当前题目', 点评: '五维点评结果', 解析: '框架 / 标准 / 对比', Trace: 'Review Trace' },
+      prep: { 准备报告: '面试准备报告', 追问清单: 'Likely 追问 × 5', 文档: '面试话术 · 导出', Trace: 'Prep Trace' }
+    };
+
+    let scene = 'resume';
+    let tab = '文档';
+
+    function dimBar(name, score, cls) {
+      const pct = score * 20;
+      return `<div class="dim-row"><span>${name}</span><div class="bar-track"><div class="bar-fill ${cls || ''}" style="width:${pct}%"></div></div><span>${score}/5</span></div>`;
+    }
+
+    function renderTabs() {
+      document.getElementById('tabs').innerHTML = TAB_MAP[scene].map(t =>
+        `<button type="button" class="tab${t === tab ? ' active' : ''}" data-tab="${t}">${t}</button>`
+      ).join('');
+      document.querySelectorAll('.tab').forEach(el => {
+        el.onclick = () => { tab = el.dataset.tab; updateChrome(); renderTabs(); renderBody(); };
+      });
+    }
+
+    function updateChrome() {
+      const title = (TITLES[scene] && TITLES[scene][tab]) || tab;
+      document.getElementById('canvasTitle').textContent = title;
+      document.getElementById('canvasCrumb').textContent = `${scene === 'resume' ? '简历 Agent' : scene === 'scenario' ? '业务场景' : '面试准备'} / ${tab} / 刚刚更新`;
+      const chips = scene === 'resume'
+        ? ['评分报告', '优化 bullet', '简历_v2.docx', 'trace#f002']
+        : scene === 'scenario'
+          ? ['Q11 真需求', '点评 3.6', '框架解析', 'trace#a18']
+          : ['prepReport', '追问×5', '话术.docx', 'trace#b09'];
+      document.getElementById('artifactStrip').innerHTML = chips.map((c, i) =>
+        `<span class="artifact-chip${i === (tab === '文档' ? 2 : tab === '评分' || tab === '准备报告' ? 0 : 1) ? ' active' : ''}">${c}</span>`
+      ).join('');
+    }
+
+    function renderBody() {
+      const el = document.getElementById('canvasBody');
+      if (scene === 'resume' && tab === '评分') {
+        el.innerHTML = `
+          <div class="canvas-split">
+            <div>
+              <div class="score-grid">
+                <div class="score-card"><div class="label">总评</div><div class="value">7.2</div><div class="sub">/ 10 · AI 产品实习向</div></div>
+                <div class="score-card"><div class="label">过筛概率</div><div class="value">58%</div><div class="sub">当前简历</div></div>
+                <div class="score-card"><div class="label">优化后预估</div><div class="value">71%</div><div class="sub">按 topFixes 改完</div></div>
+              </div>
+              <div class="panel">
+                <div class="panel-head"><span class="panel-title">一句话总评</span><span class="panel-tag">score_resume</span></div>
+                <p style="font-size:14px">有 AI 项目叙事雏形，但<strong>证据链偏薄</strong>：缺 eval 集规模、badcase 闭环；第二段 bullet 像功能清单，面试易被追问穿。</p>
+              </div>
+              <div class="panel">
+                <div class="panel-head"><span class="panel-title">五维诊断</span></div>
+                ${dimBar('AI产品信号', 3)}${dimBar('项目可信度', 4)}${dimBar('叙述结构', 3)}${dimBar('证据完整度', 2, 'bad')}${dimBar('面试可防守', 3, 'warn')}
+              </div>
+              <div class="panel">
+                <div class="panel-head"><span class="panel-title">优先改进 topFixes</span></div>
+                <ul class="fix-list">
+                  <li><span class="fix-num">1</span><span>第二段改为 STAR，补「任务定义 → 评测集 30 条 → badcase 归因」</span></li>
+                  <li><span class="fix-num">2</span><span>删除「上线 AB 实验 +15%」等无口径数据</span></li>
+                  <li><span class="fix-num">3</span><span>增加 doNotSay：不夸算法归属、不写内部库权限</span></li>
+                </ul>
+              </div>
+            </div>
+            <aside>
+              <div class="panel">
+                <div class="panel-head"><span class="panel-title">会话元信息</span></div>
+                <dl class="meta-list">
+                  <dt>目标岗位</dt><dd>字节 · AI 产品实习</dd>
+                  <dt>简历字数</dt><dd>约 1,840 字</dd>
+                  <dt>本次 Token</dt><dd>1,842 · 评分单次</dd>
+                  <dt>Trace ID</dt><dd>f0028d9a…</dd>
+                </dl>
+              </div>
+              <div class="panel">
+                <div class="panel-head"><span class="panel-title">亮点 / 风险</span></div>
+                <p style="font-size:12px;color:#166534;margin-bottom:6px">+ RAG + eval 关键词出现</p>
+                <p style="font-size:12px;color:#b45309">− 证据不可验证</p>
+                <p style="font-size:12px;color:#b91c1c">− 功能堆叠无 trade-off</p>
+              </div>
+            </aside>
+          </div>`;
+      } else if (scene === 'resume' && tab === '优化') {
+        el.innerHTML = `
+          <div class="panel">
+            <div class="panel-head"><span class="panel-title">项目二 · 推荐策略 AI 助手</span><span class="panel-tag">optimize_resume</span></div>
+            <div class="diff-block">
+              <div class="diff-before"><strong>Before</strong><br>负责推荐 feed 算法优化，提升 CTR，参与 A/B 实验与模型迭代。</div>
+              <div class="diff-after"><strong>After · STAR</strong><br><span class="hl">S</span> Feed 点击率升、时长降，需判断策略伤体验还是指标口径问题。<br><span class="hl">T</span> 定义「有效点击」与 guardrail 指标，建 30 条 golden 评测集。<br><span class="hl">A</span> 按 badcase 归因调整排序特征权重，离线 Spearman 对齐人工分。<br><span class="hl">R</span> 时长回升 X%（口径待填），badcase 类「标题党」下降。</div>
+            </div>
+          </div>
+          <div class="canvas-split">
+            <div class="panel">
+              <div class="panel-head"><span class="panel-title">eval / badcase 补全建议</span></div>
+              <ul class="fix-list">
+                <li><span class="fix-num">1</span><span>补评测维度：相关性、多样性、时长 guardrail</span></li>
+                <li><span class="fix-num">2</span><span>badcase：点击高但 3s 跳出 → 归因到标题/封面</span></li>
+              </ul>
+            </div>
+            <div class="panel">
+              <div class="panel-head"><span class="panel-title">方向建议</span></div>
+              <p style="font-size:13px"><strong>主：</strong>推荐策略 + eval 闭环<br><strong>备：</strong>AI 面试助手 / 题库 Agent</p>
+            </div>
+          </div>`;
+      } else if (tab === '文档') {
+        el.innerHTML = `
+          <div class="doc-layout">
+            <div class="doc-sidebar">
+              <div class="doc-item active">
+                <div class="doc-icon">W</div>
+                <div><strong style="font-size:13px">简历优化_v2.docx</strong><br><span style="font-size:11px;color:#64748b">刚刚 · 12 KB</span></div>
+              </div>
+              <div class="doc-item">
+                <div class="doc-icon" style="background:#64748b">M</div>
+                <div><strong style="font-size:13px">评分摘要.md</strong><br><span style="font-size:11px;color:#64748b">5 分钟前</span></div>
+              </div>
+              <div class="panel" style="margin:0">
+                <div class="panel-title" style="margin-bottom:8px">变更摘要</div>
+                <p style="font-size:12px;color:#475569;line-height:1.6">1. §2 项目 bullet → STAR<br>2. 新增 eval 30 条描述<br>3. 移除无证据 AB 表述<br>4. 补 doNotSay 边界段</p>
+              </div>
+            </div>
+            <div class="doc-preview-pane">
+              <h3>个人简历（节选预览）</h3>
+              <p><strong>项目经历 · AI 推荐策略助手</strong></p>
+              <p><span class="hl">情境</span>：Feed CTR 上升但人均时长下降，需区分策略伤体验还是指标口径问题。</p>
+              <p><span class="hl">任务</span>：定义有效点击与 guardrail，搭建 30 条 golden 评测集，按五维 rubric 跑分。</p>
+              <p><span class="hl">行动</span>：badcase 归因（标题党 / 封面误导），迭代排序特征；离线 Spearman 对齐人工标注。</p>
+              <p><span class="hl">结果</span>：时长 guardrail 回升（XX%），低质点击类 badcase 占比下降。</p>
+              <p style="color:#64748b;font-size:12px;margin-top:16px">— 以下为预览区，正式版由 export_document 生成可下载 docx —</p>
+            </div>
+          </div>`;
+      } else if (scene === 'scenario') {
+        if (tab === '题目') {
+          el.innerHTML = `
+            <div class="scenario-grid">
+              <div class="panel">
+                <div class="panel-head"><span class="panel-title">① 题目</span><button class="btn">换一题</button></div>
+                <p style="font-size:15px;font-weight:600;margin-bottom:8px">【面试·Q11·本质向】如何区分真需求与伪需求？</p>
+                <p style="font-size:13px;color:#475569">请用下面三个问题逐条回答（各举 1 个例子）：<br>① 解决谁的什么痛点 ② 带来什么可衡量收益 ③ 能否用通用能力而非一次性定制解决</p>
+                <p style="font-size:11px;color:#94a3b8;margin-top:10px">模块：竞品与产品判断 · 难度：中 · 标签：需求分析</p>
+              </div>
+              <div class="panel">
+                <div class="panel-head"><span class="panel-title">② 你的回答</span><span class="panel-tag">语音可用</span></div>
+                <div class="answer-box">伪需求就是用户嘴上说要但不用…（示例作答，可编辑）</div>
+                <div style="margin-top:10px"><button class="btn primary">提交点评</button> <button class="btn">清空</button></div>
+              </div>
+            </div>
+            <div class="panel" style="margin-top:12px;opacity:0.55">
+              <div class="panel-head"><span class="panel-title">③ 点评（提交后展开）</span></div>
+              <p style="font-size:13px;color:#64748b">提交后在此展示五维分数、亮点、遗漏与建议行动</p>
+            </div>`;
+        } else if (tab === '点评') {
+          el.innerHTML = `
+            <div class="panel">
+              <div class="panel-head"><span class="panel-title">总评</span><span class="panel-tag">review_answer</span></div>
+              <p style="font-size:14px">有「伪需求」直觉，但<strong>缺三问框架逐条对应</strong>，例子偏泛；未触及「通用能力 vs 定制」的 trade-off。</p>
+            </div>
+            <div class="review-dims">
+              <div class="review-dim"><strong>4</strong>结构</div>
+              <div class="review-dim"><strong>3</strong>框架</div>
+              <div class="review-dim"><strong>2</strong>论据</div>
+              <div class="review-dim"><strong>4</strong>洞察</div>
+              <div class="review-dim"><strong>3</strong>可执行</div>
+            </div>
+            <div class="canvas-split" style="margin-top:12px">
+              <div class="panel"><div class="panel-title" style="margin-bottom:8px">亮点</div><p style="font-size:13px">提到「说要 vs 行为」验证思路</p></div>
+              <div class="panel"><div class="panel-title" style="margin-bottom:8px">待加强</div><p style="font-size:13px">按三问分点；每点配 1 个可验证例子</p></div>
+            </div>`;
+        } else if (tab === '解析') {
+          el.innerHTML = `
+            <div class="canvas-split">
+              <div class="panel"><div class="panel-title">回答框架</div><p style="font-size:13px;margin-top:8px">① 用户/场景 ② 可衡量收益 ③ 通用性 vs 定制 · 每点 1 例</p></div>
+              <div class="panel"><div class="panel-title">评分标准</div><p style="font-size:13px;margin-top:8px">是否 MECE 覆盖三问；例子是否可验证；是否触及 trade-off</p></div>
+            </div>
+            <div class="panel"><div class="panel-title">参考对比（优/中 excerpt）</div><p style="font-size:13px;margin-top:8px;color:#475569">优：分三点 + 抖音/知乎反例…<br>中：只谈伪需求定义，无例子…</p></div>`;
+        } else {
+          el.innerHTML = traceTable('scenario', 'review_answer', '无 badcase');
+        }
+      } else if (scene === 'prep') {
+        if (tab === '准备报告') {
+          el.innerHTML = `
+            <div class="score-grid">
+              <div class="score-card"><div class="label">信号强度</div><div class="value" style="font-size:18px">中上</div><div class="sub">需补 eval 证据</div></div>
+              <div class="score-card"><div class="label">主项目</div><div class="value" style="font-size:16px">推荐+eval</div></div>
+              <div class="score-card"><div class="label">Likely 追问</div><div class="value">5</div><div class="sub">已生成</div></div>
+            </div>
+            <div class="panel">
+              <div class="panel-head"><span class="panel-title">opening15s</span><span class="panel-tag">prepare_interview</span></div>
+              <p style="font-size:14px">AI 产品实习 · 3 段：学校/方向 → 主项目（推荐 eval 闭环）→ 求职动机（字节 AI 场景）</p>
+            </div>
+            <div class="panel">
+              <div class="panel-head"><span class="panel-title">projects × 3</span></div>
+              <p style="font-size:13px;margin-bottom:8px"><strong>① 推荐策略助手</strong> — 30s：问题 → golden 集 → badcase → 指标 guardrail</p>
+              <p style="font-size:13px;margin-bottom:8px"><strong>② CVassistant</strong> — Agent 工作台 + Trace + eval</p>
+              <p style="font-size:13px"><strong>③ 课程项目 RAG</strong> — 压缩为辅，面试弱打</p>
+            </div>
+            <div class="panel">
+              <div class="panel-head"><span class="panel-title">doNotSay</span></div>
+              <p style="font-size:13px;color:#b91c1c">不声称独立负责核心排序模型 · 不写未发生的上线 AB · 不夸大数据权限</p>
+            </div>`;
+        } else if (tab === '追问清单') {
+          el.innerHTML = `
+            <div class="panel"><div class="panel-title">Q1 · 评测集怎么建的？</div><p style="font-size:13px;margin-top:8px"><strong>Defense：</strong>30 条 AI PM 题，优/中/差各 10，五维人工分，Spearman 对齐…</p></div>
+            <div class="panel"><div class="panel-title">Q2 · badcase 怎么归因？</div><p style="font-size:13px;margin-top:8px"><strong>Defense：</strong>Trace 快照 + 维度偏差 ≥2 自动打标…</p></div>
+            <div class="panel"><div class="panel-title">Q3 · 为什么用 Agent 不是 workflow？</div><p style="font-size:13px;margin-top:8px"><strong>Defense：</strong>Tool Registry + Verifier，重任务本地…</p></div>`;
+        } else if (tab === '文档') {
+          el.innerHTML = documentPane('面试话术_字节AI产品.docx', 'opening + 5 追问 defense 合并导出');
+        } else {
+          el.innerHTML = traceTable('prep', 'prepare_interview', null);
+        }
+      } else {
+        el.innerHTML = traceTable(scene, tab, null);
+      }
+    }
+
+    function traceTable(src, tool, badcase) {
+      return `
+        <div class="panel">
+          <div class="panel-head"><span class="panel-title">Observation Trace</span><span class="panel-tag">${tool || 'multi'}</span></div>
+          <table class="trace-table">
+            <thead><tr><th>轮次</th><th>Tool</th><th>Token</th><th>Badcase</th><th>摘要</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>score_resume</td><td>920</td><td>—</td><td>overall 7.2, 证据维 2/5</td></tr>
+              <tr><td>2</td><td>optimize_resume</td><td>1104</td><td>—</td><td>section=2 STAR</td></tr>
+              <tr><td>3</td><td>export_document</td><td>412</td><td>${badcase || '—'}</td><td>docx 12KB</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="panel"><div class="panel-title">上下文快照（节选）</div><pre style="font-size:11px;color:#475569;margin-top:8px;white-space:pre-wrap">intake: targetRole=字节AI产品实习, resume_len=1840
+contextGuard: compressed=false, turns=3</pre></div>`;
+    }
+
+    function documentPane(name, sub) {
+      return `
+        <div class="doc-layout">
+          <div class="doc-sidebar">
+            <div class="doc-item active"><div class="doc-icon">W</div><div><strong style="font-size:13px">${name}</strong><br><span style="font-size:11px;color:#64748b">${sub}</span></div></div>
+          </div>
+          <div class="doc-preview-pane"><h3>文档预览</h3><p>完整内容区 · 与简历/面试模块联动导出</p></div>
+        </div>`;
+    }
+
+    document.querySelectorAll('.nav-btn[data-scene]').forEach(btn => {
+      btn.onclick = () => {
+        scene = btn.dataset.scene;
+        tab = scene === 'resume' ? '文档' : scene === 'scenario' ? '题目' : '准备报告';
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        updateChrome();
+        renderTabs();
+        renderBody();
+      };
+    });
+
+    updateChrome();
+    renderTabs();
+    renderBody();
+  </script>
+</body>
+</html>

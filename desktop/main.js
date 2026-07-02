@@ -1,6 +1,9 @@
 const { app, BrowserWindow, shell } = require('electron');
 
-const START_URL = process.env.MINDTRAINING_URL || 'https://ops-trainer.vercel.app';
+const START_URL =
+  process.env.CVASSISTANT_URL ||
+  process.env.MINDTRAINING_URL ||
+  'https://cvassistant-ai.vercel.app';
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -8,7 +11,7 @@ function createWindow() {
     height: 820,
     minWidth: 360,
     minHeight: 560,
-    title: 'MindTraining',
+    title: 'CVassistant',
     autoHideMenuBar: true,
     webPreferences: {
       nodeIntegration: false,

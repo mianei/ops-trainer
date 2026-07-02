@@ -21,3 +21,8 @@ desktop/dist/
 
 # 本地维护笔记（可选保留在本地）
 题库*.md
+
+# 本地 dump / 提取物（勿提交）
+coach-docx-extracted.txt
+docs/knowledge-audit-dump.txt
+*.pdf

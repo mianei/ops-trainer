@@ -1,7 +1,7 @@
 {
-  "name": "mindtraining-desktop",
+  "name": "cvassistant-desktop",
   "version": "1.0.0",
-  "description": "MindTraining 桌面壳（个人用，加载线上训练站）",
+  "description": "CVassistant 桌面壳（个人用，加载线上训练站）",
   "main": "main.js",
   "author": "mianei",
   "license": "MIT",
@@ -15,8 +15,8 @@
     "electron-builder": "^25.1.8"
   },
   "build": {
-    "appId": "app.mindtraining.desktop",
-    "productName": "MindTraining",
+    "appId": "app.cvassistant.desktop",
+    "productName": "CVassistant",
     "directories": {
       "output": "dist"
     },
@@ -31,10 +31,10 @@
           "arch": ["x64"]
         }
       ],
-      "artifactName": "MindTraining-${version}-Windows-portable.${ext}"
+      "artifactName": "CVassistant-${version}-Windows-portable.${ext}"
     },
     "portable": {
-      "artifactName": "MindTraining-${version}-Windows-portable.${ext}"
+      "artifactName": "CVassistant-${version}-Windows-portable.${ext}"
     }
   }
 }

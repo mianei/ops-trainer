@@ -7,17 +7,17 @@ import {
   verifyUserCredentials,
   historyEnabled,
   loadTopicAttempts
-} from './lib/store.js';
+} from '../lib/store.js';
 import {
   searchInterviewPosts,
   keywordsFromSearchResults
-} from './lib/interview-search.js';
+} from '../lib/interview-search.js';
 import {
   generateScenarios,
   injectGeneratedSteps,
   getLlmConfig
-} from './lib/scenario-generate.js';
-import { buildChunksFromSearchResults, loadInterviewRagFeed, filterFeedChunksByIntent } from './lib/rag.js';
+} from '../lib/scenario-generate.js';
+import { buildChunksFromSearchResults, loadInterviewRagFeed, filterFeedChunksByIntent } from '../lib/rag.js';
 
 function interviewSearchEnabled() {
   if (process.env.INTERVIEW_SEARCH_ENABLED === '0') return false;

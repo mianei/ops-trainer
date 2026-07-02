@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- CVassistant · ops-trainer -->
+<!-- CVassistant 3.0 -->
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8" />
@@ -73,6 +73,9 @@
     --r-lg: 20px;
     --r-xl: 28px;
     --max: 1080px;
+    --max-agent: 1440px;
+    --agent-nav-w: 188px;
+    --agent-chat-w: 300px;
     --sidebar-w: 200px;
     --sidebar-gap: 20px;
     --sans: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'HarmonyOS Sans SC', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -329,6 +332,15 @@
     max-width: var(--max); margin: 0 auto;
     padding: 0 24px 3rem; width: 100%;
   }
+  .page-wrap.page-wrap--agent {
+    max-width: var(--max-agent);
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  .page-wrap.page-wrap--agent .hero-compact {
+    padding: 1.1rem 0 0.65rem;
+    max-width: none;
+  }
 
   .hero-compact {
     position: relative;
@@ -347,6 +359,16 @@
     flex: 0 0 auto;
     margin-bottom: 0;
     line-height: 1.3;
+  }
+  .hero-mutter {
+    flex: 0 0 auto;
+    margin: 0;
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    line-height: 1.45;
+    color: rgba(60, 60, 67, 0.38);
+    max-width: 14em;
   }
   .hero-waveform {
     position: relative;
@@ -469,6 +491,360 @@
     color: var(--ink);
     box-shadow: var(--shadow-sm), var(--inset-hi);
   }
+
+  /* —— 3.0 Agent 工作台：左 Nav · 中 Canvas · 右 Chat —— */
+  .agent-workspace {
+    display: grid;
+    grid-template-columns: var(--agent-nav-w) minmax(0, 1fr) var(--agent-chat-w);
+    gap: 0;
+    min-height: min(72vh, 720px);
+    border-radius: var(--r-xl);
+    overflow: hidden;
+    background: var(--frost-strong);
+    border: 1px solid var(--frost-border);
+    box-shadow: var(--shadow-sm), var(--inset-hi);
+    margin-bottom: 1rem;
+  }
+  .agent-nav {
+    background: rgba(255, 255, 255, 0.35);
+    border-right: 1px solid var(--frost-border);
+    padding: 12px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .agent-nav-brand {
+    font-family: var(--sans-en);
+    font-weight: 700;
+    font-size: 13px;
+    padding: 10px 10px 12px;
+    letter-spacing: -0.02em;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 4px;
+  }
+  .agent-nav-brand span { color: var(--btn-green-base); }
+  .agent-nav-btn {
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    text-align: left;
+    padding: 9px 11px;
+    border-radius: var(--r);
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--ink2);
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
+  }
+  .agent-nav-btn:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.55);
+    color: var(--ink);
+  }
+  .agent-nav-btn.active {
+    background: #fff;
+    border-color: var(--frost-border);
+    color: var(--ink);
+    box-shadow: var(--shadow-sm), var(--inset-hi);
+  }
+  .agent-nav-btn:disabled { opacity: 0.42; cursor: default; }
+  .agent-nav-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 99px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    margin-left: 4px;
+    vertical-align: middle;
+  }
+  .agent-canvas {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    background: rgba(255, 255, 255, 0.28);
+    border-right: 1px solid var(--frost-border);
+  }
+  .canvas-topbar {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 16px 10px;
+    background: rgba(255, 255, 255, 0.5);
+    border-bottom: 1px solid var(--line);
+    flex-wrap: wrap;
+  }
+  .canvas-topbar h2 {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 2px;
+  }
+  .canvas-crumb { font-size: 11px; color: var(--ink3); }
+  .canvas-topbar-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+  .canvas-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 10px 16px 0;
+  }
+  .canvas-tab {
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 980px;
+    border: 1px solid var(--frost-border);
+    background: rgba(255, 255, 255, 0.45);
+    color: var(--ink2);
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+  .canvas-tab.active {
+    background: #fff;
+    color: var(--ink);
+    border-color: rgba(0, 0, 0, 0.08);
+    box-shadow: var(--shadow-sm), var(--inset-hi);
+  }
+  .canvas-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 14px 16px 16px;
+    min-height: 360px;
+  }
+  .canvas-body .knowledge-intro { margin-top: 0; font-size: 13px; }
+  .canvas-body .knowledge-pager { margin-bottom: 12px; padding-bottom: 10px; }
+  .canvas-panel { display: none; }
+  .canvas-panel.active { display: block; }
+  .canvas-profile-compact { margin-bottom: 14px; }
+  .canvas-profile-compact .profile-upload-grid { margin-bottom: 0; }
+  .canvas-quick-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .canvas-quick-actions .btn-primary { font-size: 13px; padding: 8px 16px; }
+  .artifact-strip {
+    display: flex;
+    gap: 8px;
+    padding: 8px 16px;
+    border-top: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.45);
+    overflow-x: auto;
+    font-size: 11px;
+  }
+  .artifact-chip {
+    padding: 4px 10px;
+    border-radius: 99px;
+    border: 1px solid var(--frost-border);
+    background: rgba(255, 255, 255, 0.6);
+    white-space: nowrap;
+    color: var(--ink2);
+  }
+  .artifact-chip.active {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+  .agent-chat {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    background: rgba(255, 255, 255, 0.22);
+    padding: 12px;
+  }
+  .agent-chat-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 4px;
+  }
+  .agent-chat-head h3 { font-size: 14px; font-weight: 700; }
+  .agent-chat-sub { font-size: 11px; color: var(--ink3); margin-bottom: 10px; }
+  .agent-chat-msgs {
+    flex: 1;
+    overflow-y: auto;
+    min-height: 160px;
+    max-height: min(42vh, 360px);
+    margin-bottom: 10px;
+  }
+  .agent-chat-bubble {
+    max-width: 94%;
+    padding: 8px 10px;
+    border-radius: 12px;
+    margin-bottom: 8px;
+    font-size: 13px;
+    line-height: 1.5;
+    border: 1px solid var(--frost-border);
+  }
+  .agent-chat-bubble.user {
+    margin-left: auto;
+    background: var(--accent-soft);
+  }
+  .agent-chat-bubble.agent { background: #fff; }
+  .agent-chat-role { font-size: 10px; color: var(--ink3); margin-bottom: 2px; }
+  .agent-tools {
+    border: 1px solid var(--frost-border);
+    border-radius: var(--r);
+    padding: 8px 10px;
+    margin-bottom: 10px;
+    background: rgba(255, 255, 255, 0.55);
+    font-size: 12px;
+  }
+  .agent-tool-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 5px;
+  }
+  .agent-tool-pill {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: rgba(52, 199, 89, 0.15);
+    color: #1a7f37;
+  }
+  .agent-tool-pill.run {
+    background: rgba(255, 149, 0, 0.15);
+    color: #9a6700;
+  }
+  .agent-chat-compose {
+    display: flex;
+    gap: 6px;
+    align-items: stretch;
+  }
+  .agent-chat-input {
+    flex: 1;
+    font-family: inherit;
+    font-size: 13px;
+    padding: 8px 10px;
+    border: 1px solid var(--frost-border);
+    border-radius: var(--r);
+    background: #fff;
+    outline: none;
+  }
+  .agent-chat-input:focus { border-color: rgba(0, 113, 227, 0.35); }
+  .agent-chat-compose .btn-primary { font-size: 12px; padding: 8px 14px; }
+  .agent-chat-compose .btn-frost { font-size: 12px; padding: 8px 10px; }
+  .doc-artifact-card {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 14px;
+    border-radius: var(--r-lg);
+    background: #fff;
+    border: 1px solid var(--frost-border);
+    margin-bottom: 12px;
+  }
+  .doc-artifact-icon {
+    width: 40px;
+    height: 48px;
+    border-radius: 8px;
+    background: var(--accent);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    flex-shrink: 0;
+  }
+  .doc-preview-pane {
+    border: 1px solid var(--frost-border);
+    border-radius: var(--r-lg);
+    background: #fff;
+    padding: 18px 20px;
+    font-size: 14px;
+    line-height: 1.65;
+    min-height: 200px;
+  }
+  .doc-preview-pane .hl { background: rgba(254, 240, 138, 0.65); padding: 0 2px; }
+  .trace-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    background: #fff;
+    border-radius: var(--r);
+    overflow: hidden;
+  }
+  .trace-table th, .trace-table td {
+    border: 1px solid var(--line);
+    padding: 8px 10px;
+    text-align: left;
+  }
+  .trace-table th { background: rgba(0, 0, 0, 0.03); color: var(--ink3); font-weight: 600; }
+  .trace-badcase {
+    display: inline-block;
+    font-size: 11px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: rgba(239, 68, 68, 0.12);
+    color: #b91c1c;
+    font-weight: 600;
+    max-width: 140px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .trace-token-bar { font-size: 12px; color: var(--ink3); margin-bottom: 10px; }
+  .trace-panel-loading { padding: 24px; text-align: center; color: var(--ink3); font-size: 13px; }
+  .agent-chat-fab {
+    display: none;
+    position: fixed;
+    right: 16px;
+    bottom: 72px;
+    z-index: 90;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border: none;
+    background: linear-gradient(180deg, var(--btn-green-top), var(--btn-green-base));
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    box-shadow: 0 6px 20px var(--btn-green-glow);
+    cursor: pointer;
+  }
+  .agent-chat-drawer-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 95;
+    background: rgba(0, 0, 0, 0.25);
+  }
+  .agent-chat-drawer-backdrop.open { display: block; }
+  @media (max-width: 899px) {
+    .agent-workspace {
+      grid-template-columns: 1fr;
+      min-height: auto;
+    }
+    .agent-nav { display: none; }
+    .agent-canvas { border-right: none; }
+    .agent-chat {
+      display: none;
+      position: fixed;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      z-index: 96;
+      width: min(100%, 340px);
+      background: var(--frost-solid);
+      border-left: 1px solid var(--frost-border);
+      box-shadow: var(--shadow-lg);
+      padding: 12px;
+    }
+    .agent-chat.drawer-open { display: flex; }
+    .agent-chat-fab { display: block; }
+    .canvas-body { min-height: 280px; }
+  }
+  @media (min-width: 900px) and (max-width: 1100px) {
+    .agent-workspace {
+      grid-template-columns: 160px minmax(0, 1fr) 260px;
+    }
+  }
+
   .scenario-search-wrap {
     position: relative;
     width: 100%;
@@ -1085,48 +1461,41 @@
     margin-left: 6px;
     vertical-align: middle;
   }
-  .v2-tools {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin: 0 0 10px;
-    padding: 10px 12px;
-    border-radius: var(--r-lg);
-    background: rgba(94, 92, 230, 0.06);
-    border: 1px dashed rgba(94, 92, 230, 0.25);
-  }
-  .v2-tool-btn {
+  .answer-inline-tools { display: flex; justify-content: flex-end; margin-top: 6px; }
+  .btn-voice {
     font-family: inherit;
     font-size: 12px;
     font-weight: 600;
-    padding: 6px 12px;
+    padding: 4px 10px;
     border-radius: 999px;
     border: 1px solid var(--frost-border);
     background: #fff;
     color: var(--ink2);
     cursor: pointer;
   }
-  .v2-tool-btn:hover:not(:disabled) { background: rgba(94, 92, 230, 0.08); color: #5e5ce6; }
-  .v2-tool-btn:disabled { opacity: 0.45; cursor: not-allowed; }
-  .v2-tool-btn.recording { background: #ff3b30; color: #fff; border-color: #ff3b30; }
-  .v2-timer {
-    font-size: 13px;
-    font-weight: 700;
-    font-variant-numeric: tabular-nums;
-    color: #5e5ce6;
-    min-width: 52px;
-  }
-  .v2-prep-panel {
-    margin-bottom: 12px;
-    padding: 12px 14px;
-    border-radius: var(--r-lg);
-    background: rgba(255, 255, 255, 0.72);
+  .btn-voice:hover:not(:disabled) { background: rgba(94, 92, 230, 0.08); color: #5e5ce6; }
+  .btn-voice.recording { background: #ff3b30; color: #fff; border-color: #ff3b30; }
+  .review-extras { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--frost-border); }
+  .review-extra-block {
+    margin-bottom: 10px;
     border: 1px solid var(--frost-border);
-    font-size: 13px;
-    line-height: 1.6;
-    color: var(--ink2);
+    border-radius: var(--r-md);
+    background: rgba(255, 255, 255, 0.5);
+    overflow: hidden;
   }
-  .v2-prep-panel h5 { font-size: 12px; color: var(--ink3); margin: 8px 0 4px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .review-extra-block summary {
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink2);
+    padding: 10px 12px;
+    list-style: none;
+  }
+  .review-extra-block summary::-webkit-details-marker { display: none; }
+  .review-extra-block[open] summary { border-bottom: 1px solid var(--frost-border); }
+  .review-extra-body { padding: 10px 12px 12px; font-size: 13px; color: var(--ink2); line-height: 1.6; }
+  .review-extra-body h5 { font-size: 12px; color: var(--ink3); margin: 0.5rem 0 0.25rem; }
+  .review-extra-body p { margin: 0.25rem 0; }
   .bank-filters {
     display: flex;
     flex-wrap: wrap;
@@ -1189,12 +1558,12 @@
     margin-bottom: 14px;
     font-size: 13px;
     font-weight: 600;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
   }
-  .sense-loop--compact { justify-content: flex-end; margin-bottom: 0; font-size: 11px; }
+  .sense-loop--compact { justify-content: flex-start; margin-bottom: 0; font-size: 12px; flex: 1; }
+  .sense-session-top .btn-refresh { flex-shrink: 0; }
   .sense-step { color: var(--ink3); padding: 4px 10px; border-radius: 999px; background: rgba(255,255,255,0.6); border: 1px solid var(--frost-border); }
   .sense-step.active { color: #5e5ce6; border-color: rgba(94, 92, 230, 0.45); background: rgba(94, 92, 230, 0.1); }
+  .sense-step.done { color: #16a34a; border-color: rgba(22, 163, 74, 0.35); background: rgba(22, 163, 74, 0.08); }
   .sense-arrow { color: var(--ink3); font-weight: 400; }
   .sense-tagline { text-align: center; color: var(--ink2); font-size: 14px; line-height: 1.65; margin-bottom: 20px; }
   .sense-cta { display: block; width: 100%; max-width: 320px; margin: 0 auto 24px; padding: 14px 20px; font-size: 15px; }
@@ -1205,9 +1574,25 @@
   .sense-session { max-width: 760px; margin: 0 auto; }
   .sense-session-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
   .sense-q-meta { font-size: 12px; color: var(--ink3); margin-bottom: 8px; }
-  .sense-q-card .case-body { font-size: 15px; line-height: 1.65; color: var(--ink); }
+  .case-card.sense-q-card { overflow: visible; padding: 22px; }
+  .sense-q-card .case-body {
+    padding: 0;
+    margin-top: 8px;
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--ink);
+  }
+  .sense-q-card .wb-label,
+  .work-block .wb-label,
+  .feedback-card .feedback-head {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+    margin-bottom: 6px;
+  }
   .sense-session-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
-  .feedback-card .feedback-head { font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #5e5ce6; }
+  .feedback-card .feedback-head { font-size: 13px; font-weight: 700; letter-spacing: 0.02em; color: #5e5ce6; }
 
   /* ── 双模块：面试训练 / 简历优化 ── */
   .module-subtabs {
@@ -1257,8 +1642,73 @@
     resize: vertical;
   }
   .profile-box .profile-file { font-size: 11px; color: var(--ink3); margin-top: 6px; display: block; }
-  .profile-file-status { font-size: 11px; color: #5e5ce6; margin-top: 4px; min-height: 16px; }
+  .profile-file-status { font-size: 12px; color: #2563eb; margin-top: 8px; min-height: 18px; font-weight: 500; }
   .profile-file-status.is-error { color: var(--danger, #c62828); }
+  .profile-file-status.is-ok { color: #16a34a; }
+  .upload-dropzone {
+    border: 2px dashed rgba(37, 99, 235, 0.35);
+    border-radius: 14px;
+    background: rgba(37, 99, 235, 0.04);
+    padding: 22px 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .upload-dropzone:hover,
+  .upload-dropzone.is-dragover {
+    border-color: #2563eb;
+    background: rgba(37, 99, 235, 0.08);
+  }
+  .upload-dropzone--done {
+    border-style: solid;
+    border-color: rgba(22, 163, 74, 0.45);
+    background: rgba(22, 163, 74, 0.06);
+    cursor: default;
+  }
+  .upload-dropzone--done:hover { background: rgba(22, 163, 74, 0.08); }
+  .upload-dropzone-icon {
+    width: 40px;
+    height: 40px;
+    margin: 0 auto 10px;
+    border-radius: 12px;
+    background: #fff;
+    border: 1px solid var(--frost-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    color: #2563eb;
+    font-weight: 700;
+  }
+  .upload-dropzone-title { font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+  .upload-dropzone-hint { font-size: 12px; color: var(--ink3); line-height: 1.5; }
+  .upload-dropzone-loading { font-size: 13px; color: #2563eb; font-weight: 600; }
+  .upload-done-title { font-size: 14px; font-weight: 700; color: #16a34a; margin-bottom: 4px; }
+  .upload-done-meta { font-size: 12px; color: var(--ink2); margin-bottom: 10px; word-break: break-all; }
+  .upload-done-repick {
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--frost-border);
+    background: #fff;
+    cursor: pointer;
+  }
+  .upload-paste-fallback {
+    margin-top: 10px;
+    border-radius: var(--r);
+  }
+  .upload-paste-fallback summary {
+    cursor: pointer;
+    font-size: 12px;
+    color: var(--ink3);
+    font-weight: 600;
+    list-style: none;
+    user-select: none;
+  }
+  .upload-paste-fallback summary::-webkit-details-marker { display: none; }
+  .upload-paste-fallback textarea { margin-top: 8px; min-height: 88px; }
   .profile-actions {
     display: flex;
     flex-wrap: wrap;
@@ -1268,6 +1718,499 @@
   .profile-actions .btn-primary { flex: 1; min-width: 140px; }
   .profile-actions .btn-primary:disabled { opacity: 0.65; cursor: wait; }
   .profile-action-error { width: 100%; font-size: 12px; color: var(--danger, #c62828); margin-top: 4px; }
+  .coach-thread-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 4px;
+  }
+  .coach-thread-toolbar-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink2);
+  }
+  .coach-thread-toolbar-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .coach-thread-toolbar-actions .btn-primary {
+    font-size: 13px;
+    padding: 8px 16px;
+  }
+  .resume-action-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .resume-dual-pane {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 14px;
+    align-items: stretch;
+    /* 固定同一行高度，左右两栏外框必须等高 */
+    height: min(540px, calc(100vh - 260px));
+    min-height: 400px;
+  }
+  @media (max-width: 899px) {
+    .resume-dual-pane {
+      grid-template-columns: 1fr;
+      height: auto;
+      min-height: 0;
+    }
+    .resume-pane {
+      height: min(440px, 52vh);
+      min-height: 320px;
+    }
+  }
+  .resume-pane {
+    border: 1px solid var(--frost-border);
+    border-radius: 16px;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-height: 0;
+  }
+  .interview-prep-pane {
+    min-height: min(480px, calc(100vh - 320px));
+    margin-top: 12px;
+  }
+  .interview-prep-pane .resume-pane-body { max-height: none; }
+  .resume-pane-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--frost-border);
+    background: rgba(248, 250, 252, 0.9);
+    flex-shrink: 0;
+  }
+  .resume-pane-head h3 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .resume-pane-head .btn-primary {
+    font-size: 12px;
+    padding: 7px 14px;
+    white-space: nowrap;
+  }
+  .resume-pane-body {
+    flex: 1;
+    min-height: 0;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+  .resume-pane-empty {
+    min-height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 12px;
+    color: var(--ink3);
+    line-height: 1.6;
+    padding: 12px;
+  }
+  .resume-pane-loading {
+    min-height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    color: #2563eb;
+    font-weight: 600;
+  }
+  .resume-pane-error {
+    font-size: 11px;
+    color: var(--danger, #c62828);
+    padding: 0 14px 10px;
+    margin: 0;
+  }
+  .score-pane-metrics {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    flex-shrink: 0;
+  }
+  .score-pane-metric {
+    background: #f8fafc;
+    border: 1px solid var(--frost-border);
+    border-radius: 10px;
+    padding: 8px 6px;
+    text-align: center;
+  }
+  .score-pane-metric-label { font-size: 10px; color: var(--ink3); font-weight: 600; margin-bottom: 2px; }
+  .score-pane-metric-value { font-size: 1.35rem; font-weight: 800; line-height: 1.1; font-variant-numeric: tabular-nums; }
+  .score-pane-metric-value--rose { color: #e11d48; }
+  .score-pane-metric-value--blue { color: #2563eb; }
+  .score-pane-metric-value--green { color: #16a34a; }
+  .score-pane-summary {
+    font-size: 11px;
+    color: var(--ink2);
+    line-height: 1.45;
+    flex-shrink: 0;
+  }
+  .score-pane-bars { display: flex; flex-direction: column; gap: 5px; }
+  .score-pane-bar-row {
+    display: grid;
+    grid-template-columns: 72px 1fr 28px;
+    gap: 6px;
+    align-items: center;
+    font-size: 11px;
+  }
+  .score-pane-bar-name { font-weight: 600; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .score-pane-bar-track { height: 6px; background: #e2e8f0; border-radius: 999px; overflow: hidden; }
+  .score-pane-bar-fill { height: 100%; background: linear-gradient(90deg, #2563eb, #60a5fa); border-radius: 999px; }
+  .score-pane-bar-num { font-weight: 700; color: #2563eb; text-align: right; font-variant-numeric: tabular-nums; }
+  .score-pane-fixes {
+    font-size: 11px;
+    color: var(--ink2);
+    line-height: 1.4;
+    margin-top: 2px;
+    padding-top: 8px;
+    border-top: 1px solid var(--frost-border);
+  }
+  .score-pane-fixes strong { color: var(--ink); font-size: 11px; }
+  .score-pane-fixes li {
+    margin-top: 4px;
+    line-height: 1.5;
+  }
+  .opt-pane-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .opt-pane-section {
+    background: #f8fafc;
+    border: 1px solid var(--frost-border);
+    border-radius: 10px;
+    padding: 10px 12px;
+  }
+  .opt-pane-section h4 {
+    margin: 0 0 6px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #2563eb;
+  }
+  .opt-pane-section p,
+  .opt-pane-section li {
+    margin: 0;
+    font-size: 12px;
+    color: var(--ink2);
+    line-height: 1.55;
+    word-break: break-word;
+  }
+  .opt-pane-section ul { margin: 0; padding-left: 1.1rem; }
+  .opt-pane-section li + li { margin-top: 6px; }
+  .opt-pane-bullet {
+    padding: 8px 0;
+    border-top: 1px dashed var(--frost-border);
+  }
+  .opt-pane-bullet:first-child { border-top: none; padding-top: 0; }
+  .opt-bullet-pair { margin-top: 6px; }
+  .opt-bullet-pair:first-child { margin-top: 0; }
+  .opt-label {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--ink3);
+    margin-bottom: 2px;
+  }
+  .resume-action-bar .btn-primary {
+    flex: 1;
+    min-width: 140px;
+    font-size: 14px;
+    padding: 10px 18px;
+  }
+  .resume-action-bar .btn-primary:disabled { opacity: 0.65; cursor: wait; }
+  .resume-result-panel {
+    min-height: 220px;
+    max-height: 56vh;
+    overflow-y: auto;
+    padding: 14px 16px;
+    border-radius: var(--r-lg);
+    background: #fff;
+    border: 1px solid var(--frost-border);
+    margin-bottom: 14px;
+  }
+  .resume-result-head {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: #2563eb;
+    margin-bottom: 10px;
+  }
+  .resume-result-body {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--ink);
+  }
+  .score-dashboard { display: flex; flex-direction: column; gap: 14px; }
+  .score-dash-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  @media (max-width: 699px) { .score-dash-cards { grid-template-columns: 1fr; } }
+  .score-dash-card {
+    background: linear-gradient(180deg, #fff 0%, #f8fafc 100%);
+    border: 1px solid var(--frost-border);
+    border-radius: 16px;
+    padding: 14px 16px;
+    min-height: 108px;
+  }
+  .score-dash-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink3);
+    margin-bottom: 6px;
+  }
+  .score-dash-value {
+    font-size: 2.25rem;
+    font-weight: 800;
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+  }
+  .score-dash-unit { font-size: 1rem; font-weight: 600; opacity: 0.55; margin-left: 2px; }
+  .score-dash-value--rose { color: #e11d48; }
+  .score-dash-value--blue { color: #2563eb; }
+  .score-dash-value--green { color: #16a34a; }
+  .score-dash-desc {
+    font-size: 12px;
+    color: var(--ink2);
+    line-height: 1.5;
+    margin-top: 8px;
+  }
+  .score-dash-body {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 14px;
+    align-items: start;
+  }
+  @media (max-width: 699px) { .score-dash-body { grid-template-columns: 1fr; } }
+  .score-dash-chart-wrap {
+    background: #fff;
+    border: 1px solid var(--frost-border);
+    border-radius: 16px;
+    padding: 12px;
+    text-align: center;
+  }
+  .score-dash-chart-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink2);
+    margin-top: 4px;
+  }
+  .score-dash-dims { display: flex; flex-direction: column; gap: 8px; }
+  .score-dim-row {
+    display: grid;
+    grid-template-columns: 88px 36px 1fr;
+    gap: 8px;
+    align-items: start;
+    font-size: 13px;
+    padding: 8px 10px;
+    background: #fff;
+    border: 1px solid var(--frost-border);
+    border-radius: 12px;
+  }
+  .score-dim-name { font-weight: 600; color: var(--ink); }
+  .score-dim-score { font-weight: 800; color: #2563eb; font-variant-numeric: tabular-nums; }
+  .score-dim-diag { color: var(--ink2); line-height: 1.45; }
+  .score-dash-fixes {
+    background: #fff;
+    border: 1px solid var(--frost-border);
+    border-radius: 16px;
+    padding: 14px 16px;
+  }
+  .score-dash-fixes h4 {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 0 0 10px;
+  }
+  .score-dash-fixes ol {
+    margin: 0;
+    padding-left: 1.2rem;
+    font-size: 13px;
+    color: var(--ink2);
+    line-height: 1.55;
+  }
+  .score-dash-fixes li + li { margin-top: 6px; }
+  .resume-result-loading {
+    text-align: center;
+    color: var(--ink3);
+    padding: 48px 16px;
+    font-size: 14px;
+  }
+  .resume-followup-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink3);
+    margin-bottom: 6px;
+  }
+  .upload-extra-notes {
+    margin-top: 10px;
+    border: 1px solid var(--frost-border);
+    border-radius: var(--r-lg);
+    background: rgba(255,255,255,0.55);
+    padding: 8px 12px;
+  }
+  .upload-extra-notes summary {
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink3);
+    list-style: none;
+  }
+  .upload-extra-notes summary::-webkit-details-marker { display: none; }
+  .upload-extra-notes textarea {
+    width: 100%;
+    margin-top: 8px;
+    font-family: inherit;
+    font-size: 13px;
+    padding: 8px 10px;
+    border-radius: var(--r);
+    border: 1px solid var(--frost-border);
+    resize: vertical;
+    min-height: 56px;
+  }
+  .resume-followup {
+    margin-top: 4px;
+    padding-top: 10px;
+    border-top: 1px solid var(--frost-border);
+  }
+  .resume-followup-msgs {
+    max-height: 120px;
+    overflow-y: auto;
+    margin-bottom: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .resume-followup-msgs[hidden] { display: none !important; }
+  .resume-followup-bubble {
+    font-size: 12px;
+    line-height: 1.45;
+    padding: 8px 10px;
+    border-radius: 10px;
+    max-width: 92%;
+    word-break: break-word;
+  }
+  .resume-followup-bubble.user {
+    align-self: flex-end;
+    background: rgba(37, 99, 235, 0.1);
+    color: var(--ink);
+  }
+  .resume-followup-bubble.assistant {
+    align-self: flex-start;
+    background: #f8fafc;
+    border: 1px solid var(--frost-border);
+    color: var(--ink2);
+  }
+  .resume-followup-bar {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .resume-followup-input {
+    flex: 1;
+    min-width: 0;
+    font-family: inherit;
+    font-size: 13px;
+    padding: 10px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--frost-border);
+    background: #fff;
+  }
+  .resume-followup-bar .btn-primary {
+    font-size: 13px;
+    padding: 10px 18px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .resume-followup-bar .btn-frost {
+    font-size: 12px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .coach-thread--followup {
+    min-height: 120px;
+    max-height: 32vh;
+  }
+  .coach-thread-empty {
+    font-size: 13px;
+    color: var(--ink3);
+    text-align: center;
+    padding: 28px 16px;
+    line-height: 1.65;
+  }
+  .coach-extra-details {
+    border: 1px solid var(--frost-border);
+    border-radius: var(--r-lg);
+    background: rgba(255,255,255,0.45);
+    padding: 8px 12px;
+  }
+  .coach-extra-details summary {
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink2);
+    list-style: none;
+  }
+  .coach-extra-details summary::-webkit-details-marker { display: none; }
+  .coach-extra-details textarea {
+    width: 100%;
+    margin-top: 8px;
+    font-family: inherit;
+    font-size: 13px;
+    padding: 8px 10px;
+    border-radius: var(--r);
+    border: 1px solid var(--frost-border);
+    resize: vertical;
+  }
+  .coach-bubble.assistant .coach-md-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin: 8px 0;
+  }
+  .coach-bubble.assistant .coach-md-table th,
+  .coach-bubble.assistant .coach-md-table td {
+    border: 1px solid var(--frost-border);
+    padding: 6px 8px;
+    text-align: left;
+    vertical-align: top;
+  }
+  .coach-bubble.assistant .coach-md-table th {
+    background: rgba(37, 99, 235, 0.06);
+    font-weight: 600;
+  }
+  .coach-bubble.assistant h3,
+  .coach-bubble.assistant h4 {
+    font-size: 14px;
+    margin: 10px 0 6px;
+    color: var(--ink);
+  }
+  .coach-bubble.assistant p { margin: 6px 0; }
+  .coach-bubble.assistant hr {
+    border: none;
+    border-top: 1px solid var(--frost-border);
+    margin: 10px 0;
+  }
   .module-intro { font-size: 13px; color: var(--ink2); line-height: 1.6; margin-bottom: 14px; }
 
   /* ── AI 项目教练 ── */
@@ -1845,8 +2788,7 @@
   .work-card { padding: 22px; }
   .work-block { margin: 0; }
   .work-block .wb-label {
-    font-size: 15px; font-weight: 700; color: var(--ink);
-    letter-spacing: -0.02em; margin-bottom: 6px;
+    margin-bottom: 6px;
   }
   .work-block .wb-hint {
     font-size: 13px; color: var(--ink3); margin-bottom: 14px; line-height: 1.5;
@@ -1885,10 +2827,11 @@
     overflow: hidden; display: none; margin: 0;
   }
   .feedback-card.visible { display: block; }
+  [data-scenario-panel="scenario-review"] .feedback-card { display: block; }
   .feedback-head {
     padding: 12px 20px;
-    font-size: 11px; font-weight: 600; letter-spacing: 0.1em;
-    text-transform: uppercase; color: var(--ink3);
+    font-size: 13px; font-weight: 600; letter-spacing: 0.02em;
+    color: var(--ink3);
     border-bottom: 1px solid rgba(255, 255, 255, 0.35);
     background: rgba(255, 255, 255, 0.2);
     backdrop-filter: var(--blur-sm);
@@ -1913,8 +2856,8 @@
   }
   .followup-wrap.visible { display: block; }
   .followup-label {
-    font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
-    text-transform: uppercase; color: var(--ink3);
+    font-size: 12px; font-weight: 600; letter-spacing: 0.02em;
+    color: var(--ink3);
     margin-bottom: 0.75rem;
   }
   .followup-thread {
@@ -2218,14 +3161,14 @@
     <div class="bg-blob bg-blob-2"></div>
     <div class="bg-blob bg-blob-3"></div>
   </div>
-  <button type="button" class="btn-history" id="btnHistory">Replay</button>
+  <button type="button" class="btn-history" id="btnHistory">练习记录</button>
   <div class="page-wrap">
 
   <section class="hero-compact">
     <div class="hero-copy">
       <p class="hero-brand" aria-label="CVassistant"><span class="hb-mind">CV</span><span class="hb-train">assistant</span></p>
       <div class="hero-eyebrow-row">
-        <p class="eyebrow">Judgement and replay</p>
+        <p class="hero-mutter" lang="ko">씨발이력서 수정은 왜 이렇게 어려울까요</p>
         <canvas id="heroWaveform" class="hero-waveform" aria-hidden="true"></canvas>
       </div>
     </div>
@@ -2238,7 +3181,7 @@
 
   <div id="mainContent" class="loading-main">加载中…</div>
 
-  <footer class="footer"><span class="footer-brand" aria-label="CVassistant"><span class="hb-mind">CV</span><span class="hb-train">assistant</span></span><span class="v2-badge">AI PM</span> · <a class="footer-link" href="/download">下载</a> · <a class="footer-link" href="https://github.com/mianei/ops-trainer" target="_blank" rel="noopener noreferrer">GitHub</a></footer>
+  <footer class="footer"><span class="footer-brand" aria-label="CVassistant"><span class="hb-mind">CV</span><span class="hb-train">assistant</span></span><span class="v2-badge">3.0</span> · <a class="footer-link" href="/download">下载</a> · <a class="footer-link" href="https://github.com/mianei/ops-trainer" target="_blank" rel="noopener noreferrer">GitHub</a></footer>
   </div>
 </div>
 
@@ -2261,21 +3204,35 @@ if (LEGACY_WORKSPACE[workspaceMode]) {
   workspaceMode = LEGACY_WORKSPACE[workspaceMode];
   localStorage.setItem('workspaceMode', workspaceMode);
 }
+/** 3.0 Agent 工作台 */
+let agentScene = workspaceMode === 'resume' ? 'resume' : (localStorage.getItem('interviewSubView') || 'prep') === 'scenario' ? 'scenario' : 'prep';
+const CANVAS_TABS = {
+  resume: ['评分', '优化', '文档', 'Trace'],
+  scenario: ['题目', '点评', '解析', 'Trace'],
+  prep: ['准备报告', '追问清单', '文档', 'Trace'],
+  kb: ['阅读', 'Trace']
+};
+const canvasTabByScene = {
+  resume: localStorage.getItem('canvasTab_resume') || '评分',
+  scenario: localStorage.getItem('canvasTab_scenario') || '题目',
+  prep: localStorage.getItem('canvasTab_prep') || '准备报告',
+  kb: localStorage.getItem('canvasTab_kb') || '阅读'
+};
+/** @type {{ name: string, status: string, detail: string }[]} */
+let agentToolSteps = [];
 let senseSubView = 'home';
 let interviewSubView = localStorage.getItem('interviewSubView') || 'prep';
 let profileResume = localStorage.getItem('profileResume') || '';
 let profileJd = localStorage.getItem('profileJd') || '';
+let profileResumeFileName = '';
+let profileJdFileName = '';
 let profileTargetRole = localStorage.getItem('profileTargetRole') || '';
 /** @type {{ version: number, questions: object[] } | null} */
 let INTERVIEW_BANK_V2 = null;
 /** @type {{ questions: object[] } | null} */
 let AI_PM_BANK = null;
-/** @type {{ questions: object[] } | null} */
-let AI_PM_CURATED = null;
-let bankSource = localStorage.getItem('bankSource') || 'curated';
 /** @type {object | null} */
 let activeBankQuestion = null;
-const v2TimerByTopic = {};
 const v2RecorderByTopic = {};
 let knowledgePageId = localStorage.getItem('knowledgePageId') || 'ai-pm';
 let knowledgeFlatIndex = 0;
@@ -2287,7 +3244,12 @@ let trainUiReturnTopicId = '';
 const RESUME_COACH_MODES = new Set(['full-report', 'project-direction', 'project-iteration', 'resume-diagnosis']);
 const coachIntake = Object.create(null);
 const resumeMessages = [];
+/** @type {{ content: string, scoreReport: object|null, loading: boolean }} */
+let resumeScoreResult = { content: '', scoreReport: null, loading: false };
+/** @type {{ content: string, optimizeReport: object|null, loading: boolean }} */
+let resumeOptimizeResult = { content: '', optimizeReport: null, loading: false };
 const interviewPrepMessages = [];
+let interviewPrepResult = { content: '', prepReport: null, loading: false };
 let resumeDraftMessage = '';
 let interviewDraftMessage = '';
 const KNOWLEDGE_PAGES = [
@@ -3160,6 +4122,652 @@ function modeBarHtml() {
   </div>`;
 }
 
+function syncAgentSceneFromWorkspace() {
+  if (workspaceMode === 'resume') agentScene = 'resume';
+  else agentScene = interviewSubView === 'scenario' ? 'scenario' : 'prep';
+}
+
+function getCanvasTab(scene) {
+  return canvasTabByScene[scene] || CANVAS_TABS[scene]?.[0] || '';
+}
+
+function setCanvasTab(scene, tab) {
+  canvasTabByScene[scene] = tab;
+  localStorage.setItem('canvasTab_' + scene, tab);
+}
+
+function agentNavHtml(activeScene) {
+  const items = [
+    { id: 'resume', label: '简历 Agent' },
+    { id: 'scenario', label: '业务场景' },
+    { id: 'prep', label: '面试准备' },
+    { id: 'plan', label: '训练计划', disabled: true },
+    { id: 'kb', label: '知识库' }
+  ];
+  return items.map(it => {
+    const cls = 'agent-nav-btn' + (it.id === activeScene ? ' active' : '') + (it.disabled ? ' disabled' : '');
+    const badge = it.id === activeScene ? '<span class="agent-nav-badge">3.0</span>' : '';
+    return `<button type="button" class="${cls}" data-agent-scene="${it.id}"${it.disabled ? ' disabled' : ''}>${it.label}${badge}</button>`;
+  }).join('');
+}
+
+function canvasTabsHtml(scene) {
+  const tab = getCanvasTab(scene);
+  return (CANVAS_TABS[scene] || []).map(t =>
+    `<button type="button" class="canvas-tab${t === tab ? ' active' : ''}" data-canvas-tab="${escapeAttr(t)}">${escapeHtml(t)}</button>`
+  ).join('');
+}
+
+function canvasTitleFor(scene, tab) {
+  const map = {
+    resume: { 评分: '简历评分报告', 优化: '简历优化 · Bullet 改写', 文档: '简历优化 · 文档', Trace: 'Observation Trace' },
+    scenario: { 题目: '业务场景 · 当前题目', 点评: '五维点评结果', 解析: '框架 / 标准 / 对比', Trace: 'Review Trace' },
+    prep: { 准备报告: '面试准备报告', 追问清单: 'Likely 追问 × 5', 文档: '面试话术 · 导出', Trace: 'Prep Trace' },
+    kb: { 阅读: 'AI 产品经理知识库', Trace: 'Knowledge RAG Trace' }
+  };
+  return map[scene]?.[tab] || tab;
+}
+
+function artifactStripHtml(scene) {
+  const chips = scene === 'resume'
+    ? [{ label: '评分报告', tab: '评分' }, { label: '优化 bullet', tab: '优化' }, { label: '简历_v2.docx', tab: '文档' }, { label: 'trace', tab: 'Trace' }]
+    : scene === 'scenario'
+      ? [{ label: '当前题目', tab: '题目' }, { label: '点评', tab: '点评' }, { label: '解析', tab: '解析' }, { label: 'trace', tab: 'Trace' }]
+      : scene === 'kb'
+        ? [{ label: '知识卡', tab: '阅读' }, { label: 'RAG trace', tab: 'Trace' }]
+        : [{ label: 'prepReport', tab: '准备报告' }, { label: '追问×5', tab: '追问清单' }, { label: '话术.docx', tab: '文档' }, { label: 'trace', tab: 'Trace' }];
+  const active = getCanvasTab(scene);
+  return chips.map(c =>
+    `<button type="button" class="artifact-chip${c.tab === active ? ' active' : ''}" data-artifact-tab="${escapeAttr(c.tab)}">${escapeHtml(c.label)}</button>`
+  ).join('');
+}
+
+function agentToolStepsHtml() {
+  if (!agentToolSteps.length) {
+    return '<div class="agent-tool-row"><span class="agent-tool-pill">idle</span><span>等待 Agent 调用工具</span></div>';
+  }
+  return agentToolSteps.map(s =>
+    `<div class="agent-tool-row"><span class="agent-tool-pill${s.status === 'running' ? ' run' : ''}">${escapeHtml(s.status)}</span><span>${escapeHtml(s.name)}</span><span style="color:var(--ink3);font-size:11px">${escapeHtml(s.detail || '')}</span></div>`
+  ).join('');
+}
+
+function agentChatMessagesForScene(scene) {
+  if (scene === 'resume') return resumeMessages;
+  if (scene === 'prep') return interviewPrepMessages;
+  return [];
+}
+
+function renderAgentChatBubbles(scene) {
+  const msgs = agentChatMessagesForScene(scene);
+  const el = document.getElementById('agentChatMsgs');
+  if (!el) return;
+  if (!msgs.length) {
+    const hint = scene === 'kb'
+      ? '知识库阅读模式。结构化知识卡在中间 Canvas；稍后可在此询问「帮我解释 RAG」等概念。'
+      : '在右侧发指令 steer；结构化结果在中间 Canvas 展示。';
+    el.innerHTML = `<div class="agent-chat-bubble agent"><div class="agent-chat-role">Agent</div>${hint}</div>`;
+    return;
+  }
+  el.innerHTML = msgs.map(m =>
+    `<div class="agent-chat-bubble ${m.role === 'user' ? 'user' : 'agent'}"><div class="agent-chat-role">${m.role === 'user' ? '你' : 'Agent'}</div>${m.role === 'assistant' ? renderCoachBubbleHtml(m.content, m.role) : escapeHtml(m.content).replace(/\n/g, '<br/>')}</div>`
+  ).join('');
+  el.scrollTop = el.scrollHeight;
+}
+
+function renderDocumentPanelHtml() {
+  const report = resumeOptimizeResult.optimizeReport;
+  const hasDoc = Boolean(report?.bullets?.length || resumeOptimizeResult.content);
+  if (!hasDoc) {
+    return `<div class="resume-pane-empty">先完成「一键优化」，再在此预览 / 导出文档</div>`;
+  }
+  const changes = (report?.evalBadcase || []).slice(0, 4);
+  const preview = (report?.bullets || []).map(b =>
+    `<p><strong>改后：</strong>${escapeHtml(b.after || '')}</p>`
+  ).join('') || `<p>${escapeHtml(resumeOptimizeResult.content.slice(0, 600))}</p>`;
+  return `
+    <div class="doc-artifact-card">
+      <div class="doc-artifact-icon">W</div>
+      <div style="flex:1;min-width:0">
+        <strong>简历优化_v2.docx</strong>
+        <p style="font-size:13px;color:var(--ink2);margin:4px 0 8px">Agent 已更新 bullet 与 eval 描述</p>
+        <button type="button" class="btn-primary btn-frost" id="docExportMdBtn" style="font-size:12px;padding:6px 14px">下载 Markdown</button>
+      </div>
+    </div>
+    ${changes.length ? `<div class="surface-card surface-card--flat" style="padding:12px;margin-bottom:12px;font-size:13px"><strong>变更摘要</strong><ol style="margin:8px 0 0 18px">${changes.map(c => `<li>${escapeHtml(c)}</li>`).join('')}</ol></div>` : ''}
+    <div class="doc-preview-pane">${preview}</div>`;
+}
+
+const TRACE_API_CACHE_MS = 30000;
+const traceApiCache = { traces: { data: null, at: 0 }, tokenDay7: { data: null, at: 0 } };
+
+async function fetchTracesFromApi(limit = 50) {
+  const now = Date.now();
+  if (traceApiCache.traces.data && now - traceApiCache.traces.at < TRACE_API_CACHE_MS) {
+    return traceApiCache.traces.data;
+  }
+  const res = await fetch('/api/records', {
+    method: 'POST',
+    headers: authHeaders(),
+    body: JSON.stringify({ accessCode, userId: userAccountId, recordType: 'traces', limit })
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || '加载 trace 失败');
+  traceApiCache.traces = { data, at: now };
+  return data;
+}
+
+async function fetchTokenAggregate(period = 'day', days = 7) {
+  const cacheKey = period === 'day' ? 'tokenDay7' : `token_${period}_${days}`;
+  const now = Date.now();
+  if (period === 'day' && days === 7 && traceApiCache.tokenDay7.data && now - traceApiCache.tokenDay7.at < TRACE_API_CACHE_MS) {
+    return traceApiCache.tokenDay7.data;
+  }
+  const res = await fetch('/api/records', {
+    method: 'POST',
+    headers: authHeaders(),
+    body: JSON.stringify({ accessCode, userId: userAccountId, recordType: 'token-aggregate', period, days })
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || '加载 token 统计失败');
+  if (period === 'day' && days === 7) traceApiCache.tokenDay7 = { data, at: now };
+  return data;
+}
+
+function filterTracesForScene(traces, scene) {
+  if (!Array.isArray(traces)) return [];
+  return traces.filter((t) => {
+    const src = String(t.source || '');
+    const ragRefs = t.context?.ragRefs;
+    const hasRag = Array.isArray(ragRefs) && ragRefs.length > 0;
+    if (scene === 'resume') {
+      return src === 'coach-action-resume-score' || src === 'coach-action-resume-optimize' || /resume/i.test(src);
+    }
+    if (scene === 'scenario') return src === 'chat-review' || src === 'chat-followup';
+    if (scene === 'prep') return src === 'coach-action-interview-prep';
+    if (scene === 'kb') return hasRag || /knowledge|rag|kb/i.test(src);
+    return true;
+  });
+}
+
+function traceToolLabel(source) {
+  const map = {
+    'chat-review': 'review_answer',
+    'chat-followup': 'followup',
+    'coach-action-resume-score': 'score_resume',
+    'coach-action-resume-optimize': 'optimize_resume',
+    'coach-action-interview-prep': 'prepare_interview'
+  };
+  return map[source] || String(source || '—').replace(/^coach-action-/, '');
+}
+
+function traceSummaryHtml(t) {
+  const at = t.at ? t.at.slice(0, 19).replace('T', ' ') : '—';
+  const parts = [];
+  if (t.result?.rubricAvg != null) parts.push(`均分 ${t.result.rubricAvg}`);
+  const preview = t.result?.summary || t.result?.textPreview;
+  if (preview) parts.push(String(preview).slice(0, 100));
+  const body = parts.length ? parts.join(' · ') : (t.userAnswer ? String(t.userAnswer).slice(0, 80) + '…' : '—');
+  return `${escapeHtml(at)}<br/><span style="color:var(--ink2)">${escapeHtml(body)}</span>`;
+}
+
+function traceBadcaseHtml(t) {
+  if (!t.badcase?.tagged) return '—';
+  const reasons = (t.badcase.reasons || []).join(', ') || 'tagged';
+  return `<span class="trace-badcase" title="${escapeHtml(reasons)}">${escapeHtml(reasons)}</span>`;
+}
+
+function formatTokenBucketsBar(buckets) {
+  if (!Array.isArray(buckets) || !buckets.length) return '';
+  const total = buckets.reduce((s, b) => s + (Number(b.total) || 0), 0);
+  const reqs = buckets.reduce((s, b) => s + (Number(b.requests) || 0), 0);
+  return `<p class="trace-token-bar">近 ${buckets.length} 日 · ${reqs} 次请求 · ${total.toLocaleString()} tokens</p>`;
+}
+
+function buildTracePanelHtml(scene, { historyEnabled, traces, badcases, tokenBuckets, error }) {
+  if (error) {
+    return `<div class="resume-pane-empty" style="color:var(--danger)">${escapeHtml(error)}</div>`;
+  }
+  if (!historyEnabled) {
+    return `<div class="resume-pane-empty">历史存储未启用（需配置 Upstash）</div>`;
+  }
+  if (!traces.length) {
+    return `<div class="resume-pane-empty">暂无 trace，先完成一次评分/点评/准备</div>`;
+  }
+  const rows = traces.map((t) => `
+    <tr>
+      <td>${escapeHtml(String(t.turn ?? '—'))}</td>
+      <td>${escapeHtml(traceToolLabel(t.source))}</td>
+      <td>${t.tokens?.total != null ? escapeHtml(String(t.tokens.total)) : '—'}</td>
+      <td>${traceBadcaseHtml(t)}</td>
+      <td>${traceSummaryHtml(t)}</td>
+    </tr>`).join('');
+  const badcaseHint = badcases?.length
+    ? `<p style="font-size:12px;color:var(--ink3);margin-top:10px">全账号 badcase ${badcases.length} 条（本场景 ${traces.filter(t => t.badcase?.tagged).length} 条）</p>`
+    : '';
+  return `
+    ${formatTokenBucketsBar(tokenBuckets)}
+    <div class="surface-card surface-card--flat" style="padding:0;overflow:hidden">
+      <table class="trace-table">
+        <thead><tr><th>轮次</th><th>Tool</th><th>Token</th><th>Badcase</th><th>摘要</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+    ${badcaseHint}`;
+}
+
+async function loadTracePanel(hostEl, scene) {
+  if (!hostEl) return;
+  hostEl.innerHTML = '<div class="trace-panel-loading">加载 trace…</div>';
+  try {
+    const [traceData, tokenData] = await Promise.all([
+      fetchTracesFromApi(50),
+      fetchTokenAggregate('day', 7)
+    ]);
+    const filtered = filterTracesForScene(traceData.traces || [], scene);
+    hostEl.innerHTML = buildTracePanelHtml(scene, {
+      historyEnabled: traceData.historyEnabled !== false,
+      traces: filtered,
+      badcases: traceData.badcases || [],
+      tokenBuckets: tokenData.buckets || [],
+      error: null
+    });
+  } catch (e) {
+    hostEl.innerHTML = buildTracePanelHtml(scene, {
+      historyEnabled: true,
+      traces: [],
+      badcases: [],
+      tokenBuckets: [],
+      error: e.message || '加载失败'
+    });
+  }
+}
+
+function renderPrepFollowUpsPanelHtml() {
+  const report = interviewPrepResult.prepReport;
+  if (!report?.followUps?.length) {
+    return `<div class="resume-pane-empty">完成「一键准备面试」后展示追问清单</div>`;
+  }
+  return report.followUps.map(f =>
+    `<div class="surface-card surface-card--flat" style="padding:12px;margin-bottom:10px">
+      <div class="panel-title" style="font-weight:600;margin-bottom:6px">${escapeHtml(f.question || '追问')}</div>
+      <p style="font-size:13px;color:var(--ink2)"><strong>Defense：</strong>${escapeHtml(f.defense || '—')}</p>
+    </div>`
+  ).join('');
+}
+
+function renderPrepDocumentPanelHtml() {
+  const report = interviewPrepResult.prepReport;
+  if (!report) return `<div class="resume-pane-empty">暂无导出内容</div>`;
+  const body = [report.opening15s, ...(report.projects || []).map(p => p.name + '：' + (p.structure30s || ''))].filter(Boolean).join('\n\n');
+  return `
+    <div class="doc-artifact-card">
+      <div class="doc-artifact-icon">W</div>
+      <div style="flex:1"><strong>面试话术_准备.docx</strong>
+        <p style="font-size:13px;color:var(--ink2);margin-top:4px">opening + 项目 + 追问 defense</p>
+        <button type="button" class="btn-primary" id="prepDocExportMdBtn" style="font-size:12px;padding:6px 14px;margin-top:8px">下载 Markdown</button>
+      </div>
+    </div>
+    <div class="doc-preview-pane">${escapeHtml(body).replace(/\n/g, '<br/>')}</div>`;
+}
+
+function applyScenarioCanvasPanels(tab) {
+  const map = { 题目: 'scenario-q', 点评: 'scenario-review', 解析: 'scenario-extras', Trace: 'scenario-trace' };
+  const show = map[tab] || 'scenario-q';
+  document.querySelectorAll('[data-scenario-panel]').forEach(el => {
+    el.classList.toggle('canvas-panel', true);
+    el.classList.toggle('active', el.dataset.scenarioPanel === show);
+  });
+  if (tab === 'Trace') {
+    loadTracePanel(document.getElementById('scenarioTraceHost'), 'scenario');
+  }
+}
+
+function mountAgentWorkspace(innerHtml) {
+  const scene = agentScene;
+  const tab = getCanvasTab(scene);
+  const main = document.getElementById('mainContent');
+  main.classList.remove('loading-main');
+  document.querySelector('.page-wrap')?.classList.add('page-wrap--agent');
+  main.innerHTML = `
+    <div class="agent-workspace" id="agentWorkspace">
+      <nav class="agent-nav" aria-label="模块导航">${agentNavHtml(scene)}</nav>
+      <section class="agent-canvas" aria-label="产出画布">
+        <div class="canvas-topbar">
+          <div>
+            <h2 id="canvasTitle">${escapeHtml(canvasTitleFor(scene, tab))}</h2>
+            <div class="canvas-crumb" id="canvasCrumb">CVassistant 3.0 · ${escapeHtml(scene)} · ${escapeHtml(tab)}</div>
+          </div>
+          <div class="canvas-topbar-actions" id="canvasTopActions"></div>
+        </div>
+        <div class="canvas-tabs" id="canvasTabs">${canvasTabsHtml(scene)}</div>
+        <div class="canvas-body" id="agentCanvasBody">${innerHtml}</div>
+        <div class="artifact-strip" id="artifactStrip">${artifactStripHtml(scene)}</div>
+      </section>
+      <aside class="agent-chat" aria-label="Agent 对话">
+        <div class="agent-chat-head"><h3>Agent 对话</h3><span class="agent-nav-badge">控制台</span></div>
+        <p class="agent-chat-sub">发指令 · 看工具步骤 · 结果在 Canvas</p>
+        <div class="agent-chat-msgs" id="agentChatMsgs"></div>
+        <div class="agent-tools"><strong>工具调用</strong>${agentToolStepsHtml()}</div>
+        <div class="agent-chat-compose">
+          <input type="text" class="agent-chat-input" id="agentChatInput" placeholder="对 Agent 下指令…" />
+          <button type="button" class="btn-primary" id="agentChatSend">发送</button>
+        </div>
+        <button type="button" class="btn-frost" id="agentChatReset" style="margin-top:8px;font-size:12px;width:100%">重置会话</button>
+      </aside>
+    </div>
+    <button type="button" class="agent-chat-fab" id="agentChatFab" aria-label="打开 Agent 对话">Agent</button>
+    <div class="agent-chat-drawer-backdrop" id="agentChatBackdrop"></div>`;
+  bindAgentWorkspace(scene);
+  renderAgentChatBubbles(scene);
+}
+
+function bindAgentChatClone() {
+  renderAgentChatBubbles(agentScene);
+}
+
+function closeAgentChatDrawer() {
+  document.getElementById('agentChatBackdrop')?.classList.remove('open');
+  document.querySelector('.agent-chat')?.classList.remove('drawer-open');
+}
+function bindAgentWorkspace(scene) {
+  const root = document.getElementById('agentWorkspace');
+  if (!root) return;
+
+  root.querySelectorAll('[data-agent-scene]').forEach(btn => {
+    if (btn.disabled) return;
+    btn.onclick = () => setAgentScene(btn.dataset.agentScene);
+  });
+
+  root.querySelectorAll('[data-canvas-tab]').forEach(btn => {
+    btn.onclick = () => {
+      setCanvasTab(scene, btn.dataset.canvasTab);
+      refreshAgentCanvas();
+    };
+  });
+  root.querySelectorAll('[data-artifact-tab]').forEach(btn => {
+    btn.onclick = () => {
+      setCanvasTab(scene, btn.dataset.artifactTab);
+      refreshAgentCanvas();
+    };
+  });
+
+  const send = () => {
+    const input = document.getElementById('agentChatInput');
+    const msg = input?.value?.trim();
+    if (!msg) return;
+    if (scene === 'resume') {
+      if (!resumeScoreResult.content && !resumeOptimizeResult.content) {
+        alert('请先一键评分或优化');
+        return;
+      }
+      saveProfileFromDom();
+      sendModuleCoachMessage({
+        module: 'resume', message: msg, mode: '',
+        messages: resumeMessages, threadId: 'resumeThread',
+        errId: 'resumeScoreError', btnId: 'agentChatSend', inputId: 'agentChatInput',
+        restoreInputOnError: true
+      });
+    } else if (scene === 'prep') {
+      if (!interviewPrepResult.content && !interviewPrepResult.prepReport) {
+        alert('请先一键准备面试');
+        return;
+      }
+      saveProfileFromDom();
+      sendModuleCoachMessage({
+        module: 'interview', message: msg, mode: '',
+        messages: interviewPrepMessages, threadId: 'interviewPrepThread',
+        errId: 'interviewPrepError', btnId: 'agentChatSend', inputId: 'agentChatInput'
+      });
+    } else if (scene === 'scenario') {
+      if (/换|下一|another/i.test(msg)) startRandomSense();
+      else alert('业务场景可先点「换一题」；追问请在点评 Tab 使用下方输入');
+    }
+    if (input) input.value = '';
+  };
+
+  document.getElementById('agentChatSend')?.addEventListener('click', send);
+  document.getElementById('agentChatInput')?.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); send(); }
+  });
+  document.getElementById('agentChatReset')?.addEventListener('click', () => {
+    if (scene === 'resume') {
+      resumeMessages.length = 0;
+      renderAgentChatBubbles('resume');
+    } else if (scene === 'prep') {
+      interviewPrepMessages.length = 0;
+      renderAgentChatBubbles('prep');
+    }
+  });
+
+  document.getElementById('agentChatFab')?.addEventListener('click', () => {
+    document.getElementById('agentChatBackdrop')?.classList.add('open');
+    document.querySelector('.agent-chat')?.classList.add('drawer-open');
+  });
+  document.getElementById('agentChatBackdrop')?.addEventListener('click', closeAgentChatDrawer);
+  if (!window.__agentChatEscBound) {
+    window.__agentChatEscBound = true;
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeAgentChatDrawer();
+    });
+  }
+
+  document.getElementById('docExportMdBtn')?.addEventListener('click', exportResumeMarkdown);
+  document.getElementById('prepDocExportMdBtn')?.addEventListener('click', exportPrepMarkdown);
+}
+
+function setAgentScene(scene) {
+  if (scene === 'kb') {
+    agentScene = 'kb';
+    renderKbView();
+    return;
+  }
+  if (scene === 'resume') {
+    workspaceMode = 'resume';
+    localStorage.setItem('workspaceMode', 'resume');
+    agentScene = 'resume';
+    renderResumeView();
+    return;
+  }
+  workspaceMode = 'interview';
+  localStorage.setItem('workspaceMode', 'interview');
+  agentScene = scene;
+  interviewSubView = scene === 'scenario' ? 'scenario' : 'prep';
+  localStorage.setItem('interviewSubView', interviewSubView);
+  renderInterviewView();
+}
+
+function refreshAgentCanvas() {
+  if (agentScene === 'resume') {
+    renderResumeCanvasPanels();
+  } else if (agentScene === 'prep') {
+    renderPrepCanvasPanels();
+  } else if (agentScene === 'scenario') {
+    applyScenarioCanvasPanels(getCanvasTab('scenario'));
+    updateCanvasChrome('scenario');
+  } else if (agentScene === 'kb') {
+    renderKbCanvasPanels();
+  }
+}
+
+function updateCanvasChrome(scene) {
+  const tab = getCanvasTab(scene);
+  const title = document.getElementById('canvasTitle');
+  const crumb = document.getElementById('canvasCrumb');
+  if (title) title.textContent = canvasTitleFor(scene, tab);
+  if (crumb) crumb.textContent = `CVassistant 3.0 · ${scene} · ${tab}`;
+  const tabsEl = document.getElementById('canvasTabs');
+  if (tabsEl) tabsEl.innerHTML = canvasTabsHtml(scene);
+  document.querySelectorAll('#canvasTabs [data-canvas-tab]').forEach(btn => {
+    btn.onclick = () => { setCanvasTab(scene, btn.dataset.canvasTab); refreshAgentCanvas(); };
+  });
+  const strip = document.getElementById('artifactStrip');
+  if (strip) {
+    strip.innerHTML = artifactStripHtml(scene);
+    strip.querySelectorAll('[data-artifact-tab]').forEach(btn => {
+      btn.onclick = () => { setCanvasTab(scene, btn.dataset.artifactTab); refreshAgentCanvas(); };
+    });
+  }
+}
+
+function exportResumeMarkdown() {
+  const text = resumeOptimizeResult.content || JSON.stringify(resumeOptimizeResult.optimizeReport || {}, null, 2);
+  downloadTextFile('简历优化.md', text);
+}
+
+function exportPrepMarkdown() {
+  const text = interviewPrepResult.content || JSON.stringify(interviewPrepResult.prepReport || {}, null, 2);
+  downloadTextFile('面试准备.md', text);
+}
+
+function downloadTextFile(name, text) {
+  const blob = new Blob([text], { type: 'text/markdown;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = name;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function renderResumeCanvasPanels() {
+  const tab = getCanvasTab('resume');
+  updateCanvasChrome('resume');
+  const pane = document.getElementById('resumeCanvasRoot');
+  if (!pane) return;
+  pane.querySelectorAll('[data-resume-panel]').forEach(el => {
+    const on = el.dataset.resumePanel === tab;
+    el.classList.toggle('canvas-panel', true);
+    el.classList.toggle('active', on);
+  });
+  if (tab === '评分') renderResumeScorePane();
+  if (tab === '优化') renderResumeOptimizePane();
+  if (tab === '文档') {
+    const docEl = document.getElementById('resumeDocPanel');
+    if (docEl) docEl.innerHTML = renderDocumentPanelHtml();
+    document.getElementById('docExportMdBtn')?.addEventListener('click', exportResumeMarkdown);
+  }
+  if (tab === 'Trace') {
+    loadTracePanel(document.getElementById('resumeTracePanel'), 'resume');
+  }
+}
+
+function renderPrepCanvasPanels() {
+  const tab = getCanvasTab('prep');
+  updateCanvasChrome('prep');
+  document.querySelectorAll('[data-prep-panel]').forEach(el => {
+    el.classList.toggle('canvas-panel', true);
+    el.classList.toggle('active', el.dataset.prepPanel === tab);
+  });
+  if (tab === '准备报告') renderInterviewPrepPane();
+  if (tab === '追问清单') {
+    const el = document.getElementById('prepFollowupsPanel');
+    if (el) el.innerHTML = renderPrepFollowUpsPanelHtml();
+  }
+  if (tab === '文档') {
+    const el = document.getElementById('prepDocPanel');
+    if (el) el.innerHTML = renderPrepDocumentPanelHtml();
+    document.getElementById('prepDocExportMdBtn')?.addEventListener('click', exportPrepMarkdown);
+  }
+  if (tab === 'Trace') {
+    loadTracePanel(document.getElementById('prepTracePanel'), 'prep');
+  }
+}
+
+function resumeCanvasInnerHtml() {
+  const tab = getCanvasTab('resume');
+  const tabClass = (name) => `canvas-panel${tab === name ? ' active' : ''}`;
+  return `
+    <div class="canvas-profile-compact">${profileUploadHtml()}</div>
+    <div class="canvas-quick-actions">
+      <button type="button" class="btn-primary" id="resumeScoreBtn">一键评分</button>
+      <button type="button" class="btn-primary" id="resumeOptimizeBtn">一键优化</button>
+    </div>
+    <div id="resumeCanvasRoot">
+      <div class="${tabClass('评分')}" data-resume-panel="评分"><div class="resume-pane-body" id="resumeScoreBody"></div><p class="resume-pane-error" id="resumeScoreError" hidden></p></div>
+      <div class="${tabClass('优化')}" data-resume-panel="优化"><div class="resume-pane-body" id="resumeOptimizeBody"></div><p class="resume-pane-error" id="resumeOptimizeError" hidden></p></div>
+      <div class="${tabClass('文档')}" data-resume-panel="文档"><div id="resumeDocPanel"></div></div>
+      <div class="${tabClass('Trace')}" data-resume-panel="Trace"><div id="resumeTracePanel"></div></div>
+    </div>`;
+}
+
+function prepCanvasInnerHtml() {
+  const tab = getCanvasTab('prep');
+  const tabClass = (name) => `canvas-panel${tab === name ? ' active' : ''}`;
+  const hasResume = profileResume.trim().length > 0;
+  return `
+    ${!hasResume ? '<p class="module-intro" style="color:#b45309;margin-bottom:12px">提示：在「简历 Agent」上传简历后，此处会自动带入。</p>' : ''}
+    <div class="canvas-quick-actions">
+      <button type="button" class="btn-primary" id="interviewPrepBtn">基于简历一键准备面试</button>
+    </div>
+    ${coachExtraNotesHtml()}
+    <div id="prepCanvasRoot">
+      <div class="${tabClass('准备报告')}" data-prep-panel="准备报告"><div class="resume-pane-body" id="interviewPrepBody"></div><p class="resume-pane-error" id="interviewPrepError" hidden></p></div>
+      <div class="${tabClass('追问清单')}" data-prep-panel="追问清单"><div id="prepFollowupsPanel"></div></div>
+      <div class="${tabClass('文档')}" data-prep-panel="文档"><div id="prepDocPanel"></div></div>
+      <div class="${tabClass('Trace')}" data-prep-panel="Trace"><div id="prepTracePanel"></div></div>
+    </div>`;
+}
+
+function kbCanvasInnerHtml() {
+  const tab = getCanvasTab('kb');
+  const tabClass = (name) => `canvas-panel${tab === name ? ' active' : ''}`;
+  return `
+    <div id="kbCanvasRoot">
+      <div class="${tabClass('阅读')}" data-kb-panel="阅读">
+        <p class="knowledge-intro">AI 产品经理知识卡 · <strong>阅读记忆即可</strong>，不必提交作答。要练题请切回「业务场景」。</p>
+        <div id="kbPagerHost"></div>
+        <div id="knowledgeFlatViewer"></div>
+      </div>
+      <div class="${tabClass('Trace')}" data-kb-panel="Trace"><div id="kbTracePanel"></div></div>
+    </div>`;
+}
+
+function renderKbReadPanel(scrollToCardId) {
+  const flat = knowledgeFlatCardsForPage(knowledgePageId);
+  if (scrollToCardId) {
+    const i = flat.findIndex(c => c.id === scrollToCardId);
+    if (i >= 0) {
+      knowledgeFlatIndex = i;
+      knowledgeBodyPageIndex = 0;
+    }
+  }
+  const pagerHost = document.getElementById('kbPagerHost');
+  if (pagerHost) {
+    pagerHost.innerHTML = knowledgePagerHtml();
+    bindKnowledgePager();
+  }
+  const root = document.getElementById('knowledgeFlatViewer');
+  if (root) {
+    root.innerHTML = renderKnowledgeFlatViewerHtml(flat, knowledgeFlatIndex, knowledgeBodyPageIndex);
+    bindKnowledgeFlatPager(flat);
+  }
+}
+
+function renderKbCanvasPanels(scrollToCardId) {
+  const tab = getCanvasTab('kb');
+  updateCanvasChrome('kb');
+  document.querySelectorAll('[data-kb-panel]').forEach(el => {
+    el.classList.toggle('canvas-panel', true);
+    el.classList.toggle('active', el.dataset.kbPanel === tab);
+  });
+  if (tab === '阅读') renderKbReadPanel(scrollToCardId);
+  if (tab === 'Trace') {
+    loadTracePanel(document.getElementById('kbTracePanel'), 'kb');
+  }
+}
+
+async function renderKbView(scrollToCardId) {
+  agentScene = 'kb';
+  try {
+    await loadKnowledge();
+    await loadKnowledgeMap();
+  } catch (e) {
+    mountAgentWorkspace(`<p class="resume-pane-empty" style="color:var(--danger)">${escapeHtml(e.message)}</p>`);
+    return;
+  }
+  mountAgentWorkspace(kbCanvasInnerHtml());
+  renderKbCanvasPanels(scrollToCardId);
+}
+
 function bindModeBar() {
   document.querySelectorAll('.mode-btn[data-mode]').forEach(btn => {
     btn.onclick = () => setWorkspaceMode(btn.dataset.mode);
@@ -3182,21 +4790,77 @@ function captureTrainWorkspaceState() {
 
 function setWorkspaceMode(mode) {
   if (!['interview', 'resume'].includes(mode)) return;
-  if (mode === 'interview' && workspaceMode !== 'interview') {
-    senseSubView = 'home';
-  }
   workspaceMode = mode;
   localStorage.setItem('workspaceMode', mode);
+  syncAgentSceneFromWorkspace();
   if (mode === 'resume') renderResumeView();
-  else if (interviewSubView === 'scenario' && senseSubView === 'session' && activeBankQuestion) renderSenseSession(activeBankQuestion);
+  else if (interviewSubView === 'scenario' && activeBankQuestion) renderSenseSession(activeBankQuestion);
   else renderInterviewView();
 }
 
 function coachExtraNotesHtml() {
-  return `<div class="coach-intake">
-    <label for="coachExtraNotes">补充说明（可选）</label>
+  return `<details class="coach-extra-details">
+    <summary>补充说明（可选）</summary>
     <textarea id="coachExtraNotes" rows="2" placeholder="如：已收到的反馈、重点想改的项目、担心被问穿的地方…">${escapeHtml(coachIntake.extra || '')}</textarea>
-  </div>`;
+  </details>`;
+}
+
+function renderCoachBubbleHtml(content, role) {
+  if (role !== 'assistant') {
+    return escapeHtml(content).replace(/\n/g, '<br/>');
+  }
+  return formatCoachMarkdown(content);
+}
+
+function formatCoachMarkdown(text) {
+  const lines = String(text || '').split('\n');
+  /** @type {string[]} */
+  const parts = [];
+  /** @type {string[][]} */
+  let tableRows = [];
+
+  function flushTable() {
+    if (tableRows.length < 2) {
+      tableRows.forEach(row => parts.push(`<p>${escapeHtml(row.join(' | '))}</p>`));
+      tableRows = [];
+      return;
+    }
+    const parseRow = (row) => row.split('|').map(c => c.trim()).filter(Boolean);
+    const header = parseRow(tableRows[0]);
+    const bodyRows = tableRows.slice(2).map(parseRow);
+    let tbl = '<table class="coach-md-table"><thead><tr>';
+    header.forEach(c => { tbl += `<th>${escapeHtml(c)}</th>`; });
+    tbl += '</tr></thead><tbody>';
+    bodyRows.forEach(cells => {
+      tbl += '<tr>';
+      cells.forEach(c => { tbl += `<td>${escapeHtml(c)}</td>`; });
+      tbl += '</tr>';
+    });
+    tbl += '</tbody></table>';
+    parts.push(tbl);
+    tableRows = [];
+  }
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (/^\|/.test(trimmed)) {
+      tableRows.push(trimmed);
+      continue;
+    }
+    if (tableRows.length) flushTable();
+    if (/^###\s+/.test(trimmed)) parts.push(`<h4>${escapeHtml(trimmed.slice(4))}</h4>`);
+    else if (/^##\s+/.test(trimmed)) parts.push(`<h3>${escapeHtml(trimmed.slice(3))}</h3>`);
+    else if (/^#\s+/.test(trimmed)) parts.push(`<h3>${escapeHtml(trimmed.slice(2))}</h3>`);
+    else if (trimmed === '---') parts.push('<hr/>');
+    else if (!trimmed) parts.push('');
+    else parts.push(`<p>${escapeHtml(trimmed)}</p>`);
+  }
+  if (tableRows.length) flushTable();
+  return parts.join('').replace(/<\/p><p>/g, '<br/>');
+}
+
+function coachThreadEmptyHtml(hint) {
+  return `<div class="coach-thread-empty">${hint}</div>`;
 }
 
 function syncExtraNotesFromDom() {
@@ -3233,43 +4897,87 @@ function buildCoachIntakeFromProfile(extra = {}) {
 }
 
 function profileUploadHtml() {
+  const resumeChars = profileResume.trim().length;
+  const resumeDone = resumeChars > 0;
+  const resumeDoneHtml = resumeDone
+    ? `<div class="upload-done-title">已识别简历</div>
+       <div class="upload-done-meta">${profileResumeFileName ? escapeHtml(profileResumeFileName) + ' · ' : ''}${resumeChars.toLocaleString()} 字</div>
+       <button type="button" class="upload-done-repick" id="resumeRepickBtn">换一份</button>`
+    : `<div class="upload-dropzone-icon">↑</div>
+       <div class="upload-dropzone-title">点击或拖拽上传简历</div>
+       <div class="upload-dropzone-hint">自动识别 PDF · DOCX · TXT，无需复制粘贴</div>`;
+  const jdChars = profileJd.trim().length;
+  const jdDoneHtml = jdChars > 0
+    ? `<div class="upload-done-title">已识别 JD</div>
+       <div class="upload-done-meta">${profileJdFileName ? escapeHtml(profileJdFileName) + ' · ' : ''}${jdChars.toLocaleString()} 字</div>
+       <button type="button" class="upload-done-repick" id="jdRepickBtn">换一份</button>`
+    : `<div class="upload-dropzone-icon">↑</div>
+       <div class="upload-dropzone-title">点击或拖拽上传 JD</div>
+       <div class="upload-dropzone-hint">PDF · DOCX · TXT（可选）</div>`;
   return `<div class="profile-upload-grid">
     <div class="profile-box">
-      <label for="profileResumeInput">上传简历 <span style="color:var(--danger)">*</span></label>
-      <textarea id="profileResumeInput" placeholder="粘贴简历全文，或上传 PDF / DOCX / TXT">${escapeHtml(profileResume)}</textarea>
-      <input type="file" id="resumeFileInput" accept=".pdf,.doc,.docx,.txt,.md,.text,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" class="profile-file" />
-      <span class="profile-file">支持 PDF、DOCX、TXT · 单文件建议 10MB 以内</span>
-      <p class="profile-file-status" id="resumeFileStatus"></p>
+      <label>简历 <span style="color:var(--danger)">*</span></label>
+      <div class="upload-dropzone${resumeDone ? ' upload-dropzone--done' : ''}" id="resumeDropzone" tabindex="0" role="button" aria-label="上传简历">
+        <input type="file" id="resumeFileInput" accept=".pdf,.doc,.docx,.txt,.md,.text,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" hidden />
+        <div class="upload-dropzone-body" id="resumeDropzoneBody">${resumeDoneHtml}</div>
+      </div>
+      <p class="profile-file-status${resumeDone ? ' is-ok' : ''}" id="resumeFileStatus">${resumeDone ? '可直接点下方「一键评分」' : ''}</p>
+      <details class="upload-paste-fallback">
+        <summary>没有文件？粘贴文本</summary>
+        <textarea id="profileResumeInput" placeholder="直接粘贴简历全文">${escapeHtml(profileResume)}</textarea>
+      </details>
     </div>
     <div class="profile-box">
-      <label for="profileJdInput">上传 JD <span style="color:var(--ink3)">（可选）</span></label>
-      <textarea id="profileJdInput" placeholder="粘贴目标岗位 JD，或上传 PDF / DOCX">${escapeHtml(profileJd)}</textarea>
-      <input type="file" id="jdFileInput" accept=".pdf,.doc,.docx,.txt,.md,.text,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" class="profile-file" />
-      <span class="profile-file">支持 PDF、DOCX、TXT</span>
+      <label>目标 JD <span style="color:var(--ink3)">（可选）</span></label>
+      <div class="upload-dropzone${jdChars > 0 ? ' upload-dropzone--done' : ''}" id="jdDropzone" tabindex="0" role="button" aria-label="上传 JD">
+        <input type="file" id="jdFileInput" accept=".pdf,.doc,.docx,.txt,.md,.text,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" hidden />
+        <div class="upload-dropzone-body" id="jdDropzoneBody">${jdDoneHtml}</div>
+      </div>
       <p class="profile-file-status" id="jdFileStatus"></p>
-      <label for="profileTargetRoleInput" style="margin-top:8px">目标岗位</label>
+      <details class="upload-paste-fallback">
+        <summary>没有文件？粘贴 JD</summary>
+        <textarea id="profileJdInput" placeholder="粘贴目标岗位 JD">${escapeHtml(profileJd)}</textarea>
+      </details>
+      <label for="profileTargetRoleInput" style="margin-top:10px;display:block">目标岗位</label>
       <input type="text" id="profileTargetRoleInput" value="${escapeAttr(profileTargetRole)}" placeholder="如：字节 AI 产品实习" style="width:100%;padding:8px 10px;border:1px solid var(--frost-border);border-radius:var(--r);font-family:inherit;font-size:13px" />
     </div>
-  </div>`;
+  </div>
+  <details class="upload-extra-notes">
+    <summary>补充说明（可选）</summary>
+    <textarea id="coachExtraNotes" rows="2" placeholder="已收到的反馈、重点想改的项目、担心被问穿的地方…">${escapeHtml(coachIntake.extra || '')}</textarea>
+  </details>`;
 }
 
 const DOC_PARSER_SCRIPTS = {
-  pdf: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js',
+  pdf: [
+    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js',
+    'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js'
+  ],
   pdfWorker: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js',
-  mammoth: 'https://cdn.jsdelivr.net/npm/mammoth@1.8.0/mammoth.browser.min.js'
+  mammoth: [
+    'https://cdn.jsdelivr.net/npm/mammoth@1.8.0/mammoth.browser.min.js',
+    'https://unpkg.com/mammoth@1.8.0/mammoth.browser.min.js'
+  ]
 };
 const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
 
-function loadExternalScript(src) {
-  if (document.querySelector(`script[src="${src}"]`)) return Promise.resolve();
-  return new Promise((resolve, reject) => {
-    const s = document.createElement('script');
-    s.src = src;
-    s.async = true;
-    s.onload = () => resolve();
-    s.onerror = () => reject(new Error('无法加载文档解析组件，请检查网络或改粘贴文本'));
-    document.head.appendChild(s);
-  });
+async function loadExternalScript(srcOrList) {
+  const urls = Array.isArray(srcOrList) ? srcOrList : [srcOrList];
+  for (const src of urls) {
+    if (document.querySelector(`script[src="${src}"]`)) return;
+    try {
+      await new Promise((resolve, reject) => {
+        const s = document.createElement('script');
+        s.src = src;
+        s.async = true;
+        s.onload = () => resolve();
+        s.onerror = () => reject(new Error('load failed'));
+        document.head.appendChild(s);
+      });
+      return;
+    } catch { /* try next CDN */ }
+  }
+  throw new Error('无法加载文档解析组件，请检查网络或改粘贴文本');
 }
 
 async function ensureDocParsers() {
@@ -3310,7 +5018,7 @@ async function parseUploadedDocument(file) {
     for (let p = 1; p <= pdf.numPages; p++) {
       const page = await pdf.getPage(p);
       const content = await page.getTextContent();
-      parts.push(content.items.map(it => it.str).join(' '));
+      parts.push(content.items.map(it => it.str).join(''));
     }
     const text = parts.join('\n').replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
     if (!text) {
@@ -3329,68 +5037,502 @@ async function parseUploadedDocument(file) {
   throw new Error('不支持的格式，请上传 PDF、DOCX 或 TXT');
 }
 
+function updateUploadDropzoneUI(field, { fileName, charCount, parsing, error }) {
+  const isResume = field === 'resume';
+  const zone = document.getElementById(isResume ? 'resumeDropzone' : 'jdDropzone');
+  const body = document.getElementById(isResume ? 'resumeDropzoneBody' : 'jdDropzoneBody');
+  const statusEl = document.getElementById(isResume ? 'resumeFileStatus' : 'jdFileStatus');
+  const repickId = isResume ? 'resumeRepickBtn' : 'jdRepickBtn';
+  if (!zone || !body) return;
+
+  if (parsing) {
+    zone.classList.remove('upload-dropzone--done');
+    body.innerHTML = `<div class="upload-dropzone-loading">正在识别 ${escapeHtml(fileName || '文件')}…</div>`;
+    if (statusEl) {
+      statusEl.textContent = '解析中，请稍候';
+      statusEl.classList.remove('is-error', 'is-ok');
+    }
+    return;
+  }
+
+  if (error) {
+    zone.classList.remove('upload-dropzone--done');
+    body.innerHTML = `<div class="upload-dropzone-icon">↑</div>
+      <div class="upload-dropzone-title">点击或拖拽上传${isResume ? '简历' : ' JD'}</div>
+      <div class="upload-dropzone-hint">自动识别 PDF · DOCX · TXT</div>`;
+    if (statusEl) {
+      statusEl.textContent = error;
+      statusEl.classList.add('is-error');
+      statusEl.classList.remove('is-ok');
+    }
+    return;
+  }
+
+  if (charCount > 0) {
+    zone.classList.add('upload-dropzone--done');
+    const label = isResume ? '简历' : 'JD';
+    body.innerHTML = `<div class="upload-done-title">已识别${label}</div>
+      <div class="upload-done-meta">${fileName ? escapeHtml(fileName) + ' · ' : ''}${charCount.toLocaleString()} 字</div>
+      <button type="button" class="upload-done-repick" id="${repickId}">换一份</button>`;
+    document.getElementById(repickId)?.addEventListener('click', e => {
+      e.stopPropagation();
+      document.getElementById(isResume ? 'resumeFileInput' : 'jdFileInput')?.click();
+    });
+    if (statusEl) {
+      statusEl.textContent = isResume ? '识别完成，可直接点「一键评分」' : 'JD 已导入';
+      statusEl.classList.remove('is-error');
+      statusEl.classList.add('is-ok');
+    }
+  }
+}
+
+function bindFileDropzone(dropzoneId, inputId, field) {
+  const zone = document.getElementById(dropzoneId);
+  const input = document.getElementById(inputId);
+  if (!zone || !input) return;
+
+  zone.addEventListener('click', e => {
+    if (e.target.closest('.upload-done-repick')) return;
+    input.click();
+  });
+  zone.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      input.click();
+    }
+  });
+  zone.addEventListener('dragover', e => {
+    e.preventDefault();
+    zone.classList.add('is-dragover');
+  });
+  zone.addEventListener('dragleave', () => zone.classList.remove('is-dragover'));
+  zone.addEventListener('drop', async e => {
+    e.preventDefault();
+    zone.classList.remove('is-dragover');
+    const file = e.dataTransfer?.files?.[0];
+    if (file) await applyParsedFileToField(file, field);
+  });
+  input.addEventListener('change', async e => {
+    const file = e.target.files?.[0];
+    if (file) await applyParsedFileToField(file, field);
+    e.target.value = '';
+  });
+  document.getElementById(field === 'resume' ? 'resumeRepickBtn' : 'jdRepickBtn')?.addEventListener('click', e => {
+    e.stopPropagation();
+    input.click();
+  });
+}
+
 async function applyParsedFileToField(file, field) {
   const isResume = field === 'resume';
-  const statusEl = document.getElementById(isResume ? 'resumeFileStatus' : 'jdFileStatus');
   const ta = document.getElementById(isResume ? 'profileResumeInput' : 'profileJdInput');
-  if (statusEl) {
-    statusEl.textContent = `正在解析 ${file.name}…`;
-    statusEl.classList.remove('is-error');
-  }
+  updateUploadDropzoneUI(field, { fileName: file.name, parsing: true });
   try {
     const { text, format } = await parseUploadedDocument(file);
     if (isResume) {
       profileResume = text;
+      profileResumeFileName = file.name;
       localStorage.setItem('profileResume', profileResume);
     } else {
       profileJd = text;
+      profileJdFileName = file.name;
       localStorage.setItem('profileJd', profileJd);
     }
     if (ta) ta.value = text;
-    if (statusEl) statusEl.textContent = `已导入 ${file.name}（${format.toUpperCase()}，${text.length} 字）`;
+    updateUploadDropzoneUI(field, { fileName: file.name, charCount: text.length });
   } catch (e) {
-    if (statusEl) {
-      statusEl.textContent = e.message || '解析失败';
-      statusEl.classList.add('is-error');
-    }
-    alert(e.message || '文件解析失败');
+    const msg = e.message || '文件解析失败';
+    updateUploadDropzoneUI(field, { error: msg });
+    alert(msg);
   }
 }
 
 function bindProfileUpload() {
+  bindFileDropzone('resumeDropzone', 'resumeFileInput', 'resume');
+  bindFileDropzone('jdDropzone', 'jdFileInput', 'jd');
   document.getElementById('profileResumeInput')?.addEventListener('input', e => {
     profileResume = e.target.value;
     localStorage.setItem('profileResume', profileResume);
+    if (profileResume.trim()) {
+      profileResumeFileName = '';
+      updateUploadDropzoneUI('resume', { charCount: profileResume.trim().length });
+    }
   });
   document.getElementById('profileJdInput')?.addEventListener('input', e => {
     profileJd = e.target.value;
     localStorage.setItem('profileJd', profileJd);
+    if (profileJd.trim()) {
+      profileJdFileName = '';
+      updateUploadDropzoneUI('jd', { charCount: profileJd.trim().length });
+    }
   });
   document.getElementById('profileTargetRoleInput')?.addEventListener('input', e => {
     profileTargetRole = e.target.value;
     localStorage.setItem('profileTargetRole', profileTargetRole);
   });
-  document.getElementById('resumeFileInput')?.addEventListener('change', async e => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    await applyParsedFileToField(file, 'resume');
-    e.target.value = '';
-  });
-  document.getElementById('jdFileInput')?.addEventListener('change', async e => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    await applyParsedFileToField(file, 'jd');
-    e.target.value = '';
-  });
 }
 
-function renderModuleThread(threadId, messages) {
+function renderResumeFollowupThread() {
+  const wrap = document.getElementById('resumeFollowupMsgs');
+  const el = document.getElementById('resumeThread');
+  if (!el) return;
+  if (!resumeMessages.length) {
+    if (wrap) wrap.hidden = true;
+    el.innerHTML = '';
+    return;
+  }
+  if (wrap) wrap.hidden = false;
+  el.innerHTML = resumeMessages.map(m =>
+    `<div class="resume-followup-bubble ${m.role}">${m.role === 'assistant' ? renderCoachBubbleHtml(m.content, m.role) : escapeHtml(m.content).replace(/\n/g, '<br/>')}</div>`
+  ).join('');
+  el.scrollTop = el.scrollHeight;
+  renderAgentChatBubbles('resume');
+  bindAgentChatClone();
+}
+
+function renderModuleThread(threadId, messages, emptyHint) {
+  if (threadId === 'resumeThread') {
+    renderAgentChatBubbles('resume');
+    bindAgentChatClone();
+    return;
+  }
+  if (threadId === 'interviewPrepThread') {
+    renderAgentChatBubbles('prep');
+    bindAgentChatClone();
+    return;
+  }
   const thread = document.getElementById(threadId);
   if (!thread) return;
-  thread.innerHTML = messages.map(m =>
-    `<div class="coach-bubble ${m.role}">${escapeHtml(m.content).replace(/\n/g, '<br/>')}</div>`
-  ).join('');
+  if (!messages.length && emptyHint) {
+    thread.innerHTML = coachThreadEmptyHtml(emptyHint);
+  } else {
+    thread.innerHTML = messages.map(m =>
+      `<div class="coach-bubble ${m.role}">${renderCoachBubbleHtml(m.content, m.role)}</div>`
+    ).join('');
+  }
   thread.scrollTop = thread.scrollHeight;
+}
+
+function getResumeCoachHistory(priorChat = []) {
+  const seed = [];
+  if (resumeScoreResult.content) {
+    seed.push({ role: 'assistant', content: `【简历评分结果】\n${resumeScoreResult.content}` });
+  }
+  if (resumeOptimizeResult.content) {
+    seed.push({ role: 'assistant', content: `【简历优化结果】\n${resumeOptimizeResult.content}` });
+  }
+  return [...seed, ...priorChat];
+}
+
+function renderScorePaneContent(report) {
+  const overall = report.overallScore ?? (report.overallScore10 != null ? Math.round(report.overallScore10 * 10) : '—');
+  const pass = report.passRate != null ? report.passRate : '—';
+  const optPass = report.optimizedPassRate != null ? report.optimizedPassRate : '—';
+  const bars = (report.dimensions || []).map(d => {
+    const pct = Math.round((Number(d.score) / 5) * 100);
+    return `<div class="score-pane-bar-row">
+      <span class="score-pane-bar-name" title="${escapeAttr(d.name)}">${escapeHtml(d.name)}</span>
+      <div class="score-pane-bar-track"><div class="score-pane-bar-fill" style="width:${pct}%"></div></div>
+      <span class="score-pane-bar-num">${escapeHtml(String(d.score))}</span>
+    </div>`;
+  }).join('');
+  const fixes = (report.topFixes || []).slice(0, 3).map(f => `<li>${escapeHtml(f)}</li>`).join('');
+  return `<div class="score-pane-metrics">
+      <div class="score-pane-metric"><div class="score-pane-metric-label">综合</div><div class="score-pane-metric-value score-pane-metric-value--rose">${escapeHtml(String(overall))}</div></div>
+      <div class="score-pane-metric"><div class="score-pane-metric-label">通过率</div><div class="score-pane-metric-value score-pane-metric-value--blue">${escapeHtml(String(pass))}%</div></div>
+      <div class="score-pane-metric"><div class="score-pane-metric-label">优化后</div><div class="score-pane-metric-value score-pane-metric-value--green">${escapeHtml(String(optPass))}%</div></div>
+    </div>
+    ${report.summary ? `<p class="score-pane-summary">${escapeHtml(report.summary)}</p>` : ''}
+    <div class="score-pane-bars">${bars}</div>
+    ${fixes ? `<div class="score-pane-fixes"><strong>优先改</strong><ol>${fixes}</ol></div>` : ''}`;
+}
+
+function renderOptimizePaneContent(report) {
+  const bullets = (report.bullets || []).map(b =>
+    `<div class="opt-pane-bullet">
+      <div class="opt-bullet-pair"><span class="opt-label">改前</span><p>${escapeHtml(b.before || '—')}</p></div>
+      <div class="opt-bullet-pair"><span class="opt-label">改后</span><p>${escapeHtml(b.after || '—')}</p></div>
+    </div>`
+  ).join('');
+  const evalItems = (report.evalBadcase || []).map(s => `<li>${escapeHtml(s)}</li>`).join('');
+  return `<div class="opt-pane-stack">
+    <div class="opt-pane-section"><h4>① 诊断</h4><p>${escapeHtml(report.weakProject || '—')}</p></div>
+    <div class="opt-pane-section"><h4>② Bullet 改写</h4>${bullets || '<p>—</p>'}</div>
+    <div class="opt-pane-section"><h4>③ Eval / Badcase</h4>${evalItems ? `<ul>${evalItems}</ul>` : '<p>—</p>'}</div>
+    <div class="opt-pane-section"><h4>④ 项目方向</h4>
+      <p><strong>主方向：</strong>${escapeHtml(report.mainDirection || '—')}</p>
+      <p style="margin-top:6px"><strong>备方向：</strong>${escapeHtml(report.backupDirection || '—')}</p>
+    </div>
+  </div>`;
+}
+
+function renderInterviewFollowupThread() {
+  const wrap = document.getElementById('interviewFollowupMsgs');
+  const el = document.getElementById('interviewPrepThread');
+  if (!el) return;
+  if (!interviewPrepMessages.length) {
+    if (wrap) wrap.hidden = true;
+    el.innerHTML = '';
+    return;
+  }
+  if (wrap) wrap.hidden = false;
+  el.innerHTML = interviewPrepMessages.map(m =>
+    `<div class="resume-followup-bubble ${m.role}">${m.role === 'assistant' ? renderCoachBubbleHtml(m.content, m.role) : escapeHtml(m.content).replace(/\n/g, '<br/>')}</div>`
+  ).join('');
+  el.scrollTop = el.scrollHeight;
+  renderAgentChatBubbles('prep');
+  bindAgentChatClone();
+}
+
+function getInterviewCoachHistory(priorChat = []) {
+  const seed = [];
+  if (interviewPrepResult.content) {
+    seed.push({ role: 'assistant', content: `【面试准备结果】\n${interviewPrepResult.content}` });
+  }
+  return [...seed, ...priorChat];
+}
+
+function renderInterviewPrepPaneContent(report) {
+  const projects = (report.projects || []).map(p =>
+    `<div class="opt-pane-bullet">
+      <p><strong>${escapeHtml(p.name || '项目')}</strong></p>
+      <div class="opt-bullet-pair"><span class="opt-label">30 秒结构</span><p>${escapeHtml(p.structure30s || '—')}</p></div>
+      <div class="opt-bullet-pair"><span class="opt-label">可防守证据</span><p>${escapeHtml(p.keyEvidence || '—')}</p></div>
+    </div>`
+  ).join('');
+  const followUps = (report.followUps || []).map(f =>
+    `<div class="opt-pane-bullet">
+      <div class="opt-bullet-pair"><span class="opt-label">追问</span><p>${escapeHtml(f.question || '—')}</p></div>
+      <div class="opt-bullet-pair"><span class="opt-label">防守</span><p>${escapeHtml(f.defense || '—')}</p></div>
+    </div>`
+  ).join('');
+  const badcases = (report.badcases || []).map(b => `<li>${escapeHtml(b)}</li>`).join('');
+  const doNotSay = (report.doNotSay || []).map(s => `<li>${escapeHtml(s)}</li>`).join('');
+  return `<div class="opt-pane-stack">
+    ${report.summary ? `<div class="opt-pane-section"><h4>总评</h4><p>${escapeHtml(report.summary)}</p></div>` : ''}
+    <div class="opt-pane-section"><h4>① 前 15 秒</h4><p>${escapeHtml(report.opening15s || '—')}</p></div>
+    <div class="opt-pane-section"><h4>② 项目讲述</h4>${projects || '<p>—</p>'}</div>
+    <div class="opt-pane-section"><h4>③ 追问与防守</h4>${followUps || '<p>—</p>'}</div>
+    <div class="opt-pane-section"><h4>④ Badcase</h4>${badcases ? `<ul>${badcases}</ul>` : '<p>—</p>'}</div>
+    <div class="opt-pane-section"><h4>⑤ 不能说的话</h4>${doNotSay ? `<ul>${doNotSay}</ul>` : '<p>—</p>'}</div>
+  </div>`;
+}
+
+function renderInterviewPrepPane() {
+  const body = document.getElementById('interviewPrepBody');
+  const errEl = document.getElementById('interviewPrepError');
+  if (!body) return;
+  if (interviewPrepResult.loading) {
+    body.innerHTML = '<div class="resume-pane-loading">面试准备生成中…</div>';
+    if (errEl) errEl.hidden = true;
+    return;
+  }
+  if (interviewPrepResult.prepReport) {
+    body.innerHTML = renderInterviewPrepPaneContent(interviewPrepResult.prepReport);
+    if (errEl) errEl.hidden = true;
+    return;
+  }
+  if (interviewPrepResult.content) {
+    body.innerHTML = `<div class="score-pane-summary">${renderCoachBubbleHtml(interviewPrepResult.content, 'assistant')}</div>`;
+    if (errEl) errEl.hidden = true;
+    return;
+  }
+  body.innerHTML = '<div class="resume-pane-empty">点上方「基于简历一键准备面试」</div>';
+}
+
+async function runInterviewPrepAction() {
+  const errEl = document.getElementById('interviewPrepError');
+  const triggerBtn = document.getElementById('interviewPrepBtn');
+  if (errEl) { errEl.hidden = true; errEl.textContent = ''; }
+  interviewPrepResult = { content: '', prepReport: null, loading: true };
+  renderPrepCanvasPanels();
+  if (triggerBtn) {
+    triggerBtn.disabled = true;
+    triggerBtn.dataset.prevLabel = triggerBtn.textContent;
+    triggerBtn.textContent = '准备中…';
+  }
+  syncExtraNotesFromDom();
+  saveProfileFromDom();
+  try {
+    const res = await fetch('/api/coach', {
+      method: 'POST',
+      headers: authHeaders(),
+      body: JSON.stringify({
+        accessCode,
+        userId: userAccountId,
+        contextModule: 'interview',
+        action: 'interview-prep',
+        intake: buildCoachIntakeFromProfile(),
+        history: []
+      })
+    });
+    const raw = await res.text();
+    let data = {};
+    try {
+      data = raw ? JSON.parse(raw) : {};
+    } catch {
+      if (/FUNCTION_INVOCATION_TIMEOUT/i.test(raw)) throw new Error('生成超时，请缩短简历后重试');
+      if (!res.ok) throw new Error(raw.slice(0, 300) || '请求失败（HTTP ' + res.status + '）');
+    }
+    if (!res.ok) throw new Error(data.error || raw.slice(0, 300) || '请求失败（HTTP ' + res.status + '）');
+    interviewPrepResult = {
+      content: data.reply || '',
+      prepReport: data.prepReport || null,
+      loading: false
+    };
+    renderPrepCanvasPanels();
+    agentToolSteps = [{ name: 'prepare_interview', status: 'done', detail: 'prepReport' }, { name: 'write_trace', status: 'done', detail: '' }];
+    const toolsEl = document.querySelector('.agent-tools');
+    if (toolsEl) toolsEl.innerHTML = '<strong>工具调用</strong>' + agentToolStepsHtml();
+    bindAgentChatClone();
+  } catch (e) {
+    interviewPrepResult = { content: '', prepReport: null, loading: false };
+    renderPrepCanvasPanels();
+    if (errEl) {
+      errEl.hidden = false;
+      errEl.textContent = e.message || '生成失败';
+    }
+  } finally {
+    if (triggerBtn) {
+      triggerBtn.disabled = false;
+      triggerBtn.textContent = triggerBtn.dataset.prevLabel || '基于简历一键准备面试';
+    }
+  }
+}
+
+function renderResumeScorePane() {
+  const body = document.getElementById('resumeScoreBody');
+  const errEl = document.getElementById('resumeScoreError');
+  if (!body) return;
+  if (resumeScoreResult.loading) {
+    body.innerHTML = '<div class="resume-pane-loading">评分生成中…</div>';
+    if (errEl) errEl.hidden = true;
+    return;
+  }
+  if (resumeScoreResult.scoreReport) {
+    body.innerHTML = renderScorePaneContent(resumeScoreResult.scoreReport);
+    if (errEl) errEl.hidden = true;
+    return;
+  }
+  if (resumeScoreResult.content) {
+    body.innerHTML = `<div class="score-pane-summary" style="-webkit-line-clamp:12">${renderCoachBubbleHtml(resumeScoreResult.content, 'assistant')}</div>`;
+    if (errEl) errEl.hidden = true;
+    return;
+  }
+  body.innerHTML = '<div class="resume-pane-empty">点上方「一键评分」</div>';
+}
+
+function renderResumeOptimizePane() {
+  const body = document.getElementById('resumeOptimizeBody');
+  const errEl = document.getElementById('resumeOptimizeError');
+  if (!body) return;
+  if (resumeOptimizeResult.loading) {
+    body.innerHTML = '<div class="resume-pane-loading">优化生成中…</div>';
+    if (errEl) errEl.hidden = true;
+    return;
+  }
+  if (resumeOptimizeResult.optimizeReport) {
+    body.innerHTML = renderOptimizePaneContent(resumeOptimizeResult.optimizeReport);
+    if (errEl) errEl.hidden = true;
+    return;
+  }
+  if (resumeOptimizeResult.content) {
+    body.innerHTML = `<div class="score-pane-summary" style="-webkit-line-clamp:12">${renderCoachBubbleHtml(resumeOptimizeResult.content, 'assistant')}</div>`;
+    if (errEl) errEl.hidden = true;
+    return;
+  }
+  body.innerHTML = '<div class="resume-pane-empty">点上方「一键优化」</div>';
+}
+
+function renderResumePanes() {
+  renderResumeCanvasPanels();
+}
+async function runResumeAction(action, triggerBtnId, triggerBtnLabel) {
+  const isScore = action === 'resume-score';
+  const errEl = document.getElementById(isScore ? 'resumeScoreError' : 'resumeOptimizeError');
+  const triggerBtn = document.getElementById(triggerBtnId);
+
+  if (errEl) { errEl.hidden = true; errEl.textContent = ''; }
+  if (isScore) {
+    resumeScoreResult = { content: '', scoreReport: null, loading: true };
+  } else {
+    resumeOptimizeResult = { content: '', optimizeReport: null, loading: true };
+  }
+  renderResumePanes();
+
+  if (triggerBtn) {
+    triggerBtn.disabled = true;
+    triggerBtn.dataset.prevLabel = triggerBtn.textContent;
+    triggerBtn.textContent = (triggerBtnLabel || '处理中') + '…';
+  }
+
+  syncExtraNotesFromDom();
+  saveProfileFromDom();
+  try {
+    const res = await fetch('/api/coach', {
+      method: 'POST',
+      headers: authHeaders(),
+      body: JSON.stringify({
+        accessCode,
+        userId: userAccountId,
+        contextModule: 'resume',
+        action,
+        intake: buildCoachIntakeFromProfile(),
+        history: []
+      })
+    });
+    const raw = await res.text();
+    let data = {};
+    try {
+      data = raw ? JSON.parse(raw) : {};
+    } catch {
+      if (/FUNCTION_INVOCATION_TIMEOUT/i.test(raw)) {
+        throw new Error('生成超时，请缩短简历后重试');
+      }
+      if (!res.ok) throw new Error(raw.slice(0, 300) || '请求失败（HTTP ' + res.status + '）');
+    }
+    if (!res.ok) {
+      throw new Error(data.error || raw.slice(0, 300) || '请求失败（HTTP ' + res.status + '）');
+    }
+    if (isScore) {
+      resumeScoreResult = {
+        content: data.reply || '',
+        scoreReport: data.scoreReport || null,
+        loading: false
+      };
+    } else {
+      resumeOptimizeResult = {
+        content: data.reply || '',
+        optimizeReport: data.optimizeReport || null,
+        loading: false
+      };
+    }
+    renderResumeCanvasPanels();
+    agentToolSteps = [{
+      name: isScore ? 'score_resume' : 'optimize_resume',
+      status: 'done',
+      detail: isScore ? '评分完成' : '优化完成'
+    }, { name: 'write_trace', status: 'done', detail: '' }];
+    const toolsEl = document.querySelector('.agent-tools');
+    if (toolsEl) toolsEl.innerHTML = '<strong>工具调用</strong>' + agentToolStepsHtml();
+    bindAgentChatClone();
+  } catch (e) {
+    if (isScore) {
+      resumeScoreResult = { content: '', scoreReport: null, loading: false };
+    } else {
+      resumeOptimizeResult = { content: '', optimizeReport: null, loading: false };
+    }
+    renderResumeCanvasPanels();
+    if (errEl) {
+      errEl.hidden = false;
+      errEl.textContent = e.message || '生成失败';
+    }
+  } finally {
+    if (triggerBtn) {
+      triggerBtn.disabled = false;
+      triggerBtn.textContent = triggerBtn.dataset.prevLabel || triggerBtnLabel || '完成';
+    }
+  }
 }
 
 async function sendModuleCoachMessage(opts) {
@@ -3424,7 +5566,11 @@ async function sendModuleCoachMessage(opts) {
       userId: userAccountId,
       contextModule: module,
       intake: buildCoachIntakeFromProfile(),
-      history: messages.slice(0, -1)
+      history: module === 'resume'
+        ? getResumeCoachHistory(messages.slice(0, -1))
+        : module === 'interview'
+          ? getInterviewCoachHistory(messages.slice(0, -1))
+          : messages.slice(0, -1)
     };
     if (action) payload.action = action;
     else {
@@ -3454,10 +5600,10 @@ async function sendModuleCoachMessage(opts) {
       errEl.textContent = e.message || '发送失败';
     }
     messages.pop();
-    renderModuleThread(threadId, messages);
+    renderModuleThread(threadId, messages, opts.emptyHint);
     if (restoreInputOnError && input && message) input.value = message;
   } finally {
-    if (btn) { btn.disabled = false; btn.textContent = '发送'; }
+    if (btn) { btn.disabled = false; btn.textContent = btnId === 'resumeSendBtn' || btnId === 'interviewSendBtn' ? '追问' : '发送'; }
     if (triggerBtn) {
       triggerBtn.disabled = false;
       triggerBtn.textContent = triggerBtn.dataset.prevLabel || triggerBtnLabel || '完成';
@@ -3466,143 +5612,47 @@ async function sendModuleCoachMessage(opts) {
 }
 
 function renderResumeView() {
-  const main = document.getElementById('mainContent');
-  main.classList.remove('loading-main');
-  const draft = resumeDraftMessage || '简历哪里弱、项目怎么改、缺什么证据…直接问';
-  main.innerHTML = `
-    <div class="workspace-shell">
-      ${modeBarHtml()}
-      <p class="module-intro">简历优化 · 上传简历与 JD → <strong>评分</strong> → <strong>一键优化</strong> → 对话继续追问</p>
-      ${profileUploadHtml()}
-      <div class="profile-actions">
-        <button type="button" class="btn-primary" id="resumeScoreBtn">简历评分</button>
-        <button type="button" class="btn-primary" id="resumeOptimizeBtn">一键优化简历</button>
-        <p class="profile-action-error" id="resumeActionError" hidden></p>
-      </div>
-      <div class="coach-layout-single coach-main">
-        ${coachExtraNotesHtml()}
-        <div class="coach-thread" id="resumeThread" aria-live="polite">
-          ${resumeMessages.map(m => `<div class="coach-bubble ${m.role}">${escapeHtml(m.content).replace(/\n/g, '<br/>')}</div>`).join('')}
-        </div>
-        <div class="coach-compose">
-          <textarea id="resumeMessageInput" placeholder="继续问：哪个项目该深挖、怎么补 eval、bullet 怎么改…">${escapeHtml(draft)}</textarea>
-          <div class="coach-compose-row">
-            <button type="button" class="btn-primary" id="resumeSendBtn">发送</button>
-            <button type="button" class="btn-frost" id="resumeClearBtn">清空对话</button>
-            <p class="coach-error" id="resumeError" hidden></p>
-          </div>
-        </div>
-      </div>
-    </div>`;
+  agentScene = 'resume';
+  workspaceMode = 'resume';
+  mountAgentWorkspace(resumeCanvasInnerHtml());
   resumeDraftMessage = '';
-  bindModeBar();
   bindProfileUpload();
   bindResumeView();
+  renderResumeCanvasPanels();
+  ensureDocParsers().catch(() => {});
 }
 
 function bindResumeView() {
-  document.getElementById('resumeSendBtn')?.addEventListener('click', () => {
-    const msg = document.getElementById('resumeMessageInput')?.value?.trim();
-    if (!msg) return;
-    if (!profileResume.trim() && !document.getElementById('profileResumeInput')?.value?.trim()) {
-      alert('请先上传或粘贴简历');
-      return;
-    }
-    sendModuleCoachMessage({
-      module: 'resume', message: msg, mode: '',
-      messages: resumeMessages, threadId: 'resumeThread',
-      errId: 'resumeError', btnId: 'resumeSendBtn', inputId: 'resumeMessageInput'
-    });
-  });
-  document.getElementById('resumeClearBtn')?.addEventListener('click', () => {
-    resumeMessages.length = 0;
-    renderResumeView();
-  });
   document.getElementById('resumeScoreBtn')?.addEventListener('click', () => {
     saveProfileFromDom();
     if (!profileResume.trim()) { alert('请先上传或粘贴简历'); return; }
-    sendModuleCoachMessage({
-      module: 'resume',
-      action: 'resume-score',
-      displayMessage: '简历评分',
-      restoreInputOnError: false,
-      triggerBtnId: 'resumeScoreBtn',
-      triggerBtnLabel: '简历评分',
-      messages: resumeMessages,
-      threadId: 'resumeThread',
-      errId: 'resumeActionError',
-      btnId: 'resumeSendBtn',
-      inputId: 'resumeMessageInput'
-    });
+    setCanvasTab('resume', '评分');
+    runResumeAction('resume-score', 'resumeScoreBtn', '一键评分');
   });
   document.getElementById('resumeOptimizeBtn')?.addEventListener('click', () => {
     saveProfileFromDom();
     if (!profileResume.trim()) { alert('请先上传或粘贴简历'); return; }
-    sendModuleCoachMessage({
-      module: 'resume',
-      action: 'resume-optimize',
-      displayMessage: '一键优化简历',
-      restoreInputOnError: false,
-      triggerBtnId: 'resumeOptimizeBtn',
-      triggerBtnLabel: '一键优化简历',
-      messages: resumeMessages,
-      threadId: 'resumeThread',
-      errId: 'resumeActionError',
-      btnId: 'resumeSendBtn',
-      inputId: 'resumeMessageInput'
-    });
-  });
-  document.getElementById('resumeMessageInput')?.addEventListener('keydown', e => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      document.getElementById('resumeSendBtn')?.click();
-    }
+    setCanvasTab('resume', '优化');
+    runResumeAction('resume-optimize', 'resumeOptimizeBtn', '一键优化');
   });
 }
 
 function renderInterviewView() {
-  const main = document.getElementById('mainContent');
-  main.classList.remove('loading-main');
+  syncAgentSceneFromWorkspace();
   if (interviewSubView === 'scenario') {
-    if (senseSubView === 'session' && activeBankQuestion) {
+    agentScene = 'scenario';
+    if (activeBankQuestion) {
       renderSenseSession(activeBankQuestion);
       return;
     }
-    renderSenseHome();
+    ensureSenseQuestion();
     return;
   }
-  const draft = interviewDraftMessage || '项目怎么讲、追问怎么防、RAG/Agent/评测怎么答…直接问';
-  const hasResume = profileResume.trim().length > 0;
-  main.innerHTML = `
-    <div class="workspace-shell">
-      ${modeBarHtml()}
-      <div class="module-subtabs" role="tablist">
-        <button type="button" class="module-subtab active" data-interview-sub="prep">根据简历准备</button>
-        <button type="button" class="module-subtab" data-interview-sub="scenario">业务场景作答</button>
-      </div>
-      <p class="module-intro">面试训练 · 先基于简历准备讲述与防御，再练业务场景判断</p>
-      ${!hasResume ? '<p class="module-intro" style="color:#b45309">提示：在「简历优化」上传简历后，此处会自动带入。</p>' : ''}
-      <div class="coach-layout-single coach-main">
-        <div class="profile-actions">
-          <button type="button" class="btn-primary" id="interviewPrepBtn">基于简历一键准备面试</button>
-        </div>
-        ${coachExtraNotesHtml()}
-        <div class="coach-thread" id="interviewPrepThread" aria-live="polite">
-          ${interviewPrepMessages.map(m => `<div class="coach-bubble ${m.role}">${escapeHtml(m.content).replace(/\n/g, '<br/>')}</div>`).join('')}
-        </div>
-        <div class="coach-compose">
-          <textarea id="interviewMessageInput" placeholder="继续问：某个项目怎么 defense、badcase 怎么准备…">${escapeHtml(draft)}</textarea>
-          <div class="coach-compose-row">
-            <button type="button" class="btn-primary" id="interviewSendBtn">发送</button>
-            <button type="button" class="btn-frost" id="interviewClearBtn">清空对话</button>
-            <p class="coach-error" id="interviewError" hidden></p>
-          </div>
-        </div>
-      </div>
-    </div>`;
+  agentScene = 'prep';
   interviewDraftMessage = '';
-  bindModeBar();
+  mountAgentWorkspace(prepCanvasInnerHtml());
   bindInterviewView();
+  renderPrepCanvasPanels();
 }
 
 function detectCoachIntentLocal(text) {
@@ -3637,49 +5687,14 @@ function openCoachFromGoal(goal, mode) {
 }
 
 function bindInterviewView() {
-  document.querySelectorAll('[data-interview-sub]').forEach(btn => {
-    btn.onclick = () => {
-      interviewSubView = btn.dataset.interviewSub;
-      localStorage.setItem('interviewSubView', interviewSubView);
-      if (interviewSubView === 'scenario') senseSubView = 'home';
-      renderInterviewView();
-    };
-  });
-  document.getElementById('interviewSendBtn')?.addEventListener('click', () => {
-    const msg = document.getElementById('interviewMessageInput')?.value?.trim();
-    if (!msg) return;
-    saveProfileFromDom();
-    sendModuleCoachMessage({
-      module: 'interview', message: msg, mode: '',
-      messages: interviewPrepMessages, threadId: 'interviewPrepThread',
-      errId: 'interviewError', btnId: 'interviewSendBtn', inputId: 'interviewMessageInput'
-    });
-  });
-  document.getElementById('interviewClearBtn')?.addEventListener('click', () => {
-    interviewPrepMessages.length = 0;
-    renderInterviewView();
-  });
   document.getElementById('interviewPrepBtn')?.addEventListener('click', () => {
     saveProfileFromDom();
-    sendModuleCoachMessage({
-      module: 'interview',
-      action: 'interview-prep',
-      displayMessage: '基于简历准备面试',
-      restoreInputOnError: false,
-      triggerBtnId: 'interviewPrepBtn',
-      triggerBtnLabel: '基于简历一键准备面试',
-      messages: interviewPrepMessages,
-      threadId: 'interviewPrepThread',
-      errId: 'interviewError',
-      btnId: 'interviewSendBtn',
-      inputId: 'interviewMessageInput'
-    });
-  });
-  document.getElementById('interviewMessageInput')?.addEventListener('keydown', e => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      document.getElementById('interviewSendBtn')?.click();
+    if (!profileResume.trim() && !coachIntake.extra?.trim()) {
+      alert('请先在「简历 Agent」上传简历，或填写补充说明');
+      return;
     }
+    setCanvasTab('prep', '准备报告');
+    runInterviewPrepAction();
   });
 }
 
@@ -3699,16 +5714,9 @@ async function loadAiPmBanks() {
       if (res.ok) AI_PM_BANK = await res.json();
     } catch { /* */ }
   }
-  if (!AI_PM_CURATED?.questions?.length) {
-    try {
-      const res = await fetch('interview-bank-ai-pm-curated.json?t=' + Date.now(), { cache: 'no-store' });
-      if (res.ok) AI_PM_CURATED = await res.json();
-    } catch { /* */ }
-  }
 }
 
-function bankQuestionsForSource(source) {
-  if (source === 'curated') return AI_PM_CURATED?.questions || [];
+function bankQuestions() {
   return AI_PM_BANK?.questions || [];
 }
 
@@ -3724,88 +5732,57 @@ function bindInterviewSubtabs() {
     btn.onclick = () => {
       interviewSubView = btn.dataset.interviewSub;
       localStorage.setItem('interviewSubView', interviewSubView);
-      if (interviewSubView === 'scenario') {
-        senseSubView = 'home';
-        renderInterviewView();
-      } else {
-        renderInterviewView();
-      }
+      renderInterviewView();
     };
   });
 }
 
-function renderSenseHome() {
-  senseSubView = 'home';
-  interviewSubView = 'scenario';
-  localStorage.setItem('interviewSubView', 'scenario');
-  const main = document.getElementById('mainContent');
-  main.classList.remove('loading-main');
-  const source = bankSource === 'ops' ? 'ai-pm' : bankSource;
-  if (bankSource === 'ops') {
-    bankSource = 'ai-pm';
-    localStorage.setItem('bankSource', 'ai-pm');
-  }
-  const qs = bankQuestionsForSource(source);
-  const nCur = AI_PM_CURATED?.questions?.length || 10;
-  const nAi = AI_PM_BANK?.questions?.length || 218;
+function interviewFlowStepsHtml(activeStep) {
+  const order = ['question', 'answer', 'review'];
+  const labels = { question: '出题', answer: '答题', review: '点评' };
+  const activeIdx = Math.max(0, order.indexOf(activeStep));
+  return order.map((key, i) => {
+    let cls = 'sense-step';
+    if (i === activeIdx) cls += ' active';
+    else if (i < activeIdx) cls += ' done';
+    return `<span class="${cls}">${labels[key]}</span>${i < order.length - 1 ? '<span class="sense-arrow">→</span>' : ''}`;
+  }).join('');
+}
+
+function setInterviewFlowStep(step) {
+  const el = document.getElementById('interviewFlowSteps');
+  if (el) el.innerHTML = interviewFlowStepsHtml(step);
+}
+
+function senseBankPickerHtml() {
+  const qs = bankQuestions();
+  const nAi = qs.length || AI_PM_BANK?.questions?.length || 0;
   const companies = [...new Set(qs.map(q => q.company))].sort();
   const types = [...new Set(qs.map(q => q.type))];
+  return `<details class="sense-picker">
+    <summary>选题库 · 共 ${nAi} 题</summary>
+    <div class="bank-filters" id="bankFilters">
+      <label class="bank-filter">公司 <select id="bankFilterCompany"><option value="">全部</option>${companies.map(c => `<option>${escapeHtml(c)}</option>`).join('')}</select></label>
+      <label class="bank-filter">题型 <select id="bankFilterType"><option value="">全部</option>${types.map(t => `<option value="${escapeAttr(t)}">${escapeHtml(t === 'ai_product' ? 'AI产品经理' : (INTERVIEW_BANK_V2?.typeLabels?.[t] || t))}</option>`).join('')}</select></label>
+      <label class="bank-filter">难度 <select id="bankFilterDiff"><option value="">全部</option><option value="easy">简单</option><option value="medium">中等</option><option value="hard">困难</option></select></label>
+    </div>
+    <div class="bank-list" id="bankList"></div>
+  </details>`;
+}
 
-  main.innerHTML = `
-    <div class="workspace-shell">
-      ${modeBarHtml()}
-      ${interviewSubtabsHtml('scenario')}
-      <p class="module-intro">业务场景作答 · 独立判断 → Judgement → Replay</p>
-      <div class="sense-home">
-        <div class="sense-loop" aria-label="训练闭环">
-          <span class="sense-step active">Sense</span>
-          <span class="sense-arrow">→</span>
-          <span class="sense-step">Judgement</span>
-          <span class="sense-arrow">→</span>
-          <span class="sense-step">Replay</span>
-        </div>
-        <p class="sense-tagline">给场景 → 写下产品判断 → 获取结构化 Judgement → Replay 复盘</p>
-        <button type="button" class="btn-primary sense-cta" id="senseStartBtn">开始一题场景训练</button>
-        <details class="sense-picker">
-          <summary>选题库 · 精选 ${nCur} / 全部 ${nAi}</summary>
-          <div class="bank-source-tabs" role="tablist">
-            <button type="button" class="${source === 'curated' ? 'active' : ''}" data-bank="curated">精选 ${nCur}</button>
-            <button type="button" class="${source === 'ai-pm' ? 'active' : ''}" data-bank="ai-pm">全部 ${nAi}</button>
-          </div>
-          <div class="bank-filters" id="bankFilters" ${source === 'curated' ? 'hidden' : ''}>
-            <label class="bank-filter">公司 <select id="bankFilterCompany"><option value="">全部</option>${companies.map(c => `<option>${escapeHtml(c)}</option>`).join('')}</select></label>
-            <label class="bank-filter">题型 <select id="bankFilterType"><option value="">全部</option>${types.map(t => `<option value="${escapeAttr(t)}">${escapeHtml(t === 'ai_product' ? 'AI产品经理' : (INTERVIEW_BANK_V2?.typeLabels?.[t] || t))}</option>`).join('')}</select></label>
-            <label class="bank-filter">难度 <select id="bankFilterDiff"><option value="">全部</option><option value="easy">简单</option><option value="medium">中等</option><option value="hard">困难</option></select></label>
-            <label class="bank-filter" id="bankFilterCuratedWrap" ${source !== 'ai-pm' ? 'hidden' : ''}> <input type="checkbox" id="bankFilterCurated" /> 仅精选</label>
-          </div>
-          <div class="bank-list" id="bankList"></div>
-        </details>
-      </div>
-    </div>`;
-  bindModeBar();
-  bindInterviewSubtabs();
-  document.getElementById('senseStartBtn').onclick = () => startRandomSense();
-  main.querySelectorAll('[data-bank]').forEach(btn => {
-    btn.onclick = () => {
-      bankSource = btn.dataset.bank;
-      localStorage.setItem('bankSource', bankSource);
-      renderSenseHome();
-    };
-  });
+function bindSenseBankPicker() {
+  const qs = bankQuestions();
   const renderList = () => {
     const fc = document.getElementById('bankFilterCompany')?.value || '';
     const ft = document.getElementById('bankFilterType')?.value || '';
     const fd = document.getElementById('bankFilterDiff')?.value || '';
-    const onlyCur = document.getElementById('bankFilterCurated')?.checked;
-    let filtered = qs.filter(q =>
+    const filtered = qs.filter(q =>
       (!fc || q.company === fc) && (!ft || q.type === ft) && (!fd || q.difficulty === fd)
     );
-    if (onlyCur) filtered = filtered.filter(q => q.curated);
     const list = document.getElementById('bankList');
     if (!list) return;
-    const limit = source === 'curated' ? 20 : 50;
-    list.innerHTML = filtered.slice(0, limit).map(q => `
-      <button type="button" class="bank-item${q.curated ? ' curated' : ''}" data-qid="${escapeAttr(q.id)}">
+    list.innerHTML = filtered.slice(0, 50).map(q => `
+      <button type="button" class="bank-item" data-qid="${escapeAttr(q.id)}">
         <div class="bank-item-meta">${q.num ? '题' + q.num + ' · ' : ''}${escapeHtml(q.company || '通用')} · ${escapeHtml(q.typeLabel || q.type || '')}</div>
         <div class="bank-item-text">${escapeHtml(q.text.slice(0, 120))}${q.text.length > 120 ? '…' : ''}</div>
       </button>`).join('') || '<p style="color:var(--ink3)">无匹配题目</p>';
@@ -3816,77 +5793,80 @@ function renderSenseHome() {
       };
     });
   };
-  ['bankFilterCompany', 'bankFilterType', 'bankFilterDiff', 'bankFilterCurated'].forEach(id => {
+  ['bankFilterCompany', 'bankFilterType', 'bankFilterDiff'].forEach(id => {
     document.getElementById(id)?.addEventListener('change', renderList);
   });
   renderList();
 }
 
-function startRandomSense() {
-  const source = bankSource === 'curated' ? 'curated' : 'ai-pm';
-  const qs = bankQuestionsForSource(source);
-  const curatedPool = qs.filter(q => q.curated);
-  const pool = curatedPool.length ? curatedPool : qs;
-  if (!pool.length) { alert('题库尚未加载'); return; }
-  applyBankQuestion(pool[Math.floor(Math.random() * pool.length)]);
+function pickRandomSenseQuestion() {
+  const qs = bankQuestions();
+  if (!qs.length) return null;
+  return qs[Math.floor(Math.random() * qs.length)];
 }
 
-function renderSenseSession(q) {
-  senseSubView = 'session';
-  interviewSubView = 'scenario';
-  const main = document.getElementById('mainContent');
-  main.classList.remove('loading-main');
-  const tid = q.topicId || 'iv-pm';
-  activeTopicId = tid;
-  trainUiReturnTopicId = tid;
-  const t = getTopic(tid) || TOPICS[0];
-  if (!t) { renderSenseHome(); return; }
-  const meta = [q.num ? '题' + q.num : '', q.company, q.typeLabel || q.type, q.framework].filter(Boolean).join(' · ');
-  const draft = answerDraftByTopic[tid] || '';
+function startRandomSense() {
+  const q = pickRandomSenseQuestion();
+  if (!q) { alert('题库尚未加载'); return false; }
+  applyBankQuestion(q);
+  return true;
+}
 
-  main.innerHTML = `
-    <div class="workspace-shell sense-shell">
-      ${modeBarHtml()}
-      ${interviewSubtabsHtml('scenario')}
-      <div class="sense-session">
-        <div class="sense-session-top">
-          <button type="button" class="btn-frost" id="senseBackBtn">← 返回场景列表</button>
-          <div class="sense-loop sense-loop--compact" aria-hidden="true">
-            <span class="sense-step active">Sense</span><span class="sense-arrow">→</span>
-            <span class="sense-step">Judgement</span><span class="sense-arrow">→</span>
-            <span class="sense-step">Replay</span>
-          </div>
+async function ensureSenseQuestion() {
+  if (activeBankQuestion) {
+    renderSenseSession(activeBankQuestion);
+    return;
+  }
+  agentScene = 'scenario';
+  mountAgentWorkspace('<p class="sense-tagline" style="margin:24px 0">正在加载题目…</p>');
+  if (!AI_PM_BANK?.questions?.length) {
+    await loadAiPmBanks();
+  }
+  if (!startRandomSense()) {
+    const body = document.getElementById('agentCanvasBody');
+    if (body) body.innerHTML = '<p class="sense-tagline">题库加载失败，请刷新页面重试</p>';
+  }
+}
+
+function senseCanvasInnerHtml(q, tid, meta, draft) {
+  const tab = getCanvasTab('scenario');
+  return `
+    <div class="sense-session" id="panel-${tid}">
+      <div class="sense-session-top">
+        <div class="sense-loop sense-loop--compact" id="interviewFlowSteps" aria-label="训练流程">
+          ${interviewFlowStepsHtml('answer')}
         </div>
+        <button type="button" class="btn-refresh" id="senseNextBtn">换一题</button>
+      </div>
+      <div class="canvas-panel${tab === '题目' ? ' active' : ''}" data-scenario-panel="scenario-q">
         ${meta ? `<p class="sense-q-meta">${escapeHtml(meta)}</p>` : ''}
         <article class="surface-card case-card sense-q-card">
+          <div class="wb-label">① 题目</div>
           <div class="case-body" id="scenario-${tid}">${escapeHtml(q.text)}</div>
         </article>
-        <div class="v2-tools">
-          <button type="button" class="v2-tool-btn" data-v2="framework">回答框架</button>
-          <button type="button" class="v2-tool-btn" data-v2="rubric">评分标准</button>
-          <button type="button" class="v2-tool-btn" data-v2="compare">参考对比</button>
-          <button type="button" class="v2-tool-btn" data-v2-timer="1">计时</button>
-          <span class="v2-timer" id="v2timer-${tid}">00:00</span>
-          <button type="button" class="v2-tool-btn" data-v2-voice="1">语音输入</button>
-        </div>
-        <div class="v2-prep-panel" id="v2prep-${tid}" hidden></div>
         <div class="surface-card work-card">
           <div class="work-block">
-            <div class="wb-label">你的判断</div>
-            <div class="wb-hint">先独立完成 sense 判断，再提交获取 Judgement</div>
+            <div class="wb-label">② 你的回答</div>
+            <div class="wb-hint">独立作答后提交，获取 AI 点评</div>
             <textarea id="answer-${tid}" placeholder="写下你的产品判断…">${escapeHtml(draft)}</textarea>
+            <div class="answer-inline-tools">
+              <button type="button" class="btn-voice" id="voice-${tid}">语音输入</button>
+            </div>
           </div>
         </div>
         <div class="surface-card surface-card--flat action-card">
           <div class="btn-row">
-            <button class="btn-primary" id="btn-${tid}" type="button">提交判断 · Judgement</button>
+            <button class="btn-primary" id="btn-${tid}" type="button">提交答案 · 获取点评</button>
           </div>
         </div>
+        ${senseBankPickerHtml()}
+      </div>
+      <div class="canvas-panel${tab === '点评' ? ' active' : ''}" data-scenario-panel="scenario-review">
         <div class="surface-card feedback-card" id="resp-${tid}">
-          <div class="feedback-head">Judgement</div>
+          <div class="feedback-head">③ AI 点评</div>
           <div class="feedback-body" id="resp-body-${tid}"></div>
           <div class="followup-wrap" id="followup-${tid}">
-            <div class="followup-label">针对 Judgement 追问</div>
+            <div class="followup-label">针对点评追问</div>
             <div class="followup-thread" id="followup-thread-${tid}"></div>
             <div class="followup-compose">
               <textarea id="followup-input-${tid}" rows="2" maxlength="800" placeholder="哪里判断错了？怎么改？" disabled></textarea>
@@ -3894,31 +5874,44 @@ function renderSenseSession(q) {
             </div>
           </div>
         </div>
-        <div class="sense-session-actions">
-          <button type="button" class="btn-frost" id="senseNextBtn">下一题</button>
-          <button type="button" class="btn-frost" id="senseReplayBtn">Replay 复盘</button>
-        </div>
+      </div>
+      <div class="canvas-panel${tab === '解析' ? ' active' : ''}" data-scenario-panel="scenario-extras">
+        <div id="scenarioExtrasHost-${tid}"><p class="resume-pane-empty">提交点评后，框架 / 标准 / 对比会出现在此</p></div>
+      </div>
+      <div class="canvas-panel${tab === 'Trace' ? ' active' : ''}" data-scenario-panel="scenario-trace">
+        <div id="scenarioTraceHost"></div>
+      </div>
+      <div class="sense-session-actions">
+        <button type="button" class="btn-frost" id="senseReplayBtn">练习记录</button>
       </div>
     </div>`;
+}
 
-  bindModeBar();
-  bindInterviewSubtabs();
-  document.getElementById('senseBackBtn').onclick = () => renderSenseHome();
+function renderSenseSession(q) {
+  senseSubView = 'session';
+  interviewSubView = 'scenario';
+  agentScene = 'scenario';
+  const tid = q.topicId || 'iv-pm';
+  activeTopicId = tid;
+  trainUiReturnTopicId = tid;
+  const t = getTopic(tid) || TOPICS[0];
+  if (!t) { startRandomSense(); return; }
+  const meta = [q.num ? '题' + q.num : '', q.company, q.typeLabel || q.type, q.framework].filter(Boolean).join(' · ');
+  const draft = answerDraftByTopic[tid] || '';
+
+  mountAgentWorkspace(senseCanvasInnerHtml(q, tid, meta, draft));
+
+  bindSenseBankPicker();
   document.getElementById('btn-' + tid).onclick = () => submitAnswer(tid);
-  document.getElementById('senseNextBtn').onclick = () => startRandomSense();
+  document.getElementById('senseNextBtn').onclick = () => {
+    agentToolSteps = [{ name: 'pick_scenario', status: 'done', detail: '换题' }];
+    startRandomSense();
+  };
   document.getElementById('senseReplayBtn').onclick = () => openAnalyticsModal();
   initFollowUp(tid);
-  bindV2Tools(tid);
+  bindVoiceInput(tid);
   updateReadingTip(tid, q.text);
-  if (q.referenceAnswer || q.framework) {
-    const prep = document.getElementById('v2prep-' + tid);
-    if (prep) {
-      prep.hidden = false;
-      prep.innerHTML = (q.framework ? `<h5>框架：${escapeHtml(q.framework)}</h5>` : '') +
-        (q.projects?.length ? `<p style="font-size:12px;color:var(--ink3)">结合项目：${escapeHtml(q.projects.join(' · '))}</p>` : '') +
-        `<h5>参考话术（请改写成你自己的判断）</h5><p style="white-space:pre-wrap">${escapeHtml(q.referenceAnswer || q.referenceOutline || '')}</p>`;
-    }
-  }
+  applyScenarioCanvasPanels(getCanvasTab('scenario'));
 }
 
 function applyBankQuestion(q) {
@@ -3926,36 +5919,72 @@ function applyBankQuestion(q) {
   renderSenseSession(q);
 }
 
-function bindV2Tools(topicId) {
-  const panel = document.getElementById('panel-' + topicId);
-  if (!panel) return;
-  panel.querySelectorAll('[data-v2]').forEach(btn => {
-    btn.onclick = () => runV2Analyze(topicId, btn.dataset.v2);
-  });
-  panel.querySelector('[data-v2-timer]')?.addEventListener('click', () => toggleV2Timer(topicId));
-  panel.querySelector('[data-v2-voice]')?.addEventListener('click', () => toggleV2Voice(topicId));
+function bindVoiceInput(topicId) {
+  document.getElementById('voice-' + topicId)?.addEventListener('click', () => toggleV2Voice(topicId));
 }
 
-async function runV2Analyze(topicId, mode) {
+async function fetchV2Analyze(topicId, mode, answer) {
   const scenario = document.getElementById('scenario-' + topicId)?.textContent?.trim();
-  const prep = document.getElementById('v2prep-' + topicId);
-  if (!scenario || !prep) return;
-  prep.hidden = false;
-  prep.innerHTML = '<p class="stream-status">生成中…</p>';
-  const answer = document.getElementById('answer-' + topicId)?.value?.trim() || '';
-  const payload = { accessCode, userId: userAccountId, mode, scenario, bankMeta: activeBankQuestion || null };
+  if (!scenario) return null;
+  const payload = { accessCode, userId: userAccountId, tool: 'analyze', mode, scenario, bankMeta: activeBankQuestion || null };
   if (mode === 'compare') {
-    if (!answer) { prep.innerHTML = '<p>请先写下回答，再点「参考对比」</p>'; return; }
     payload.answer = answer;
     payload.referenceOutline = activeBankQuestion?.referenceOutline;
   }
   try {
-    const res = await fetch('/api/analyze', { method: 'POST', headers: authHeaders(), body: JSON.stringify(payload) });
+    const res = await fetch('/api/chat', { method: 'POST', headers: authHeaders(), body: JSON.stringify(payload) });
     const data = await res.json();
-    if (!res.ok) { prep.innerHTML = '<p>' + escapeHtml(data.error || '失败') + '</p>'; return; }
-    prep.innerHTML = renderV2PrepHtml(mode, data.structured, data.text);
+    if (!res.ok) return { error: data.error || '失败' };
+    return data;
   } catch (e) {
-    prep.innerHTML = '<p>网络错误：' + escapeHtml(e.message) + '</p>';
+    return { error: e.message };
+  }
+}
+
+async function loadReviewExtras(topicId, scenario, answer) {
+  const extrasHost = document.getElementById('scenarioExtrasHost-' + topicId);
+  const respHost = document.getElementById('resp-body-' + topicId);
+  const host = extrasHost || respHost;
+  if (!host) return;
+  const labels = { framework: '回答框架', rubric: '评分标准', compare: '参考对比' };
+  const loadingHtml = '<div class="review-extras"><p class="stream-status">加载框架与对照…</p></div>';
+  if (extrasHost) {
+    extrasHost.innerHTML = loadingHtml;
+  } else {
+    const extras = document.createElement('div');
+    extras.className = 'review-extras';
+    extras.innerHTML = '<p class="stream-status">加载框架与对照…</p>';
+    host.appendChild(extras);
+  }
+
+  const modes = ['framework', 'rubric', 'compare'];
+  const results = await Promise.all(modes.map(async mode => ({ mode, data: await fetchV2Analyze(topicId, mode, answer) })));
+
+  const blocksHtml = results.map(({ mode, data }) => {
+    if (data?.error) {
+      return `<details class="review-extra-block"><summary>${labels[mode]}</summary><div class="review-extra-body"><p>${escapeHtml(data.error)}</p></div></details>`;
+    }
+    const body = renderV2PrepHtml(mode, data?.structured, data?.text);
+    const open = mode === 'framework' ? ' open' : '';
+    return `<details class="review-extra-block"${open}><summary>${labels[mode]}</summary><div class="review-extra-body">${body}</div></details>`;
+  }).join('');
+
+  if (extrasHost) {
+    extrasHost.innerHTML = `<div class="review-extras">${blocksHtml}</div>`;
+  } else {
+    const extras = host.querySelector('.review-extras');
+    if (extras) extras.innerHTML = blocksHtml;
+  }
+
+  agentToolSteps = agentToolSteps.map(s =>
+    s.name === 'analyze_extras' ? { ...s, status: 'done', detail: 'framework+rubric+compare' } : s
+  );
+  const toolsEl = document.querySelector('.agent-tools');
+  if (toolsEl) toolsEl.innerHTML = '<strong>工具调用</strong>' + agentToolStepsHtml();
+
+  if (extrasHost && agentScene === 'scenario') {
+    setCanvasTab('scenario', '解析');
+    refreshAgentCanvas();
   }
 }
 
@@ -3978,21 +6007,8 @@ function renderV2PrepHtml(mode, st, raw) {
   return escapeHtml(JSON.stringify(st));
 }
 
-function toggleV2Timer(topicId) {
-  const el = document.getElementById('v2timer-' + topicId);
-  if (!el) return;
-  let t = v2TimerByTopic[topicId];
-  if (t?.interval) { clearInterval(t.interval); v2TimerByTopic[topicId] = { sec: t.sec, interval: null }; return; }
-  if (!t) t = { sec: 0, interval: null };
-  t.interval = setInterval(() => {
-    t.sec += 1;
-    el.textContent = String(Math.floor(t.sec / 60)).padStart(2, '0') + ':' + String(t.sec % 60).padStart(2, '0');
-  }, 1000);
-  v2TimerByTopic[topicId] = t;
-}
-
 async function toggleV2Voice(topicId) {
-  const btn = document.querySelector('#panel-' + topicId + ' [data-v2-voice]');
+  const btn = document.getElementById('voice-' + topicId);
   const ta = document.getElementById('answer-' + topicId);
   if (!btn || !ta) return;
   if (v2RecorderByTopic[topicId]?.recording) { v2RecorderByTopic[topicId].recorder.stop(); return; }
@@ -4011,7 +6027,7 @@ async function toggleV2Voice(topicId) {
       });
       btn.textContent = '转写中…';
       try {
-        const res = await fetch('/api/transcribe', { method: 'POST', headers: authHeaders(), body: JSON.stringify({ accessCode, userId: userAccountId, audioBase64: b64, mimeType: 'audio/webm' }) });
+        const res = await fetch('/api/chat', { method: 'POST', headers: authHeaders(), body: JSON.stringify({ accessCode, userId: userAccountId, tool: 'transcribe', audioBase64: b64, mimeType: 'audio/webm' }) });
         const data = await res.json();
         if (res.ok && data.text) ta.value = (ta.value ? ta.value + '\n' : '') + data.text;
         else alert(data.error || '转写失败');
@@ -4030,7 +6046,7 @@ async function openAnalyticsModal() {
     modal = document.createElement('div');
     modal.id = 'analyticsModal';
     modal.className = 'history-modal';
-    modal.innerHTML = '<div class="history-panel"><h3>Replay · 复盘</h3><div id="analyticsBody"></div><button type="button" class="btn-primary" id="analyticsClose">关闭</button></div>';
+    modal.innerHTML = '<div class="history-panel"><h3>练习记录</h3><div id="analyticsBody"></div><button type="button" class="btn-primary" id="analyticsClose">关闭</button></div>';
     document.body.appendChild(modal);
     modal.onclick = e => { if (e.target === modal) modal.classList.remove('open'); };
     modal.querySelector('#analyticsClose').onclick = () => modal.classList.remove('open');
@@ -4039,7 +6055,7 @@ async function openAnalyticsModal() {
   body.innerHTML = '<p style="color:var(--ink3)">加载中…</p>';
   modal.classList.add('open');
   try {
-    const res = await fetch('/api/analytics', { method: 'POST', headers: authHeaders(), body: JSON.stringify({ accessCode, userId: userAccountId, topicIds: TOPICS.map(t => t.id) }) });
+    const res = await fetch('/api/records', { method: 'POST', headers: authHeaders(), body: JSON.stringify({ accessCode, userId: userAccountId, recordType: 'analytics', topicIds: TOPICS.map(t => t.id) }) });
     const data = await res.json();
     if (!data.progressCurve?.length) { body.innerHTML = '<p>' + escapeHtml(data.summary || '暂无数据') + '</p>'; return; }
     const max = Math.max(...data.progressCurve.map(p => p.score), 5);
@@ -4166,6 +6182,7 @@ function renderStructuredReview(review, metaHtml) {
   if (review.gaps?.length) html += `<h5>待加强</h5><p>${review.gaps.map(s => escapeHtml(s)).join(' · ')}</p>`;
   if (review.actions?.length) html += `<h5>建议行动</h5><p>${review.actions.map(s => escapeHtml(s)).join(' · ')}</p>`;
   if (review.growth) html += `<h5>思维成长</h5><p>${escapeHtml(review.growth)}</p>`;
+  if (review.referenceGap) html += `<h5>与参考相比</h5><p>${escapeHtml(review.referenceGap)}</p>`;
   html += '</div></div>';
   return html;
 }
@@ -4197,7 +6214,7 @@ async function openHistoryModal() {
   modal.setAttribute('aria-hidden', 'false');
   body.innerHTML = '<p style="color:var(--ink3)">加载中…</p>';
   try {
-    const res = await fetch('/api/history', {
+    const res = await fetch('/api/records', {
       method: 'POST',
       headers: authHeaders(),
       body: JSON.stringify({ accessCode, userId: userAccountId, topicIds: TOPICS.map(t => t.id) })
@@ -4388,7 +6405,13 @@ function setKnowledgePage(pageId) {
   if (!getKnowledgePage(pageId)) return;
   knowledgePageId = pageId;
   localStorage.setItem('knowledgePageId', knowledgePageId);
-  renderKnowledgeView();
+  knowledgeFlatIndex = 0;
+  knowledgeBodyPageIndex = 0;
+  if (agentScene === 'kb' && document.getElementById('kbCanvasRoot')) {
+    renderKbReadPanel();
+  } else {
+    renderKbView();
+  }
   const pager = document.getElementById('knowledgePager');
   if (pager) pager.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
@@ -4425,17 +6448,22 @@ function bindKnowledgePager() {
 
 function scrollToKnowledgeCard(cardId) {
   if (!cardId) return;
+  const pageId = findKnowledgePageForCard(cardId);
+  if (pageId && pageId !== knowledgePageId) {
+    knowledgePageId = pageId;
+    localStorage.setItem('knowledgePageId', knowledgePageId);
+  }
   const flat = knowledgeFlatCardsForPage(knowledgePageId);
   const index = flat.findIndex(c => c.id === cardId);
   if (index >= 0) {
     knowledgeFlatIndex = index;
     knowledgeBodyPageIndex = 0;
-    const root = document.getElementById('knowledgeFlatViewer');
-    if (root) {
-      root.innerHTML = renderKnowledgeFlatViewerHtml(flat, knowledgeFlatIndex, knowledgeBodyPageIndex);
-      bindKnowledgeFlatPager(flat);
-    }
   }
+  if (agentScene !== 'kb' || !document.getElementById('kbCanvasRoot')) {
+    renderKbView(cardId);
+    return;
+  }
+  renderKbReadPanel(cardId);
   setTimeout(() => {
     document.querySelector(`.knowledge-flat-viewer[data-card-id="${CSS.escape(cardId)}"]`)
       ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -4443,28 +6471,7 @@ function scrollToKnowledgeCard(cardId) {
 }
 
 function renderKnowledgeView(scrollToCardId) {
-  const main = document.getElementById('mainContent');
-  main.classList.remove('loading-main');
-  const flat = knowledgeFlatCardsForPage(knowledgePageId);
-  knowledgeFlatIndex = 0;
-  knowledgeBodyPageIndex = 0;
-  if (scrollToCardId) {
-    const i = flat.findIndex(c => c.id === scrollToCardId);
-    if (i >= 0) knowledgeFlatIndex = i;
-  }
-  const viewerHtml = renderKnowledgeFlatViewerHtml(flat, knowledgeFlatIndex, knowledgeBodyPageIndex);
-
-  main.innerHTML = `
-    <div class="workspace-shell">
-      ${modeBarHtml()}
-      <p class="knowledge-intro">AI 产品经理知识卡 · <strong>阅读记忆即可</strong>，不必提交作答。要练题请切回「面经练习」。</p>
-      ${knowledgePagerHtml()}
-      <div id="knowledgeFlatViewer">${viewerHtml}</div>
-    </div>
-  `;
-  bindModeBar();
-  bindKnowledgePager();
-  bindKnowledgeFlatPager(flat);
+  renderKbView(scrollToCardId);
 }
 
 function renderTopics() {
@@ -4508,7 +6515,6 @@ function renderTopics() {
 
   document.getElementById('backToBankBtn')?.addEventListener('click', () => {
     interviewSubView = 'scenario';
-    senseSubView = 'home';
     renderInterviewView();
   });
 
@@ -4526,20 +6532,14 @@ function renderTopics() {
           <div class="case-body" id="scenario-${t.id}"></div>
         </article>
         <div class="reading-tip" id="reading-${t.id}" style="display:none"></div>
-        <div class="v2-tools">
-          <button type="button" class="v2-tool-btn" data-v2="framework">回答框架</button>
-          <button type="button" class="v2-tool-btn" data-v2="rubric">评分标准</button>
-          <button type="button" class="v2-tool-btn" data-v2="compare">参考对比</button>
-          <button type="button" class="v2-tool-btn" data-v2-timer="1">计时</button>
-          <span class="v2-timer" id="v2timer-${t.id}">00:00</span>
-          <button type="button" class="v2-tool-btn" data-v2-voice="1">语音输入</button>
-        </div>
-        <div class="v2-prep-panel" id="v2prep-${t.id}" hidden></div>
         <div class="surface-card work-card">
           <div class="work-block">
             <div class="wb-label">你的分析</div>
             <div class="wb-hint">${escapeHtml(t.fieldLabel)}</div>
             <textarea id="answer-${t.id}" placeholder="${escapeAttr(t.placeholder)}"></textarea>
+            <div class="answer-inline-tools">
+              <button type="button" class="btn-voice" id="voice-${t.id}">语音输入</button>
+            </div>
           </div>
         </div>
         <div class="surface-card surface-card--flat action-card">
@@ -4570,7 +6570,7 @@ function renderTopics() {
     };
     document.getElementById('btn-' + t.id).onclick = () => submitAnswer(t.id);
     initFollowUp(t.id);
-    bindV2Tools(t.id);
+    bindVoiceInput(t.id);
     const pinned = scenarioPinByTopic[t.id];
     const draft = answerDraftByTopic[t.id];
     loadScenario(t.id, pinned, { preserveAnswer: !!draft, preserveFeedback: true });
@@ -4593,16 +6593,17 @@ async function loadTopicsAndRender() {
     await loadInterviewBankV2();
     await loadAiPmBanks();
     setSyncStatus(true);
+    syncAgentSceneFromWorkspace();
     if (workspaceMode === 'resume') renderResumeView();
     else if (workspaceMode === 'interview') {
-      if (interviewSubView === 'scenario' && senseSubView === 'session' && activeBankQuestion) renderSenseSession(activeBankQuestion);
+      if (interviewSubView === 'scenario') ensureSenseQuestion();
       else renderInterviewView();
     } else renderInterviewView();
   } catch (e) {
     const isFile = location.protocol === 'file:';
     const hint = isFile
       ? '不能双击打开 HTML。请在项目目录运行 <code>npx vercel dev</code>，再用终端里的 http://localhost 地址访问。'
-      : '请确认已运行 <code>npx vercel dev</code>，或访问已部署的 <a href="https://ops-trainer.vercel.app">ops-trainer.vercel.app</a>。';
+      : '请确认已运行 <code>npx vercel dev</code>，或访问已部署的 <a href="https://cvassistant-ai.vercel.app">cvassistant-ai.vercel.app</a>。';
     setSyncStatus(false, '加载失败：' + (e.message || '网络错误'));
     document.getElementById('mainContent').innerHTML =
       `<div style="color:var(--danger);text-align:center;padding:2rem 1.5rem;max-width:520px;margin:0 auto;line-height:1.6">
@@ -4890,20 +6891,29 @@ async function submitFollowUp(id) {
 function finishReviewForTopic(id, scenario, data) {
   const metaHtml = reviewMetaHtml(data);
   const respBody = document.getElementById('resp-body-' + id);
+  const answer = document.getElementById('answer-' + id)?.value || '';
   if (respBody) {
     respBody.innerHTML = data.structured
       ? renderStructuredReview(data.structured, metaHtml)
       : metaHtml + escapeHtml(data.text || '').replace(/\n/g, '<br/>');
   }
-  mentorSessions[id] = { scenario, answer: document.getElementById('answer-' + id)?.value || '', feedback: data.text, history: [] };
+  mentorSessions[id] = { scenario, answer, feedback: data.text, history: [] };
   enableFollowUp(id);
+  setInterviewFlowStep('review');
   onMissionPracticeComplete(id, data.rubricAvg, scenario);
+  loadReviewExtras(id, scenario, answer);
+  setCanvasTab('scenario', '点评');
+  refreshAgentCanvas();
+  agentToolSteps = [{ name: 'review_answer', status: 'done', detail: String(id) }, { name: 'analyze_extras', status: 'running', detail: '' }];
+  const toolsEl = document.querySelector('.agent-tools');
+  if (toolsEl) toolsEl.innerHTML = '<strong>工具调用</strong>' + agentToolStepsHtml();
+  bindAgentChatClone();
 }
 
 async function submitAnswer(id) {
   if (!accessCode) { accessCode = 'guest'; userAccountId = userAccountId || 'guest'; }
   const answer = document.getElementById('answer-' + id).value.trim();
-  if (!answer) { alert('请先写下你的判断'); return; }
+  if (!answer) { alert('请先写下你的回答'); return; }
 
   const t = getTopic(id);
   const scenario = document.getElementById('scenario-' + id).textContent;
@@ -4913,9 +6923,10 @@ async function submitAnswer(id) {
   const systemPrompt = resolveSystemPrompt(scenario, t.systemPrompt);
 
   btn.disabled = true;
-  btn.textContent = 'Judgement 生成中…';
+  btn.textContent = '点评生成中…';
   respArea.classList.add('visible');
-  respBody.innerHTML = '<p class="stream-status">正在生成 Judgement…</p>';
+  respBody.innerHTML = '<p class="stream-status">正在生成 AI 点评…</p>';
+  setInterviewFlowStep('review');
 
   const payload = {
     accessCode,
@@ -4988,7 +6999,7 @@ async function submitAnswer(id) {
   }
 
   btn.disabled = false;
-  btn.textContent = '提交判断 · Judgement';
+  btn.textContent = '提交答案 · 获取点评';
 }
 
 
