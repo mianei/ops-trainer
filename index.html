@@ -4887,15 +4887,6 @@ function setAgentScene(scene) {
   renderInterviewView();
 }
 
-function bindScenarioTitleActions() {
-  const tid = activeBankQuestion?.topicId || activeTopicId || 'iv-pm';
-  document.getElementById('btn-' + tid)?.addEventListener('click', () => submitAnswer(tid));
-  document.getElementById('senseNextBtn')?.addEventListener('click', () => {
-    agentToolSteps = [{ name: 'pick_scenario', status: 'done', detail: '换题' }];
-    startRandomSense();
-  });
-}
-
 function refreshAgentCanvas() {
   if (agentScene === 'resume') {
     if (getCanvasTab('resume') !== '评分') saveProfileFromDom();
@@ -4922,7 +4913,6 @@ function updateCanvasChrome(scene) {
     btn.onclick = () => { setCanvasTab(scene, btn.dataset.canvasTab); refreshAgentCanvas(); };
   });
   renderCanvasTitleCta(scene, tab);
-  if (scene === 'scenario') bindScenarioTitleActions();
 }
 
 function renderCanvasTitleCta(scene, tab) {
@@ -6369,8 +6359,7 @@ async function loadReviewExtras(topicId, scenario, answer) {
   agentToolSteps = agentToolSteps.map(s =>
     s.name === 'analyze_extras' ? { ...s, status: 'done', detail: 'framework+rubric+compare' } : s
   );
-  const toolsEl = document.querySelector('.agent-tools');
-  if (toolsEl) toolsEl.innerHTML = '<strong>工具调用</strong>' + agentToolStepsHtml();
+  renderAgentToolsPanel();
 
   if (extrasHost && agentScene === 'scenario') {
     setCanvasTab('scenario', '解析');
@@ -7295,8 +7284,7 @@ function finishReviewForTopic(id, scenario, data) {
   setCanvasTab('scenario', '点评');
   refreshAgentCanvas();
   agentToolSteps = [{ name: 'review_answer', status: 'done', detail: String(id) }, { name: 'analyze_extras', status: 'running', detail: '' }];
-  const toolsEl = document.querySelector('.agent-tools');
-  if (toolsEl) toolsEl.innerHTML = '<strong>工具调用</strong>' + agentToolStepsHtml();
+  renderAgentToolsPanel();
   bindAgentChatClone();
 }
 
