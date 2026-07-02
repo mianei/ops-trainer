@@ -677,7 +677,6 @@
     opacity: 0.55;
     cursor: not-allowed;
   }
-  .canvas-crumb { display: none; }
   .canvas-topbar-actions { display: flex; gap: 8px; flex-wrap: wrap; }
   .canvas-tabs {
     display: flex;
@@ -3335,9 +3334,10 @@
   /* —— 深色模式：黑 · 紫 · 白 —— */
   html[data-theme="dark"] {
     color-scheme: dark;
-    --bg: #000000;
-    --white: #111114;
-    --wash: #000000;
+    --page-bg: #000000;
+    --bg: var(--page-bg);
+    --white: #111111;
+    --wash: var(--page-bg);
     --ink: #f5f5f7;
     --ink2: #a1a1a6;
     --ink3: #6e6e73;
@@ -3360,11 +3360,11 @@
     --ops-soft: rgba(167, 139, 250, 0.12);
     --interview: #c084fc;
     --interview-soft: rgba(192, 132, 252, 0.12);
-    --wave-1: #1a1028;
-    --wave-2: #120a1e;
+    --wave-1: var(--page-bg);
+    --wave-2: var(--page-bg);
     --frost: rgba(255, 255, 255, 0.04);
-    --frost-strong: rgba(255, 255, 255, 0.07);
-    --frost-solid: rgba(20, 20, 24, 0.92);
+    --frost-strong: rgba(255, 255, 255, 0.06);
+    --frost-solid: rgba(13, 13, 15, 0.92);
     --frost-border: rgba(255, 255, 255, 0.1);
     --frost-edge: rgba(255, 255, 255, 0.06);
     --frost-dark: rgba(0, 0, 0, 0.65);
@@ -3374,12 +3374,12 @@
     --shadow-lg: 0 24px 56px rgba(0, 0, 0, 0.55);
     --hero-ink: #ffffff;
     --hero-accent: #c084fc;
-    --block-bg: #111114;
-    --block-bg-elevated: rgba(22, 22, 28, 0.95);
-    --block-bg-subtle: rgba(18, 18, 22, 0.88);
-    --block-bg-muted: rgba(14, 14, 18, 0.78);
-    --block-bg-inset: rgba(12, 12, 16, 0.82);
-    --block-bg-gradient: linear-gradient(180deg, #16161a 0%, #0a0a0e 100%);
+    --block-bg: #0d0d0f;
+    --block-bg-elevated: #111111;
+    --block-bg-subtle: #0d0d0f;
+    --block-bg-muted: #0a0a0a;
+    --block-bg-inset: #080808;
+    --block-bg-gradient: linear-gradient(180deg, #0d0d0f 0%, #000000 100%);
     --block-border: rgba(255, 255, 255, 0.1);
     --block-border-subtle: rgba(255, 255, 255, 0.06);
     --block-border-accent: rgba(168, 85, 247, 0.38);
@@ -3390,8 +3390,18 @@
     --block-shadow: 0 2px 16px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.06);
     --block-glow: 0 0 28px rgba(147, 51, 234, 0.14);
   }
+  html[data-theme="dark"],
+  html[data-theme="dark"] body {
+    background: var(--page-bg);
+  }
+  html[data-theme="dark"] #app {
+    background: var(--page-bg);
+  }
+  html[data-theme="dark"] .page-wrap {
+    background: transparent;
+  }
   html[data-theme="dark"] .bg-scene {
-    background: #000000;
+    background: var(--page-bg);
   }
   html[data-theme="dark"] .bg-scene::before {
     display: none;
@@ -3410,36 +3420,43 @@
   }
   html[data-theme="dark"] .bg-cubes {
     display: block;
-    background-color: #000000;
+    background-color: transparent;
     background-image: url('/assets/purple-cubes-bg.png');
     background-repeat: no-repeat;
     background-position: top right;
-    background-size: clamp(280px, 42vw, 520px);
+    background-size: clamp(300px, 46vw, 560px) auto;
     opacity: 1;
     mask-image:
-      linear-gradient(180deg, #000 0%, #000 52%, rgba(0, 0, 0, 0.72) 68%, rgba(0, 0, 0, 0.28) 82%, transparent 100%),
-      linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.12) 18%, #000 46%);
+      linear-gradient(180deg, #000 0%, #000 64%, rgba(0, 0, 0, 0.88) 76%, rgba(0, 0, 0, 0.52) 88%, rgba(0, 0, 0, 0.18) 96%, transparent 100%),
+      linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.06) 24%, #000 52%);
     mask-composite: intersect;
     -webkit-mask-composite: source-in;
   }
-  html[data-theme="dark"] .bg-blob-1 {
-    background: linear-gradient(135deg, rgba(168, 85, 247, 0.42), rgba(124, 58, 237, 0.18));
-    opacity: 0.75;
-  }
-  html[data-theme="dark"] .bg-blob-2 {
-    background: linear-gradient(135deg, rgba(88, 28, 135, 0.35), rgba(30, 20, 50, 0.5));
-  }
-  html[data-theme="dark"] .bg-blob-3 {
-    background: linear-gradient(135deg, rgba(192, 132, 252, 0.2), rgba(147, 51, 234, 0.12));
+  html[data-theme="dark"] .bg-cubes::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: clamp(300px, 46vw, 560px);
+    height: clamp(320px, 52vh, 620px);
+    pointer-events: none;
+    background: linear-gradient(180deg, transparent 0%, transparent 58%, rgba(0, 0, 0, 0.22) 78%, var(--page-bg) 100%);
   }
   html[data-theme="dark"] .hero-compact::before {
-    height: 140px;
-    opacity: 0.38;
-    background: radial-gradient(ellipse 110% 120% at 18% 0%, rgba(168, 85, 247, 0.045), transparent 82%),
-                radial-gradient(ellipse 95% 95% at 82% 10%, rgba(124, 58, 237, 0.03), transparent 86%);
-  }
-  html[data-theme="dark"] .page-wrap--agent .hero-compact::before {
     display: none;
+  }
+  html[data-theme="dark"] .surface,
+  html[data-theme="dark"] .sync-bar {
+    background: var(--block-bg-muted);
+    border-color: var(--block-border);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  html[data-theme="dark"] .footer-brand .hb-mind {
+    color: var(--hero-ink);
+  }
+  html[data-theme="dark"] .footer-link {
+    border-bottom-color: rgba(255, 255, 255, 0.14);
   }
   html[data-theme="dark"] .agent-canvas,
   html[data-theme="dark"] .agent-nav,
@@ -3476,11 +3493,54 @@
     background: var(--block-bg-subtle);
     border-color: var(--block-border);
   }
+  /* Dark form fields: match agent-chat inset aesthetic (no flat medium gray) */
+  html[data-theme="dark"] textarea,
+  html[data-theme="dark"] .scenario-search-input,
+  html[data-theme="dark"] .goal-plan-input,
+  html[data-theme="dark"] .coach-field textarea,
+  html[data-theme="dark"] .coach-field input,
+  html[data-theme="dark"] .coach-compose textarea,
+  html[data-theme="dark"] .coach-extra-details textarea,
+  html[data-theme="dark"] .upload-extra-notes textarea,
   html[data-theme="dark"] .profile-box textarea,
-  html[data-theme="dark"] .profile-box input[type="text"] {
+  html[data-theme="dark"] .profile-box input[type="text"],
+  html[data-theme="dark"] #profileTargetRoleInput,
+  html[data-theme="dark"] .agent-chat-input {
+    background: rgba(0, 0, 0, 0.32);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: var(--ink);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.28);
+  }
+  html[data-theme="dark"] textarea:focus,
+  html[data-theme="dark"] .scenario-search-input:focus,
+  html[data-theme="dark"] .goal-plan-input:focus,
+  html[data-theme="dark"] .coach-field textarea:focus,
+  html[data-theme="dark"] .coach-field input:focus,
+  html[data-theme="dark"] .coach-compose textarea:focus,
+  html[data-theme="dark"] .coach-extra-details textarea:focus,
+  html[data-theme="dark"] .upload-extra-notes textarea:focus,
+  html[data-theme="dark"] .profile-box textarea:focus,
+  html[data-theme="dark"] .profile-box input[type="text"]:focus,
+  html[data-theme="dark"] #profileTargetRoleInput:focus,
+  html[data-theme="dark"] .agent-chat-input:focus {
+    background: rgba(0, 0, 0, 0.42);
+    border-color: var(--block-border-accent);
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.28), 0 0 0 3px rgba(168, 85, 247, 0.1);
+  }
+  html[data-theme="dark"] textarea::placeholder,
+  html[data-theme="dark"] .scenario-search-input::placeholder,
+  html[data-theme="dark"] .goal-plan-input::placeholder,
+  html[data-theme="dark"] .coach-field textarea::placeholder,
+  html[data-theme="dark"] .coach-field input::placeholder,
+  html[data-theme="dark"] .coach-compose textarea::placeholder,
+  html[data-theme="dark"] .agent-chat-input::placeholder {
+    color: var(--ink3);
+  }
+  html[data-theme="dark"] .upload-extra-notes {
     background: var(--block-bg-inset);
     border-color: var(--block-border);
-    color: var(--ink);
   }
   html[data-theme="dark"] .upload-dropzone {
     background: var(--block-bg-inset);
