@@ -570,24 +570,26 @@
     align-items: flex-start;
     justify-content: space-between;
     gap: 12px;
-    padding: 14px 16px 10px;
+    padding: 14px 16px 12px;
     background: rgba(255, 255, 255, 0.5);
     border-bottom: 1px solid var(--line);
     flex-wrap: wrap;
   }
+  .canvas-topbar-main { flex: 1; min-width: 0; }
   .canvas-topbar h2 {
     font-size: 15px;
     font-weight: 700;
     letter-spacing: -0.02em;
-    margin-bottom: 2px;
+    margin: 0 0 2px;
   }
-  .canvas-crumb { font-size: 11px; color: var(--ink3); }
+  .canvas-crumb { font-size: 11px; color: var(--ink3); margin-bottom: 10px; }
   .canvas-topbar-actions { display: flex; gap: 8px; flex-wrap: wrap; }
   .canvas-tabs {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
-    padding: 10px 16px 0;
+    padding: 0;
+    margin: 0;
   }
   .canvas-tab {
     font-family: inherit;
@@ -1792,16 +1794,19 @@
     -webkit-overflow-scrolling: touch;
   }
   .resume-pane-empty {
-    min-height: 160px;
+    min-height: 120px;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    font-size: 12px;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    text-align: left;
+    font-size: 13px;
     color: var(--ink3);
     line-height: 1.6;
-    padding: 12px;
+    padding: 4px 0 12px;
   }
+  .resume-pane-empty p { margin: 0; }
+  .resume-tab-cta { margin-top: 10px; }
   .resume-pane-loading {
     min-height: 160px;
     display: flex;
@@ -2454,7 +2459,6 @@
     gap: 8px;
     align-items: center;
   }
-  .resume-tab-cta { margin-top: 12px; }
   .history-modal {
     position: fixed;
     inset: 0;
@@ -4416,13 +4420,13 @@ function mountAgentWorkspace(innerHtml) {
       <nav class="agent-nav" aria-label="模块导航">${agentNavHtml(scene)}</nav>
       <section class="agent-canvas" aria-label="产出画布">
         <div class="canvas-topbar">
-          <div>
+          <div class="canvas-topbar-main">
             <h2 id="canvasTitle">${escapeHtml(canvasTitleFor(scene, tab))}</h2>
             <div class="canvas-crumb" id="canvasCrumb">CVassistant 3.0 · ${escapeHtml(scene)} · ${escapeHtml(tab)}</div>
+            <div class="canvas-tabs" id="canvasTabs">${canvasTabsHtml(scene)}</div>
           </div>
           <div class="canvas-topbar-actions" id="canvasTopActions"></div>
         </div>
-        <div class="canvas-tabs" id="canvasTabs">${canvasTabsHtml(scene)}</div>
         <div class="canvas-body" id="agentCanvasBody">${innerHtml}</div>
       </section>
       <aside class="agent-chat" aria-label="Agent 对话">
