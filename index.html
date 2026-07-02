@@ -557,6 +557,7 @@
   .agent-workspace {
     display: grid;
     grid-template-columns: var(--agent-nav-w) minmax(0, 1fr) var(--agent-chat-w);
+    align-items: stretch;
     gap: 0;
     min-height: min(72vh, 720px);
     border-radius: var(--r-xl);
@@ -620,10 +621,26 @@
     margin-left: 4px;
     vertical-align: middle;
   }
+  .canvas-subtitle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-height: 22px;
+    margin: 2px 0 6px;
+  }
+  .canvas-subtitle {
+    margin: 0;
+    font-size: 12px;
+    color: var(--ink3);
+    line-height: 1.45;
+  }
+  .canvas-subtitle-actions { flex-shrink: 0; }
   .agent-canvas {
     display: flex;
     flex-direction: column;
     min-width: 0;
+    min-height: 100%;
     background: var(--block-bg-muted);
     border-right: 1px solid var(--block-border);
   }
@@ -773,7 +790,8 @@
   .agent-chat {
     display: flex;
     flex-direction: column;
-    min-height: 0;
+    min-height: 100%;
+    align-self: stretch;
     background: var(--block-bg-muted);
     padding: 12px;
   }
@@ -4748,6 +4766,15 @@ function canvasTitleFor(scene, tab) {
   return map[scene]?.[tab] || tab;
 }
 
+function canvasSubtitleFor(scene, tab) {
+  if (scene === 'resume' && tab === '评分') {
+    if (!profileResume.trim() && !resumeScoreResult.loading && !resumeScoreResult.scoreReport && !resumeScoreResult.content) {
+      return '请上传或粘贴简历';
+    }
+  }
+  return '';
+}
+
 function agentToolStepsHtml() {
   if (!agentToolSteps.length) return '';
   return agentToolSteps.map(s =>
@@ -5009,6 +5036,10 @@ function mountAgentWorkspace(innerHtml) {
               <h2 id="canvasTitle">${escapeHtml(canvasTitleFor(scene, tab))}</h2>
               <div class="canvas-title-cta" id="canvasTitleCta"></div>
             </div>
+            <div class="canvas-subtitle-row" id="canvasSubtitleRow">
+              <p class="canvas-subtitle" id="canvasSubtitle" hidden></p>
+              <div class="canvas-subtitle-actions" id="canvasSubtitleActions"></div>
+            </div>
             <div class="canvas-tabs" id="canvasTabs">${canvasTabsHtml(scene)}</div>
           </div>
           <div class="canvas-topbar-actions" id="canvasTopActions"></div>
@@ -5167,12 +5198,38 @@ function updateCanvasChrome(scene) {
   const tab = getCanvasTab(scene);
   const title = document.getElementById('canvasTitle');
   if (title) title.textContent = canvasTitleFor(scene, tab);
+  const subtitleEl = document.getElementById('canvasSubtitle');
+  const subtitle = canvasSubtitleFor(scene, tab);
+  if (subtitleEl) {
+    if (subtitle) {
+      subtitleEl.textContent = subtitle;
+      subtitleEl.hidden = false;
+    } else {
+      subtitleEl.textContent = '';
+      subtitleEl.hidden = true;
+    }
+  }
+  renderCanvasSubtitleActions(scene, tab);
   const tabsEl = document.getElementById('canvasTabs');
   if (tabsEl) tabsEl.innerHTML = canvasTabsHtml(scene);
   document.querySelectorAll('#canvasTabs [data-canvas-tab]').forEach(btn => {
     btn.onclick = () => { setCanvasTab(scene, btn.dataset.canvasTab); refreshAgentCanvas(); };
   });
   renderCanvasTitleCta(scene, tab);
+}
+
+function renderCanvasSubtitleActions(scene, tab) {
+  const host = document.getElementById('canvasSubtitleActions');
+  if (!host) return;
+  host.innerHTML = '';
+  if (scene === 'scenario' && tab === '题目') {
+    host.innerHTML = '<button type="button" class="btn-refresh" id="senseNextBtn">换一题</button>';
+    document.getElementById('senseNextBtn')?.addEventListener('click', () => {
+      agentToolSteps = [{ name: 'pick_scenario', status: 'done', detail: '换题' }];
+      renderAgentToolsPanel();
+      startRandomSense();
+    });
+  }
 }
 
 function renderCanvasTitleCta(scene, tab) {
@@ -5183,7 +5240,9 @@ function renderCanvasTitleCta(scene, tab) {
 
   if (scene === 'resume' && tab === '评分') {
     if (resumeScoreResult.loading) parts.push('<button type="button" class="btn-primary" disabled>评分中…</button>');
-    else if (!resumeScoreResult.scoreReport && !resumeScoreResult.content) {
+    else if (resumeScoreResult.scoreReport || resumeScoreResult.content) {
+      parts.push('<button type="button" class="btn-primary" id="resumeGoOptimizeBtn">去优化</button>');
+    } else {
       const disabled = !profileResume.trim() ? ' disabled' : '';
       parts.push(`<button type="button" class="btn-primary" id="resumeStartScoreBtn"${disabled}>开始评分</button>`);
     }
@@ -5207,7 +5266,6 @@ function renderCanvasTitleCta(scene, tab) {
     }
   } else if (scene === 'scenario') {
     const tid = activeBankQuestion?.topicId || activeTopicId || 'iv-pm';
-    parts.push('<button type="button" class="btn-refresh" id="senseNextBtn">换一题</button>');
     if (tab === '题目') parts.push(`<button type="button" class="btn-primary" id="btn-${tid}">提交 · 获取点评</button>`);
   }
 
@@ -5223,10 +5281,9 @@ function renderCanvasTitleCta(scene, tab) {
     }
     runInterviewPrepAction();
   });
-  document.getElementById('senseNextBtn')?.addEventListener('click', () => {
-    agentToolSteps = [{ name: 'pick_scenario', status: 'done', detail: '换题' }];
-    renderAgentToolsPanel();
-    startRandomSense();
+  document.getElementById('resumeGoOptimizeBtn')?.addEventListener('click', () => {
+    setCanvasTab('resume', '优化');
+    refreshAgentCanvas();
   });
   const tid = activeBankQuestion?.topicId || activeTopicId;
   if (tid) document.getElementById('btn-' + tid)?.addEventListener('click', () => submitAnswer(tid));
@@ -5841,8 +5898,6 @@ function getResumeCoachHistory(priorChat = []) {
 
 function renderScorePaneContent(report) {
   const overall = report.overallScore ?? (report.overallScore10 != null ? Math.round(report.overallScore10 * 10) : '—');
-  const pass = report.passRate != null ? report.passRate : '—';
-  const optPass = report.optimizedPassRate != null ? report.optimizedPassRate : '—';
   const bars = (report.dimensions || []).map(d => {
     const pct = Math.round((Number(d.score) / 5) * 100);
     return `<div class="score-pane-bar-row">
@@ -5854,8 +5909,6 @@ function renderScorePaneContent(report) {
   const fixes = (report.topFixes || []).slice(0, 3).map(f => `<li>${escapeHtml(f)}</li>`).join('');
   return `<div class="score-pane-metrics">
       <div class="score-pane-metric"><div class="score-pane-metric-label">综合</div><div class="score-pane-metric-value score-pane-metric-value--rose">${escapeHtml(String(overall))}</div></div>
-      <div class="score-pane-metric"><div class="score-pane-metric-label">通过率</div><div class="score-pane-metric-value score-pane-metric-value--blue">${escapeHtml(String(pass))}%</div></div>
-      <div class="score-pane-metric"><div class="score-pane-metric-label">优化后</div><div class="score-pane-metric-value score-pane-metric-value--green">${escapeHtml(String(optPass))}%</div></div>
     </div>
     ${report.summary ? `<p class="score-pane-summary">${escapeHtml(report.summary)}</p>` : ''}
     <div class="score-pane-bars">${bars}</div>
@@ -6059,9 +6112,7 @@ function renderResumeScorePane() {
     if (errEl) errEl.hidden = true;
     return;
   }
-  body.innerHTML = profileResume.trim()
-    ? ''
-    : '<div class="resume-pane-empty"><p>请上传或粘贴简历</p></div>';
+  body.innerHTML = profileResume.trim() ? '' : '';
   bindResumePaneActions();
 }
 
@@ -6149,7 +6200,6 @@ async function runResumeAction(action, triggerBtnId, triggerBtnLabel) {
         scoreReport: data.scoreReport || null,
         loading: false
       };
-      setCanvasTab('resume', '优化');
     } else {
       resumeOptimizeResult = {
         content: data.reply || '',
@@ -6158,6 +6208,8 @@ async function runResumeAction(action, triggerBtnId, triggerBtnLabel) {
       };
     }
     renderResumeCanvasPanels();
+    renderCanvasTitleCta('resume', getCanvasTab('resume'));
+    updateCanvasChrome('resume');
     agentToolSteps = [{
       name: isScore ? 'score_resume' : 'optimize_resume',
       status: 'done',
@@ -6483,7 +6535,6 @@ function senseCanvasInnerHtml(q, tid, meta, draft) {
   const tab = getCanvasTab('scenario');
   return `
     <div class="sense-session" id="panel-${tid}">
-      ${meta ? `<p class="sense-q-meta">${escapeHtml(meta)}</p>` : ''}
       <div class="canvas-panel${tab === '题目' ? ' active' : ''}" data-scenario-panel="scenario-q">
         <article class="surface-card case-card sense-q-card">
           <div class="wb-label">① 题目</div>
