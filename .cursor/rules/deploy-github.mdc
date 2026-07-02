@@ -1,15 +1,18 @@
 ---
-description: 完成功能改动后自动 commit 并 push 到 GitHub
+description: 完成功能改动后自动 commit、push 并部署 Vercel 生产环境
 alwaysApply: true
 ---
 
-# 部署到 GitHub
+# 自动部署（GitHub + Vercel）
 
-在本项目（CVassistant / ops-trainer）完成有意义的代码或配置改动后：
+在本项目（CVassistant / cvassistant）完成有意义的代码或配置改动后：
 
-1. **默认 commit 并 push 到 GitHub**（`origin/main`），无需用户再单独说「要部署」。
-2. 提交前确认：不提交 `.env.local`、API Key、`.cursor/` 临时文件、大 PDF/ dump 等。
-3. 若用户明确说「先别 push / 只改本地」，则跳过 push。
-4. push 完成后简短告知：commit hash、推送结果；若 Vercel 已关联则提醒自动部署。
+1. **默认自动完成全流程**，无需用户再说「部署」：
+   - `git status` → `git diff` → stage 相关文件 → commit → `git push origin main`
+   - `npx vercel --prod --yes` 部署生产环境
+   - 修正域名别名：`mindtraining.vercel.app` 移除；`cvassistant-ai.vercel.app`、`cvassistant-pm.vercel.app`、`ops-trainer.vercel.app` 指向最新部署
+2. 提交前确认：不提交 `.env.local`、API Key、`.cursor/skills`、大 PDF/dump 等。
+3. 若用户明确说「先别 push / 只改本地 / 别部署」，则跳过对应步骤。
+4. 完成后简短告知：commit hash、线上地址 https://cvassistant-ai.vercel.app，不要反复问用户要不要部署。
 
-Workflow：`git status` → `git diff` → stage 相关文件 → commit → `git push -u origin HEAD` → `git status` 确认。
+主域名：**cvassistant-ai.vercel.app**（不要用 mindtraining）。

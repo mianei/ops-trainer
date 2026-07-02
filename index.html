@@ -626,28 +626,6 @@
     margin-bottom: 14px;
   }
   .canvas-quick-actions .btn-primary { font-size: 13px; padding: 8px 16px; }
-  .artifact-strip {
-    display: flex;
-    gap: 8px;
-    padding: 8px 16px;
-    border-top: 1px solid var(--line);
-    background: rgba(255, 255, 255, 0.45);
-    overflow-x: auto;
-    font-size: 11px;
-  }
-  .artifact-chip {
-    padding: 4px 10px;
-    border-radius: 99px;
-    border: 1px solid var(--frost-border);
-    background: rgba(255, 255, 255, 0.6);
-    white-space: nowrap;
-    color: var(--ink2);
-  }
-  .artifact-chip.active {
-    border-color: var(--accent);
-    background: var(--accent-soft);
-    color: var(--accent);
-  }
   .agent-chat {
     display: flex;
     flex-direction: column;
@@ -2454,11 +2432,8 @@
   .rubric-lists { font-size: 13px; color: var(--ink2); line-height: 1.6; margin-top: 0.75rem; }
   .rubric-lists h5 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink3); margin: 0.5rem 0 0.25rem; }
   .stream-status { font-size: 14px; color: var(--ink2); }
-  .btn-history {
-    position: fixed;
-    top: 14px;
-    right: 88px;
-    z-index: 50;
+  .btn-history,
+  .btn-trace {
     font-family: inherit;
     font-size: 12px;
     font-weight: 600;
@@ -2470,6 +2445,16 @@
     cursor: pointer;
     backdrop-filter: var(--blur-md);
   }
+  .header-actions {
+    position: fixed;
+    top: 14px;
+    right: 16px;
+    z-index: 50;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .resume-tab-cta { margin-top: 12px; }
   .history-modal {
     position: fixed;
     inset: 0;
@@ -2492,6 +2477,7 @@
     padding: 1.25rem;
   }
   .history-panel h3 { font-size: 1.1rem; margin-bottom: 0.75rem; }
+  .history-panel--wide { width: min(720px, 100%); }
   .history-item {
     padding: 10px 0;
     border-bottom: 1px solid var(--frost-border);
@@ -3161,7 +3147,10 @@
     <div class="bg-blob bg-blob-2"></div>
     <div class="bg-blob bg-blob-3"></div>
   </div>
-  <button type="button" class="btn-history" id="btnHistory">练习记录</button>
+  <div class="header-actions" id="headerActions" hidden>
+    <button type="button" class="btn-trace" id="btnTrace">Trace</button>
+    <button type="button" class="btn-history" id="btnHistory">练习记录</button>
+  </div>
   <div class="page-wrap">
 
   <section class="hero-compact">
@@ -3182,6 +3171,14 @@
   <div id="mainContent" class="loading-main">加载中…</div>
 
   <footer class="footer"><span class="footer-brand" aria-label="CVassistant"><span class="hb-mind">CV</span><span class="hb-train">assistant</span></span><span class="v2-badge">3.0</span> · <a class="footer-link" href="/download">下载</a> · <a class="footer-link" href="https://github.com/mianei/ops-trainer" target="_blank" rel="noopener noreferrer">GitHub</a></footer>
+  </div>
+</div>
+
+<div class="history-modal" id="traceModal" aria-hidden="true">
+  <div class="history-panel history-panel--wide" role="dialog" aria-labelledby="traceTitle">
+    <button type="button" class="history-close" id="traceClose" aria-label="关闭">×</button>
+    <h3 id="traceTitle">Observation Trace</h3>
+    <div id="traceModalBody"><p style="color:var(--ink3)">加载中…</p></div>
   </div>
 </div>
 
@@ -3207,10 +3204,10 @@ if (LEGACY_WORKSPACE[workspaceMode]) {
 /** 3.0 Agent 工作台 */
 let agentScene = workspaceMode === 'resume' ? 'resume' : (localStorage.getItem('interviewSubView') || 'prep') === 'scenario' ? 'scenario' : 'prep';
 const CANVAS_TABS = {
-  resume: ['评分', '优化', '文档', 'Trace'],
-  scenario: ['题目', '点评', '解析', 'Trace'],
-  prep: ['准备报告', '追问清单', '文档', 'Trace'],
-  kb: ['阅读', 'Trace']
+  resume: ['评分', '优化', '文档'],
+  scenario: ['题目', '点评', '解析'],
+  prep: ['准备报告', '追问清单', '文档'],
+  kb: ['阅读']
 };
 const canvasTabByScene = {
   resume: localStorage.getItem('canvasTab_resume') || '评分',
@@ -3369,8 +3366,8 @@ function setSyncStatus(ok, text) {
 
 function unlockApp() {
   app.classList.add('visible');
-  const btnHist = document.getElementById('btnHistory');
-  if (btnHist) btnHist.hidden = false;
+  const headerActions = document.getElementById('headerActions');
+  if (headerActions) headerActions.hidden = false;
   if (!document.documentElement.classList.contains('is-mobile')) {
     initHeroWaveform();
   }
@@ -4128,7 +4125,10 @@ function syncAgentSceneFromWorkspace() {
 }
 
 function getCanvasTab(scene) {
-  return canvasTabByScene[scene] || CANVAS_TABS[scene]?.[0] || '';
+  const valid = CANVAS_TABS[scene] || [];
+  let tab = canvasTabByScene[scene] || valid[0] || '';
+  if (tab && !valid.includes(tab)) tab = valid[0];
+  return tab;
 }
 
 function setCanvasTab(scene, tab) {
@@ -4160,26 +4160,12 @@ function canvasTabsHtml(scene) {
 
 function canvasTitleFor(scene, tab) {
   const map = {
-    resume: { 评分: '简历评分报告', 优化: '简历优化 · Bullet 改写', 文档: '简历优化 · 文档', Trace: 'Observation Trace' },
-    scenario: { 题目: '业务场景 · 当前题目', 点评: '五维点评结果', 解析: '框架 / 标准 / 对比', Trace: 'Review Trace' },
-    prep: { 准备报告: '面试准备报告', 追问清单: 'Likely 追问 × 5', 文档: '面试话术 · 导出', Trace: 'Prep Trace' },
-    kb: { 阅读: 'AI 产品经理知识库', Trace: 'Knowledge RAG Trace' }
+    resume: { 评分: '简历评分报告', 优化: '简历优化 · Bullet 改写', 文档: '简历优化 · 文档' },
+    scenario: { 题目: '业务场景 · 当前题目', 点评: '五维点评结果', 解析: '框架 / 标准 / 对比' },
+    prep: { 准备报告: '面试准备报告', 追问清单: 'Likely 追问 × 5', 文档: '面试话术 · 导出' },
+    kb: { 阅读: 'AI 产品经理知识库' }
   };
   return map[scene]?.[tab] || tab;
-}
-
-function artifactStripHtml(scene) {
-  const chips = scene === 'resume'
-    ? [{ label: '评分报告', tab: '评分' }, { label: '优化 bullet', tab: '优化' }, { label: '简历_v2.docx', tab: '文档' }, { label: 'trace', tab: 'Trace' }]
-    : scene === 'scenario'
-      ? [{ label: '当前题目', tab: '题目' }, { label: '点评', tab: '点评' }, { label: '解析', tab: '解析' }, { label: 'trace', tab: 'Trace' }]
-      : scene === 'kb'
-        ? [{ label: '知识卡', tab: '阅读' }, { label: 'RAG trace', tab: 'Trace' }]
-        : [{ label: 'prepReport', tab: '准备报告' }, { label: '追问×5', tab: '追问清单' }, { label: '话术.docx', tab: '文档' }, { label: 'trace', tab: 'Trace' }];
-  const active = getCanvasTab(scene);
-  return chips.map(c =>
-    `<button type="button" class="artifact-chip${c.tab === active ? ' active' : ''}" data-artifact-tab="${escapeAttr(c.tab)}">${escapeHtml(c.label)}</button>`
-  ).join('');
 }
 
 function agentToolStepsHtml() {
@@ -4218,7 +4204,7 @@ function renderDocumentPanelHtml() {
   const report = resumeOptimizeResult.optimizeReport;
   const hasDoc = Boolean(report?.bullets?.length || resumeOptimizeResult.content);
   if (!hasDoc) {
-    return `<div class="resume-pane-empty">先完成「一键优化」，再在此预览 / 导出文档</div>`;
+    return `<div class="resume-pane-empty">先完成「优化」标签页中的优化，再在此预览 / 导出文档</div>`;
   }
   const changes = (report?.evalBadcase || []).slice(0, 4);
   const preview = (report?.bullets || []).map(b =>
@@ -4411,15 +4397,12 @@ function renderPrepDocumentPanelHtml() {
 }
 
 function applyScenarioCanvasPanels(tab) {
-  const map = { 题目: 'scenario-q', 点评: 'scenario-review', 解析: 'scenario-extras', Trace: 'scenario-trace' };
+  const map = { 题目: 'scenario-q', 点评: 'scenario-review', 解析: 'scenario-extras' };
   const show = map[tab] || 'scenario-q';
   document.querySelectorAll('[data-scenario-panel]').forEach(el => {
     el.classList.toggle('canvas-panel', true);
     el.classList.toggle('active', el.dataset.scenarioPanel === show);
   });
-  if (tab === 'Trace') {
-    loadTracePanel(document.getElementById('scenarioTraceHost'), 'scenario');
-  }
 }
 
 function mountAgentWorkspace(innerHtml) {
@@ -4441,7 +4424,6 @@ function mountAgentWorkspace(innerHtml) {
         </div>
         <div class="canvas-tabs" id="canvasTabs">${canvasTabsHtml(scene)}</div>
         <div class="canvas-body" id="agentCanvasBody">${innerHtml}</div>
-        <div class="artifact-strip" id="artifactStrip">${artifactStripHtml(scene)}</div>
       </section>
       <aside class="agent-chat" aria-label="Agent 对话">
         <div class="agent-chat-head"><h3>Agent 对话</h3><span class="agent-nav-badge">控制台</span></div>
@@ -4600,13 +4582,6 @@ function updateCanvasChrome(scene) {
   document.querySelectorAll('#canvasTabs [data-canvas-tab]').forEach(btn => {
     btn.onclick = () => { setCanvasTab(scene, btn.dataset.canvasTab); refreshAgentCanvas(); };
   });
-  const strip = document.getElementById('artifactStrip');
-  if (strip) {
-    strip.innerHTML = artifactStripHtml(scene);
-    strip.querySelectorAll('[data-artifact-tab]').forEach(btn => {
-      btn.onclick = () => { setCanvasTab(scene, btn.dataset.artifactTab); refreshAgentCanvas(); };
-    });
-  }
 }
 
 function exportResumeMarkdown() {
@@ -4645,9 +4620,7 @@ function renderResumeCanvasPanels() {
     if (docEl) docEl.innerHTML = renderDocumentPanelHtml();
     document.getElementById('docExportMdBtn')?.addEventListener('click', exportResumeMarkdown);
   }
-  if (tab === 'Trace') {
-    loadTracePanel(document.getElementById('resumeTracePanel'), 'resume');
-  }
+  bindResumePaneActions();
 }
 
 function renderPrepCanvasPanels() {
@@ -4667,9 +4640,6 @@ function renderPrepCanvasPanels() {
     if (el) el.innerHTML = renderPrepDocumentPanelHtml();
     document.getElementById('prepDocExportMdBtn')?.addEventListener('click', exportPrepMarkdown);
   }
-  if (tab === 'Trace') {
-    loadTracePanel(document.getElementById('prepTracePanel'), 'prep');
-  }
 }
 
 function resumeCanvasInnerHtml() {
@@ -4677,15 +4647,10 @@ function resumeCanvasInnerHtml() {
   const tabClass = (name) => `canvas-panel${tab === name ? ' active' : ''}`;
   return `
     <div class="canvas-profile-compact">${profileUploadHtml()}</div>
-    <div class="canvas-quick-actions">
-      <button type="button" class="btn-primary" id="resumeScoreBtn">一键评分</button>
-      <button type="button" class="btn-primary" id="resumeOptimizeBtn">一键优化</button>
-    </div>
     <div id="resumeCanvasRoot">
       <div class="${tabClass('评分')}" data-resume-panel="评分"><div class="resume-pane-body" id="resumeScoreBody"></div><p class="resume-pane-error" id="resumeScoreError" hidden></p></div>
       <div class="${tabClass('优化')}" data-resume-panel="优化"><div class="resume-pane-body" id="resumeOptimizeBody"></div><p class="resume-pane-error" id="resumeOptimizeError" hidden></p></div>
       <div class="${tabClass('文档')}" data-resume-panel="文档"><div id="resumeDocPanel"></div></div>
-      <div class="${tabClass('Trace')}" data-resume-panel="Trace"><div id="resumeTracePanel"></div></div>
     </div>`;
 }
 
@@ -4703,7 +4668,6 @@ function prepCanvasInnerHtml() {
       <div class="${tabClass('准备报告')}" data-prep-panel="准备报告"><div class="resume-pane-body" id="interviewPrepBody"></div><p class="resume-pane-error" id="interviewPrepError" hidden></p></div>
       <div class="${tabClass('追问清单')}" data-prep-panel="追问清单"><div id="prepFollowupsPanel"></div></div>
       <div class="${tabClass('文档')}" data-prep-panel="文档"><div id="prepDocPanel"></div></div>
-      <div class="${tabClass('Trace')}" data-prep-panel="Trace"><div id="prepTracePanel"></div></div>
     </div>`;
 }
 
@@ -4717,7 +4681,6 @@ function kbCanvasInnerHtml() {
         <div id="kbPagerHost"></div>
         <div id="knowledgeFlatViewer"></div>
       </div>
-      <div class="${tabClass('Trace')}" data-kb-panel="Trace"><div id="kbTracePanel"></div></div>
     </div>`;
 }
 
@@ -4750,9 +4713,6 @@ function renderKbCanvasPanels(scrollToCardId) {
     el.classList.toggle('active', el.dataset.kbPanel === tab);
   });
   if (tab === '阅读') renderKbReadPanel(scrollToCardId);
-  if (tab === 'Trace') {
-    loadTracePanel(document.getElementById('kbTracePanel'), 'kb');
-  }
 }
 
 async function renderKbView(scrollToCardId) {
@@ -4921,7 +4881,7 @@ function profileUploadHtml() {
         <input type="file" id="resumeFileInput" accept=".pdf,.doc,.docx,.txt,.md,.text,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" hidden />
         <div class="upload-dropzone-body" id="resumeDropzoneBody">${resumeDoneHtml}</div>
       </div>
-      <p class="profile-file-status${resumeDone ? ' is-ok' : ''}" id="resumeFileStatus">${resumeDone ? '可直接点下方「一键评分」' : ''}</p>
+      <p class="profile-file-status${resumeDone ? ' is-ok' : ''}" id="resumeFileStatus">${resumeDone ? '上传完成，切换到「评分」标签开始' : ''}</p>
       <details class="upload-paste-fallback">
         <summary>没有文件？粘贴文本</summary>
         <textarea id="profileResumeInput" placeholder="直接粘贴简历全文">${escapeHtml(profileResume)}</textarea>
@@ -5400,6 +5360,32 @@ async function runInterviewPrepAction() {
   }
 }
 
+function resumeHasScore() {
+  return Boolean(resumeScoreResult.scoreReport || resumeScoreResult.content);
+}
+
+function bindResumePaneActions() {
+  document.getElementById('resumeStartScoreBtn')?.addEventListener('click', () => {
+    saveProfileFromDom();
+    if (!profileResume.trim()) { alert('请先上传或粘贴简历'); return; }
+    runResumeAction('resume-score', null, '开始评分');
+  });
+  document.getElementById('resumeStartOptimizeBtn')?.addEventListener('click', () => {
+    if (!resumeHasScore()) {
+      alert('请先在「评分」页完成评分');
+      setCanvasTab('resume', '评分');
+      refreshAgentCanvas();
+      return;
+    }
+    saveProfileFromDom();
+    runResumeAction('resume-optimize', null, '开始优化');
+  });
+  document.getElementById('resumeGoScoreBtn')?.addEventListener('click', () => {
+    setCanvasTab('resume', '评分');
+    refreshAgentCanvas();
+  });
+}
+
 function renderResumeScorePane() {
   const body = document.getElementById('resumeScoreBody');
   const errEl = document.getElementById('resumeScoreError');
@@ -5419,7 +5405,11 @@ function renderResumeScorePane() {
     if (errEl) errEl.hidden = true;
     return;
   }
-  body.innerHTML = '<div class="resume-pane-empty">点上方「一键评分」</div>';
+  body.innerHTML = `<div class="resume-pane-empty">
+    <p>上传简历后，在此生成五维评分报告</p>
+    <button type="button" class="btn-primary resume-tab-cta" id="resumeStartScoreBtn">开始评分</button>
+  </div>`;
+  bindResumePaneActions();
 }
 
 function renderResumeOptimizePane() {
@@ -5441,7 +5431,19 @@ function renderResumeOptimizePane() {
     if (errEl) errEl.hidden = true;
     return;
   }
-  body.innerHTML = '<div class="resume-pane-empty">点上方「一键优化」</div>';
+  if (!resumeHasScore()) {
+    body.innerHTML = `<div class="resume-pane-empty">
+      <p>请先在「评分」页完成评分，再开始优化</p>
+      <button type="button" class="btn-frost resume-tab-cta" id="resumeGoScoreBtn">去评分</button>
+    </div>`;
+    bindResumePaneActions();
+    return;
+  }
+  body.innerHTML = `<div class="resume-pane-empty">
+    <p>基于评分结果，改写 bullet 与项目描述</p>
+    <button type="button" class="btn-primary resume-tab-cta" id="resumeStartOptimizeBtn">开始优化</button>
+  </div>`;
+  bindResumePaneActions();
 }
 
 function renderResumePanes() {
@@ -5500,6 +5502,7 @@ async function runResumeAction(action, triggerBtnId, triggerBtnLabel) {
         scoreReport: data.scoreReport || null,
         loading: false
       };
+      setCanvasTab('resume', '优化');
     } else {
       resumeOptimizeResult = {
         content: data.reply || '',
@@ -5623,18 +5626,21 @@ function renderResumeView() {
 }
 
 function bindResumeView() {
-  document.getElementById('resumeScoreBtn')?.addEventListener('click', () => {
-    saveProfileFromDom();
-    if (!profileResume.trim()) { alert('请先上传或粘贴简历'); return; }
-    setCanvasTab('resume', '评分');
-    runResumeAction('resume-score', 'resumeScoreBtn', '一键评分');
-  });
-  document.getElementById('resumeOptimizeBtn')?.addEventListener('click', () => {
-    saveProfileFromDom();
-    if (!profileResume.trim()) { alert('请先上传或粘贴简历'); return; }
-    setCanvasTab('resume', '优化');
-    runResumeAction('resume-optimize', 'resumeOptimizeBtn', '一键优化');
-  });
+  bindResumePaneActions();
+}
+
+async function openTraceModal() {
+  const modal = document.getElementById('traceModal');
+  const body = document.getElementById('traceModalBody');
+  if (!modal || !body) return;
+  const scene = agentScene || 'scenario';
+  const titles = { resume: 'Resume Trace', scenario: 'Review Trace', prep: 'Prep Trace', kb: 'Knowledge RAG Trace' };
+  const titleEl = document.getElementById('traceTitle');
+  if (titleEl) titleEl.textContent = titles[scene] || 'Observation Trace';
+  body.innerHTML = '<p class="trace-panel-loading">加载 trace…</p>';
+  modal.classList.add('open');
+  modal.setAttribute('aria-hidden', 'false');
+  await loadTracePanel(body, scene);
 }
 
 function renderInterviewView() {
@@ -5878,11 +5884,9 @@ function senseCanvasInnerHtml(q, tid, meta, draft) {
       <div class="canvas-panel${tab === '解析' ? ' active' : ''}" data-scenario-panel="scenario-extras">
         <div id="scenarioExtrasHost-${tid}"><p class="resume-pane-empty">提交点评后，框架 / 标准 / 对比会出现在此</p></div>
       </div>
-      <div class="canvas-panel${tab === 'Trace' ? ' active' : ''}" data-scenario-panel="scenario-trace">
-        <div id="scenarioTraceHost"></div>
-      </div>
       <div class="sense-session-actions">
         <button type="button" class="btn-frost" id="senseReplayBtn">练习记录</button>
+        <button type="button" class="btn-frost" id="senseTraceBtn">Trace</button>
       </div>
     </div>`;
 }
@@ -5908,6 +5912,7 @@ function renderSenseSession(q) {
     startRandomSense();
   };
   document.getElementById('senseReplayBtn').onclick = () => openAnalyticsModal();
+  document.getElementById('senseTraceBtn').onclick = () => openTraceModal();
   initFollowUp(tid);
   bindVoiceInput(tid);
   updateReadingTip(tid, q.text);
@@ -7121,6 +7126,24 @@ async function bootstrap() {
   window.addEventListener('resize', () => {});
   const btnHistory = document.getElementById('btnHistory');
   if (btnHistory) btnHistory.onclick = openAnalyticsModal;
+  const btnTrace = document.getElementById('btnTrace');
+  if (btnTrace) btnTrace.onclick = openTraceModal;
+  const traceModal = document.getElementById('traceModal');
+  const traceClose = document.getElementById('traceClose');
+  if (traceModal) {
+    traceModal.onclick = (e) => {
+      if (e.target === traceModal) {
+        traceModal.classList.remove('open');
+        traceModal.setAttribute('aria-hidden', 'true');
+      }
+    };
+  }
+  if (traceClose) {
+    traceClose.onclick = () => {
+      traceModal?.classList.remove('open');
+      traceModal?.setAttribute('aria-hidden', 'true');
+    };
+  }
   await enterApp();
 }
 
