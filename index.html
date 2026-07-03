@@ -5029,11 +5029,10 @@ function mountAgentChatPlan() {
   const zone = document.getElementById('agentChatPlan');
   if (!zone) return;
   zone.innerHTML = `
-    ${goalPlanBarHtml()}
+    ${goalPlanMissionHtml()}
     <div class="goal-plan-list" id="goalPlanList" hidden></div>
     <div class="external-search-box" id="externalSearchBox" hidden></div>
     <div class="llm-demo-box" id="llmDemoBox" hidden></div>`;
-  bindGoalPlan();
   if (agentMission) {
     renderMissionBar();
     renderExternalSearchBox(agentMission.externalSearch);
@@ -5062,15 +5061,8 @@ function findBankQuestionForScenario(scenarioText, topicId) {
   return qs[Math.floor(Math.random() * qs.length)] || null;
 }
 
-function goalPlanBarHtml() {
-  return `<div class="goal-plan-wrap" id="goalPlanWrap">
-    <label class="goal-plan-label" for="goalPlanInput">训练计划</label>
-    <div class="goal-plan-row">
-      <input type="text" class="goal-plan-input" id="goalPlanInput" placeholder="目标，如：明天面字节 AI PM" autocomplete="off" enterkeyhint="go" />
-      <button type="button" class="btn-primary goal-plan-btn" id="goalPlanBtn">生成计划</button>
-    </div>
-    <p class="goal-plan-error" id="goalPlanError" role="alert"></p>
-  </div>
+function goalPlanMissionHtml() {
+  return `<p class="goal-plan-error" id="goalPlanError" role="alert"></p>
   <div class="mission-bar" id="missionBar" hidden>
     <div class="mission-bar-head">
       <span class="mission-bar-title">Agent 任务流</span>
@@ -5502,37 +5494,50 @@ function onMissionPracticeComplete(topicId, rubricAvg, scenario) {
   setTimeout(() => advanceMission(), 800);
 }
 
+function shouldStartTrainingPlan(goal, unified) {
+  if (unified && unified.intent === 'goal_plan') return true;
+  const t = String(goal || '').trim();
+  if (!t) return false;
+  return /训练计划|学习计划|帮我规划|规划.*(?:训练|学习|备考)|帮我安排|明天面|后天面|紧急面试|多步|分步(?:执行|完成)|制定计划/i.test(t);
+}
+
 async function startMission(goal) {
   goal = String(goal || '').trim();
   if (!goal) {
-    showGoalPlanError('请输入学习目标');
+    showGoalPlanError('请输入内容');
     return;
   }
   if (!TOPICS.length) {
     showGoalPlanError('题目尚未加载完成');
     return;
   }
-  const btn = document.getElementById('goalPlanBtn');
-  const input = document.getElementById('goalPlanInput');
+  const sendBtn = document.getElementById('agentChatSend');
   showGoalPlanError('');
   const unified = recognizeAgentIntent(goal, { scene: agentScene });
   if (unified.intent === 'coach_mode' && unified.coachMode) {
-    if (btn) { btn.disabled = false; btn.textContent = '生成计划'; }
+    pushAgentChatUser(agentScene, goal);
     openCoachFromGoal(goal, unified.coachMode);
-    if (input) input.blur();
     return;
   }
-  if (['score_resume', 'optimize_resume', 'prep_interview', 'next_scenario', 'navigate_scene'].includes(unified.intent)) {
-    if (btn) { btn.disabled = false; btn.textContent = '生成计划'; }
+  const quickIntents = ['score_resume', 'optimize_resume', 'prep_interview', 'next_scenario', 'navigate_scene', 'switch_tab', 'export_doc', 'submit_scenario'];
+  if (quickIntents.includes(unified.intent) && (unified.confidence === 'high' || !['switch_tab', 'export_doc', 'submit_scenario'].includes(unified.intent))) {
     if (unified.targetScene) navigateToAgentScene(unified.targetScene);
     await handleGlobalAgentMessage(goal, unified.targetScene || agentScene);
-    if (input) input.blur();
     return;
   }
-  if (btn) {
-    btn.disabled = true;
-    btn.textContent = /面|面试|明[天日]|后天/i.test(goal) ? '规划并 AI 出题…' : '规划中…';
+  if (parseMultiStepMessage(goal).length > 1) {
+    await handleGlobalAgentMessage(goal, agentScene);
+    return;
   }
+  if (!shouldStartTrainingPlan(goal, unified)) {
+    await handleGlobalAgentMessage(goal, agentScene);
+    return;
+  }
+  if (sendBtn) {
+    sendBtn.disabled = true;
+    sendBtn.textContent = /面|面试|明[天日]|后天/i.test(goal) ? '规划中…' : '规划中…';
+  }
+  pushAgentChatUser(agentScene, goal);
   try {
     const catalog = TOPICS.map(t => ({
       id: t.id,
@@ -5575,49 +5580,25 @@ async function startMission(goal) {
     renderExternalSearchBox(agentMission.externalSearch);
     renderLlmDemoBox(agentMission.llmGenerate, agentMission.ragSession);
     renderMissionStepList();
+    pushAgentChatAssistant(agentScene, `已生成 ${steps.length} 步训练计划，重点：${agentMission.focus || goal}`);
     runMissionStep(0);
-    if (input) input.blur();
     if (document.documentElement.classList.contains('is-mobile')) {
       document.getElementById('agentChatBackdrop')?.classList.add('open');
       document.querySelector('.agent-chat')?.classList.add('drawer-open');
     }
   } catch (e) {
     showGoalPlanError(e.message || '规划失败');
+    pushAgentChatAssistant(agentScene, '规划失败：' + (e.message || '未知错误'));
   } finally {
-    if (btn) {
-      btn.disabled = false;
-      btn.textContent = '生成计划';
+    if (sendBtn) {
+      sendBtn.disabled = false;
+      sendBtn.textContent = '发送';
     }
   }
 }
 
 function startByGoal(goal) {
   return startMission(goal);
-}
-
-function bindGoalPlan() {
-  const btn = document.getElementById('goalPlanBtn');
-  const input = document.getElementById('goalPlanInput');
-  if (!btn || !input) return;
-  btn.onclick = () => startMission(input.value);
-  input.addEventListener('keydown', e => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      startMission(input.value);
-    }
-  });
-  if (agentMission) {
-    renderMissionBar();
-    renderExternalSearchBox(agentMission.externalSearch);
-    renderLlmDemoBox(agentMission.llmGenerate, agentMission.ragSession);
-    renderMissionStepList();
-    const cur = agentMission.steps[agentMission.currentIndex];
-    if (cur && cur.type === 'read' && cur.status !== 'done') {
-      showMissionReadStep(cur, agentMission.currentIndex);
-    } else {
-      setMissionViewMode('practice');
-    }
-  }
 }
 
 function renderScenarioSearchResults(query) {
@@ -6770,7 +6751,7 @@ function mountAgentWorkspace(innerHtml) {
             <button type="button" class="agent-compose-icon" id="agentChatMic" title="语音输入" aria-label="语音输入"></button>
             <input type="file" id="agentChatFile" accept=".txt,.md,.json" hidden />
             <button type="button" class="agent-compose-icon" id="agentChatAttach" title="附加文本文件" aria-label="附加文本文件"></button>
-            <input type="text" class="agent-chat-input" id="agentChatInput" placeholder="短指令直接发；复杂目标用上方「生成计划」" />
+            <input type="text" class="agent-chat-input" id="agentChatInput" placeholder="输入指令或备战目标…" autocomplete="off" enterkeyhint="send" />
             <button type="button" class="btn-primary" id="agentChatSend">发送</button>
           </div>
         </div>
@@ -6836,7 +6817,7 @@ function bindAgentWorkspace(scene) {
     const btn = document.getElementById('agentChatSend');
     if (btn) { btn.disabled = true; btn.textContent = '处理中…'; }
     try {
-      await handleGlobalAgentMessage(msg, scene);
+      await startMission(msg);
     } finally {
       if (btn) { btn.disabled = false; btn.textContent = '发送'; }
     }
