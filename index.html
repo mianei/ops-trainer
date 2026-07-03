@@ -714,6 +714,33 @@
     border-radius: var(--btn-pill-radius);
     overflow: visible;
     flex-shrink: 0;
+    color: #fff;
+    background: linear-gradient(180deg, var(--btn-green-top) 0%, var(--btn-green-mid) 42%, var(--btn-green-base) 100%);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.24),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.12),
+      0 3px 0 var(--btn-green-lip),
+      0 4px 12px var(--btn-green-glow);
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  }
+  .doc-export-split:hover {
+    background: linear-gradient(180deg, var(--btn-green-hover-top) 0%, var(--btn-green-hover-mid) 42%, var(--btn-green-hover-base) 100%);
+    transform: translateY(-1px);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.3),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.1),
+      0 5px 0 var(--btn-green-lip),
+      0 8px 20px var(--btn-green-hover-glow);
+  }
+  .doc-export-split:active {
+    transform: translateY(3px);
+    background: linear-gradient(180deg, var(--btn-green-mid) 0%, var(--btn-green-base) 55%, var(--btn-green-lip) 100%);
+    box-shadow:
+      inset 0 2px 4px rgba(0, 0, 0, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.16),
+      0 1px 0 var(--btn-green-lip),
+      0 3px 10px var(--btn-green-glow);
   }
   .doc-export-split .doc-export-main,
   .doc-export-split .doc-export-toggle {
@@ -726,13 +753,10 @@
     border: none;
     cursor: pointer;
     white-space: nowrap;
-    color: #fff;
-    background: linear-gradient(180deg, var(--btn-green-top) 0%, var(--btn-green-mid) 42%, var(--btn-green-base) 100%);
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.24),
-      inset 0 -1px 0 rgba(0, 0, 0, 0.12),
-      0 3px 0 var(--btn-green-lip),
-      0 4px 12px var(--btn-green-glow);
+    color: inherit;
+    background: transparent;
+    box-shadow: none;
+    text-shadow: inherit;
   }
   .doc-export-split .doc-export-main {
     border-radius: var(--btn-pill-radius) 0 0 var(--btn-pill-radius);
@@ -743,10 +767,6 @@
     padding: 5px 8px;
     border-left: 1px solid rgba(255, 255, 255, 0.22);
     font-size: 10px;
-  }
-  .doc-export-split .doc-export-main:hover,
-  .doc-export-split .doc-export-toggle:hover {
-    background: linear-gradient(180deg, var(--btn-green-hover-top) 0%, var(--btn-green-hover-mid) 42%, var(--btn-green-hover-base) 100%);
   }
   .doc-export-menu {
     position: absolute;
@@ -1557,75 +1577,73 @@
     gap: 8px;
     margin-bottom: 1.25rem;
     padding-bottom: 1rem;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    border-bottom: 1px solid var(--line);
   }
   .knowledge-page-btn {
     font-family: inherit;
     font-size: 12px;
     font-weight: 600;
     padding: 8px 12px;
-    border-radius: var(--r-lg);
-    border: 1px solid var(--frost-border);
-    background: linear-gradient(145deg, rgba(255, 255, 255, 0.52) 0%, rgba(255, 255, 255, 0.28) 100%);
-    backdrop-filter: var(--blur-sm);
-    -webkit-backdrop-filter: var(--blur-sm);
+    border-radius: var(--btn-pill-radius);
+    border: 1px solid var(--block-border);
+    background: var(--block-bg-muted);
     color: var(--ink2);
     cursor: pointer;
-    transition: background 0.3s ease, border-color 0.3s ease, color 0.25s ease, box-shadow 0.3s ease;
+    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
     display: inline-flex;
     align-items: center;
     gap: 6px;
   }
   .knowledge-page-btn:hover {
-    background: linear-gradient(145deg, rgba(255, 255, 255, 0.78) 0%, rgba(255, 255, 255, 0.5) 100%);
+    background: var(--block-bg-subtle);
     color: var(--ink);
     box-shadow: var(--inset-hi);
   }
   .knowledge-page-btn.active {
     color: var(--ink);
-    backdrop-filter: var(--blur-md);
-    -webkit-backdrop-filter: var(--blur-md);
-    box-shadow: var(--inset-hi), 0 6px 20px rgba(0, 0, 0, 0.06);
+    box-shadow: var(--inset-hi), var(--shadow-sm);
   }
   .knowledge-page-btn.cat-product.active {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.88) 0%, rgba(212, 245, 232, 0.62) 45%, rgba(38, 194, 129, 0.14) 100%);
-    border-color: rgba(255, 255, 255, 0.9);
-    box-shadow: var(--inset-hi), 0 6px 22px rgba(38, 194, 129, 0.12);
+    background: var(--product-soft);
+    border-color: rgba(38, 194, 129, 0.35);
+    color: var(--product);
+    box-shadow: var(--inset-hi), 0 4px 16px rgba(38, 194, 129, 0.1);
   }
   .knowledge-page-btn.cat-ops.active {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.88) 0%, rgba(220, 236, 255, 0.62) 45%, rgba(0, 102, 204, 0.1) 100%);
-    border-color: rgba(255, 255, 255, 0.9);
-    box-shadow: var(--inset-hi), 0 6px 22px rgba(0, 102, 204, 0.1);
+    background: var(--ops-soft);
+    border-color: rgba(0, 102, 204, 0.35);
+    color: var(--ops);
+    box-shadow: var(--inset-hi), 0 4px 16px rgba(0, 102, 204, 0.08);
   }
   .knowledge-page-btn.cat-interview.active {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.88) 0%, rgba(232, 230, 255, 0.65) 45%, rgba(94, 92, 230, 0.12) 100%);
-    border-color: rgba(255, 255, 255, 0.9);
-    box-shadow: var(--inset-hi), 0 6px 22px rgba(94, 92, 230, 0.1);
+    background: var(--interview-soft);
+    border-color: rgba(94, 92, 230, 0.35);
+    color: var(--interview);
+    box-shadow: var(--inset-hi), 0 4px 16px rgba(94, 92, 230, 0.1);
   }
   .kpage-count {
     font-size: 10px;
     font-weight: 700;
     padding: 2px 6px;
     border-radius: 999px;
-    background: rgba(0, 0, 0, 0.06);
+    background: var(--block-bg-inset);
+    border: 1px solid var(--block-border-subtle);
     color: var(--ink3);
     font-variant-numeric: tabular-nums;
   }
   .knowledge-page-btn.active .kpage-count {
-    backdrop-filter: var(--blur-sm);
-    -webkit-backdrop-filter: var(--blur-sm);
-    border: 1px solid rgba(255, 255, 255, 0.55);
+    border-color: var(--block-border);
   }
   .knowledge-page-btn.cat-product.active .kpage-count {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.75) 0%, rgba(38, 194, 129, 0.22) 100%);
+    background: rgba(38, 194, 129, 0.12);
     color: var(--product);
   }
   .knowledge-page-btn.cat-ops.active .kpage-count {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.75) 0%, rgba(0, 102, 204, 0.18) 100%);
+    background: rgba(0, 102, 204, 0.1);
     color: var(--ops);
   }
   .knowledge-page-btn.cat-interview.active .kpage-count {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.75) 0%, rgba(94, 92, 230, 0.2) 100%);
+    background: rgba(94, 92, 230, 0.12);
     color: var(--interview);
   }
   .knowledge-page-hint {
@@ -1641,25 +1659,26 @@
     gap: 12px;
     margin-top: 1.5rem;
     padding-top: 1rem;
-    border-top: 1px solid rgba(0, 0, 0, 0.06);
+    border-top: 1px solid var(--line);
   }
   .knowledge-pager-nav button {
     font-family: inherit;
     font-size: 13px;
     font-weight: 600;
     padding: 8px 14px;
-    border-radius: var(--r);
+    border-radius: var(--btn-pill-radius);
     border: 1px solid var(--frost-border);
-    background: rgba(255, 255, 255, 0.55);
+    background: var(--frost);
     color: var(--ink2);
     cursor: pointer;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
   }
   .knowledge-pager-nav button:disabled {
     opacity: 0.4;
     cursor: not-allowed;
   }
   .knowledge-pager-nav button:not(:disabled):hover {
-    background: var(--white);
+    background: var(--frost-strong);
     color: var(--ink);
   }
   .knowledge-pager-pos {
@@ -1701,9 +1720,9 @@
     position: relative;
     padding: 1.15rem 1.25rem;
     border-radius: var(--r-lg);
-    background: rgba(255, 255, 255, 0.88);
-    border: 1px solid var(--frost-border);
-    box-shadow: var(--shadow-sm), var(--inset-hi);
+    background: var(--block-bg);
+    border: 1px solid var(--block-border);
+    box-shadow: var(--block-shadow);
     margin-bottom: 12px;
   }
   .knowledge-card-single .kc-body-paged {
@@ -1723,10 +1742,11 @@
     z-index: 5;
     padding: 10px 12px;
     border-radius: var(--r-lg);
-    background: rgba(255, 255, 255, 0.92);
-    border: 1px solid var(--frost-border);
+    background: var(--block-bg-subtle);
+    border: 1px solid var(--block-border);
     box-shadow: var(--shadow-sm);
-    backdrop-filter: blur(12px);
+    backdrop-filter: var(--blur-sm);
+    -webkit-backdrop-filter: var(--blur-sm);
   }
   .mission-read-pager {
     position: static;
@@ -1739,7 +1759,7 @@
   .knowledge-pager-pos {
     font-size: 13px;
     font-weight: 600;
-    color: var(--ink3);
+    color: var(--ink2);
     font-variant-numeric: tabular-nums;
     min-width: 72px;
     text-align: center;
@@ -2187,6 +2207,7 @@
   .score-pane-metric-label { font-size: 10px; color: var(--ink3); font-weight: 600; margin-bottom: 2px; }
   .score-pane-metric-value { font-size: 1.35rem; font-weight: 800; line-height: 1.1; font-variant-numeric: tabular-nums; }
   .score-pane-metric-value--rose { color: #e11d48; }
+  .score-pane-metric-value--amber { color: #ca8a04; }
   .score-pane-metric-value--blue { color: #2563eb; }
   .score-pane-metric-value--green { color: #16a34a; }
   .score-pane-summary {
@@ -2405,6 +2426,7 @@
   }
   .score-dash-unit { font-size: 1rem; font-weight: 600; opacity: 0.55; margin-left: 2px; }
   .score-dash-value--rose { color: #e11d48; }
+  .score-dash-value--amber { color: #ca8a04; }
   .score-dash-value--blue { color: #2563eb; }
   .score-dash-value--green { color: #16a34a; }
   .score-dash-desc {
@@ -2790,13 +2812,13 @@
     font-weight: 600;
     padding: 8px 14px;
     border-radius: var(--btn-pill-radius);
-    border: 1px solid var(--btn-ghost-border);
-    background: var(--btn-ghost-bg);
-    color: var(--btn-ghost-color);
+    border: 1px solid var(--frost-border);
+    background: var(--frost);
+    color: var(--ink2);
     cursor: pointer;
-    transition: background 0.2s, color 0.2s;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
   }
-  .kc-nav:hover:not(:disabled) { background: var(--btn-ghost-hover-bg); color: var(--btn-ghost-hover-color); }
+  .kc-nav:hover:not(:disabled) { background: var(--frost-strong); color: var(--ink); }
   .kc-nav:disabled { opacity: 0.38; cursor: not-allowed; }
   .kc-dots {
     display: flex;
@@ -2824,6 +2846,7 @@
     font-weight: 700;
     margin-bottom: 0.35rem;
     letter-spacing: -0.02em;
+    color: var(--ink);
   }
   .knowledge-card .kc-tags {
     display: flex;
@@ -2835,10 +2858,10 @@
     font-size: 10px;
     font-weight: 600;
     padding: 2px 8px;
-    border-radius: 6px;
+    border-radius: 99px;
     background: var(--block-bg-inset);
-    border: 1px solid var(--block-border-subtle);
-    color: var(--ink3);
+    border: 1px solid var(--frost-border);
+    color: var(--ink2);
   }
   .knowledge-card .kc-body {
     font-size: 14px;
@@ -3138,6 +3161,10 @@
       backdrop-filter: none;
       -webkit-backdrop-filter: none;
     }
+    .knowledge-page-btn { background: var(--block-bg-muted); }
+    .knowledge-page-btn.cat-product.active { background: var(--product-soft); }
+    .knowledge-page-btn.cat-ops.active { background: var(--ops-soft); }
+    .knowledge-page-btn.cat-interview.active { background: var(--interview-soft); }
     .module-item.active.cat-product { background: var(--product-soft); }
     .module-item.active.cat-ops { background: var(--ops-soft); }
     .module-item.active.cat-interview { background: var(--interview-soft); }
@@ -4101,6 +4128,11 @@
     background: rgba(0, 0, 0, 0.72);
   }
   html[data-theme="dark"] .rubric-bar { background: rgba(255, 255, 255, 0.08); }
+  html[data-theme="dark"] .score-pane-metric-value--rose { color: #fb7185; }
+  html[data-theme="dark"] .score-pane-metric-value--amber { color: #fbbf24; }
+  html[data-theme="dark"] .score-pane-metric-value--green { color: #4ade80; }
+  html[data-theme="dark"] .score-dash-value--rose { color: #fb7185; }
+  html[data-theme="dark"] .score-dash-value--amber { color: #fbbf24; }
   html[data-theme="dark"] .score-dash-value--blue { color: #a78bfa; }
   html[data-theme="dark"] .score-dash-value--green { color: #4ade80; }
   html[data-theme="dark"] .score-dim-score { color: #c084fc; }
@@ -4117,6 +4149,34 @@
       inset 0 -1px 0 rgba(0, 0, 0, 0.12),
       0 3px 0 var(--btn-green-lip),
       0 4px 12px var(--btn-green-glow);
+  }
+  html[data-theme="dark"] .doc-export-split {
+    background: linear-gradient(180deg, var(--btn-green-top) 0%, var(--btn-green-mid) 42%, var(--btn-green-base) 100%);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.24),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.12),
+      0 3px 0 var(--btn-green-lip),
+      0 4px 12px var(--btn-green-glow);
+  }
+  html[data-theme="dark"] .doc-export-split:hover {
+    background: linear-gradient(180deg, var(--btn-green-hover-top) 0%, var(--btn-green-hover-mid) 42%, var(--btn-green-hover-base) 100%);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.3),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.1),
+      0 4px 0 var(--btn-green-lip),
+      0 6px 16px var(--btn-green-hover-glow);
+  }
+  html[data-theme="dark"] .doc-export-split:active {
+    box-shadow:
+      inset 0 2px 4px rgba(0, 0, 0, 0.18),
+      inset 0 1px 0 rgba(255, 255, 255, 0.16),
+      0 0 0 var(--btn-green-lip),
+      0 2px 8px var(--btn-green-glow);
+  }
+  html[data-theme="dark"] .doc-export-split .doc-export-main,
+  html[data-theme="dark"] .doc-export-split .doc-export-toggle {
+    background: transparent;
+    box-shadow: none;
   }
   html[data-theme="dark"] .canvas-title-cta .btn-primary:hover:not(:disabled),
   html[data-theme="dark"] .agent-chat-compose .btn-primary:hover:not(:disabled) {
@@ -4148,11 +4208,121 @@
       0 0 0 var(--btn-green-lip),
       0 2px 8px var(--btn-green-glow);
   }
+  /* Knowledge base — align with agent canvas / chat dark tokens */
+  html[data-theme="dark"] .knowledge-card-single {
+    background: var(--block-bg-subtle);
+    border-color: var(--block-border);
+    box-shadow: var(--block-shadow), var(--block-glow);
+  }
+  html[data-theme="dark"] .knowledge-card h4 {
+    color: var(--ink);
+  }
+  html[data-theme="dark"] .knowledge-card .kc-body {
+    color: var(--ink2);
+  }
+  html[data-theme="dark"] .knowledge-card .kc-tag {
+    background: var(--block-bg-inset);
+    border-color: var(--block-border);
+    color: var(--ink2);
+  }
+  html[data-theme="dark"] .knowledge-stack-nav,
+  html[data-theme="dark"] .mission-read-pager {
+    background: var(--block-bg-muted);
+    border-color: var(--block-border);
+    box-shadow: var(--shadow-sm);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  html[data-theme="dark"] .knowledge-pager {
+    border-bottom-color: var(--block-border-subtle);
+  }
+  html[data-theme="dark"] .knowledge-pager-nav {
+    border-top-color: var(--block-border-subtle);
+  }
+  html[data-theme="dark"] .knowledge-page-btn {
+    background: var(--block-bg-muted);
+    border-color: var(--block-border);
+    color: var(--ink2);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  html[data-theme="dark"] .knowledge-page-btn:hover {
+    background: var(--block-bg-subtle);
+    color: var(--ink);
+    box-shadow: none;
+  }
+  html[data-theme="dark"] .knowledge-page-btn.active {
+    box-shadow: var(--shadow-sm);
+  }
+  html[data-theme="dark"] .knowledge-page-btn.cat-product.active {
+    background: var(--product-soft);
+    border-color: rgba(192, 132, 252, 0.38);
+    color: var(--product);
+    box-shadow: var(--shadow-sm), 0 0 14px rgba(168, 85, 247, 0.2);
+  }
+  html[data-theme="dark"] .knowledge-page-btn.cat-ops.active {
+    background: var(--ops-soft);
+    border-color: rgba(167, 139, 250, 0.35);
+    color: var(--ops);
+    box-shadow: var(--shadow-sm), 0 0 14px rgba(147, 51, 234, 0.16);
+  }
+  html[data-theme="dark"] .knowledge-page-btn.cat-interview.active {
+    background: var(--interview-soft);
+    border-color: rgba(192, 132, 252, 0.35);
+    color: var(--interview);
+    box-shadow: var(--shadow-sm), 0 0 14px rgba(168, 85, 247, 0.18);
+  }
+  html[data-theme="dark"] .kpage-count {
+    background: var(--block-bg-inset);
+    border-color: var(--block-border-subtle);
+    color: var(--ink3);
+  }
+  html[data-theme="dark"] .knowledge-page-btn.active .kpage-count {
+    border-color: var(--block-border);
+  }
+  html[data-theme="dark"] .knowledge-page-btn.cat-product.active .kpage-count {
+    background: rgba(192, 132, 252, 0.14);
+    color: var(--product);
+  }
+  html[data-theme="dark"] .knowledge-page-btn.cat-ops.active .kpage-count {
+    background: rgba(167, 139, 250, 0.12);
+    color: var(--ops);
+  }
+  html[data-theme="dark"] .knowledge-page-btn.cat-interview.active .kpage-count {
+    background: rgba(192, 132, 252, 0.14);
+    color: var(--interview);
+  }
+  html[data-theme="dark"] .knowledge-pager-nav button,
+  html[data-theme="dark"] .kc-nav {
+    background: var(--block-bg-muted);
+    border-color: var(--block-border);
+    color: var(--ink2);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  html[data-theme="dark"] .knowledge-pager-nav button:not(:disabled):hover,
+  html[data-theme="dark"] .kc-nav:hover:not(:disabled) {
+    background: var(--block-bg-subtle);
+    color: var(--ink);
+  }
+  html[data-theme="dark"] .knowledge-pager-pos {
+    color: var(--ink2);
+  }
+  html[data-theme="dark"] .kc-dot {
+    background: rgba(255, 255, 255, 0.12);
+  }
+  html[data-theme="dark"] .kc-dot.active {
+    background: var(--accent);
+  }
   @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
     html[data-theme="dark"] .glass,
     html[data-theme="dark"] .surface,
     html[data-theme="dark"] .surface-card,
-    html[data-theme="dark"] .btn-frost {
+    html[data-theme="dark"] .btn-frost,
+    html[data-theme="dark"] .knowledge-card-single,
+    html[data-theme="dark"] .knowledge-stack-nav,
+    html[data-theme="dark"] .knowledge-page-btn,
+    html[data-theme="dark"] .kc-nav {
       background: var(--block-bg-subtle);
     }
   }
@@ -5392,6 +5562,7 @@ async function executeMultiStepAgentPlan(msg, scene, steps) {
       if (!resumeHasScore()) { pushAgentChatAssistant(scene, '跳过优化：请先评分。'); continue; }
       pushAgentUndoSnapshot('优化前');
       saveProfileFromDom();
+      switchResumeOptimizeTab();
       await runResumeAction('resume-optimize', 'agentChatSend', '优化');
       persistCrossSceneMemory();
       pushAgentChatAssistant(scene, '✓ 优化完成');
@@ -5490,7 +5661,7 @@ function renderAgentSuggestionChips(scene) {
   if (scene === 'resume') {
     if (!profileResume.trim()) chips.push({ label: '上传简历后评分', msg: '帮我评分简历' });
     else if (!resumeScoreResult.content) chips.push({ label: '开始评分', msg: '评分' });
-    else if (!resumeOptimizeResult.content) chips.push({ label: '去优化 bullet', msg: '优化简历' });
+    else if (!resumeAlreadyOptimized()) chips.push({ label: '去优化 bullet', action: 'go_optimize', msg: '优化简历' });
     else chips.push({ label: '导出文档', msg: '导出 markdown' });
     if (resumeOptimizeResult.content) chips.push({ label: '撤销上次优化', action: 'undo' });
   } else if (scene === 'prep') {
@@ -5511,6 +5682,28 @@ function renderAgentSuggestionChips(scene) {
     btn.onclick = async () => {
       const c = chips[Number(btn.dataset.chipI)];
       if (c.action === 'undo') { popAgentUndoSnapshot(); return; }
+      if (c.action === 'go_optimize') {
+        pushAgentChatUser(scene, c.msg || '优化简历');
+        if (!resumeHasScore()) {
+          pushAgentChatAssistant(scene, '请先完成评分，再执行优化。');
+          return;
+        }
+        agentToolSteps = [{ name: 'optimize_resume', status: 'running', detail: '' }];
+        renderAgentToolsPanel();
+        pushAgentChatAssistant(scene, '收到，正在优化简历 bullet…');
+        pushAgentUndoSnapshot('优化前');
+        const shouldStart = resumeShouldAutoStartOptimize();
+        switchResumeOptimizeTab();
+        if (shouldStart) {
+          await runResumeAction('resume-optimize', 'agentChatSend', '优化');
+          persistCrossSceneMemory();
+        }
+        agentToolSteps = [{ name: 'optimize_resume', status: 'done', detail: '' }];
+        renderAgentToolsPanel();
+        pushAgentChatAssistant(scene, shouldStart ? '优化完成，请查看「优化」页。' : '已切换到「优化」页。');
+        renderAgentSuggestionChips(scene);
+        return;
+      }
       const input = document.getElementById('agentChatInput');
       if (input) input.value = c.msg;
       document.getElementById('agentChatSend')?.click();
@@ -5826,11 +6019,15 @@ async function handleGlobalAgentMessage(msg, scene) {
     renderAgentToolsPanel();
     pushAgentChatAssistant(scene, '收到，正在优化简历 bullet…');
     pushAgentUndoSnapshot('优化前');
-    await runResumeAction('resume-optimize', 'agentChatSend', '优化');
-    persistCrossSceneMemory();
+    const shouldStart = resumeShouldAutoStartOptimize();
+    switchResumeOptimizeTab();
+    if (shouldStart) {
+      await runResumeAction('resume-optimize', 'agentChatSend', '优化');
+      persistCrossSceneMemory();
+    }
     agentToolSteps = [{ name: 'optimize_resume', status: 'done', detail: '' }];
     renderAgentToolsPanel();
-    pushAgentChatAssistant(scene, '优化完成，请查看「优化」页。');
+    pushAgentChatAssistant(scene, shouldStart ? '优化完成，请查看「优化」页。' : '已切换到「优化」页。');
     renderAgentSuggestionChips(scene);
     return;
   }
@@ -6463,13 +6660,7 @@ function renderCanvasTitleCta(scene, tab) {
     runInterviewPrepAction();
   });
   document.getElementById('resumeGoOptimizeBtn')?.addEventListener('click', () => {
-    saveProfileFromDom();
-    setCanvasTab('resume', '优化');
-    refreshAgentCanvas();
-    const alreadyOptimized = Boolean(resumeOptimizeResult.optimizeReport || resumeOptimizeResult.content);
-    if (!alreadyOptimized && resumeHasScore() && !resumeOptimizeResult.loading) {
-      runResumeAction('resume-optimize', 'resumeStartOptimizeBtn', '开始优化');
-    }
+    goResumeOptimizeAndStart(null, '开始优化');
   });
   const tid = activeBankQuestion?.topicId || activeTopicId;
   if (tid) document.getElementById('btn-' + tid)?.addEventListener('click', () => submitAnswer(tid));
@@ -6477,7 +6668,7 @@ function renderCanvasTitleCta(scene, tab) {
 
 function renderDocExportSplitHtml(scope) {
   const id = scope === 'resume' ? 'resumeDocExport' : 'prepDocExport';
-  return `<div class="doc-export-split btn-primary" id="${id}Split" data-doc-export-scope="${scope}">
+  return `<div class="doc-export-split" id="${id}Split" data-doc-export-scope="${scope}">
     <button type="button" class="doc-export-main" data-doc-export-scope="${scope}" data-doc-format="docx">下载文档</button>
     <button type="button" class="doc-export-toggle" data-doc-export-scope="${scope}" aria-expanded="false" aria-haspopup="menu" aria-label="选择导出格式">▾</button>
     <div class="doc-export-menu" id="${id}Menu" hidden role="menu">
@@ -7218,6 +7409,16 @@ function getResumeCoachHistory(priorChat = []) {
   return [...seed, ...priorChat];
 }
 
+function scoreOverallColorClass(score, baseClass) {
+  const base = baseClass || 'score-pane-metric-value';
+  const n = typeof score === 'number' ? score : parseInt(String(score), 10);
+  if (Number.isNaN(n)) return base;
+  let tier = 'green';
+  if (n < 60) tier = 'rose';
+  else if (n <= 90) tier = 'amber';
+  return base + ' ' + base + '--' + tier;
+}
+
 function scoreReportKey(report) {
   if (!report) return '';
   const overall = report.overallScore ?? report.overallScore10;
@@ -7290,10 +7491,11 @@ function renderScorePaneContent(report, opts) {
   const fixesCls = animate ? ' score-reveal-delayed score-reveal-delayed--2' : '';
   const countAttr = animate && !Number.isNaN(overallNum) ? ` data-count-target="${overallNum}"` : '';
   const overallText = animate && !Number.isNaN(overallNum) ? '0' : String(overall);
+  const overallValueCls = scoreOverallColorClass(overallNum);
   const scoreKey = options.scoreKey ? ` data-score-key="${escapeAttr(options.scoreKey)}"` : '';
   return `<div class="score-pane${animate ? ' score-pane--animating' : ''}"${scoreKey}>
     <div class="score-pane-metrics score-pane-metrics--single">
-      <div class="score-pane-metric"><div class="score-pane-metric-label">评分</div><div class="score-pane-metric-value score-pane-metric-value--rose"${countAttr}>${escapeHtml(overallText)}</div></div>
+      <div class="score-pane-metric"><div class="score-pane-metric-label">评分</div><div class="${overallValueCls}"${countAttr}>${escapeHtml(overallText)}</div></div>
     </div>
     ${report.summary ? `<p class="score-pane-summary${summaryCls}">${escapeHtml(report.summary)}</p>` : ''}
     <div class="score-pane-bars">${bars}</div>
@@ -7499,26 +7701,62 @@ function resumeHasScore() {
   return Boolean(resumeScoreResult.scoreReport || resumeScoreResult.content);
 }
 
-function bindResumePaneActions() {
-  document.getElementById('resumeStartScoreBtn')?.addEventListener('click', () => {
-    saveProfileFromDom();
-    if (!profileResume.trim()) { alert('请先上传或粘贴简历'); return; }
-    runResumeAction('resume-score', 'resumeStartScoreBtn', '开始评分');
+function resumeAlreadyOptimized() {
+  return Boolean(resumeOptimizeResult.optimizeReport || resumeOptimizeResult.content);
+}
+
+function resumeShouldAutoStartOptimize() {
+  return !resumeAlreadyOptimized() && resumeHasScore() && !resumeOptimizeResult.loading;
+}
+
+function switchResumeOptimizeTab() {
+  saveProfileFromDom();
+  setCanvasTab('resume', '优化');
+  refreshAgentCanvas();
+}
+
+function scheduleResumeOptimizeStart(triggerBtnId, triggerBtnLabel) {
+  if (!resumeShouldAutoStartOptimize()) return;
+  queueMicrotask(() => {
+    if (!resumeShouldAutoStartOptimize()) return;
+    void runResumeAction('resume-optimize', triggerBtnId || null, triggerBtnLabel || '开始优化');
   });
-  document.getElementById('resumeStartOptimizeBtn')?.addEventListener('click', () => {
-    if (!resumeHasScore()) {
-      alert('请先在「评分」页完成评分');
+}
+
+function goResumeOptimizeAndStart(triggerBtnId, triggerBtnLabel) {
+  switchResumeOptimizeTab();
+  scheduleResumeOptimizeStart(triggerBtnId, triggerBtnLabel);
+}
+
+function bindResumePaneActions() {
+  const scoreBtn = document.getElementById('resumeStartScoreBtn');
+  if (scoreBtn) {
+    scoreBtn.onclick = () => {
+      saveProfileFromDom();
+      if (!profileResume.trim()) { alert('请先上传或粘贴简历'); return; }
+      runResumeAction('resume-score', 'resumeStartScoreBtn', '开始评分');
+    };
+  }
+  const optimizeBtn = document.getElementById('resumeStartOptimizeBtn');
+  if (optimizeBtn) {
+    optimizeBtn.onclick = () => {
+      if (!resumeHasScore()) {
+        alert('请先在「评分」页完成评分');
+        setCanvasTab('resume', '评分');
+        refreshAgentCanvas();
+        return;
+      }
+      saveProfileFromDom();
+      runResumeAction('resume-optimize', 'resumeStartOptimizeBtn', '开始优化');
+    };
+  }
+  const goScoreBtn = document.getElementById('resumeGoScoreBtn');
+  if (goScoreBtn) {
+    goScoreBtn.onclick = () => {
       setCanvasTab('resume', '评分');
       refreshAgentCanvas();
-      return;
-    }
-    saveProfileFromDom();
-    runResumeAction('resume-optimize', 'resumeStartOptimizeBtn', '开始优化');
-  });
-  document.getElementById('resumeGoScoreBtn')?.addEventListener('click', () => {
-    setCanvasTab('resume', '评分');
-    refreshAgentCanvas();
-  });
+    };
+  }
 }
 
 function renderResumeScorePane() {
@@ -7596,7 +7834,7 @@ function renderResumePanes() {
 async function runResumeAction(action, triggerBtnId, triggerBtnLabel) {
   const isScore = action === 'resume-score';
   const errEl = document.getElementById(isScore ? 'resumeScoreError' : 'resumeOptimizeError');
-  const triggerBtn = document.getElementById(triggerBtnId);
+  const triggerBtn = triggerBtnId ? document.getElementById(triggerBtnId) : null;
 
   if (errEl) { errEl.hidden = true; errEl.textContent = ''; }
   if (isScore) {
