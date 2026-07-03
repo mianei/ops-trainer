@@ -411,7 +411,7 @@
     padding-right: 16px;
   }
   .page-wrap.page-wrap--agent .hero-compact {
-    padding: 1.1rem 0 0.65rem;
+    padding: 0.75rem 0 0.45rem;
     max-width: none;
   }
 
@@ -561,7 +561,7 @@
     display: grid;
     grid-template-columns: var(--agent-nav-w) minmax(0, 1fr) var(--agent-chat-w);
     gap: 0;
-    --agent-workspace-h: min(78vh, 780px);
+    --agent-workspace-h: min(calc(100dvh - 128px), 960px);
     height: var(--agent-workspace-h);
     min-height: var(--agent-workspace-h);
     max-height: var(--agent-workspace-h);
@@ -1168,7 +1168,7 @@
   @media (max-width: 899px) {
     .agent-workspace {
       grid-template-columns: 1fr;
-      --agent-workspace-h: min(calc(100dvh - 140px), 780px);
+      --agent-workspace-h: min(calc(100dvh - 100px), 960px);
       height: var(--agent-workspace-h);
       min-height: var(--agent-workspace-h);
       max-height: var(--agent-workspace-h);
@@ -1305,7 +1305,7 @@
     }
     .sense-home { padding: 0 2px; }
     .sense-cta { max-width: none; }
-    .bank-list { max-height: min(38vh, 280px); }
+    .bank-list { max-height: min(42vh, 380px); }
     .history-panel {
       width: 100%;
       max-height: min(88dvh, 640px);
@@ -2050,7 +2050,7 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
-    max-height: min(42vh, 340px);
+    max-height: min(50vh, 480px);
     overflow-y: auto;
     overscroll-behavior: contain;
     scrollbar-gutter: stable;
