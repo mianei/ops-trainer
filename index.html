@@ -5813,8 +5813,8 @@ function renderCanvasTitleCta(scene, tab) {
   bindDocExportControls();
   document.getElementById('interviewPrepBtn')?.addEventListener('click', () => {
     saveProfileFromDom();
-    if (!profileResume.trim() && !coachIntake.extra?.trim()) {
-      alert('请先在「简历 Agent」上传简历，或填写补充说明');
+    if (!profileResume.trim()) {
+      alert('请先在「简历 Agent」上传简历');
       return;
     }
     runInterviewPrepAction();
@@ -6047,10 +6047,7 @@ function resumeCanvasInnerHtml() {
 function prepCanvasInnerHtml() {
   const tab = getCanvasTab('prep');
   const tabClass = (name) => `canvas-panel${tab === name ? ' active' : ''}`;
-  const hasResume = profileResume.trim().length > 0;
   return `
-    ${!hasResume ? '<p class="module-intro" style="color:#b45309;margin-bottom:12px">提示：在「简历 Agent」上传简历后，此处会自动带入。</p>' : ''}
-    ${coachExtraNotesHtml()}
     <div id="prepCanvasRoot">
       <div class="${tabClass('准备报告')}" data-prep-panel="准备报告"><div class="resume-pane-body" id="interviewPrepBody"></div><p class="resume-pane-error" id="interviewPrepError" hidden></p></div>
       <div class="${tabClass('追问清单')}" data-prep-panel="追问清单"><div id="prepFollowupsPanel"></div></div>
@@ -6775,7 +6772,7 @@ function renderInterviewPrepPane() {
     if (errEl) errEl.hidden = true;
     return;
   }
-  body.innerHTML = '<div class="resume-pane-empty">点上方「基于简历一键准备面试」</div>';
+  body.innerHTML = '<div class="resume-pane-empty is-minimal"><p>在右侧 Agent 直接提问，或点标题栏「一键准备面试」</p></div>';
 }
 
 async function runInterviewPrepAction() {

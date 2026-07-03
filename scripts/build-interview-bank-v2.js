@@ -1,5 +1,6 @@
 /**
- * 从 v1.0 场景库 + AI PM 面经构建业务场景题库（350 道产品向真题）
+ * 从 v1.0 场景库 + AI PM 面经构建业务场景题库（350 道）
+ * 固定配比：200 道 AI产品经理 + 150 道传统产品业务面
  * 运行: node scripts/build-interview-bank-v2.js
  */
 import fs from 'fs';
@@ -9,30 +10,25 @@ import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
 const TARGET = 350;
+const AI_TARGET = 200;
+const TRADITIONAL_TARGET = 150;
 
 const EXCLUDE_FILES = new Set(['scenarios-sql-practice.json']);
+
+const AI_PM_SOURCES = new Set(['interview-bank-ai-pm', 'interview-bank-ai-pm-curated']);
 
 const COMPANIES = [
   '字节跳动', '美团', '腾讯', '阿里巴巴', '拼多多', '京东', '百度', '网易',
   '小红书', '抖音', '携程', '滴滴', '快手', 'B站', '华为', '小米', 'Shein', '得物'
 ];
 
-const TYPE_RULES = [
-  ['ai_product', /Agent|RAG|Prompt|评测|Eval|大模型|LLM|向量|embedding|微调|badcase|幻觉/i],
-  ['behavior', /实习|STAR|困难|优势|规划|收获|自我介绍|为什么做产品|ToB|ToC|经历|复盘/i],
-  ['product_design', /设计|功能|交互|MVP|方案|原型|需求|上线|改版|入口|Tab/i],
-  ['estimation', /估算|多少|GMV|DAU|量级|测算|漏斗|口径/i],
-  ['case', /案例|分析|论证|开放·Q|为何|为什么.*推|为何.*做|对比|解读/i],
-  ['business', /业务|策略|商业化|增长|竞品|数据|运营|平台|定价|留存/i]
-];
+const AI_PRODUCT_RE = /Agent|RAG|Prompt|评测|Eval|大模型|LLM|向量|embedding|微调|badcase|幻觉|生成模型|Copilot|多模态|AI辅助|AI功能/i;
+
+const TRADITIONAL_HINT_RE = /产品|业务|竞品|增长|设计|案例|行为|估算|策略|商业化|运营|留存|MVP|需求|用户|STAR|实习|面经|面试/i;
 
 const TYPE_LABELS = {
   ai_product: 'AI产品经理',
-  behavior: '行为面',
-  business: '业务面',
-  case: '案例分析',
-  product_design: '产品设计',
-  estimation: '估算题'
+  business: '传统产品业务面'
 };
 
 const PRODUCT_RE = /产品|PM|面经|面试|设计|需求|竞品|用户|增长|策略|方案|MVP|功能|业务|Agent|RAG|评测|AI|开放·Q|【面经|【面试|【产品|【判断|【设计|【需求|【功能|【竞品|【增长|【决策/i;
@@ -48,14 +44,6 @@ function inferCompany(text, fallback = '通用') {
     if (hit) return hit;
   }
   return fallback;
-}
-
-function inferType(text, hint) {
-  if (hint && TYPE_LABELS[hint]) return hint;
-  for (const [type, re] of TYPE_RULES) {
-    if (re.test(text)) return type;
-  }
-  return 'business';
 }
 
 function inferDifficulty(text, hint) {
@@ -74,28 +62,23 @@ function inferTopicId(key, text) {
   return 'iv-pm';
 }
 
-function defaultOutline(type) {
-  const map = {
-    ai_product: '场景→方案选型(Prompt/RAG/Agent)→评测指标→迭代闭环',
-    behavior: '情境→任务→行动→结果→反思；每步含量化指标',
-    business: '结论先行→业务背景→策略选项→取舍理由→验证指标',
-    case: '定义问题→拆解维度→假设→验证路径→风险',
-    product_design: '用户场景→痛点→方案对比→MVP→成功指标',
-    estimation: '明确口径→拆解公式→假设取值→敏感性→结论区间'
-  };
-  return map[type] || map.business;
+function defaultOutline(type, text) {
+  if (type === 'ai_product') {
+    return '场景→方案选型(Prompt/RAG/Agent)→评测指标→迭代闭环';
+  }
+  if (/设计|功能|交互|MVP/.test(text)) return '用户场景→痛点→方案对比→MVP→成功指标';
+  if (/估算|多少|GMV|DAU|量级/.test(text)) return '明确口径→拆解公式→假设取值→敏感性→结论区间';
+  if (/实习|STAR|困难|优势|规划|收获|自我介绍/.test(text)) return '情境→任务→行动→结果→反思；每步含量化指标';
+  if (/案例|分析|论证|开放·Q|对比|解读/.test(text)) return '定义问题→拆解维度→假设→验证路径→风险';
+  return '结论先行→业务背景→策略选项→取舍理由→验证指标';
 }
 
-function defaultFramework(type) {
-  const map = {
-    ai_product: 'AI产品决策',
-    behavior: 'STAR',
-    estimation: 'Fermi',
-    product_design: 'Design Thinking',
-    case: '结构化分析',
-    business: '结构化分析'
-  };
-  return map[type] || '结构化分析';
+function defaultFramework(type, text) {
+  if (type === 'ai_product') return 'AI产品决策';
+  if (/估算|多少|GMV|DAU|量级/.test(text)) return 'Fermi';
+  if (/设计|功能|交互|MVP/.test(text)) return 'Design Thinking';
+  if (/实习|STAR|困难|优势/.test(text)) return 'STAR';
+  return '结构化分析';
 }
 
 function collectQuestions() {
@@ -136,7 +119,7 @@ function collectQuestions() {
     for (const q of data.questions || []) {
       add(q.text, {
         topicKey: q.topicId || 'iv-pm',
-        type: q.type || 'ai_product',
+        type: 'ai_product',
         company: q.company,
         difficulty: q.difficulty,
         curated: Boolean(q.curated),
@@ -149,65 +132,98 @@ function collectQuestions() {
   return items;
 }
 
-function score(q) {
+function isAiPmSource(q) {
+  return AI_PM_SOURCES.has(q.source);
+}
+
+function isScenarioSource(q) {
+  return q.source?.startsWith('scenarios');
+}
+
+function isAiCandidate(q) {
+  return isAiPmSource(q) || AI_PRODUCT_RE.test(q.text);
+}
+
+function isTraditionalCandidate(q) {
+  if (!isScenarioSource(q)) return false;
+  if (isAiPmSource(q)) return false;
+  if (AI_PRODUCT_RE.test(q.text)) return false;
+  return TRADITIONAL_HINT_RE.test(q.text);
+}
+
+function score(q, bucket) {
   let s = 0;
   if (q.curated) s += 20;
   if (/【面经|【面试|【产品|【PM|产品经理/.test(q.text)) s += 5;
   if (q.company && q.company !== '通用') s += 3;
-  if (q.type === 'ai_product' || q.type === 'product_design' || q.type === 'case') s += 2;
   if (q.difficulty === 'medium') s += 1;
   if (q.sourceChannel === 'coach面经') s += 1;
+  if (bucket === 'ai' && isAiPmSource(q)) s += 4;
+  if (bucket === 'ai' && AI_PRODUCT_RE.test(q.text)) s += 2;
+  if (bucket === 'trad' && isScenarioSource(q)) s += 2;
+  if (bucket === 'trad' && q.sourceChannel === '行业面经') s += 1;
   return s;
 }
 
-function pickBalanced(items, target) {
-  const sorted = [...items].sort((a, b) => score(b) - score(a));
+function pickFromPool(pool, target, seenText, type) {
+  const sorted = [...pool].sort((a, b) => score(b, type === 'ai_product' ? 'ai' : 'trad') - score(a, type === 'ai_product' ? 'ai' : 'trad'));
   const picked = [];
-  const seenText = new Set();
-  const typeCap = {
-    ai_product: 80,
-    product_design: 90,
-    case: 80,
-    business: 70,
-    behavior: 60,
-    estimation: 30
-  };
-  const typeCount = {};
 
   const tryPick = (q) => {
-    if (picked.length >= target) return false;
-    if (seenText.has(q.text)) return false;
-    const type = inferType(q.text, q.type);
-    const cap = typeCap[type] || 50;
-    if ((typeCount[type] || 0) >= cap) return false;
+    if (picked.length >= target) return;
+    if (seenText.has(q.text)) return;
     seenText.add(q.text);
-    typeCount[type] = (typeCount[type] || 0) + 1;
     picked.push({ ...q, type });
-    return true;
   };
 
-  // 精选优先
   sorted.filter(q => q.curated).forEach(tryPick);
   sorted.forEach(tryPick);
 
-  // 不足则放宽 type cap
-  if (picked.length < target) {
-    for (const q of sorted) {
-      if (picked.length >= target) break;
-      if (seenText.has(q.text)) continue;
-      seenText.add(q.text);
-      picked.push({ ...q, type: inferType(q.text, q.type) });
-    }
+  return picked;
+}
+
+function pickSplit(items) {
+  const seenText = new Set();
+  const aiPool = items.filter(isAiCandidate);
+  const tradPool = items.filter(isTraditionalCandidate);
+
+  let aiPicked = pickFromPool(aiPool, AI_TARGET, seenText, 'ai_product');
+
+  // AI 池不足时，从场景库中补充 AI 向题目
+  if (aiPicked.length < AI_TARGET) {
+    const extraAi = items.filter(q =>
+      isScenarioSource(q) &&
+      AI_PRODUCT_RE.test(q.text) &&
+      !seenText.has(q.text)
+    );
+    aiPicked = aiPicked.concat(pickFromPool(extraAi, AI_TARGET - aiPicked.length, seenText, 'ai_product'));
   }
 
-  return picked.slice(0, target);
+  let tradPicked = pickFromPool(tradPool, TRADITIONAL_TARGET, seenText, 'business');
+
+  // 传统池不足时，从剩余场景题放宽筛选
+  if (tradPicked.length < TRADITIONAL_TARGET) {
+    const extraTrad = items.filter(q =>
+      isScenarioSource(q) &&
+      !isAiPmSource(q) &&
+      !seenText.has(q.text)
+    );
+    tradPicked = tradPicked.concat(pickFromPool(extraTrad, TRADITIONAL_TARGET - tradPicked.length, seenText, 'business'));
+  }
+
+  const combined = [...aiPicked, ...tradPicked];
+  if (combined.length !== TARGET) {
+    console.warn(`WARN: expected ${TARGET}, got ${combined.length} (ai=${aiPicked.length}, trad=${tradPicked.length})`);
+  }
+
+  return combined;
 }
 
 const all = collectQuestions();
-const picked = pickBalanced(all, TARGET);
+const picked = pickSplit(all);
 
 const questions = picked.map((q, i) => {
-  const type = q.type || inferType(q.text);
+  const type = q.type;
   return {
     id: `pm-v2-${String(i + 1).padStart(3, '0')}`,
     num: i + 1,
@@ -219,8 +235,8 @@ const questions = picked.map((q, i) => {
     topicId: inferTopicId(q.topicKey, q.text),
     source: q.sourceChannel || 'v1.0面经',
     sourceFile: q.source || '',
-    framework: defaultFramework(type),
-    referenceOutline: defaultOutline(type),
+    framework: defaultFramework(type, q.text),
+    referenceOutline: defaultOutline(type, q.text),
     curated: Boolean(q.curated),
     tags: [TYPE_LABELS[type] || type, q.company || inferCompany(q.text), inferDifficulty(q.text, q.difficulty)].filter(Boolean)
   };
@@ -247,4 +263,6 @@ fs.writeFileSync(path.join(ROOT, 'interview-bank-v2.json'), JSON.stringify(out, 
 console.log('interview-bank-v2.json:', questions.length, 'questions');
 console.log('sources pool:', all.length, 'unique product questions');
 console.log('byType', byType);
+console.log('sample AI ids', questions.filter(q => q.type === 'ai_product').slice(0, 3).map(q => q.id));
+console.log('sample trad ids', questions.filter(q => q.type === 'business').slice(0, 3).map(q => q.id));
 console.log('top companies', Object.entries(byCompany).sort((a, b) => b[1] - a[1]).slice(0, 8));
