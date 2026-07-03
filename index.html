@@ -5375,8 +5375,8 @@ function renderAgentChatBubbles(scene) {
   if (!el) return;
   if (!msgs.length) {
     const hint = scene === 'kb'
-      ? '知识库模式：知识卡在中间 Canvas；在此可追问概念解释，Agent 会识别意图并调用工具。'
-      : '全局 Agent 控制台：识别意图、调用工具。中间 Canvas 结果不满意，在此继续追问即可。';
+      ? '可以帮你查概念、解释知识点。阅读卡片时有不懂的，直接问我。'
+      : '我可以帮你评分简历、优化表述、准备面试或换题练习。左边结果不满意，直接说你想怎么改。';
     el.innerHTML = `<div class="agent-chat-bubble agent"><div class="agent-chat-role">Agent</div>${hint}</div>`;
     return;
   }
@@ -5616,8 +5616,8 @@ function mountAgentWorkspace(innerHtml) {
         <div class="canvas-body" id="agentCanvasBody">${innerHtml}</div>
       </section>
       <aside class="agent-chat" aria-label="助手bot">
-        <div class="agent-chat-head"><h3>助手bot</h3><span class="agent-nav-badge">控制台</span></div>
-        <p class="agent-chat-sub">发指令 · 看工具步骤 · 结果在 Canvas</p>
+        <div class="agent-chat-head"><h3>助手bot</h3><span class="agent-nav-badge">随时问</span></div>
+        <p class="agent-chat-sub">直接说需求 · 左边看结果 · 不满意继续聊</p>
         <div class="agent-chat-msgs" id="agentChatMsgs"></div>
         <div class="agent-tools" hidden></div>
         <div class="agent-chat-compose">
