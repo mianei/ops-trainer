@@ -413,7 +413,7 @@
     align-items: center;
     gap: clamp(12px, 3vw, 28px);
     margin-bottom: 0.65rem;
-    min-height: 92px;
+    min-height: 110px;
   }
   .hero-eyebrow-row .eyebrow {
     flex: 0 0 auto;
@@ -426,11 +426,11 @@
     flex: 1 1 auto;
     min-width: 140px;
     max-width: min(480px, 58vw);
-    height: 92px;
+    height: 110px;
     pointer-events: none;
-    opacity: 0.68;
-    -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.35) 12%, rgba(0, 0, 0, 0.92) 42%, rgba(0, 0, 0, 0.55) 100%);
-    mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.35) 12%, rgba(0, 0, 0, 0.92) 42%, rgba(0, 0, 0, 0.55) 100%);
+    opacity: 0.78;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.45) 10%, rgba(0, 0, 0, 0.96) 38%, rgba(0, 0, 0, 0.68) 100%);
+    mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.45) 10%, rgba(0, 0, 0, 0.96) 38%, rgba(0, 0, 0, 0.68) 100%);
   }
   .hero-copy {
     position: relative;
@@ -446,8 +446,8 @@
     .hero-waveform {
       flex: 1 1 100%;
       max-width: none;
-      height: 80px;
-      opacity: 0.52;
+      height: 92px;
+      opacity: 0.65;
     }
   }
   .hero-compact::before {
@@ -8593,12 +8593,12 @@ function initHeroWaveform() {
       const x = i * step + (step - barW) / 2;
       const cx = x + barW / 2;
       const phase = i * 0.42;
-      let amp = 0.18 + 0.82 * Math.pow(Math.abs(Math.sin(tick * 0.028 + phase)), 1.35);
-      amp *= 0.55 + 0.45 * Math.sin(i * 0.22 + tick * 0.012);
+      let amp = 0.26 + 0.74 * Math.pow(Math.abs(Math.sin(tick * 0.028 + phase)), 1.22);
+      amp *= 0.62 + 0.38 * Math.sin(i * 0.22 + tick * 0.012);
       const dist = Math.hypot(mx - cx, my - midY);
       const boost = Math.max(0, 1 - dist / Math.max(140, cw * 0.38));
       amp = Math.min(1, amp + boost * 0.85);
-      const barH = 8 + bandH * amp * 0.62;
+      const barH = 8 + bandH * amp * 0.86;
       const y = midY - barH / 2;
       const g = ctx.createLinearGradient(x, y, x, y + barH);
       g.addColorStop(0, 'rgba(74, 224, 173, 0.08)');
