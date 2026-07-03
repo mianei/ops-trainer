@@ -1304,18 +1304,43 @@
     padding-bottom: 1rem;
     border-bottom: 1px solid var(--line);
   }
-  .agent-goal-zone {
-    margin-bottom: 1rem;
-    border-radius: var(--r-xl);
-    padding: 14px 16px;
+  .agent-chat-plan {
+    flex-shrink: 0;
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--line);
+    max-height: min(42vh, 320px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
   }
-  .agent-goal-zone .goal-plan-wrap {
+  .agent-chat-plan .goal-plan-wrap {
     margin-bottom: 0;
     padding-bottom: 0;
     border-bottom: none;
   }
-  .agent-goal-zone .mission-bar { margin-top: 12px; }
-  .agent-goal-zone .goal-plan-list { margin-top: 12px; }
+  .agent-chat-plan .goal-plan-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .agent-chat-plan .goal-plan-btn {
+    width: 100%;
+    min-height: var(--btn-min-h-sm);
+    font-size: 13px;
+    padding: 8px 12px;
+  }
+  .agent-chat-plan .goal-plan-input {
+    font-size: 13px;
+    padding: 8px 10px;
+  }
+  .agent-chat-plan .goal-plan-label {
+    font-size: 10px;
+    margin-bottom: 4px;
+  }
+  .agent-chat-plan .mission-bar { margin-top: 8px; }
+  .agent-chat-plan .goal-plan-list { margin-top: 8px; max-height: 140px; overflow-y: auto; }
+  .agent-chat-plan .mission-step-panel { margin-top: 8px; }
+  .agent-chat-plan .mission-read-card { padding: 12px; }
+  .agent-chat-plan .mission-read-body { font-size: 13px; max-height: 120px; overflow-y: auto; }
   .goal-plan-label {
     display: block;
     font-size: 11px;
@@ -4442,8 +4467,6 @@
     <span id="syncText">正在加载…</span>
   </div>
 
-  <div class="agent-goal-zone surface" id="agentGoalZone" aria-label="备战助手"></div>
-
   <div id="mainContent" class="loading-main">加载中…</div>
 
   <footer class="footer">
@@ -4835,15 +4858,14 @@ function scenarioSearchBarHtml() {
   </div>`;
 }
 
-function initAgentGoalZone() {
-  const zone = document.getElementById('agentGoalZone');
-  if (!zone || zone.dataset.ready === '1') return;
+function mountAgentChatPlan() {
+  const zone = document.getElementById('agentChatPlan');
+  if (!zone) return;
   zone.innerHTML = `
     ${goalPlanBarHtml()}
     <div class="goal-plan-list" id="goalPlanList" hidden></div>
     <div class="external-search-box" id="externalSearchBox" hidden></div>
     <div class="llm-demo-box" id="llmDemoBox" hidden></div>`;
-  zone.dataset.ready = '1';
   bindGoalPlan();
   if (agentMission) {
     renderMissionBar();
@@ -4875,9 +4897,9 @@ function findBankQuestionForScenario(scenarioText, topicId) {
 
 function goalPlanBarHtml() {
   return `<div class="goal-plan-wrap" id="goalPlanWrap">
-    <label class="goal-plan-label" for="goalPlanInput">训练计划 · 说明目标，AI 拆成步骤</label>
+    <label class="goal-plan-label" for="goalPlanInput">训练计划</label>
     <div class="goal-plan-row">
-      <input type="text" class="goal-plan-input" id="goalPlanInput" placeholder="如：明天面字节 AI PM / 先诊断简历再练 RAG 项目 defense" autocomplete="off" enterkeyhint="go" />
+      <input type="text" class="goal-plan-input" id="goalPlanInput" placeholder="目标，如：明天面字节 AI PM" autocomplete="off" enterkeyhint="go" />
       <button type="button" class="btn-primary goal-plan-btn" id="goalPlanBtn">生成计划</button>
     </div>
     <p class="goal-plan-error" id="goalPlanError" role="alert"></p>
@@ -5222,7 +5244,9 @@ function showMissionPracticeStep(step, stepIndex) {
       applyBankQuestion(q);
       const preview = stripQuestionPrefix(q.text).slice(0, 56);
       pushAgentChatAssistant('scenario', `任务第 ${stepIndex + 1} 步：${preview}${preview.length >= 56 ? '…' : ''} — 请作答并提交点评，完成后自动进入下一步。`);
-      document.getElementById('agentGoalZone')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      document.getElementById('agentChatBackdrop')?.classList.add('open');
+      document.querySelector('.agent-chat')?.classList.add('drawer-open');
+      document.getElementById('agentChatPlan')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       return;
     }
   }
@@ -6547,6 +6571,7 @@ function mountAgentWorkspace(innerHtml) {
       </section>
       <aside class="agent-chat" aria-label="助手bot">
         <div class="agent-chat-head"><h3>助手bot</h3><span class="agent-nav-badge">随时问</span></div>
+        <div class="agent-chat-plan" id="agentChatPlan" aria-label="训练计划"></div>
         <div class="agent-chat-msgs" id="agentChatMsgs"></div>
         <div class="agent-chat-chips" id="agentChatChips" hidden></div>
         <div class="agent-tools" hidden></div>
@@ -6555,7 +6580,7 @@ function mountAgentWorkspace(innerHtml) {
             <button type="button" class="agent-compose-icon" id="agentChatMic" title="语音输入" aria-label="语音输入"></button>
             <input type="file" id="agentChatFile" accept=".txt,.md,.json" hidden />
             <button type="button" class="agent-compose-icon" id="agentChatAttach" title="附加文本文件" aria-label="附加文本文件"></button>
-            <input type="text" class="agent-chat-input" id="agentChatInput" placeholder="对 Agent 下指令…" />
+            <input type="text" class="agent-chat-input" id="agentChatInput" placeholder="短指令直接发；复杂目标用上方「生成计划」" />
             <button type="button" class="btn-primary" id="agentChatSend">发送</button>
           </div>
         </div>
@@ -6568,6 +6593,7 @@ function mountAgentWorkspace(innerHtml) {
     <button type="button" class="agent-chat-fab" id="agentChatFab" aria-label="打开助手bot">Bot</button>
     <div class="agent-chat-drawer-backdrop" id="agentChatBackdrop"></div>`;
   bindAgentWorkspace(scene);
+  mountAgentChatPlan();
   renderAgentChatBubbles(scene);
   renderAgentSuggestionChips(scene);
   bindAgentVoiceAttach(scene);
@@ -9163,7 +9189,6 @@ function renderTopics() {
 
 async function loadTopicsAndRender() {
   try {
-    initAgentGoalZone();
     TOPICS = await loadTopics();
     buildScenarioIndex();
     await loadKnowledgeMap();
