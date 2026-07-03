@@ -22,6 +22,18 @@
 <meta name="format-detection" content="telephone=no" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <title>CVassistant · AI 产品经理训练</title>
+<meta name="description" content="CVassistant：AI 产品经理简历评分与优化、面试准备、350 题场景练题与 Agent 助手，打开即用。" />
+<link rel="canonical" href="https://cvassistant-ai.vercel.app/" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="/favicon.svg" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://cvassistant-ai.vercel.app/" />
+<meta property="og:title" content="CVassistant · AI 产品经理训练" />
+<meta property="og:description" content="简历优化、面试准备、场景练题与 Agent 助手一体化工作台。" />
+<meta property="og:locale" content="zh_CN" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="CVassistant · AI 产品经理训练" />
+<meta name="twitter:description" content="简历优化、面试准备、场景练题与 Agent 助手一体化工作台。" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Outfit:wght@600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" />
@@ -1292,6 +1304,18 @@
     padding-bottom: 1rem;
     border-bottom: 1px solid var(--line);
   }
+  .agent-goal-zone {
+    margin-bottom: 1rem;
+    border-radius: var(--r-xl);
+    padding: 14px 16px;
+  }
+  .agent-goal-zone .goal-plan-wrap {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+  .agent-goal-zone .mission-bar { margin-top: 12px; }
+  .agent-goal-zone .goal-plan-list { margin-top: 12px; }
   .goal-plan-label {
     display: block;
     font-size: 11px;
@@ -4418,6 +4442,8 @@
     <span id="syncText">正在加载…</span>
   </div>
 
+  <div class="agent-goal-zone surface" id="agentGoalZone" aria-label="备战助手"></div>
+
   <div id="mainContent" class="loading-main">加载中…</div>
 
   <footer class="footer">
@@ -4455,6 +4481,18 @@
 <script src="/agent-intent.browser.js"></script>
 <script>
 const GITHUB_TOPICS_URL = '';
+const APP_ASSET_VERSION = '3.0.1';
+
+function assetUrl(path) {
+  const sep = path.includes('?') ? '&' : '?';
+  return path + sep + 'v=' + APP_ASSET_VERSION;
+}
+
+async function fetchJsonAsset(path) {
+  const res = await fetch(assetUrl(path));
+  if (!res.ok) throw new Error('Failed to load ' + path + ' (' + res.status + ')');
+  return res.json();
+}
 
 let accessCode = 'guest';
 let userAccountId = 'guest';
@@ -4686,12 +4724,9 @@ async function loadTopics() {
   /** @type {object[]} */
   let topics = [];
   try {
-    const tr = await fetch('topics-interview.json?t=' + Date.now(), { cache: 'no-store' });
-    if (tr.ok) {
-      const trData = await tr.json();
-      if (Array.isArray(trData.topics)) {
-        topics = trData.topics.filter(t => AI_PM_TOPIC_IDS.has(t.id));
-      }
+    const trData = await fetchJsonAsset('topics-interview.json');
+    if (Array.isArray(trData.topics)) {
+      topics = trData.topics.filter(t => AI_PM_TOPIC_IDS.has(t.id));
     }
   } catch { /* */ }
   if (!topics.length) {
@@ -4709,9 +4744,7 @@ async function loadTopics() {
   }
   for (const file of ['scenarios-interview-pm.json', 'scenarios-interview-misc.json', 'scenarios-interview-open.json']) {
     try {
-      const ex = await fetch(file + '?t=' + Date.now(), { cache: 'no-store' });
-      if (!ex.ok) continue;
-      const extra = await ex.json();
+      const extra = await fetchJsonAsset(file);
       topics.forEach(t => {
         const list = extra[t.id];
         if (!Array.isArray(list)) return;
@@ -4802,12 +4835,50 @@ function scenarioSearchBarHtml() {
   </div>`;
 }
 
+function initAgentGoalZone() {
+  const zone = document.getElementById('agentGoalZone');
+  if (!zone || zone.dataset.ready === '1') return;
+  zone.innerHTML = `
+    ${goalPlanBarHtml()}
+    <div class="goal-plan-list" id="goalPlanList" hidden></div>
+    <div class="external-search-box" id="externalSearchBox" hidden></div>
+    <div class="llm-demo-box" id="llmDemoBox" hidden></div>`;
+  zone.dataset.ready = '1';
+  bindGoalPlan();
+  if (agentMission) {
+    renderMissionBar();
+    renderExternalSearchBox(agentMission.externalSearch);
+    renderLlmDemoBox(agentMission.llmGenerate, agentMission.ragSession);
+    renderMissionStepList();
+    const cur = agentMission.steps[agentMission.currentIndex];
+    if (cur && cur.type === 'read' && cur.status !== 'done') {
+      showMissionReadStep(cur, agentMission.currentIndex);
+    }
+  }
+}
+
+function findBankQuestionForScenario(scenarioText, topicId) {
+  const qs = bankQuestions();
+  const norm = stripQuestionPrefix(scenarioText || '').trim();
+  if (!norm) return null;
+  let hit = qs.find(q => stripQuestionPrefix(q.text).trim() === norm);
+  if (hit) return hit;
+  hit = qs.find(q => {
+    const t = stripQuestionPrefix(q.text);
+    return t.includes(norm.slice(0, 48)) || norm.includes(t.slice(0, 48));
+  });
+  if (hit) return hit;
+  const pool = qs.filter(q => isScenarioPracticeQuestion(q));
+  if (pool.length) return pool[Math.floor(Math.random() * pool.length)];
+  return qs[Math.floor(Math.random() * qs.length)] || null;
+}
+
 function goalPlanBarHtml() {
   return `<div class="goal-plan-wrap" id="goalPlanWrap">
-    <label class="goal-plan-label" for="goalPlanInput">备战助手 · 说明目标或困惑</label>
+    <label class="goal-plan-label" for="goalPlanInput">训练计划 · 说明目标，AI 拆成步骤</label>
     <div class="goal-plan-row">
-      <input type="text" class="goal-plan-input" id="goalPlanInput" placeholder="如：明天面字节 AI 产品经理 / 诊断 AI 项目简历 / 帮我准备 RAG 项目 defense" autocomplete="off" enterkeyhint="go" />
-      <button type="button" class="btn-primary goal-plan-btn" id="goalPlanBtn">开始训练</button>
+      <input type="text" class="goal-plan-input" id="goalPlanInput" placeholder="如：明天面字节 AI PM / 先诊断简历再练 RAG 项目 defense" autocomplete="off" enterkeyhint="go" />
+      <button type="button" class="btn-primary goal-plan-btn" id="goalPlanBtn">生成计划</button>
     </div>
     <p class="goal-plan-error" id="goalPlanError" role="alert"></p>
   </div>
@@ -5139,6 +5210,22 @@ function showMissionPracticeStep(step, stepIndex) {
     return;
   }
   agentMission.doneKeys.push(scenarioKey(step.topicId, step.scenario));
+  renderMissionBar();
+  renderMissionStepList();
+  if (workspaceMode !== 'train') {
+    const q = findBankQuestionForScenario(step.scenario, step.topicId);
+    if (q) {
+      interviewSubView = 'scenario';
+      localStorage.setItem('interviewSubView', 'scenario');
+      workspaceMode = 'interview';
+      agentScene = 'scenario';
+      applyBankQuestion(q);
+      const preview = stripQuestionPrefix(q.text).slice(0, 56);
+      pushAgentChatAssistant('scenario', `任务第 ${stepIndex + 1} 步：${preview}${preview.length >= 56 ? '…' : ''} — 请作答并提交点评，完成后自动进入下一步。`);
+      document.getElementById('agentGoalZone')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      return;
+    }
+  }
   switchTab(step.topicId, null);
   loadScenario(step.topicId, step.scenario, { allowExternal: !!(step.external || step.fromSearch || step.generated) });
   updateModuleHead(step.topicId);
@@ -5213,7 +5300,8 @@ function insertRemedialSteps(topicId, scenario) {
 function onMissionPracticeComplete(topicId, rubricAvg, scenario) {
   if (!agentMission) return;
   const cur = agentMission.steps[agentMission.currentIndex];
-  if (!cur || cur.type !== 'practice' || cur.topicId !== topicId) return;
+  if (!cur || cur.type !== 'practice') return;
+  if (topicId && cur.topicId && cur.topicId !== topicId) return;
   if (scenario && !cur.scenario) cur.scenario = scenario;
   completeMissionStep(agentMission.currentIndex);
   const score = Number(rubricAvg);
@@ -5238,13 +5326,13 @@ async function startMission(goal) {
   showGoalPlanError('');
   const unified = recognizeAgentIntent(goal, { scene: agentScene });
   if (unified.intent === 'coach_mode' && unified.coachMode) {
-    if (btn) { btn.disabled = false; btn.textContent = '开始训练'; }
+    if (btn) { btn.disabled = false; btn.textContent = '生成计划'; }
     openCoachFromGoal(goal, unified.coachMode);
     if (input) input.blur();
     return;
   }
   if (['score_resume', 'optimize_resume', 'prep_interview', 'next_scenario', 'navigate_scene'].includes(unified.intent)) {
-    if (btn) { btn.disabled = false; btn.textContent = '开始训练'; }
+    if (btn) { btn.disabled = false; btn.textContent = '生成计划'; }
     if (unified.targetScene) navigateToAgentScene(unified.targetScene);
     await handleGlobalAgentMessage(goal, unified.targetScene || agentScene);
     if (input) input.blur();
@@ -5255,10 +5343,6 @@ async function startMission(goal) {
     btn.textContent = /面|面试|明[天日]|后天/i.test(goal) ? '规划并 AI 出题…' : '规划中…';
   }
   try {
-    if (workspaceMode !== 'train') {
-      workspaceMode = 'train';
-      renderTopics();
-    }
     const catalog = TOPICS.map(t => ({
       id: t.id,
       label: t.label,
@@ -5307,7 +5391,7 @@ async function startMission(goal) {
   } finally {
     if (btn) {
       btn.disabled = false;
-      btn.textContent = '开始训练';
+      btn.textContent = '生成计划';
     }
   }
 }
@@ -6010,7 +6094,7 @@ async function handleGlobalAgentMessage(msg, scene) {
     await executeMultiStepAgentPlan(msg, scene, multi);
     return;
   }
-  const intent = recognizeAgentIntent(msg, scene);
+  const intent = await classifyAgentIntent(msg, scene);
   agentToolSteps = [{ name: 'recognize_intent', status: 'done', detail: intent.intent, input: msg, output: intent.intent }, { name: intent.tool, status: 'running', detail: '', input: msg }];
   renderAgentToolsPanel();
 
@@ -6199,19 +6283,10 @@ function openAgentChatHistoryModal(scene) {
 
 function bindAgentChatHistoryModal() {
   const modal = document.getElementById('agentChatHistoryModal');
-  const close = document.getElementById('agentChatHistoryClose');
+  bindModalA11y(modal, '#agentChatHistoryClose');
   if (modal) {
     modal.onclick = (e) => {
-      if (e.target === modal) {
-        modal.classList.remove('open');
-        modal.setAttribute('aria-hidden', 'true');
-      }
-    };
-  }
-  if (close) {
-    close.onclick = () => {
-      modal?.classList.remove('open');
-      modal?.setAttribute('aria-hidden', 'true');
+      if (e.target === modal) closeModalEl(modal);
     };
   }
 }
@@ -6705,8 +6780,8 @@ function renderDocExportSplitHtml(scope) {
     <button type="button" class="doc-export-toggle" data-doc-export-scope="${scope}" aria-expanded="false" aria-haspopup="menu" aria-label="选择导出格式">▾</button>
     <div class="doc-export-menu" id="${id}Menu" hidden role="menu">
       <button type="button" role="menuitem" data-doc-export-scope="${scope}" data-doc-format="md">Markdown (.md)</button>
-      <button type="button" role="menuitem" data-doc-export-scope="${scope}" data-doc-format="docx">Word (.docx)</button>
-      <button type="button" role="menuitem" data-doc-export-scope="${scope}" data-doc-format="pdf">PDF (.pdf)</button>
+      <button type="button" role="menuitem" data-doc-export-scope="${scope}" data-doc-format="docx">Word 兼容 (.docx)</button>
+      <button type="button" role="menuitem" data-doc-export-scope="${scope}" data-doc-format="pdf">打印为 PDF</button>
     </div>
   </div>`;
 }
@@ -6849,7 +6924,7 @@ function downloadWordHtmlFile(name, bodyHtml, title) {
 
 function printHtmlDocument(bodyHtml, title) {
   const win = window.open('', '_blank', 'noopener,noreferrer');
-  if (!win) { alert('请允许弹出窗口以导出 PDF'); return; }
+  if (!win) { alert('请允许弹出窗口，然后在打印对话框中选择「另存为 PDF」'); return; }
   win.document.write(`<!DOCTYPE html><html><head><meta charset="utf-8"><title>${escapeHtml(title || '文档')}</title>
 <style>@page{margin:18mm}body{font-family:"Microsoft YaHei",SimSun,sans-serif;line-height:1.65;padding:0;color:#111;max-width:720px;margin:0 auto}h1{font-size:22px}h2{font-size:16px;margin-top:20px}p,li{font-size:14px}</style></head>
 <body>${bodyHtml}</body></html>`);
@@ -8153,8 +8228,7 @@ function bindInterviewView() {
 async function loadInterviewBankV2() {
   if (INTERVIEW_BANK_V2?.questions?.length) return INTERVIEW_BANK_V2;
   try {
-    const res = await fetch('interview-bank-v2.json?t=' + Date.now(), { cache: 'no-store' });
-    if (res.ok) INTERVIEW_BANK_V2 = await res.json();
+    INTERVIEW_BANK_V2 = await fetchJsonAsset('interview-bank-v2.json');
   } catch { /* */ }
   return INTERVIEW_BANK_V2;
 }
@@ -8162,8 +8236,7 @@ async function loadInterviewBankV2() {
 async function loadAiPmBanks() {
   if (!AI_PM_BANK?.questions?.length) {
     try {
-      const res = await fetch('interview-bank-ai-pm.json?t=' + Date.now(), { cache: 'no-store' });
-      if (res.ok) AI_PM_BANK = await res.json();
+      AI_PM_BANK = await fetchJsonAsset('interview-bank-ai-pm.json');
     } catch { /* */ }
   }
 }
@@ -8505,28 +8578,56 @@ async function openAnalyticsModal() {
     modal = document.createElement('div');
     modal.id = 'analyticsModal';
     modal.className = 'history-modal';
-    modal.innerHTML = '<div class="history-panel"><h3>练习记录</h3><div id="analyticsBody"></div><button type="button" class="btn-primary" id="analyticsClose">关闭</button></div>';
+    modal.setAttribute('aria-hidden', 'true');
+    modal.innerHTML = '<div class="history-panel" role="dialog" aria-labelledby="analyticsTitle"><button type="button" class="history-close" id="analyticsClose" aria-label="关闭">×</button><h3 id="analyticsTitle">练习记录</h3><div id="analyticsBody"></div></div>';
     document.body.appendChild(modal);
-    modal.onclick = e => { if (e.target === modal) modal.classList.remove('open'); };
-    modal.querySelector('#analyticsClose').onclick = () => modal.classList.remove('open');
+    bindModalA11y(modal, '#analyticsClose');
+    modal.onclick = e => { if (e.target === modal) closeModalEl(modal); };
   }
   const body = document.getElementById('analyticsBody');
   body.innerHTML = '<p style="color:var(--ink3)">加载中…</p>';
   modal.classList.add('open');
+  modal.setAttribute('aria-hidden', 'false');
   try {
     const res = await fetch('/api/records', { method: 'POST', headers: authHeaders(), body: JSON.stringify({ accessCode, userId: userAccountId, recordType: 'analytics', topicIds: TOPICS.map(t => t.id) }) });
-    const data = await res.json();
-    if (!data.progressCurve?.length) { body.innerHTML = '<p>' + escapeHtml(data.summary || '暂无数据') + '</p>'; return; }
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      const hint = res.status === 503 || /upstash|redis|storage|未配置|not configured/i.test(String(data.error || ''))
+        ? '练习记录与进步曲线需配置 Upstash Redis（部署可选），不影响评分、优化与练题。'
+        : (data.error || '加载失败（HTTP ' + res.status + '）');
+      body.innerHTML = '<p style="color:var(--ink2);line-height:1.65">' + escapeHtml(hint) + '</p>';
+      return;
+    }
+    if (!data.progressCurve?.length) {
+      body.innerHTML = '<p style="color:var(--ink2);line-height:1.65">' + escapeHtml(data.summary || '暂无练习记录。完成场景作答并获取点评后，这里会显示进步曲线。') + '</p>';
+      return;
+    }
     const max = Math.max(...data.progressCurve.map(p => p.score), 5);
     body.innerHTML = `<p>${escapeHtml(data.summary || '')}</p><div class="analytics-chart">${data.progressCurve.map(p => `<div class="analytics-bar" style="height:${Math.round((p.score / max) * 100)}%"></div>`).join('')}</div><ul>${(data.weakTypes || []).map(w => `<li>${escapeHtml(w.typeLabel)} ${w.avgScore}/5</li>`).join('')}</ul>`;
-  } catch (e) { body.innerHTML = '<p>' + escapeHtml(e.message) + '</p>'; }
+  } catch (e) { body.innerHTML = '<p style="color:var(--ink2);line-height:1.65">' + escapeHtml(e.message) + '</p>'; }
+}
+
+function closeModalEl(modal) {
+  if (!modal) return;
+  modal.classList.remove('open');
+  modal.setAttribute('aria-hidden', 'true');
+}
+
+function bindModalA11y(modal, closeSelector) {
+  if (!modal || modal.dataset.a11yBound === '1') return;
+  modal.dataset.a11yBound = '1';
+  modal.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeModalEl(modal);
+  });
+  const closeBtn = closeSelector ? modal.querySelector(closeSelector) : modal.querySelector('.history-close');
+  closeBtn?.addEventListener('click', () => closeModalEl(modal));
 }
 
 let KNOWLEDGE_JSON_LOADED = false;
 
 async function mergeAiPmInterviewKbSection() {
   try {
-    const res = await fetch('/api/ai-pm-interview-kb?t=' + Date.now(), { cache: 'no-store' });
+    const res = await fetch(assetUrl('/api/ai-pm-interview-kb'));
     if (!res.ok) return;
     const kbSec = await res.json();
     KNOWLEDGE = KNOWLEDGE.filter(s => s.id !== 'ai-pm-interview-kb');
@@ -8541,13 +8642,10 @@ async function mergeAiPmInterviewKbSection() {
 async function loadKnowledge() {
   if (!KNOWLEDGE_JSON_LOADED) {
     try {
-      const res = await fetch('knowledge.json?t=' + Date.now(), { cache: 'no-store' });
-      if (res.ok) {
-        const data = await res.json();
-        KNOWLEDGE = Array.isArray(data.sections)
-          ? data.sections.filter(s => s.id !== 'ai-pm-interview-kb')
-          : [];
-      }
+      const data = await fetchJsonAsset('knowledge.json');
+      KNOWLEDGE = Array.isArray(data.sections)
+        ? data.sections.filter(s => s.id !== 'ai-pm-interview-kb')
+        : [];
     } catch { /* optional */ }
     KNOWLEDGE_JSON_LOADED = true;
   }
@@ -8557,8 +8655,7 @@ async function loadKnowledge() {
 
 async function loadKnowledgeMap() {
   try {
-    const res = await fetch('knowledge-map.json?t=' + Date.now(), { cache: 'no-store' });
-    if (res.ok) KNOWLEDGE_MAP = await res.json();
+    KNOWLEDGE_MAP = await fetchJsonAsset('knowledge-map.json');
   } catch (_) { /* optional */ }
 }
 
@@ -8982,11 +9079,7 @@ function renderTopics() {
           <nav class="module-nav" id="moduleNav"></nav>
         </aside>
         <div class="train-main">
-          ${goalPlanBarHtml()}
           <div class="module-head" id="moduleHead"></div>
-          <div class="goal-plan-list" id="goalPlanList" hidden></div>
-          <div class="external-search-box" id="externalSearchBox" hidden></div>
-          <div class="llm-demo-box" id="llmDemoBox" hidden></div>
           <div id="panels"></div>
         </div>
       </div>
@@ -9066,11 +9159,11 @@ function renderTopics() {
   setupMobileModuleNav(ordered);
   bindModeBar();
   bindScenarioSearch();
-  bindGoalPlan();
 }
 
 async function loadTopicsAndRender() {
   try {
+    initAgentGoalZone();
     TOPICS = await loadTopics();
     buildScenarioIndex();
     await loadKnowledgeMap();
@@ -9650,21 +9743,23 @@ async function bootstrap() {
   const btnTrace = document.getElementById('btnTrace');
   if (btnTrace) btnTrace.onclick = openTraceModal;
   const traceModal = document.getElementById('traceModal');
-  const traceClose = document.getElementById('traceClose');
+  const historyModal = document.getElementById('historyModal');
+  bindModalA11y(traceModal, '#traceClose');
+  bindModalA11y(historyModal, '#historyClose');
   if (traceModal) {
     traceModal.onclick = (e) => {
-      if (e.target === traceModal) {
-        traceModal.classList.remove('open');
-        traceModal.setAttribute('aria-hidden', 'true');
-      }
+      if (e.target === traceModal) closeModalEl(traceModal);
     };
   }
-  if (traceClose) {
-    traceClose.onclick = () => {
-      traceModal?.classList.remove('open');
-      traceModal?.setAttribute('aria-hidden', 'true');
+  if (historyModal) {
+    historyModal.onclick = (e) => {
+      if (e.target === historyModal) closeModalEl(historyModal);
     };
   }
+  const traceClose = document.getElementById('traceClose');
+  if (traceClose) traceClose.onclick = () => closeModalEl(traceModal);
+  const historyClose = document.getElementById('historyClose');
+  if (historyClose) historyClose.onclick = () => closeModalEl(historyModal);
   bindAgentChatHistoryModal();
   await enterApp();
 }

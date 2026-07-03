@@ -3,6 +3,6 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "vercel-build": "node scripts/verify-ai-pm-interview-kb.js"
+    "vercel-build": "node scripts/verify-ai-pm-interview-kb.js && node scripts/test-trace-guard.mjs"
   }
 }
