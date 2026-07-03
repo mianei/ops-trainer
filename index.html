@@ -2109,6 +2109,12 @@
     padding: 4px 0 12px;
   }
   .resume-pane-empty p { margin: 0; }
+  .resume-pane-empty.is-minimal {
+    min-height: 0;
+    padding: 8px 0 4px;
+    font-size: 12px;
+    color: var(--ink4, #94a3b8);
+  }
   .resume-tab-cta { margin-top: 10px; }
   .resume-pane-loading {
     min-height: 160px;
@@ -6142,13 +6148,6 @@ function setWorkspaceMode(mode) {
   else renderInterviewView();
 }
 
-function coachExtraNotesHtml() {
-  return `<details class="coach-extra-details">
-    <summary>补充说明（可选）</summary>
-    <textarea id="coachExtraNotes" rows="2" placeholder="如：已收到的反馈、重点想改的项目、担心被问穿的地方…">${escapeHtml(coachIntake.extra || '')}</textarea>
-  </details>`;
-}
-
 function renderCoachBubbleHtml(content, role) {
   if (role !== 'assistant') {
     return escapeHtml(content).replace(/\n/g, '<br/>');
@@ -7166,8 +7165,8 @@ function openCoachFromGoal(goal, mode) {
 function bindInterviewView() {
   document.getElementById('interviewPrepBtn')?.addEventListener('click', () => {
     saveProfileFromDom();
-    if (!profileResume.trim() && !coachIntake.extra?.trim()) {
-      alert('请先在「简历 Agent」上传简历，或填写补充说明');
+    if (!profileResume.trim()) {
+      alert('请先在「简历 Agent」上传简历');
       return;
     }
     setCanvasTab('prep', '准备报告');
