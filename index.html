@@ -906,6 +906,7 @@
     margin-top: 8px;
     display: flex;
     gap: 6px;
+    align-items: stretch;
   }
   .agent-chat-actions .btn-frost {
     flex: 1;
@@ -913,16 +914,14 @@
     font-weight: 600;
     padding: 6px 10px;
     min-height: var(--btn-min-h-sm);
+    height: var(--btn-min-h-sm);
+    line-height: 1.2;
     border-radius: var(--btn-pill-radius);
-  }
-  .agent-chat-reset {
-    margin-top: 8px;
-    width: 100%;
-    font-size: 11px;
-    font-weight: 600;
-    padding: 6px 12px;
-    min-height: var(--btn-min-h-sm);
-    border-radius: var(--btn-pill-radius);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    width: auto;
   }
   .doc-artifact-card {
     display: flex;
