@@ -1838,7 +1838,22 @@
     background: var(--block-bg-muted);
     color: var(--ink);
   }
-  .bank-list { display: flex; flex-direction: column; gap: 8px; }
+  .bank-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: min(42vh, 340px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-gutter: stable;
+    padding-right: 4px;
+  }
+  .bank-list::-webkit-scrollbar { width: 6px; }
+  .bank-list::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.14);
+    border-radius: 999px;
+  }
+  .bank-list::-webkit-scrollbar-track { background: transparent; }
   .bank-item {
     text-align: left;
     font-family: inherit;
@@ -4321,6 +4336,9 @@
   }
   html[data-theme="dark"] .bank-item-hint {
     color: var(--interview);
+  }
+  html[data-theme="dark"] .bank-list::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.18);
   }
   @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
     html[data-theme="dark"] .glass,
