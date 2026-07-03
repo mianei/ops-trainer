@@ -10,7 +10,7 @@ import { parseResumeOptimizeReport, formatResumeOptimizeReply } from '../lib/res
 import { parseInterviewPrepReport, formatInterviewPrepReply } from '../lib/interview-prep-parse.js';
 import { guardCoachHistory, getGuardConfig } from '../lib/context-guard.js';
 import { appendAgentContextToUserMessage } from '../lib/agent-context.js';
-import { formatRagContext } from '../lib/rag.js';
+import { formatRagContext, ragEnabled, retrieveRagContext } from '../lib/rag.js';
 import {
   newTraceId,
   extractTokenUsage,
@@ -214,8 +214,29 @@ export default async function handler(req) {
     const crossMemory = String(body?.crossMemory || '').trim();
     let userContent = buildCoachUserMessage(mode, actionIntake, message);
     userContent = appendAgentContextToUserMessage(userContent, canvasContext, crossMemory);
-    const ragChunks = Array.isArray(body?.ragChunks) ? body.ragChunks : [];
-    if (ragChunks.length && !action) {
+    let ragChunks = Array.isArray(body?.ragChunks) ? body.ragChunks : [];
+    if (ragEnabled()) {
+      try {
+        const origin = new URL(req.url).origin;
+        const ragQuery = {
+          scenario: [
+            message,
+            intake.targetRole,
+            intake.targetCompany,
+            String(intake.jd || '').slice(0, 400),
+            String(intake.resume || '').slice(0, 600),
+            contextModule === 'resume' ? 'AI产品经理 简历' : contextModule === 'interview' ? 'AI产品经理 面试' : 'AI产品经理'
+          ].filter(Boolean).join('\n'),
+          topicId: 'iv-pm',
+          question: message
+        };
+        const rag = await retrieveRagContext(origin, ragQuery, { sessionChunks: ragChunks });
+        if (rag.chunks?.length) ragChunks = rag.chunks;
+      } catch (e) {
+        console.warn('[coach] rag retrieve failed', e?.message);
+      }
+    }
+    if (ragChunks.length) {
       const ragBlock = formatRagContext(ragChunks);
       if (ragBlock) userContent = ragBlock + '\n\n' + userContent;
     }

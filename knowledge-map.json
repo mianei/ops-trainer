@@ -1,40 +1,220 @@
 {
   "readingByNav": {
-    "feature": ["problem-hypothesis-metric", "surface-vs-core", "ia-four"],
-    "competitor": ["competitor-four-layers", "competitor-analysis"],
-    "decision": ["goal-path-resource-risk", "priority-rice"],
-    "growth": ["guide-aarrr-leaks", "guide-acquisition-channels", "aarrr"],
-    "iv-ops": ["guide-resume-ops-story", "activity-review-loop", "renhuochang-analysis"],
-    "biz-platform": ["super-app-logic", "gmv-decomposition"],
-    "biz-vertical": ["churn-layer-ops", "community-triangle"],
-    "biz-monetize": ["arpu-ltv-dau", "north-star-guardrails"],
-    "prod-open": ["circles-framework", "ai-agent-boundary", "moments-not-home"],
-    "iv-exp": ["starr-framework", "prep-framework", "quantify-resume"],
-    "iv-self": ["starr-framework", "prep-framework"],
-    "iv-career": ["self-intro-four", "career-stages"],
-    "iv-pm": ["circles-framework", "ai-project-four-steps", "true-demand-three"],
-    "iv-skills": ["fermi-estimation", "competitor-four-layers", "priority-rice"],
-    "data": ["guide-data-four-questions", "sql-select-where", "impact-coefficient", "data-anomaly-debug"],
-    "sql": ["sql-why-ops", "sql-select-where", "sql-group-by", "sql-join-left", "sql-retention-simple"]
+    "feature": [
+      "problem-hypothesis-metric",
+      "surface-vs-core",
+      "ia-four"
+    ],
+    "competitor": [
+      "competitor-four-layers",
+      "competitor-analysis"
+    ],
+    "decision": [
+      "goal-path-resource-risk",
+      "priority-rice"
+    ],
+    "growth": [
+      "guide-aarrr-leaks",
+      "guide-acquisition-channels",
+      "aarrr"
+    ],
+    "iv-ops": [
+      "guide-resume-ops-story",
+      "activity-review-loop",
+      "renhuochang-analysis"
+    ],
+    "biz-platform": [
+      "super-app-logic",
+      "gmv-decomposition"
+    ],
+    "biz-vertical": [
+      "churn-layer-ops",
+      "community-triangle"
+    ],
+    "biz-monetize": [
+      "arpu-ltv-dau",
+      "north-star-guardrails"
+    ],
+    "prod-open": [
+      "circles-framework",
+      "ai-agent-boundary",
+      "moments-not-home"
+    ],
+    "iv-exp": [
+      "starr-framework",
+      "prep-framework",
+      "quantify-resume"
+    ],
+    "iv-self": [
+      "starr-framework",
+      "prep-framework"
+    ],
+    "iv-career": [
+      "self-intro-four",
+      "career-stages"
+    ],
+    "iv-pm": [
+      "circles-framework",
+      "ai-project-four-steps",
+      "true-demand-three"
+    ],
+    "iv-skills": [
+      "fermi-estimation",
+      "competitor-four-layers",
+      "priority-rice"
+    ],
+    "data": [
+      "guide-data-four-questions",
+      "sql-select-where",
+      "impact-coefficient",
+      "data-anomaly-debug"
+    ],
+    "sql": [
+      "sql-why-ops",
+      "sql-select-where",
+      "sql-group-by",
+      "sql-join-left",
+      "sql-retention-simple"
+    ],
+    "ai-pm-kb": [
+      "aipm-1-1-llm-是什么",
+      "aipm-1-2-llm-的训练流程",
+      "aipm-1-3-rag-vs-微调",
+      "aipm-1-4-模型推理与部署",
+      "aipm-1-5-prompt-的底层原理",
+      "aipm-1-6-多模态模型",
+      "aipm-2-1-agent-基础概念",
+      "aipm-2-2-agent-架构模式",
+      "aipm-2-3-rag-检索增强生成",
+      "aipm-2-4-prompt-engineering",
+      "aipm-2-5-agent-评测",
+      "aipm-2-6-agent-记忆与上下文",
+      "aipm-2-7-工具调用",
+      "aipm-2-8-主流-agent-框架",
+      "aipm-2-9-agent-安全与护栏",
+      "aipm-3-1-ai-pm-vs-传统-pm",
+      "aipm-3-2-ai-产品经理的核心能力",
+      "aipm-3-3-ai-产品经理的常见岗位类型",
+      "aipm-3-4-ai-产品经理的成长路径",
+      "aipm-4-1-核心原则",
+      "aipm-4-2-交互模式",
+      "aipm-4-3-错误处理设计",
+      "aipm-4-4-数据飞轮",
+      "aipm-4-5-产品形态决策树",
+      "aipm-4-6-ai-产品设计的常见错误",
+      "aipm-5-1-必须能讲清楚的概念",
+      "aipm-5-2-必问题与参考答案",
+      "aipm-5-3-进阶题与参考答案",
+      "aipm-5-4-面试防御话术"
+    ]
   },
   "readingByTopic": {
-    "user": ["true-demand-three", "surface-vs-core"],
-    "decision": ["goal-path-resource-risk", "priority-rice"],
-    "data": ["guide-metrics-core", "guide-data-four-questions", "sql-why-ops", "data-anomaly-debug", "impact-coefficient"],
-    "growth": ["guide-aarrr-leaks", "guide-acquisition-channels", "aarrr", "metric-selection-chain"],
-    "retention": ["guide-retention-aha", "rfm-basics", "retention-value", "cohort-read"],
-    "content": ["ops-plan-5w1h", "activity-review-loop", "aida-hook"],
-    "interaction": ["ia-four", "fitts-law"],
-    "crisis": ["crisis-response-frame", "crisis-time-window"],
-    "competitor": ["competitor-four-layers", "competitor-analysis"],
-    "iv-pm": ["circles-framework", "ai-project-four-steps", "true-demand-three"],
-    "iv-ops": ["guide-resume-ops-story", "guide-user-tier-recall", "activity-review-loop", "renhuochang-analysis"],
-    "iv-exp": ["starr-framework", "quantify-resume"],
-    "iv-self": ["starr-framework", "prep-framework"],
-    "iv-career": ["self-intro-four", "career-stages"],
-    "iv-skills": ["fermi-estimation", "competitor-four-layers"],
-    "biz-monetize": ["community-triangle", "cac-ltv"],
-    "biz-platform": ["prep-framework", "scqa-framework"],
-    "sql": ["sql-why-ops", "sql-select-where", "sql-group-by", "sql-join-left", "sql-retention-simple", "sql-ops-tips"]
+    "user": [
+      "true-demand-three",
+      "surface-vs-core"
+    ],
+    "decision": [
+      "goal-path-resource-risk",
+      "priority-rice"
+    ],
+    "data": [
+      "guide-metrics-core",
+      "guide-data-four-questions",
+      "sql-why-ops",
+      "data-anomaly-debug",
+      "impact-coefficient"
+    ],
+    "growth": [
+      "guide-aarrr-leaks",
+      "guide-acquisition-channels",
+      "aarrr",
+      "metric-selection-chain"
+    ],
+    "retention": [
+      "guide-retention-aha",
+      "rfm-basics",
+      "retention-value",
+      "cohort-read"
+    ],
+    "content": [
+      "ops-plan-5w1h",
+      "activity-review-loop",
+      "aida-hook"
+    ],
+    "interaction": [
+      "ia-four",
+      "fitts-law"
+    ],
+    "crisis": [
+      "crisis-response-frame",
+      "crisis-time-window"
+    ],
+    "competitor": [
+      "competitor-four-layers",
+      "competitor-analysis"
+    ],
+    "iv-pm": [
+      "circles-framework",
+      "ai-project-four-steps",
+      "true-demand-three",
+      "aipm-1-1-llm-是什么",
+      "aipm-1-2-llm-的训练流程",
+      "aipm-1-3-rag-vs-微调",
+      "aipm-1-4-模型推理与部署",
+      "aipm-1-5-prompt-的底层原理",
+      "aipm-1-6-多模态模型",
+      "aipm-2-1-agent-基础概念",
+      "aipm-2-2-agent-架构模式",
+      "aipm-2-3-rag-检索增强生成",
+      "aipm-2-4-prompt-engineering",
+      "aipm-2-5-agent-评测",
+      "aipm-2-6-agent-记忆与上下文",
+      "aipm-2-7-工具调用",
+      "aipm-2-8-主流-agent-框架",
+      "aipm-2-9-agent-安全与护栏",
+      "aipm-3-1-ai-pm-vs-传统-pm",
+      "aipm-3-2-ai-产品经理的核心能力",
+      "aipm-3-3-ai-产品经理的常见岗位类型",
+      "aipm-3-4-ai-产品经理的成长路径",
+      "aipm-4-1-核心原则"
+    ],
+    "iv-ops": [
+      "guide-resume-ops-story",
+      "guide-user-tier-recall",
+      "activity-review-loop",
+      "renhuochang-analysis"
+    ],
+    "iv-exp": [
+      "starr-framework",
+      "quantify-resume"
+    ],
+    "iv-self": [
+      "starr-framework",
+      "prep-framework"
+    ],
+    "iv-career": [
+      "self-intro-four",
+      "career-stages"
+    ],
+    "iv-skills": [
+      "fermi-estimation",
+      "competitor-four-layers"
+    ],
+    "biz-monetize": [
+      "community-triangle",
+      "cac-ltv"
+    ],
+    "biz-platform": [
+      "prep-framework",
+      "scqa-framework"
+    ],
+    "sql": [
+      "sql-why-ops",
+      "sql-select-where",
+      "sql-group-by",
+      "sql-join-left",
+      "sql-retention-simple",
+      "sql-ops-tips"
+    ]
   }
 }
