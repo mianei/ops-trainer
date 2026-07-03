@@ -9,6 +9,8 @@ import { parseResumeScoreReport, formatResumeScoreReply } from '../lib/resume-sc
 import { parseResumeOptimizeReport, formatResumeOptimizeReply } from '../lib/resume-optimize-parse.js';
 import { parseInterviewPrepReport, formatInterviewPrepReply } from '../lib/interview-prep-parse.js';
 import { guardCoachHistory, getGuardConfig } from '../lib/context-guard.js';
+import { appendAgentContextToUserMessage } from '../lib/agent-context.js';
+import { formatRagContext } from '../lib/rag.js';
 import {
   newTraceId,
   extractTokenUsage,
@@ -72,6 +74,74 @@ async function callAnthropicCoach(cfg, systemPrompt, messages, maxTokens = 4096)
       total: (data?.usage?.input_tokens ?? 0) + (data?.usage?.output_tokens ?? 0)
     }
   };
+}
+
+async function streamCoachDeepSeek(cfg, systemPrompt, chatMessages, maxTokens, temperature, onDone) {
+  const res = await fetch(`${cfg.baseUrl}/chat/completions`, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      authorization: `Bearer ${cfg.apiKey}`
+    },
+    body: JSON.stringify({
+      model: cfg.model,
+      max_tokens: maxTokens,
+      temperature,
+      stream: true,
+      messages: [{ role: 'system', content: systemPrompt }, ...chatMessages]
+    })
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    const msg = data?.error?.message || 'DeepSeek 流式错误';
+    return { error: msg, status: res.status };
+  }
+  const encoder = new TextEncoder();
+  const decoder = new TextDecoder();
+  const stream = new ReadableStream({
+    async start(controller) {
+      let buffer = '';
+      let fullText = '';
+      try {
+        const reader = res.body.getReader();
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split('\n');
+          buffer = lines.pop() || '';
+          for (const line of lines) {
+            const trimmed = line.trim();
+            if (!trimmed.startsWith('data:')) continue;
+            const payload = trimmed.slice(5).trim();
+            if (payload === '[DONE]') continue;
+            try {
+              const json = JSON.parse(payload);
+              const delta = json.choices?.[0]?.delta?.content;
+              if (delta) {
+                fullText += delta;
+                controller.enqueue(encoder.encode(JSON.stringify({ type: 'delta', text: delta }) + '\n'));
+              }
+            } catch {
+              /* skip */
+            }
+          }
+        }
+        const meta = await onDone(fullText);
+        controller.enqueue(encoder.encode(JSON.stringify({ type: 'done', ...meta }) + '\n'));
+        controller.close();
+      } catch (e) {
+        controller.enqueue(encoder.encode(JSON.stringify({ type: 'error', error: e.message }) + '\n'));
+        controller.close();
+      }
+    }
+  });
+  return new Response(stream, {
+    headers: {
+      'content-type': 'application/x-ndjson; charset=utf-8',
+      'cache-control': 'no-cache'
+    }
+  });
 }
 
 async function persistCoachTrace(auth, payload) {
@@ -140,7 +210,15 @@ export default async function handler(req) {
     const systemPrompt = action
       ? buildActionCoachSystemPrompt(action)
       : buildCoachSystemPrompt(mode, { compact });
-    const userContent = buildCoachUserMessage(mode, actionIntake, message);
+    const canvasContext = String(body?.canvasContext || '').trim();
+    const crossMemory = String(body?.crossMemory || '').trim();
+    let userContent = buildCoachUserMessage(mode, actionIntake, message);
+    userContent = appendAgentContextToUserMessage(userContent, canvasContext, crossMemory);
+    const ragChunks = Array.isArray(body?.ragChunks) ? body.ragChunks : [];
+    if (ragChunks.length && !action) {
+      const ragBlock = formatRagContext(ragChunks);
+      if (ragBlock) userContent = ragBlock + '\n\n' + userContent;
+    }
     const guardResult = action
       ? { history: [], compressed: false, meta: { turnCount: 0 } }
       : guardCoachHistory(history, intake, getGuardConfig());
@@ -151,6 +229,27 @@ export default async function handler(req) {
         .map(m => ({ role: m.role, content: String(m.content) }))),
       { role: 'user', content: userContent }
     ];
+
+    const wantStream = body?.stream === true && !action && cfg.provider === 'deepseek'
+      && (process.env.STREAM_ENABLED || '1').trim() !== '0';
+
+    if (wantStream) {
+      const streamed = await streamCoachDeepSeek(cfg, systemPrompt, chatMessages, maxTokens, temperature, async (fullText) => {
+        const traceId = await persistCoachTrace(auth, {
+          traceId: newTraceId(),
+          runId: `coach-${mode}-${new Date().toISOString().slice(0, 10)}`,
+          turn: (history?.length || 0) + 1,
+          source: 'coach-stream',
+          userAnswer: message,
+          context: { mode, contextModule, contextGuard: guardResult.meta, streamed: true },
+          result: { parseOk: true, textPreview: fullText?.slice(0, 400) || null },
+          tokens: null
+        });
+        return { reply: fullText, mode, traceId };
+      });
+      if (streamed instanceof Response) return streamed;
+      if (streamed?.error) return json({ error: streamed.error }, streamed.status || 502);
+    }
 
     const result =
       cfg.provider === 'anthropic'
