@@ -6981,6 +6981,7 @@ async function loadAiPmBanks() {
 }
 
 function bankQuestions() {
+  if (INTERVIEW_BANK_V2?.questions?.length) return INTERVIEW_BANK_V2.questions;
   return AI_PM_BANK?.questions || [];
 }
 
@@ -7044,7 +7045,7 @@ function bindSenseBankPicker() {
     );
     const list = document.getElementById('bankList');
     if (!list) return;
-    list.innerHTML = filtered.slice(0, 50).map(q => `
+    list.innerHTML = filtered.slice(0, 100).map(q => `
       <button type="button" class="bank-item" data-qid="${escapeAttr(q.id)}">
         <div class="bank-item-meta">${q.num ? '题' + q.num + ' · ' : ''}${escapeHtml(q.company || '通用')} · ${escapeHtml(q.typeLabel || q.type || '')}</div>
         <div class="bank-item-text">${escapeHtml(q.text.slice(0, 120))}${q.text.length > 120 ? '…' : ''}</div>
@@ -7082,7 +7083,10 @@ async function ensureSenseQuestion() {
   }
   agentScene = 'scenario';
   mountAgentWorkspace('<p class="sense-tagline" style="margin:24px 0">正在加载题目…</p>');
-  if (!AI_PM_BANK?.questions?.length) {
+  if (!INTERVIEW_BANK_V2?.questions?.length) {
+    await loadInterviewBankV2();
+  }
+  if (!bankQuestions().length && !AI_PM_BANK?.questions?.length) {
     await loadAiPmBanks();
   }
   if (!startRandomSense()) {
