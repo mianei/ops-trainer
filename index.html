@@ -3715,6 +3715,9 @@
   html[data-theme="dark"] .bg-scene::before {
     display: none;
   }
+  html[data-theme="dark"] .bg-scene::after {
+    display: none;
+  }
   html[data-theme="dark"] .bg-horizon-svg,
   html[data-theme="dark"] .bg-wave-svg,
   html[data-theme="dark"] .bg-blob,
@@ -3763,8 +3766,22 @@
     -webkit-mask-repeat: no-repeat;
     mask-repeat: no-repeat;
   }
-  html:not([data-theme="dark"]) .bg-grid-left {
-    display: block;
+  html:not([data-theme="dark"]) .bg-horizon-svg {
+    display: none;
+  }
+  html:not([data-theme="dark"]) .bg-scene::after {
+    content: '';
+    position: absolute;
+    top: -6%;
+    left: -8%;
+    right: -8%;
+    height: min(46vh, 380px);
+    background:
+      radial-gradient(ellipse 88% 70% at 50% 0%, rgba(176, 212, 240, 0.48) 0%, transparent 72%),
+      radial-gradient(ellipse 52% 44% at 16% 14%, rgba(152, 220, 198, 0.32) 0%, transparent 68%),
+      radial-gradient(ellipse 48% 42% at 84% 10%, rgba(188, 208, 248, 0.28) 0%, transparent 65%);
+    pointer-events: none;
+    z-index: 0;
   }
   html:not([data-theme="dark"]) .bg-grid-layer {
     background-image:
