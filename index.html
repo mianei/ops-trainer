@@ -21,6 +21,8 @@
 <meta name="color-scheme" content="light dark" />
 <meta name="format-detection" content="telephone=no" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="mobile-web-app-capable" content="yes" />
 <title>CVassistant · AI 产品经理训练</title>
 <meta name="description" content="CVassistant：AI 产品经理简历评分与优化、面试准备、350 题场景练题与 Agent 助手，打开即用。" />
 <link rel="canonical" href="https://cvassistant-ai.vercel.app/" />
@@ -917,6 +919,28 @@
     margin-bottom: 4px;
   }
   .agent-chat-head h3 { font-size: 14px; font-weight: 700; }
+  .agent-chat-head-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .agent-chat-close {
+    display: none;
+    width: 32px;
+    height: 32px;
+    border: 1px solid var(--frost-border);
+    border-radius: 8px;
+    background: var(--block-bg);
+    color: var(--ink2);
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+    touch-action: manipulation;
+  }
+  .agent-mobile-nav {
+    display: none;
+  }
   .agent-chat-msgs {
     flex: 1 1 auto;
     overflow-y: auto;
@@ -1146,15 +1170,140 @@
       top: 0;
       bottom: 0;
       z-index: 96;
-      width: min(100%, 340px);
+      width: min(100%, 100vw);
+      max-width: 100%;
       background: var(--frost-solid);
-      border-left: 1px solid var(--frost-border);
+      border-left: none;
       box-shadow: var(--shadow-lg);
-      padding: 12px;
+      padding: max(10px, env(safe-area-inset-top)) 12px max(12px, env(safe-area-inset-bottom));
     }
     .agent-chat.drawer-open { display: flex; }
-    .agent-chat-fab { display: block; }
-    .canvas-body { min-height: 280px; }
+    .agent-chat-close { display: inline-flex; align-items: center; justify-content: center; }
+    .agent-chat-fab {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      bottom: calc(64px + env(safe-area-inset-bottom));
+      right: max(12px, env(safe-area-inset-right));
+      width: 52px;
+      height: 52px;
+      font-size: 11px;
+      letter-spacing: -0.02em;
+    }
+    .agent-mobile-nav {
+      display: flex;
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 88;
+      gap: 4px;
+      padding: 6px 8px calc(6px + env(safe-area-inset-bottom));
+      background: var(--frost-solid);
+      border-top: 1px solid var(--block-border);
+      box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.08);
+    }
+    .agent-mobile-nav-btn {
+      flex: 1;
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 6px 4px;
+      min-height: 44px;
+      border: none;
+      border-radius: var(--r);
+      background: transparent;
+      color: var(--ink2);
+      cursor: pointer;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .agent-mobile-nav-btn.active {
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+    .canvas-body { min-height: min(52vh, 420px); }
+    .canvas-topbar {
+      padding: 10px 12px 8px;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 8px;
+    }
+    .canvas-topbar-main { width: 100%; }
+    .canvas-topbar-actions { width: 100%; }
+    .canvas-title-row { flex-wrap: wrap; gap: 8px; }
+    .canvas-title-row h2 { font-size: 14px; }
+    .canvas-title-cta { width: 100%; justify-content: flex-start; }
+    .canvas-tabs {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      overscroll-behavior-x: contain;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      margin: 0 -4px;
+      padding: 0 4px 2px;
+    }
+    .canvas-tabs::-webkit-scrollbar { display: none; }
+    .canvas-tab {
+      flex-shrink: 0;
+      font-size: 12px;
+      min-height: 32px;
+      padding: 6px 12px;
+    }
+    .canvas-body { padding: 10px 12px 14px; }
+    .agent-chat-input,
+    .goal-plan-input {
+      font-size: 16px;
+    }
+    .agent-compose-icon { width: 40px; height: 40px; }
+    .agent-chat-compose .btn-primary {
+      min-height: 40px;
+      padding: 0 14px;
+    }
+    .agent-chat-plan {
+      max-height: min(34vh, 240px);
+    }
+    .page-wrap.page-wrap--agent {
+      padding-left: 10px;
+      padding-right: 10px;
+      padding-bottom: calc(76px + env(safe-area-inset-bottom));
+    }
+    .page-wrap.page-wrap--agent .hero-compact {
+      padding: 0.45rem 0 0.35rem;
+    }
+    .page-wrap.page-wrap--agent .hero-brand {
+      font-size: clamp(1.35rem, 6vw, 1.65rem);
+      margin-bottom: 0;
+    }
+    .header-actions {
+      top: max(8px, env(safe-area-inset-top));
+      right: max(10px, env(safe-area-inset-right));
+      gap: 4px;
+    }
+    .header-actions .btn-theme,
+    .header-actions .btn-trace,
+    .header-actions .btn-history {
+      font-size: 11px;
+      padding: 6px 8px;
+      min-height: 32px;
+    }
+    .agent-workspace {
+      border-radius: var(--r-lg);
+      margin-bottom: 0;
+      min-height: min(calc(100dvh - 168px), 720px);
+    }
+    .sense-home { padding: 0 2px; }
+    .sense-cta { max-width: none; }
+    .bank-list { max-height: min(38vh, 280px); }
+    .history-panel {
+      width: 100%;
+      max-height: min(88dvh, 640px);
+      margin: max(8px, env(safe-area-inset-top)) 0 max(8px, env(safe-area-inset-bottom));
+    }
+    .doc-export-split .doc-export-main,
+    .doc-export-split .doc-export-toggle {
+      min-height: 40px;
+    }
   }
   @media (min-width: 900px) and (max-width: 1100px) {
     .agent-workspace {
@@ -3655,6 +3804,10 @@
     .btn-row { flex-direction: column; }
     .btn-row .btn-primary { width: 100%; }
     .footer { padding: 1.25rem 12px max(1.5rem, env(safe-area-inset-bottom)); font-size: 11px; }
+    .page-wrap.page-wrap--agent .footer {
+      padding-bottom: calc(4.5rem + env(safe-area-inset-bottom));
+    }
+    .sync-bar { padding: 8px 12px; font-size: 11px; margin-bottom: 0.5rem; }
   }
 
   .sync-bar.sync-bar--hidden { display: none !important; }
@@ -4392,6 +4545,20 @@
   html[data-theme="dark"] .bank-item-hint {
     color: var(--interview);
   }
+  html[data-theme="dark"] .agent-mobile-nav {
+    background: var(--block-bg-elevated);
+    border-color: var(--block-border);
+    box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.35);
+  }
+  html[data-theme="dark"] .agent-mobile-nav-btn.active {
+    background: var(--block-accent-soft);
+    color: var(--product);
+  }
+  html[data-theme="dark"] .agent-chat-close {
+    background: var(--block-bg-muted);
+    border-color: var(--block-border);
+    color: var(--ink2);
+  }
   html[data-theme="dark"] .bank-list::-webkit-scrollbar-thumb {
     background: rgba(255, 255, 255, 0.18);
   }
@@ -4504,7 +4671,7 @@
 <script src="/agent-intent.browser.js"></script>
 <script>
 const GITHUB_TOPICS_URL = '';
-const APP_ASSET_VERSION = '3.0.1';
+const APP_ASSET_VERSION = '3.0.2';
 
 function assetUrl(path) {
   const sep = path.includes('?') ? '&' : '?';
@@ -5410,6 +5577,10 @@ async function startMission(goal) {
     renderMissionStepList();
     runMissionStep(0);
     if (input) input.blur();
+    if (document.documentElement.classList.contains('is-mobile')) {
+      document.getElementById('agentChatBackdrop')?.classList.add('open');
+      document.querySelector('.agent-chat')?.classList.add('drawer-open');
+    }
   } catch (e) {
     showGoalPlanError(e.message || '规划失败');
   } finally {
@@ -5543,6 +5714,19 @@ function getCanvasTab(scene) {
 function setCanvasTab(scene, tab) {
   canvasTabByScene[scene] = tab;
   localStorage.setItem('canvasTab_' + scene, tab);
+}
+
+function agentMobileNavHtml(activeScene) {
+  const items = [
+    { id: 'resume', label: '简历' },
+    { id: 'scenario', label: '练题' },
+    { id: 'prep', label: '准备' },
+    { id: 'kb', label: '知识库' }
+  ];
+  return items.map(it => {
+    const cls = 'agent-mobile-nav-btn' + (it.id === activeScene ? ' active' : '');
+    return `<button type="button" class="${cls}" data-agent-scene="${it.id}">${escapeHtml(it.label)}</button>`;
+  }).join('');
 }
 
 function agentNavHtml(activeScene) {
@@ -6569,8 +6753,14 @@ function mountAgentWorkspace(innerHtml) {
         </div>
         <div class="canvas-body" id="agentCanvasBody">${innerHtml}</div>
       </section>
-      <aside class="agent-chat" aria-label="助手bot">
-        <div class="agent-chat-head"><h3>助手bot</h3><span class="agent-nav-badge">随时问</span></div>
+      <aside class="agent-chat" aria-label="助手 Bot">
+        <div class="agent-chat-head">
+          <h3>助手 Bot</h3>
+          <div class="agent-chat-head-actions">
+            <span class="agent-nav-badge">随时问</span>
+            <button type="button" class="agent-chat-close" id="agentChatClose" aria-label="关闭助手">×</button>
+          </div>
+        </div>
         <div class="agent-chat-plan" id="agentChatPlan" aria-label="训练计划"></div>
         <div class="agent-chat-msgs" id="agentChatMsgs"></div>
         <div class="agent-chat-chips" id="agentChatChips" hidden></div>
@@ -6590,7 +6780,8 @@ function mountAgentWorkspace(innerHtml) {
         </div>
       </aside>
     </div>
-    <button type="button" class="agent-chat-fab" id="agentChatFab" aria-label="打开助手bot">Bot</button>
+    <nav class="agent-mobile-nav" id="agentMobileNav" aria-label="模块切换">${agentMobileNavHtml(scene)}</nav>
+    <button type="button" class="agent-chat-fab" id="agentChatFab" aria-label="打开助手 Bot">Bot</button>
     <div class="agent-chat-drawer-backdrop" id="agentChatBackdrop"></div>`;
   bindAgentWorkspace(scene);
   mountAgentChatPlan();
@@ -6616,6 +6807,12 @@ function bindAgentWorkspace(scene) {
   root.querySelectorAll('[data-agent-scene]').forEach(btn => {
     if (btn.disabled) return;
     btn.onclick = () => setAgentScene(btn.dataset.agentScene);
+  });
+  document.querySelectorAll('#agentMobileNav [data-agent-scene]').forEach(btn => {
+    btn.onclick = () => {
+      closeAgentChatDrawer();
+      setAgentScene(btn.dataset.agentScene);
+    };
   });
 
   root.querySelectorAll('[data-canvas-tab]').forEach(btn => {
@@ -6666,6 +6863,7 @@ function bindAgentWorkspace(scene) {
     document.getElementById('agentChatBackdrop')?.classList.add('open');
     document.querySelector('.agent-chat')?.classList.add('drawer-open');
   });
+  document.getElementById('agentChatClose')?.addEventListener('click', closeAgentChatDrawer);
   document.getElementById('agentChatBackdrop')?.addEventListener('click', closeAgentChatDrawer);
   if (!window.__agentChatEscBound) {
     window.__agentChatEscBound = true;
