@@ -5291,8 +5291,8 @@ function renderAgentChatBubbles(scene) {
   if (!el) return;
   if (!msgs.length) {
     const hint = scene === 'kb'
-      ? '知识库阅读模式。结构化知识卡在中间 Canvas；稍后可在此询问「帮我解释 RAG」等概念。'
-      : '在右侧发指令 steer；结构化结果在中间 Canvas 展示。';
+      ? '知识库模式：知识卡在中间 Canvas；在此可追问概念解释，Agent 会识别意图并调用工具。'
+      : '全局 Agent 控制台：识别意图、调用工具。中间 Canvas 结果不满意，在此继续追问即可。';
     el.innerHTML = `<div class="agent-chat-bubble agent"><div class="agent-chat-role">Agent</div>${hint}</div>`;
     return;
   }
