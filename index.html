@@ -6595,8 +6595,8 @@ function renderKbCanvasPanels(scrollToCardId) {
 async function renderKbView(scrollToCardId) {
   agentScene = 'kb';
   try {
-    await loadKnowledge();
     await loadKnowledgeMap();
+    await loadKnowledge();
   } catch (e) {
     mountAgentWorkspace(`<p class="resume-pane-empty" style="color:var(--danger)">${escapeHtml(e.message)}</p>`);
     return;
@@ -8051,14 +8051,36 @@ async function openAnalyticsModal() {
   } catch (e) { body.innerHTML = '<p>' + escapeHtml(e.message) + '</p>'; }
 }
 
-async function loadKnowledge() {
-  if (KNOWLEDGE.length) return KNOWLEDGE;
+let KNOWLEDGE_JSON_LOADED = false;
+
+async function mergeAiPmInterviewKbSection() {
   try {
-    const res = await fetch('knowledge.json?t=' + Date.now(), { cache: 'no-store' });
-    if (!res.ok) return KNOWLEDGE;
-    const data = await res.json();
-    KNOWLEDGE = Array.isArray(data.sections) ? data.sections : [];
+    const res = await fetch('/api/ai-pm-interview-kb?t=' + Date.now(), { cache: 'no-store' });
+    if (!res.ok) return;
+    const kbSec = await res.json();
+    KNOWLEDGE = KNOWLEDGE.filter(s => s.id !== 'ai-pm-interview-kb');
+    if (kbSec?.id && Array.isArray(kbSec.cards)) {
+      KNOWLEDGE.push(kbSec);
+      KNOWLEDGE_MAP.readingByNav = KNOWLEDGE_MAP.readingByNav || {};
+      KNOWLEDGE_MAP.readingByNav['ai-pm-kb'] = kbSec.cards.map(c => c.id);
+    }
   } catch { /* optional */ }
+}
+
+async function loadKnowledge() {
+  if (!KNOWLEDGE_JSON_LOADED) {
+    try {
+      const res = await fetch('knowledge.json?t=' + Date.now(), { cache: 'no-store' });
+      if (res.ok) {
+        const data = await res.json();
+        KNOWLEDGE = Array.isArray(data.sections)
+          ? data.sections.filter(s => s.id !== 'ai-pm-interview-kb')
+          : [];
+      }
+    } catch { /* optional */ }
+    KNOWLEDGE_JSON_LOADED = true;
+  }
+  await mergeAiPmInterviewKbSection();
   return KNOWLEDGE;
 }
 
@@ -8578,8 +8600,8 @@ async function loadTopicsAndRender() {
   try {
     TOPICS = await loadTopics();
     buildScenarioIndex();
-    await loadKnowledge();
     await loadKnowledgeMap();
+    await loadKnowledge();
     await loadInterviewBankV2();
     await loadAiPmBanks();
     setSyncStatus(true);

@@ -1,5 +1,8 @@
 {
   "name": "cvassistant",
   "private": true,
-  "type": "module"
+  "type": "module",
+  "scripts": {
+    "vercel-build": "node scripts/verify-ai-pm-interview-kb.js"
+  }
 }
