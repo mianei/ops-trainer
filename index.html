@@ -62,9 +62,9 @@
     --map-soft: rgba(172, 142, 104, 0.1);
     --wave-1: #d4e8f8;
     --wave-2: #d2efe0;
-    --frost: rgba(255, 255, 255, 0.42);
-    --frost-strong: rgba(255, 255, 255, 0.62);
-    --frost-solid: rgba(255, 255, 255, 0.78);
+    --frost: rgba(255, 255, 255, 0.52);
+    --frost-strong: rgba(255, 255, 255, 0.82);
+    --frost-solid: rgba(255, 255, 255, 0.92);
     --frost-border: rgba(255, 255, 255, 0.72);
     --frost-edge: rgba(0, 0, 0, 0.05);
     --frost-dark: rgba(29, 29, 31, 0.72);
@@ -92,10 +92,10 @@
     --sans-en: 'Syne', 'Outfit', var(--sans);
     /* —— 统一方块/卡片 token（浅色：白·浅灰·蓝绿描边）—— */
     --block-bg: #ffffff;
-    --block-bg-elevated: rgba(255, 255, 255, 0.85);
-    --block-bg-subtle: rgba(255, 255, 255, 0.55);
-    --block-bg-muted: rgba(255, 255, 255, 0.28);
-    --block-bg-inset: rgba(255, 255, 255, 0.45);
+    --block-bg-elevated: rgba(255, 255, 255, 0.94);
+    --block-bg-subtle: rgba(255, 255, 255, 0.78);
+    --block-bg-muted: rgba(255, 255, 255, 0.52);
+    --block-bg-inset: rgba(255, 255, 255, 0.68);
     --block-bg-gradient: linear-gradient(180deg, #ffffff 0%, #f0f7ff 100%);
     --block-border: var(--frost-border);
     --block-border-subtle: rgba(0, 0, 0, 0.06);
@@ -157,6 +157,7 @@
     width: 120%;
     height: clamp(300px, 44vh, 480px);
     z-index: 1;
+    opacity: 0.96;
     pointer-events: none;
     will-change: transform;
     animation: horizonPan 28s ease-in-out infinite;
@@ -176,10 +177,10 @@
     66% { transform: translate3d(-2%, 3%, 0) scaleY(0.94); }
   }
   .bg-wave-svg {
-    position: absolute; width: 140%; left: -20%; top: 20%;
+    position: absolute; width: 140%; left: -20%; top: 10%;
     opacity: 0.95;
     will-change: transform;
-    z-index: 1;
+    z-index: 2;
     animation: wavePan 28s ease-in-out infinite;
   }
   .bg-wave-mid {
@@ -1952,10 +1953,10 @@
   html:not([data-theme="dark"]) .work-block .wb-label {
     display: inline-block;
     padding: 4px 10px;
-    background: #ffffff;
-    border: 1px solid rgba(38, 194, 129, 0.2);
+    background: rgba(255, 255, 255, 0.96);
+    border: 1px solid rgba(38, 194, 129, 0.22);
     border-radius: 8px;
-    box-shadow: 0 1px 4px rgba(38, 194, 129, 0.08);
+    box-shadow: 0 1px 6px rgba(38, 194, 129, 0.1);
   }
   .sense-session-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
   .feedback-card .feedback-head { font-size: 13px; font-weight: 700; letter-spacing: 0.02em; color: #5e5ce6; }
@@ -3509,7 +3510,7 @@
     .bg-wave-svg {
       left: 0;
       width: 100%;
-      top: 16%;
+      top: 8%;
       opacity: 0.92;
     }
     .glass, .surface, .surface-card, .workspace-shell,
@@ -3766,26 +3767,9 @@
     -webkit-mask-repeat: no-repeat;
     mask-repeat: no-repeat;
   }
-  html:not([data-theme="dark"]) .bg-horizon-svg {
-    display: none;
-  }
-  html:not([data-theme="dark"]) .bg-scene::after {
-    content: '';
-    position: absolute;
-    top: -4%;
-    left: -8%;
-    right: -8%;
-    height: min(28vh, 220px);
-    background:
-      radial-gradient(ellipse 90% 68% at 50% 0%, rgba(210, 232, 248, 0.22) 0%, transparent 74%),
-      radial-gradient(ellipse 48% 38% at 18% 8%, rgba(198, 236, 220, 0.14) 0%, transparent 70%),
-      radial-gradient(ellipse 44% 36% at 82% 6%, rgba(214, 226, 248, 0.12) 0%, transparent 68%);
-    pointer-events: none;
-    z-index: 0;
-  }
   html:not([data-theme="dark"]) .bg-wave-svg {
     opacity: 1;
-    z-index: 1;
+    z-index: 2;
   }
   html:not([data-theme="dark"]) .bg-grid-layer {
     background-image:
@@ -4398,9 +4382,9 @@
     <svg class="bg-horizon-svg" viewBox="0 0 1440 480" preserveAspectRatio="none" aria-hidden="true">
       <defs>
         <linearGradient id="skyCapGradApp" x1="0" y1="0" x2="0" y2="480" gradientUnits="userSpaceOnUse">
-          <stop stop-color="#e4eef8"/>
-          <stop offset="0.58" stop-color="#dcefe8"/>
-          <stop offset="1" stop-color="#d6e8f2"/>
+          <stop stop-color="#ffffff"/>
+          <stop offset="0.52" stop-color="#fafdfc"/>
+          <stop offset="1" stop-color="#f2f8f5"/>
         </linearGradient>
       </defs>
       <path fill="url(#skyCapGradApp)" d="M0,0 H1440 V320 C1253,490 965,290 720,420 C475,500 187,300 0,400 V0 Z">
