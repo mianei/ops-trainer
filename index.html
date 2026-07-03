@@ -941,6 +941,7 @@
   .agent-compose-row .agent-chat-input { flex: 1; }
   .agent-compose-icon { width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--frost-border); background: var(--block-bg); cursor: pointer; font-size: 14px; display: inline-flex; align-items: center; justify-content: center; color: var(--ink2); padding: 0; }
   .agent-compose-icon .agent-voice-icon { width: 18px; height: 18px; display: block; fill: currentColor; }
+  .agent-compose-icon .agent-attach-icon { width: 18px; height: 18px; display: block; fill: currentColor; }
   .agent-compose-icon.recording { background: #fee2e2; border-color: #f87171; color: #dc2626; }
   .agent-compose-icon.transcribing { opacity: 0.65; pointer-events: none; }
   .agent-tool-io { margin: 4px 0 0 24px; font-size: 11px; color: var(--ink3); }
@@ -4159,6 +4160,8 @@ let agentVoiceRecorder = null;
 
 const AGENT_MIC_SVG = '<svg class="agent-voice-icon" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M512 608 512 608c88 0 160-72 160-160L672 256c0-88-72-160-160-160l0 0c-88 0-160 72-160 160l0 192C352 536 424 608 512 608z"/><path d="M796.6 492.4c2.7-17.5-9.2-33.8-26.7-36.5-17.5-2.6-33.8 9.3-36.5 26.7C716.6 590.6 621.5 672 512 672c-109.5 0-204.7-81.5-221.4-189.5-2.7-17.5-19.1-29.4-36.5-26.7-17.5 2.7-29.4 19-26.7 36.5 20.2 130.5 124 227.8 252.6 241.8L480 832l-96 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l256 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0 0-97.9C672.5 720.1 776.4 622.9 796.6 492.4z"/></svg>';
 
+const AGENT_ATTACH_SVG = '<svg class="agent-attach-icon" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M800 556.8L524.8 832c-38.4 38.4-83.2 64-140.8 64s-102.4-25.6-140.8-64c-76.8-76.8-76.8-204.8 0-281.6l384-384c25.6-25.6 57.6-38.4 89.6-38.4 32 0 64 12.8 89.6 38.4 44.8 44.8 44.8 128 0 172.8l-384 384c-6.4 6.4-19.2 12.8-32 12.8s-25.6-6.4-32-12.8c-19.2-19.2-19.2-44.8 0-64l384-384c12.8-12.8 12.8-32 0-44.8-6.4-6.4-12.8-12.8-25.6-12.8-6.4 0-19.2 6.4-25.6 12.8l-384 384c-19.2 19.2-32 51.2-32 76.8 0 32 12.8 57.6 32 76.8 19.2 19.2 51.2 32 76.8 32 32 0 57.6-12.8 76.8-32l384-384c38.4-38.4 57.6-83.2 57.6-134.4s-19.2-96-57.6-134.4c-32-32-76.8-51.2-128-51.2s-96 19.2-134.4 57.6l-384 384c-51.2 51.2-76.8 115.2-76.8 185.6 0 70.4 25.6 140.8 76.8 185.6C249.6 934.4 313.6 960 384 960s140.8-25.6 185.6-76.8L844.8 608c12.8-12.8 12.8-32 0-44.8-12.8-19.2-32-12.8-44.8-6.4z"/></svg>';
+
 function setAgentMicIcon(mic, state) {
   if (!mic) return;
   mic.classList.toggle('recording', state === 'recording');
@@ -5408,8 +5411,10 @@ async function consumeCoachStream(res, messages, threadId, onDelta) {
 
 function bindAgentVoiceAttach(scene) {
   const mic = document.getElementById('agentChatMic');
+  const attach = document.getElementById('agentChatAttach');
   const file = document.getElementById('agentChatFile');
   const input = document.getElementById('agentChatInput');
+  if (attach) attach.innerHTML = AGENT_ATTACH_SVG;
   if (mic) {
     setAgentMicIcon(mic, 'idle');
     mic.onclick = async () => {
@@ -6110,7 +6115,7 @@ function mountAgentWorkspace(innerHtml) {
           <div class="agent-compose-row">
             <button type="button" class="agent-compose-icon" id="agentChatMic" title="语音输入" aria-label="语音输入"></button>
             <input type="file" id="agentChatFile" accept=".txt,.md,.json" hidden />
-            <button type="button" class="agent-compose-icon" id="agentChatAttach" title="附加文本文件">📎</button>
+            <button type="button" class="agent-compose-icon" id="agentChatAttach" title="附加文本文件" aria-label="附加文本文件"></button>
             <input type="text" class="agent-chat-input" id="agentChatInput" placeholder="对 Agent 下指令…" />
             <button type="button" class="btn-primary" id="agentChatSend">发送</button>
           </div>
