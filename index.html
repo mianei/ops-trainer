@@ -4111,6 +4111,7 @@
   </div>
 </div>
 
+<script src="/agent-intent.browser.js"></script>
 <script>
 const GITHUB_TOPICS_URL = '';
 
@@ -4869,10 +4870,17 @@ async function startMission(goal) {
   const btn = document.getElementById('goalPlanBtn');
   const input = document.getElementById('goalPlanInput');
   showGoalPlanError('');
-  const coachIntent = detectCoachIntentLocal(goal);
-  if (coachIntent) {
+  const unified = recognizeAgentIntent(goal, { scene: agentScene });
+  if (unified.intent === 'coach_mode' && unified.coachMode) {
     if (btn) { btn.disabled = false; btn.textContent = '开始训练'; }
-    openCoachFromGoal(goal, coachIntent);
+    openCoachFromGoal(goal, unified.coachMode);
+    if (input) input.blur();
+    return;
+  }
+  if (['score_resume', 'optimize_resume', 'prep_interview', 'next_scenario', 'navigate_scene'].includes(unified.intent)) {
+    if (btn) { btn.disabled = false; btn.textContent = '开始训练'; }
+    if (unified.targetScene) navigateToAgentScene(unified.targetScene);
+    await handleGlobalAgentMessage(goal, unified.targetScene || agentScene);
     if (input) input.blur();
     return;
   }
@@ -5157,20 +5165,35 @@ function persistAgentChatSnapshot(scene, messages) {
 }
 
 function recognizeAgentIntent(msg, scene) {
-  const t = String(msg || '').trim();
-  const lower = t.toLowerCase();
-  if (/换题|下一题|another|next/i.test(t)) return { intent: 'next_scenario', tool: 'pick_scenario' };
-  if (/评分|打分|score/i.test(t) && scene === 'resume') return { intent: 'score_resume', tool: 'score_resume' };
-  if (/优化|optimize|改写/i.test(t) && scene === 'resume') return { intent: 'optimize_resume', tool: 'optimize_resume' };
-  if (/准备|prep|面试/i.test(t) && scene === 'prep') return { intent: 'prep_interview', tool: 'prepare_interview' };
-  const tabMatch = t.match(/(?:切到|打开|看|切换(?:到)?)[「"']?([^「"'s]+)[」"']?/);
-  if (tabMatch) return { intent: 'switch_tab', tab: tabMatch[1], tool: 'switch_canvas_tab' };
-  if (/解析|框架|标准/.test(t) && scene === 'scenario') return { intent: 'switch_tab', tab: '解析', tool: 'switch_canvas_tab' };
-  if (/点评|反馈/.test(t) && scene === 'scenario') return { intent: 'switch_tab', tab: '点评', tool: 'switch_canvas_tab' };
-  if (/题目|作答/.test(t) && scene === 'scenario') return { intent: 'switch_tab', tab: '题目', tool: 'switch_canvas_tab' };
-  if (/追问|followup|解释|为什么/.test(t)) return { intent: 'coach_followup', tool: 'coach_reply' };
-  if (/导出|下载|markdown|md/i.test(lower)) return { intent: 'export_doc', tool: 'export_markdown' };
-  return { intent: 'coach_followup', tool: 'coach_reply' };
+  if (typeof resolveAgentIntent === 'function') {
+    return resolveAgentIntent(msg, { scene });
+  }
+  return { intent: 'coach_followup', tool: 'coach_reply', confidence: 'low', source: 'regex' };
+}
+
+async function classifyAgentIntent(msg, scene) {
+  const local = recognizeAgentIntent(msg, scene);
+  if (local.confidence === 'high') return local;
+  try {
+    const res = await fetch('/api/intent', {
+      method: 'POST',
+      headers: authHeaders(),
+      body: JSON.stringify({ message: msg, scene, useLlm: true })
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data.intent) return data;
+    }
+  } catch { /* fallback local */ }
+  return local;
+}
+
+function navigateToAgentScene(targetScene) {
+  if (!targetScene || targetScene === agentScene) return;
+  if (targetScene === 'resume') { setAgentScene('resume'); return; }
+  if (targetScene === 'prep') { setAgentScene('prep'); return; }
+  if (targetScene === 'scenario') { setAgentScene('scenario'); return; }
+  if (targetScene === 'kb') { setAgentScene('kb'); }
 }
 
 function resolveCanvasTab(scene, label) {
@@ -7187,20 +7210,11 @@ function renderInterviewView() {
 }
 
 function detectCoachIntentLocal(text) {
-  const t = String(text || '').trim();
-  if (!t) return null;
-  const rules = [
-    [/完整|落地方案|规划.*AI\s*项目|转\s*AI\s*产品/i, 'full-report'],
-    [/迭代|无面试|没回复|demo.*弱|优化.*项目/i, 'project-iteration'],
-    [/简历|诊断|改写|优化简历/i, 'resume-diagnosis'],
-    [/面试防御|追问|讲项目|被问穿|准备面试/i, 'interview-defense'],
-    [/没有.*项目|项目方向|找方向/i, 'project-direction'],
-    [/AI\s*产品|RAG|Agent|评测|Eval|badcase/i, 'ai-pm-qa']
-  ];
-  for (const [re, mode] of rules) {
-    if (re.test(t)) return mode;
+  if (typeof detectCoachIntentUnified === 'function') {
+    return detectCoachIntentUnified(text);
   }
-  return null;
+  const resolved = recognizeAgentIntent(text, agentScene);
+  return resolved.coachMode || null;
 }
 
 function openCoachFromGoal(goal, mode) {
