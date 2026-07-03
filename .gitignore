@@ -26,3 +26,16 @@ desktop/dist/
 coach-docx-extracted.txt
 docs/knowledge-audit-dump.txt
 *.pdf
+
+# 一次性 patch / 本地草稿（勿提交）
+_patch-*.cjs
+_live*.html
+_deployed-*.html
+_fix-*.cjs
+.git-push-retry.log
+
+# Cursor 本地（非项目源码）
+.cursor/skills/
+
+# 无依赖项目，忽略误生成的 lock
+package-lock.json
