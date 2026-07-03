@@ -29,9 +29,9 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --bg: #ffffff;
+    --bg: #e2ebe6;
     --white: #ffffff;
-    --wash: #f0f7ff;
+    --wash: #eef6f2;
     --ink: #1d1d1f;
     --ink2: #6e6e73;
     --ink3: #86868b;
@@ -62,10 +62,10 @@
     --map-soft: rgba(172, 142, 104, 0.1);
     --wave-1: #e8f4ff;
     --wave-2: #e6faf0;
-    --frost: rgba(255, 255, 255, 0.42);
-    --frost-strong: rgba(255, 255, 255, 0.62);
-    --frost-solid: rgba(255, 255, 255, 0.78);
-    --frost-border: rgba(255, 255, 255, 0.72);
+    --frost: rgba(255, 255, 255, 0.58);
+    --frost-strong: rgba(255, 255, 255, 0.78);
+    --frost-solid: rgba(255, 255, 255, 0.92);
+    --frost-border: rgba(38, 194, 129, 0.14);
     --frost-edge: rgba(0, 0, 0, 0.05);
     --frost-dark: rgba(29, 29, 31, 0.72);
     --blur-sm: blur(14px) saturate(165%);
@@ -92,13 +92,13 @@
     --sans-en: 'Syne', 'Outfit', var(--sans);
     /* —— 统一方块/卡片 token（浅色：白·浅灰·蓝绿描边）—— */
     --block-bg: #ffffff;
-    --block-bg-elevated: rgba(255, 255, 255, 0.85);
-    --block-bg-subtle: rgba(255, 255, 255, 0.55);
-    --block-bg-muted: rgba(255, 255, 255, 0.28);
-    --block-bg-inset: rgba(255, 255, 255, 0.45);
-    --block-bg-gradient: linear-gradient(180deg, #ffffff 0%, #f0f7ff 100%);
-    --block-border: var(--frost-border);
-    --block-border-subtle: rgba(0, 0, 0, 0.06);
+    --block-bg-elevated: #ffffff;
+    --block-bg-subtle: #ffffff;
+    --block-bg-muted: rgba(255, 255, 255, 0.72);
+    --block-bg-inset: rgba(236, 244, 240, 0.88);
+    --block-bg-gradient: linear-gradient(180deg, #ffffff 0%, #f4faf7 100%);
+    --block-border: rgba(38, 194, 129, 0.12);
+    --block-border-subtle: rgba(38, 194, 129, 0.08);
     --block-border-accent: rgba(38, 194, 129, 0.35);
     --block-border-accent-hover: rgba(38, 194, 129, 0.55);
     --block-accent-soft: rgba(38, 194, 129, 0.06);
@@ -137,7 +137,7 @@
 
   .bg-scene {
     position: absolute; inset: 0; z-index: 0; pointer-events: none;
-    background: linear-gradient(180deg, #f8fbff 0%, #f0f9f4 48%, #eef6ff 100%);
+    background: linear-gradient(180deg, #edf5f1 0%, #e2ebe6 42%, #dce8e3 100%);
     overflow: hidden;
   }
   .bg-horizon-svg {
@@ -147,6 +147,7 @@
     width: 120%;
     height: clamp(300px, 44vh, 480px);
     z-index: 1;
+    opacity: 0.38;
     pointer-events: none;
     will-change: transform;
     animation: horizonPan 28s ease-in-out infinite;
@@ -167,60 +168,63 @@
   }
   .bg-wave-svg {
     position: absolute; width: 140%; left: -20%; top: 24%;
-    opacity: 0.82;
+    opacity: 0.88;
     will-change: transform;
-    z-index: 0;
-    animation: wavePan 28s ease-in-out infinite;
+    z-index: 2;
+    animation: wavePan 20s ease-in-out infinite;
   }
   .bg-wave-mid {
     transform-origin: 55% 85%;
-    animation: waveDriftMid 14s ease-in-out infinite;
+    animation: waveDriftMid 10s ease-in-out infinite;
   }
   .bg-wave-back {
     transform-origin: 50% 80%;
-    animation: waveDriftBack 18s ease-in-out infinite;
+    animation: waveDriftBack 14s ease-in-out infinite;
   }
   .bg-wave-front {
     transform-origin: 40% 90%;
-    animation: waveDriftFront 11s ease-in-out infinite;
+    animation: waveDriftFront 8s ease-in-out infinite;
   }
   @keyframes wavePan {
     0%, 100% { transform: translate3d(0, 0, 0); }
-    50% { transform: translate3d(-5%, 0, 0); }
+    33% { transform: translate3d(-3.5%, 1%, 0); }
+    66% { transform: translate3d(-6%, -0.5%, 0); }
   }
   @keyframes waveDriftMid {
     0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-    25% { transform: translate3d(4%, -5.5%, 0) scale(1.04); }
-    50% { transform: translate3d(-3%, 4.5%, 0) scale(0.97); }
-    75% { transform: translate3d(2%, -3%, 0) scale(1.03); }
+    20% { transform: translate3d(5%, -6.5%, 0) scale(1.05); }
+    45% { transform: translate3d(-4%, 5%, 0) scale(0.96); }
+    70% { transform: translate3d(3%, -4%, 0) scale(1.04); }
   }
   @keyframes waveDriftBack {
     0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-    33% { transform: translate3d(-5%, 4.5%, 0) scale(1.05); }
-    66% { transform: translate3d(3.5%, -4%, 0) scale(0.96); }
+    25% { transform: translate3d(-6%, 5%, 0) scale(1.06); }
+    55% { transform: translate3d(4.5%, -5%, 0) scale(0.95); }
+    80% { transform: translate3d(-2%, 3%, 0) scale(1.03); }
   }
   @keyframes waveDriftFront {
     0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-    50% { transform: translate3d(6%, -6%, 0) scale(1.07); }
+    35% { transform: translate3d(7%, -7%, 0) scale(1.08); }
+    70% { transform: translate3d(-4%, 4%, 0) scale(0.97); }
   }
   .bg-blob {
     position: absolute; border-radius: 50%; filter: blur(80px);
-    opacity: 0.58; will-change: transform;
+    opacity: 0.36; will-change: transform;
   }
   .bg-blob-1 {
     width: 480px; height: 480px; top: -100px; right: -80px;
-    background: linear-gradient(135deg, rgba(74, 224, 173, 0.55), rgba(184, 212, 255, 0.5));
-    animation: blobFloat1 18s ease-in-out infinite;
+    background: linear-gradient(135deg, rgba(74, 224, 173, 0.32), rgba(184, 212, 255, 0.28));
+    animation: blobFloat1 16s ease-in-out infinite;
   }
   .bg-blob-2 {
     width: 360px; height: 360px; bottom: 8%; left: -90px;
-    background: linear-gradient(135deg, rgba(212, 245, 224, 0.65), rgba(232, 240, 255, 0.55));
-    animation: blobFloat2 24s ease-in-out infinite;
+    background: linear-gradient(135deg, rgba(212, 245, 224, 0.38), rgba(232, 240, 255, 0.32));
+    animation: blobFloat2 20s ease-in-out infinite;
   }
   .bg-blob-3 {
     width: 280px; height: 280px; top: 38%; right: 12%;
-    background: linear-gradient(135deg, rgba(38, 194, 129, 0.22), rgba(94, 92, 230, 0.12));
-    animation: blobFloat3 20s ease-in-out infinite;
+    background: linear-gradient(135deg, rgba(38, 194, 129, 0.12), rgba(94, 92, 230, 0.08));
+    animation: blobFloat3 18s ease-in-out infinite;
   }
   @keyframes blobFloat3 {
     0%, 100% { transform: translate(0, 0) scale(1); }
@@ -260,7 +264,7 @@
     box-shadow: var(--shadow), var(--inset-hi);
   }
   .surface-card {
-    background: var(--block-bg-elevated);
+    background: var(--block-bg);
     backdrop-filter: var(--blur-md);
     -webkit-backdrop-filter: var(--blur-md);
     border: 1px solid var(--block-border);
@@ -384,7 +388,7 @@
   }
 
   /* —— 主应用 —— */
-  #app { display: none; position: relative; z-index: 1; min-height: 100vh; }
+  #app { display: none; position: relative; z-index: 1; min-height: 100vh; background: transparent; }
   #app.visible { display: flex; flex-direction: column; }
 
   .page-wrap {
@@ -509,7 +513,9 @@
     padding: 20px;
     margin-bottom: 1rem;
     overflow: visible;
-    background: var(--frost-strong);
+    background: rgba(255, 255, 255, 0.62);
+    backdrop-filter: var(--blur-md);
+    -webkit-backdrop-filter: var(--blur-md);
     border: 1px solid var(--frost-border);
     box-shadow: var(--shadow-sm), var(--inset-hi);
   }
@@ -551,13 +557,15 @@
     min-height: min(72vh, 720px);
     border-radius: var(--r-xl);
     overflow: hidden;
-    background: var(--block-bg-inset);
+    background: rgba(255, 255, 255, 0.68);
+    backdrop-filter: var(--blur-md);
+    -webkit-backdrop-filter: var(--blur-md);
     border: 1px solid var(--block-border);
     box-shadow: var(--block-shadow), var(--block-glow);
     margin-bottom: 1rem;
   }
   .agent-nav {
-    background: var(--block-bg-muted);
+    background: rgba(248, 252, 250, 0.82);
     border-right: 1px solid var(--block-border);
     padding: 12px 10px;
     display: flex;
@@ -614,7 +622,7 @@
     display: flex;
     flex-direction: column;
     min-width: 0;
-    background: var(--block-bg-muted);
+    background: rgba(255, 255, 255, 0.94);
     border-right: 1px solid var(--block-border);
   }
   .canvas-topbar {
@@ -623,7 +631,7 @@
     justify-content: space-between;
     gap: 12px;
     padding: 14px 16px 12px;
-    background: var(--block-bg-subtle);
+    background: #ffffff;
     border-bottom: 1px solid var(--block-border-subtle);
     flex-wrap: wrap;
   }
@@ -876,7 +884,7 @@
     height: 100%;
     min-height: 0;
     align-self: stretch;
-    background: var(--block-bg-muted);
+    background: rgba(248, 252, 250, 0.82);
     padding: 12px;
   }
   .agent-chat-head {
@@ -1703,12 +1711,13 @@
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
   }
-  .knowledge-stack-nav {
+  .knowledge-stack-nav,
+  .mission-read-pager {
     display: flex;
-    flex-wrap: wrap;
     align-items: center;
-    justify-content: center;
-    gap: 8px 10px;
+    justify-content: space-between;
+    width: 100%;
+    gap: 12px;
     position: sticky;
     bottom: 10px;
     z-index: 5;
@@ -1718,6 +1727,14 @@
     border: 1px solid var(--frost-border);
     box-shadow: var(--shadow-sm);
     backdrop-filter: blur(12px);
+  }
+  .mission-read-pager {
+    position: static;
+    margin-bottom: 12px;
+  }
+  .kc-body-nav {
+    margin-top: 10px;
+    margin-bottom: 4px;
   }
   .knowledge-pager-pos {
     font-size: 13px;
@@ -1730,13 +1747,6 @@
   .mission-read-body-paged {
     max-height: min(44vh, 320px);
     overflow-y: auto;
-    margin-bottom: 12px;
-  }
-  .mission-read-pager {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
     margin-bottom: 12px;
   }
   /* ── v2.0 产品面试 ── */
@@ -1893,6 +1903,15 @@
     color: var(--ink);
     letter-spacing: -0.02em;
     margin-bottom: 6px;
+  }
+  html:not([data-theme="dark"]) .sense-q-card .wb-label,
+  html:not([data-theme="dark"]) .work-block .wb-label {
+    display: inline-block;
+    padding: 4px 10px;
+    background: #ffffff;
+    border: 1px solid rgba(38, 194, 129, 0.2);
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(38, 194, 129, 0.08);
   }
   .sense-session-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
   .feedback-card .feedback-head { font-size: 13px; font-weight: 700; letter-spacing: 0.02em; color: #5e5ce6; }
@@ -2297,6 +2316,29 @@
     font-weight: 700;
     color: var(--ink3);
     margin-bottom: 2px;
+  }
+  .opt-bullet-pair .opt-before p {
+    color: var(--ink3);
+    text-decoration: line-through;
+    text-decoration-color: rgba(0, 0, 0, 0.15);
+  }
+  .opt-bullet-pair .opt-after p {
+    color: var(--ink);
+    background: rgba(38, 194, 129, 0.08);
+    border-left: 3px solid rgba(38, 194, 129, 0.45);
+    padding: 8px 10px;
+    border-radius: 0 8px 8px 0;
+    font-weight: 500;
+  }
+  html[data-theme="dark"] .opt-bullet-pair .opt-after p {
+    background: rgba(38, 194, 129, 0.12);
+    border-left-color: rgba(74, 224, 173, 0.5);
+  }
+  .opt-section-hint {
+    font-size: 12px;
+    color: var(--ink3);
+    margin: 0 0 8px;
+    line-height: 1.5;
   }
   .resume-action-bar .btn-primary {
     flex: 1;
@@ -3622,7 +3664,7 @@
   html[data-theme="dark"] .hero-waveform { display: none !important; }
 
   .bg-grid-left {
-    display: none;
+    display: block;
     position: absolute;
     left: 0;
     top: 0;
@@ -3637,6 +3679,46 @@
     pointer-events: none;
     z-index: 1;
     overflow: hidden;
+    -webkit-mask-image: linear-gradient(
+      90deg,
+      #000 0%,
+      #000 10%,
+      rgba(0, 0, 0, 0.88) 24%,
+      rgba(0, 0, 0, 0.62) 40%,
+      rgba(0, 0, 0, 0.38) 56%,
+      rgba(0, 0, 0, 0.18) 72%,
+      rgba(0, 0, 0, 0.06) 88%,
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      90deg,
+      #000 0%,
+      #000 10%,
+      rgba(0, 0, 0, 0.88) 24%,
+      rgba(0, 0, 0, 0.62) 40%,
+      rgba(0, 0, 0, 0.38) 56%,
+      rgba(0, 0, 0, 0.18) 72%,
+      rgba(0, 0, 0, 0.06) 88%,
+      transparent 100%
+    );
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+  }
+  html:not([data-theme="dark"]) .bg-grid-layer {
+    background-image:
+      linear-gradient(rgba(38, 194, 129, 0.28) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(38, 194, 129, 0.28) 1px, transparent 1px);
+  }
+  html:not([data-theme="dark"]) .bg-grid-back { opacity: 0.07; }
+  html:not([data-theme="dark"]) .bg-grid-mid { opacity: 0.13; }
+  html:not([data-theme="dark"]) .bg-grid-front {
+    opacity: 0.22;
+    box-shadow: inset 0 0 120px rgba(38, 194, 129, 0.04);
+  }
+  html:not([data-theme="dark"]) .bg-grid-left::after {
+    background: radial-gradient(ellipse at 30% 40%, rgba(38, 194, 129, 0.08) 0%, transparent 68%);
   }
   html[data-theme="dark"] .bg-grid-left {
     display: block;
@@ -3788,6 +3870,25 @@
     height: clamp(320px, 52vh, 620px);
     pointer-events: none;
     background: linear-gradient(180deg, transparent 0%, transparent 58%, rgba(0, 0, 0, 0.22) 78%, var(--page-bg) 100%);
+  }
+  html:not([data-theme="dark"]) .bg-cubes {
+    display: block;
+    background-color: transparent;
+    background-image:
+      linear-gradient(rgba(38, 194, 129, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(38, 194, 129, 0.05) 1px, transparent 1px);
+    background-repeat: repeat;
+    background-position: calc(100% - 72px) 88px;
+    background-size: 32px 32px;
+    opacity: 0.72;
+    -webkit-mask-image:
+      linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.4) 18%, rgba(0, 0, 0, 0.22) 72%, transparent 100%),
+      linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.08) 30%, rgba(0, 0, 0, 0.18) 55%, transparent 78%);
+    mask-image:
+      linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.4) 18%, rgba(0, 0, 0, 0.22) 72%, transparent 100%),
+      linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.08) 30%, rgba(0, 0, 0, 0.18) 55%, transparent 78%);
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
   }
   html[data-theme="dark"] .footer-mutter {
     color: rgba(235, 235, 245, 0.38);
@@ -4058,9 +4159,9 @@
     <svg class="bg-horizon-svg" viewBox="0 0 1440 480" preserveAspectRatio="none" aria-hidden="true">
       <defs>
         <linearGradient id="skyCapGradApp" x1="0" y1="0" x2="0" y2="480" gradientUnits="userSpaceOnUse">
-          <stop stop-color="#ffffff"/>
-          <stop offset="0.58" stop-color="#fafdfc"/>
-          <stop offset="1" stop-color="#f3f8f6"/>
+          <stop stop-color="#f6fbf8"/>
+          <stop offset="0.58" stop-color="#eef6f2"/>
+          <stop offset="1" stop-color="#e4ede8"/>
         </linearGradient>
       </defs>
       <path fill="url(#skyCapGradApp)" d="M0,0 H1440 V320 C1253,490 965,290 720,420 C475,500 187,300 0,400 V0 Z">
@@ -4070,13 +4171,13 @@
     </svg>
     <svg class="bg-wave-svg" viewBox="0 0 1440 900" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       <defs>
-        <linearGradient id="awg0" x1="0" y1="280" x2="1440" y2="900" gradientUnits="userSpaceOnUse"><stop stop-color="#eef8f4" stop-opacity="0.85"/><stop offset="0.5" stop-color="#e8f4ff" stop-opacity="0.7"/><stop offset="1" stop-color="#dde8f5" stop-opacity="0.45"/></linearGradient>
-        <linearGradient id="awg2" x1="200" y1="300" x2="1200" y2="900"><stop stop-color="#eef8f4" stop-opacity="0.92"/><stop offset="0.5" stop-color="#e4f0fa" stop-opacity="0.7"/><stop offset="1" stop-color="#d8e4f5" stop-opacity="0.45"/></linearGradient>
-        <linearGradient id="awg3" x1="400" y1="480" x2="1100" y2="900"><stop stop-color="#ffffff" stop-opacity="0.45"/><stop offset="1" stop-color="#c8ecd8" stop-opacity="0.3"/></linearGradient>
+        <linearGradient id="awg0" x1="0" y1="280" x2="1440" y2="900" gradientUnits="userSpaceOnUse"><stop stop-color="#eef8f4" stop-opacity="0.42"/><stop offset="0.5" stop-color="#e8f4ff" stop-opacity="0.32"/><stop offset="1" stop-color="#dde8f5" stop-opacity="0.2"/></linearGradient>
+        <linearGradient id="awg2" x1="200" y1="300" x2="1200" y2="900"><stop stop-color="#eef8f4" stop-opacity="0.48"/><stop offset="0.5" stop-color="#e4f0fa" stop-opacity="0.34"/><stop offset="1" stop-color="#d8e4f5" stop-opacity="0.22"/></linearGradient>
+        <linearGradient id="awg3" x1="400" y1="480" x2="1100" y2="900"><stop stop-color="#ffffff" stop-opacity="0.28"/><stop offset="1" stop-color="#c8ecd8" stop-opacity="0.18"/></linearGradient>
       </defs>
-      <g class="bg-wave-back"><path d="M-80 400C180 240 380 160 680 260C980 400 1180 520 1520 420L1520 900L-80 900Z" fill="url(#awg0)"/></g>
-      <g class="bg-wave-mid"><path d="M-60 480C280 340 520 260 820 340C1120 420 1300 560 1500 460L1500 900L-60 900Z" fill="url(#awg2)" opacity="0.72"/></g>
-      <g class="bg-wave-front"><path d="M-60 580C260 420 540 340 840 420C1140 500 1320 680 1500 560L1500 900L-60 900Z" fill="url(#awg3)" opacity="0.65"/></g>
+      <g class="bg-wave-back"><path d="M-80 400C180 240 380 160 680 260C980 400 1180 520 1520 420L1520 900L-80 900Z" fill="url(#awg0)" opacity="0.55"/></g>
+      <g class="bg-wave-mid"><path d="M-60 480C280 340 520 260 820 340C1120 420 1300 560 1500 460L1500 900L-60 900Z" fill="url(#awg2)" opacity="0.68"/></g>
+      <g class="bg-wave-front"><path d="M-60 580C260 420 540 340 840 420C1140 500 1320 680 1500 560L1500 900L-60 900Z" fill="url(#awg3)" opacity="0.82"/></g>
     </svg>
     <div class="bg-blob bg-blob-1"></div>
     <div class="bg-blob bg-blob-2"></div>
@@ -4734,7 +4835,7 @@ function renderMissionStepList() {
           : step.external || step.fromSearch ? '外部面经 · ' : '练习 · ';
         label = prefix + (mod ? mod.label : step.topicId);
         preview = step.scenario
-          ? step.scenario.replace(/^【[^】]+】\s*/, '').trim().slice(0, 72) + (step.scenario.length > 72 ? '…' : '')
+          ? (() => { const s = stripQuestionPrefix(step.scenario); return s.slice(0, 72) + (s.length > 72 ? '…' : ''); })()
           : '待加载题目';
       } else {
         label = step.type;
@@ -4782,10 +4883,10 @@ function showMissionReadStep(step, stepIndex) {
   const render = () => {
     const bodyText = bodyPages[bodyPage] || '';
     const bodyPager = bodyPages.length > 1
-      ? `<div class="mission-read-pager">
-          <button type="button" class="kc-nav" id="missionBodyPrev" ${bodyPage <= 0 ? 'disabled' : ''}>上一页</button>
+      ? `<div class="mission-read-pager" aria-label="正文翻页">
+          <button type="button" class="kc-nav" id="missionBodyPrev" ${bodyPage <= 0 ? 'disabled' : ''} aria-label="上一页">← 上一页</button>
           <span class="knowledge-pager-pos">${bodyPage + 1} / ${bodyPages.length}</span>
-          <button type="button" class="kc-nav" id="missionBodyNext" ${bodyPage >= bodyPages.length - 1 ? 'disabled' : ''}>下一页</button>
+          <button type="button" class="kc-nav" id="missionBodyNext" ${bodyPage >= bodyPages.length - 1 ? 'disabled' : ''} aria-label="下一页">下一页 →</button>
         </div>`
       : '';
     panel.innerHTML = `
@@ -5048,7 +5149,8 @@ function renderScenarioSearchResults(query) {
   }
   box.hidden = false;
   box.innerHTML = hits.map((item, i) => {
-    const preview = item.scenario.length > 120 ? item.scenario.slice(0, 120) + '…' : item.scenario;
+    const previewRaw = stripQuestionPrefix(item.scenario);
+    const preview = previewRaw.length > 120 ? previewRaw.slice(0, 120) + '…' : previewRaw;
     return `<button type="button" class="scenario-search-item" data-hit="${i}">
       <span class="scenario-search-item-meta">${escapeHtml(item.moduleLabel)}${item.tag ? ' · ' + escapeHtml(item.tag) : ''}</span>
       ${highlightSearchText(preview, q)}
@@ -5155,7 +5257,7 @@ function canvasSubtitleFor(scene, tab) {
 
 function canvasTitleFor(scene, tab) {
   const map = {
-    resume: { 评分: '简历评分报告', 优化: '简历优化 · Bullet 改写', 文档: '简历优化 · 文档' },
+    resume: { 评分: '简历评分报告', 优化: '简历优化 · 改写方案', 文档: '简历优化 · 文档' },
     scenario: { 题目: '业务场景 · 当前题目', 点评: '五维点评结果', 解析: '框架 / 标准 / 对比' },
     prep: { 准备报告: '面试准备报告', 追问清单: 'Likely 追问 × 5', 文档: '面试话术 · 导出' },
     kb: { 阅读: 'AI 产品经理知识库' }
@@ -5301,7 +5403,7 @@ async function executeMultiStepAgentPlan(msg, scene, steps) {
     agentToolSteps = [{ name: 'multi_step', status: 'done', detail: step, input: msg, output: 'ok' }];
     renderAgentToolsPanel();
   }
-  pushAgentChatAssistant(scene, '多步任务全部执行完毕，请查看 Canvas。');
+  pushAgentChatAssistant(scene, '多步任务全部执行完毕，请查看结果。');
   renderAgentSuggestionChips(scene);
 }
 
@@ -5629,7 +5731,7 @@ async function sendScenarioAgentFollowup(msg) {
   const tid = activeBankQuestion?.topicId || activeTopicId || 'iv-pm';
   const session = mentorSessions[tid];
   if (!session?.feedback) {
-    pushAgentChatAssistant('scenario', '请先在 Canvas 提交作答并获取点评，再在此追问。');
+    pushAgentChatAssistant('scenario', '请先提交作答并获取点评，再在此追问。');
     return;
   }
   agentToolSteps = [{ name: 'followup', status: 'running', detail: tid }];
@@ -5684,24 +5786,24 @@ async function handleGlobalAgentMessage(msg, scene) {
     agentToolSteps = [{ name: 'pick_scenario', status: 'done', detail: '换题' }];
     renderAgentToolsPanel();
     startRandomSense();
-    pushAgentChatAssistant(scene, '已换一题，请在 Canvas 作答。');
+    pushAgentChatAssistant(scene, '已换一题，请作答。');
     return;
   }
   if (intent.intent === 'score_resume') {
     pushAgentChatUser(scene, msg);
     if (!profileResume.trim()) {
-      pushAgentChatAssistant(scene, '请先在 Canvas 上传或粘贴简历，再开始评分。');
+      pushAgentChatAssistant(scene, '请先上传或粘贴简历，再开始评分。');
       return;
     }
     saveProfileFromDom();
     agentToolSteps = [{ name: 'score_resume', status: 'running', detail: '' }];
     renderAgentToolsPanel();
-    pushAgentChatAssistant(scene, '收到，正在 Canvas 执行简历评分…');
+    pushAgentChatAssistant(scene, '收到，正在执行简历评分…');
     await runResumeAction('resume-score', 'agentChatSend', '评分');
     agentToolSteps = [{ name: 'score_resume', status: 'done', detail: '' }];
     renderAgentToolsPanel();
     persistCrossSceneMemory();
-    pushAgentChatAssistant(scene, resumeScoreResult.content ? '评分完成，请查看 Canvas「评分」Tab。' : '评分流程已触发，请查看 Canvas。');
+    pushAgentChatAssistant(scene, resumeScoreResult.content ? '评分完成，请查看「评分」页。' : '评分已触发，请稍候。');
     renderAgentSuggestionChips(scene);
     return;
   }
@@ -5714,13 +5816,13 @@ async function handleGlobalAgentMessage(msg, scene) {
     saveProfileFromDom();
     agentToolSteps = [{ name: 'optimize_resume', status: 'running', detail: '' }];
     renderAgentToolsPanel();
-    pushAgentChatAssistant(scene, '收到，正在 Canvas 优化简历 bullet…');
+    pushAgentChatAssistant(scene, '收到，正在优化简历 bullet…');
     pushAgentUndoSnapshot('优化前');
     await runResumeAction('resume-optimize', 'agentChatSend', '优化');
     persistCrossSceneMemory();
     agentToolSteps = [{ name: 'optimize_resume', status: 'done', detail: '' }];
     renderAgentToolsPanel();
-    pushAgentChatAssistant(scene, '优化完成，请查看 Canvas「优化」Tab。');
+    pushAgentChatAssistant(scene, '优化完成，请查看「优化」页。');
     renderAgentSuggestionChips(scene);
     return;
   }
@@ -5734,7 +5836,7 @@ async function handleGlobalAgentMessage(msg, scene) {
     persistCrossSceneMemory();
     agentToolSteps = [{ name: 'prepare_interview', status: 'done', detail: '' }];
     renderAgentToolsPanel();
-    pushAgentChatAssistant(scene, '准备报告已更新，请查看 Canvas。');
+    pushAgentChatAssistant(scene, '准备报告已更新，请查看结果。');
     renderAgentSuggestionChips(scene);
     return;
   }
@@ -5744,9 +5846,9 @@ async function handleGlobalAgentMessage(msg, scene) {
     if (tab) {
       setCanvasTab(scene, tab);
       refreshAgentCanvas();
-      agentToolSteps = [{ name: 'switch_canvas_tab', status: 'done', detail: tab }];
+      agentToolSteps = [{ name: 'switch_tab', status: 'done', detail: tab }];
       renderAgentToolsPanel();
-      pushAgentChatAssistant(scene, '已切换到 Canvas「' + tab + '」。');
+      pushAgentChatAssistant(scene, '已切换到「' + tab + '」页。');
     } else {
       pushAgentChatAssistant(scene, '未找到 Tab「' + intent.tab + '」，当前可用：' + (CANVAS_TABS[scene] || []).join('、'));
     }
@@ -5758,7 +5860,7 @@ async function handleGlobalAgentMessage(msg, scene) {
     else if (scene === 'prep') exportPrepMarkdown();
     agentToolSteps = [{ name: 'export_markdown', status: 'done', detail: scene }];
     renderAgentToolsPanel();
-    pushAgentChatAssistant(scene, '已触发 Markdown 导出（若 Canvas 有文档）。');
+    pushAgentChatAssistant(scene, '已触发 Markdown 导出。');
     return;
   }
   if (scene === 'scenario') {
@@ -6114,7 +6216,7 @@ function mountAgentWorkspace(innerHtml) {
   main.innerHTML = `
     <div class="agent-workspace" id="agentWorkspace">
       <nav class="agent-nav" aria-label="模块导航">${agentNavHtml(scene)}</nav>
-      <section class="agent-canvas" aria-label="产出画布">
+      <section class="agent-canvas" aria-label="工作区">
         <div class="canvas-topbar">
           <div class="canvas-topbar-main">
             <div class="canvas-title-row">
@@ -6353,8 +6455,13 @@ function renderCanvasTitleCta(scene, tab) {
     runInterviewPrepAction();
   });
   document.getElementById('resumeGoOptimizeBtn')?.addEventListener('click', () => {
+    saveProfileFromDom();
     setCanvasTab('resume', '优化');
     refreshAgentCanvas();
+    const alreadyOptimized = Boolean(resumeOptimizeResult.optimizeReport || resumeOptimizeResult.content);
+    if (!alreadyOptimized && resumeHasScore() && !resumeOptimizeResult.loading) {
+      runResumeAction('resume-optimize', 'resumeStartOptimizeBtn', '开始优化');
+    }
   });
   const tid = activeBankQuestion?.topicId || activeTopicId;
   if (tid) document.getElementById('btn-' + tid)?.addEventListener('click', () => submitAnswer(tid));
@@ -7216,15 +7323,15 @@ function animateScorePane(root) {
 function renderOptimizePaneContent(report) {
   const bullets = (report.bullets || []).map(b =>
     `<div class="opt-pane-bullet">
-      <div class="opt-bullet-pair"><span class="opt-label">改前</span><p>${escapeHtml(b.before || '—')}</p></div>
-      <div class="opt-bullet-pair"><span class="opt-label">改后</span><p>${escapeHtml(b.after || '—')}</p></div>
+      <div class="opt-bullet-pair opt-before"><span class="opt-label">改前</span><p>${escapeHtml(b.before || '—')}</p></div>
+      <div class="opt-bullet-pair opt-after"><span class="opt-label">改后 · 可直接粘贴</span><p>${escapeHtml(b.after || '—')}</p></div>
     </div>`
   ).join('');
   const evalItems = (report.evalBadcase || []).map(s => `<li>${escapeHtml(s)}</li>`).join('');
   return `<div class="opt-pane-stack">
     <div class="opt-pane-section"><h4>① 诊断</h4><p>${escapeHtml(report.weakProject || '—')}</p></div>
-    <div class="opt-pane-section"><h4>② Bullet 改写</h4>${bullets || '<p>—</p>'}</div>
-    <div class="opt-pane-section"><h4>③ Eval / Badcase</h4>${evalItems ? `<ul>${evalItems}</ul>` : '<p>—</p>'}</div>
+    <div class="opt-pane-section"><h4>② 改写方案</h4><p class="opt-section-hint">以下是可直接复制进简历的 bullet，不是点评分析。</p>${bullets || '<p>—</p>'}</div>
+    <div class="opt-pane-section"><h4>③ Eval / Badcase 补充</h4>${evalItems ? `<ul>${evalItems}</ul>` : '<p>—</p>'}</div>
     <div class="opt-pane-section"><h4>④ 项目方向</h4>
       <p><strong>主方向：</strong>${escapeHtml(report.mainDirection || '—')}</p>
       <p style="margin-top:6px"><strong>备方向：</strong>${escapeHtml(report.backupDirection || '—')}</p>
@@ -7824,11 +7931,15 @@ function bindSenseBankPicker() {
     );
     const list = document.getElementById('bankList');
     if (!list) return;
-    list.innerHTML = filtered.slice(0, 100).map(q => `
+    list.innerHTML = filtered.slice(0, 100).map(q => {
+      const displayText = stripQuestionPrefix(q.text);
+      const snippet = displayText.slice(0, 120);
+      return `
       <button type="button" class="bank-item" data-qid="${escapeAttr(q.id)}">
         <div class="bank-item-meta">${q.num ? '题' + q.num + ' · ' : ''}${escapeHtml(q.company || '通用')} · ${escapeHtml(q.typeLabel || q.type || '')}</div>
-        <div class="bank-item-text">${escapeHtml(q.text.slice(0, 120))}${q.text.length > 120 ? '…' : ''}</div>
-      </button>`).join('') || '<p style="color:var(--ink3)">无匹配题目</p>';
+        <div class="bank-item-text">${escapeHtml(snippet)}${displayText.length > 120 ? '…' : ''}</div>
+      </button>`;
+    }).join('') || '<p style="color:var(--ink3)">无匹配题目</p>';
     list.querySelectorAll('.bank-item').forEach(btn => {
       btn.onclick = () => {
         const q = qs.find(x => x.id === btn.dataset.qid);
@@ -7842,9 +7953,25 @@ function bindSenseBankPicker() {
   renderList();
 }
 
+function isScenarioPracticeQuestion(q) {
+  const t = String(q?.text || '').trim();
+  if (!t) return false;
+  const behavioral = /未来\s*6\s*个月学习计划|最近读的书|生活中一次挫折|实习中的「成就感」|你如何看待工作|创造力\/任务拆解|用 3 分钟概括你的一段|如何解释转行动机|你如何理解产品经理|业务理解、执行力、创造力|中途接盘项目：先读交接|整个实习中你在创造力/i;
+  if (behavioral.test(t)) return false;
+  if (q.type === 'ai_product') return true;
+  if (/【业务分析·|【面经·策略|【面经·竞品|【面经·危机|【面经·变现|【判断·|【开放·Q|【设计·|【需求·|【功能·|【增长·|【决策·|【产品·|【面试·深度·Q|【面试·产品设计/.test(t)) return true;
+  if (/^【面试·综合】/.test(t) && /App|护城河|业务|平台|行业|分析|策略|用户|变现|内容化|本地生活|电商|超级 App/i.test(t)) return true;
+  if (q.type === 'business' && !/^【面试·综合】/.test(t)) return true;
+  return false;
+}
+
+function scenarioPracticePool() {
+  return bankQuestions().filter(isScenarioPracticeQuestion);
+}
+
 function pickRandomSenseQuestion() {
-  const qs = bankQuestions();
-  if (!qs.length) return null;
+  const qs = scenarioPracticePool();
+  if (!qs.length) return bankQuestions()[Math.floor(Math.random() * bankQuestions().length)] || null;
   return qs[Math.floor(Math.random() * qs.length)];
 }
 
@@ -7881,7 +8008,7 @@ function senseCanvasInnerHtml(q, tid, meta, draft) {
       <div class="canvas-panel${tab === '题目' ? ' active' : ''}" data-scenario-panel="scenario-q">
         <article class="surface-card case-card sense-q-card">
           <div class="wb-label">① 题目</div>
-          <div class="case-body" id="scenario-${tid}">${escapeHtml(q.text)}</div>
+          <div class="case-body" id="scenario-${tid}">${escapeHtml(stripQuestionPrefix(q.text))}</div>
         </article>
         <div class="surface-card work-card">
           <div class="work-block">
@@ -8282,7 +8409,7 @@ async function openHistoryModal() {
       const label = getTopic(item.topicId)?.label || item.topicId;
       const when = item.at ? item.at.slice(0, 16).replace('T', ' ') : '';
       const score = item.rubricAvg ? ` · ${item.rubricAvg}/5` : '';
-      const scene = String(item.scenario || '').slice(0, 60);
+      const scene = stripQuestionPrefix(item.scenario || '').slice(0, 60);
       return `<div class="history-item"><strong>${escapeHtml(label)}</strong>${escapeHtml(score)}<br/><span>${escapeHtml(when)}</span><br/>${escapeHtml(scene)}…</div>`;
     }).join('');
   } catch (e) {
@@ -8358,9 +8485,11 @@ function renderKnowledgeFlatViewerHtml(flat, cardIndex, bodyPageIndex) {
   const bi = Math.max(0, Math.min(bodyPageIndex, bodyPages.length - 1));
   const bodyText = bodyPages[bi];
   const bodyNav = bodyPages.length > 1
-    ? `<button type="button" class="kc-nav kc-body-prev" ${bi <= 0 ? 'disabled' : ''}>上一页</button>
-       <span class="knowledge-pager-pos">${bi + 1} / ${bodyPages.length}</span>
-       <button type="button" class="kc-nav kc-body-next" ${bi >= bodyPages.length - 1 ? 'disabled' : ''}>下一页</button>`
+    ? `<div class="knowledge-stack-nav kc-body-nav" aria-label="正文翻页">
+      <button type="button" class="kc-nav kc-body-prev" ${bi <= 0 ? 'disabled' : ''} aria-label="上一页">← 上一页</button>
+      <span class="knowledge-pager-pos">${bi + 1} / ${bodyPages.length}</span>
+      <button type="button" class="kc-nav kc-body-next" ${bi >= bodyPages.length - 1 ? 'disabled' : ''} aria-label="下一页">下一页 →</button>
+    </div>`
     : '';
   return `<section class="knowledge-flat-viewer cat-${escapeHtml(card.sectionCat || 'ops')}" data-card-id="${escapeAttr(card.id || '')}">
     <div class="knowledge-section-head">
@@ -8372,7 +8501,7 @@ function renderKnowledgeFlatViewerHtml(flat, cardIndex, bodyPageIndex) {
       <div class="kc-tags">${(card.tags || []).map(t => `<span class="kc-tag">${escapeHtml(t)}</span>`).join('')}</div>
       <div class="kc-body kc-body-paged">${renderKnowledgeMarkdownish(bodyText)}</div>
     </article>
-    ${bodyNav ? `<div class="mission-read-pager">${bodyNav}</div>` : ''}
+    ${bodyNav}
     <div class="knowledge-stack-nav" aria-label="卡片翻页">
       <button type="button" class="kc-nav kc-card-prev" ${ci <= 0 ? 'disabled' : ''} aria-label="上一张">← 上一张</button>
       <span class="knowledge-pager-pos">${ci + 1} / ${flat.length}</span>
@@ -8671,6 +8800,9 @@ async function loadTopicsAndRender() {
 function escapeHtml(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
+function stripQuestionPrefix(text) {
+  return String(text || '').replace(/^(【[^】]+】\s*)+/, '').trim();
+}
 function escapeAttr(s) {
   return escapeHtml(s).replace(/"/g,'&quot;');
 }
@@ -8813,7 +8945,7 @@ function loadScenario(id, preferredScenario, opts) {
     scenario = pool[Math.floor(Math.random() * pool.length)];
   }
   scenarioPinByTopic[id] = scenario;
-  document.getElementById('scenario-' + id).textContent = scenario;
+  document.getElementById('scenario-' + id).textContent = stripQuestionPrefix(scenario);
   updateReadingTip(id, scenario);
   const hintEl = document.querySelector('#panel-' + id + ' .wb-hint');
   if (hintEl) hintEl.textContent = answerHintForScenario(scenario, t.fieldLabel);

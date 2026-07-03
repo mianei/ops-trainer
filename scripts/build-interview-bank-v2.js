@@ -29,6 +29,9 @@ const TRADITIONAL_PRODUCT_RE = /产品|PM|产品经理|面经·产品|【产品|
 /** 纯运营岗面经（非产品经理业务面） */
 const OPS_ROLE_TAG_RE = /^【面经·运营】|^【运营·|^【面试·运营】/;
 
+/** 行为/HR 面（非业务场景分析，不应进入「业务场景」题库） */
+const BEHAVIORAL_HR_RE = /未来\s*6\s*个月学习计划|最近读的书|生活中一次挫折|实习中的「成就感」|你如何看待工作|创造力\/任务拆解|用 3 分钟概括你的一段|如何解释转行动机|你如何理解产品经理|业务理解、执行力、创造力|中途接盘项目：先读交接|整个实习中你在创造力/i;
+
 const TYPE_LABELS = {
   ai_product: 'AI产品经理',
   business: '传统产品业务面'
@@ -152,6 +155,7 @@ function isTraditionalCandidate(q) {
   if (isAiPmSource(q)) return false;
   if (AI_PRODUCT_RE.test(q.text)) return false;
   if (OPS_ROLE_TAG_RE.test(String(q.text || '').trim())) return false;
+  if (BEHAVIORAL_HR_RE.test(String(q.text || '').trim())) return false;
   return TRADITIONAL_PRODUCT_RE.test(q.text);
 }
 
@@ -212,6 +216,7 @@ function pickSplit(items) {
       !isAiPmSource(q) &&
       !AI_PRODUCT_RE.test(q.text) &&
       !OPS_ROLE_TAG_RE.test(String(q.text || '').trim()) &&
+      !BEHAVIORAL_HR_RE.test(String(q.text || '').trim()) &&
       TRADITIONAL_PRODUCT_RE.test(q.text) &&
       !seenText.has(q.text)
     );

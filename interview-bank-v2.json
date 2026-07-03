@@ -4288,66 +4288,6 @@
     {
       "id": "pm-v2-214",
       "num": 214,
-      "text": "【面试·综合】用 3 分钟概括你的一段电商相关实习：业务目标—你负责的一块—关键结果—若再干 3 个月会做什么。",
-      "company": "通用",
-      "type": "business",
-      "typeLabel": "传统产品业务面",
-      "difficulty": "easy",
-      "topicId": "iv-misc",
-      "source": "行业面经",
-      "sourceFile": "scenarios-interview-misc",
-      "framework": "STAR",
-      "referenceOutline": "情境→任务→行动→结果→反思；每步含量化指标",
-      "curated": false,
-      "tags": [
-        "传统产品业务面",
-        "通用",
-        "easy"
-      ]
-    },
-    {
-      "id": "pm-v2-215",
-      "num": 215,
-      "text": "【面试·综合】简历实习是电商，投递部门是游戏/文娱：如何解释转行动机？写行业判断 + 可迁移能力 + 个人长期兴趣，避免「因为杭州只有电商」。",
-      "company": "通用",
-      "type": "business",
-      "typeLabel": "传统产品业务面",
-      "difficulty": "medium",
-      "topicId": "iv-misc",
-      "source": "行业面经",
-      "sourceFile": "scenarios-interview-misc",
-      "framework": "STAR",
-      "referenceOutline": "情境→任务→行动→结果→反思；每步含量化指标",
-      "curated": false,
-      "tags": [
-        "传统产品业务面",
-        "通用",
-        "medium"
-      ]
-    },
-    {
-      "id": "pm-v2-216",
-      "num": 216,
-      "text": "【面试·综合】未来 6 个月学习计划：2 项硬技能 + 1 项行业输入，每项写可交付物（如 1 份竞品报告、1 次灰度复盘）。",
-      "company": "通用",
-      "type": "business",
-      "typeLabel": "传统产品业务面",
-      "difficulty": "easy",
-      "topicId": "iv-misc",
-      "source": "行业面经",
-      "sourceFile": "scenarios-interview-misc",
-      "framework": "结构化分析",
-      "referenceOutline": "结论先行→业务背景→策略选项→取舍理由→验证指标",
-      "curated": false,
-      "tags": [
-        "传统产品业务面",
-        "通用",
-        "easy"
-      ]
-    },
-    {
-      "id": "pm-v2-217",
-      "num": 217,
       "text": "【面试·Q9·行业】从电商转向本地生活/内容/游戏等业务线时，如何论证「不是随便投」？写 1 条行业趋势判断 + 1 条你已验证的能力。",
       "company": "通用",
       "type": "business",
@@ -4366,8 +4306,8 @@
       ]
     },
     {
-      "id": "pm-v2-218",
-      "num": 218,
+      "id": "pm-v2-215",
+      "num": 215,
       "text": "【面试·开放·Q84】消费者为何在直播间下单？对比传统电商「计划外购买变弱」与线下高成本，从临场感、参与感（播前选品/弹幕互动）、紧迫感（限时限量）论证「场」的价值。",
       "company": "通用",
       "type": "business",
@@ -4386,8 +4326,8 @@
       ]
     },
     {
-      "id": "pm-v2-219",
-      "num": 219,
+      "id": "pm-v2-216",
+      "num": 216,
       "text": "【面试·开放·Q91】内容平台做电商、电商平台做内容：各自「流量焦虑/防守搜索工具化/基因冲突（履约 vs 逛）」—用两面各 2 点分析，不要只站队。",
       "company": "通用",
       "type": "business",
@@ -4406,8 +4346,8 @@
       ]
     },
     {
-      "id": "pm-v2-220",
-      "num": 220,
+      "id": "pm-v2-217",
+      "num": 217,
       "text": "【面试·开放·Q101】内容社区做大后为何难免「内容水化」？从破圈用户审美下沉、算法偏好高互动快餐内容、商业化种草压力三点论证。",
       "company": "通用",
       "type": "business",
@@ -4426,8 +4366,8 @@
       ]
     },
     {
-      "id": "pm-v2-221",
-      "num": 221,
+      "id": "pm-v2-218",
+      "num": 218,
       "text": "【面试·开放·Q105】旅游平台评价为何比电商更严？写体验不可逆、供给侧刷评博弈、评价是决策链生命线—各 1 个治理手段。",
       "company": "通用",
       "type": "business",
@@ -4446,8 +4386,8 @@
       ]
     },
     {
-      "id": "pm-v2-222",
-      "num": 222,
+      "id": "pm-v2-219",
+      "num": 219,
       "text": "【面试·开放·Q107】闲鱼为何做「鱼力值+小法庭」？写二手非标信任成本、去中心化判例降客服成本、社区自治信号与违规成本。",
       "company": "通用",
       "type": "business",
@@ -4466,8 +4406,8 @@
       ]
     },
     {
-      "id": "pm-v2-223",
-      "num": 223,
+      "id": "pm-v2-220",
+      "num": 220,
       "text": "【面试·开放·Q122】淘拼为何自建「种草社区」对抗小红书？写决策链防守（种草-搜索-成交闭环）、从交易平台变高频入口。",
       "company": "小红书",
       "type": "business",
@@ -4486,8 +4426,8 @@
       ]
     },
     {
-      "id": "pm-v2-224",
-      "num": 224,
+      "id": "pm-v2-221",
+      "num": 221,
       "text": "【面试·开放·Q136】美团为何做「美团优选」社区团购即便亏损？写下沉市场低价路径、生鲜高频带其他业务、自提点社会化物流基建。",
       "company": "美团",
       "type": "business",
@@ -4506,8 +4446,8 @@
       ]
     },
     {
-      "id": "pm-v2-225",
-      "num": 225,
+      "id": "pm-v2-222",
+      "num": 222,
       "text": "【面试·产品设计·Q114】小红书为何推「买手直播」而非全网最低价直播？写社区气质/溢价、供应链打不过淘拼、KOC 长尾变现稳定内容池。",
       "company": "小红书",
       "type": "business",
@@ -4526,8 +4466,8 @@
       ]
     },
     {
-      "id": "pm-v2-226",
-      "num": 226,
+      "id": "pm-v2-223",
+      "num": 223,
       "text": "【面试·深度】内容社区「赞/踩/不感兴趣」的轻量互动，对消费者、创作者、平台分别有什么价值？每方写 1–2 点。",
       "company": "通用",
       "type": "business",
@@ -4546,8 +4486,8 @@
       ]
     },
     {
-      "id": "pm-v2-227",
-      "num": 227,
+      "id": "pm-v2-224",
+      "num": 224,
       "text": "【面试·深度】电商站内做即时零售/直播：如何理解用户偏好？写「搜索词显式意图 + 全站行为画像（正负反馈）」并各举 1 个信号。",
       "company": "通用",
       "type": "business",
@@ -4566,8 +4506,8 @@
       ]
     },
     {
-      "id": "pm-v2-228",
-      "num": 228,
+      "id": "pm-v2-225",
+      "num": 225,
       "text": "【面试·Q1】收获不要写成「学会了写 PRD」。请区分：硬技能（指标拆解/实验）vs 软技能（对齐/优先级）vs 行业认知（商业模式一句）。",
       "company": "通用",
       "type": "business",
@@ -4586,8 +4526,8 @@
       ]
     },
     {
-      "id": "pm-v2-229",
-      "num": 229,
+      "id": "pm-v2-226",
+      "num": 226,
       "text": "【面试·Q6】若面试 ToB 岗：说明行业壁垒、抽象模块化、MVP 思维；并说明 ToC 共情如何帮你理解客户痛点。",
       "company": "通用",
       "type": "business",
@@ -4606,8 +4546,8 @@
       ]
     },
     {
-      "id": "pm-v2-230",
-      "num": 230,
+      "id": "pm-v2-227",
+      "num": 227,
       "text": "【面试·Q8】若投策略/用户/B 端不同岗：在规划中点明 1 条与岗位匹配的专业纵深（如策略产品、行业专家、带团队），避免空喊「成为专家」。",
       "company": "通用",
       "type": "business",
@@ -4626,8 +4566,8 @@
       ]
     },
     {
-      "id": "pm-v2-231",
-      "num": 231,
+      "id": "pm-v2-228",
+      "num": 228,
       "text": "【面试·Q9】非本专业转 PM：写清与 PM 的共性能力（理性/沟通/结构化）+ 为转行付出的自学/项目投入，勿只抱怨原行业不景气。",
       "company": "通用",
       "type": "business",
@@ -4646,8 +4586,8 @@
       ]
     },
     {
-      "id": "pm-v2-232",
-      "num": 232,
+      "id": "pm-v2-229",
+      "num": 229,
       "text": "【面试·实操】内容产品里「点赞/有用」的核心作用是什么？从反馈信号、推荐训练、作者激励、社区氛围各选 2 点展开。",
       "company": "通用",
       "type": "business",
@@ -4666,8 +4606,8 @@
       ]
     },
     {
-      "id": "pm-v2-233",
-      "num": 233,
+      "id": "pm-v2-230",
+      "num": 230,
       "text": "【产品拆解·判断】（录音拆解题）面试官：「拼多多低价策略，自营电商要不要跟进？」\n拆解提示：① 用户群与供给结构差异 ② 毛利与心智 ③ 跟进/差异化的代价\n请给出明确立场与依据。",
       "company": "拼多多",
       "type": "business",
@@ -4686,8 +4626,8 @@
       ]
     },
     {
-      "id": "pm-v2-234",
-      "num": 234,
+      "id": "pm-v2-231",
+      "num": 231,
       "text": "【产品拆解·开放】（录音拆解题）面试官：「直播间礼物榜值得做吗？利弊？」\n拆解提示：① 收入 vs 体验 ② 社区公平 ③ 监管与青少年\n请写结论 + 2 条护栏。",
       "company": "通用",
       "type": "business",
@@ -4706,8 +4646,8 @@
       ]
     },
     {
-      "id": "pm-v2-235",
-      "num": 235,
+      "id": "pm-v2-232",
+      "num": 232,
       "text": "【产品拆解·增长】（录音拆解题）面试官：「新用户 7 日留存低于行业 8 个点，注册靠投放维持，先做什么？」\n拆解提示：① 激活/Aha ② 渠道质量 ③ 非红包类实验\n请明确先修哪一环。",
       "company": "通用",
       "type": "business",
@@ -4726,8 +4666,8 @@
       ]
     },
     {
-      "id": "pm-v2-236",
-      "num": 236,
+      "id": "pm-v2-233",
+      "num": 233,
       "text": "【面经·竞品】抖音在视频下方测试「边看边买」，作为货架电商直播运营你会如何应对（短期 + 中期各 1 条）？",
       "company": "抖音",
       "type": "business",
@@ -4746,8 +4686,8 @@
       ]
     },
     {
-      "id": "pm-v2-237",
-      "num": 237,
+      "id": "pm-v2-234",
+      "num": 234,
       "text": "【面经·竞品】拼多多强调低价白牌供给，自营品牌电商是否应跟进价格战？请给出立场与依据。",
       "company": "拼多多",
       "type": "business",
@@ -4766,8 +4706,8 @@
       ]
     },
     {
-      "id": "pm-v2-238",
-      "num": 238,
+      "id": "pm-v2-235",
+      "num": 235,
       "text": "【面经·竞品】拼多多低价策略，自营电商要不要跟进？",
       "company": "拼多多",
       "type": "business",
@@ -4786,8 +4726,8 @@
       ]
     },
     {
-      "id": "pm-v2-239",
-      "num": 239,
+      "id": "pm-v2-236",
+      "num": 236,
       "text": "【面经·决策】新用户 7 日留存低于行业 8 个点，注册量靠投放维持。你会先修激活、渠道还是留存？为什么？",
       "company": "通用",
       "type": "business",
@@ -4806,8 +4746,8 @@
       ]
     },
     {
-      "id": "pm-v2-240",
-      "num": 240,
+      "id": "pm-v2-237",
+      "num": 237,
       "text": "【面经·决策】新用户 7 日留存低于行业 8 个点，注册靠投放维持，先做什么？",
       "company": "通用",
       "type": "business",
@@ -4826,8 +4766,8 @@
       ]
     },
     {
-      "id": "pm-v2-241",
-      "num": 241,
+      "id": "pm-v2-238",
+      "num": 238,
       "text": "【面经·活动】电商大促推广方案题：请从目标用户、渠道组合、创意机制、预算与风险预案四块作答（可用 5W1H 组织）。",
       "company": "通用",
       "type": "business",
@@ -4846,8 +4786,8 @@
       ]
     },
     {
-      "id": "pm-v2-242",
-      "num": 242,
+      "id": "pm-v2-239",
+      "num": 239,
       "text": "【面经·变现】直播电商 vs 货架电商：请从「满足需求 vs 激发需求」写差异，并推导内容团队应盯的 2 个指标。",
       "company": "通用",
       "type": "business",
@@ -4866,8 +4806,8 @@
       ]
     },
     {
-      "id": "pm-v2-243",
-      "num": 243,
+      "id": "pm-v2-240",
+      "num": 240,
       "text": "【面经·策略】社区电商常陷入「种草疲劳」。请从信任、履约、售后各写 1 个产品/运营杠杆，并配 1 个可验证指标。",
       "company": "通用",
       "type": "business",
@@ -4886,8 +4826,8 @@
       ]
     },
     {
-      "id": "pm-v2-244",
-      "num": 244,
+      "id": "pm-v2-241",
+      "num": 241,
       "text": "【面经·增长】新用户 7 日留存低于行业均值 8 个点，注册量靠投放维持。请判断应先修 AARRR 哪一环，并给 1 个非「送红包拉新」的实验想法。",
       "company": "通用",
       "type": "business",
@@ -4906,8 +4846,8 @@
       ]
     },
     {
-      "id": "pm-v2-245",
-      "num": 245,
+      "id": "pm-v2-242",
+      "num": 242,
       "text": "【面经·危机】社区出现大量低质/违规内容，举报率升、核心创作者抗议。请写 48 小时内动作清单（产品、运营、沟通各至少 1 条）。",
       "company": "通用",
       "type": "business",
@@ -4926,9 +4866,69 @@
       ]
     },
     {
+      "id": "pm-v2-243",
+      "num": 243,
+      "text": "【面试·深度】停留时长反映平台偏好，完播率反映单条内容质量。若完播升、时长降，你如何向算法/运营解释？",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "传统产品业务面",
+      "difficulty": "easy",
+      "topicId": "iv-ops",
+      "source": "v1.0面经",
+      "sourceFile": "scenarios-industry-map",
+      "framework": "结构化分析",
+      "referenceOutline": "结论先行→业务背景→策略选项→取舍理由→验证指标",
+      "curated": false,
+      "tags": [
+        "传统产品业务面",
+        "通用",
+        "easy"
+      ]
+    },
+    {
+      "id": "pm-v2-244",
+      "num": 244,
+      "text": "【面试·深度】游戏分发平台相对通用社交 App 的 4 个优势：用户纯、长尾曝光、研玩家互动、个性化分发—各写 1 句。",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "传统产品业务面",
+      "difficulty": "easy",
+      "topicId": "iv-ops",
+      "source": "v1.0面经",
+      "sourceFile": "scenarios-industry-map",
+      "framework": "STAR",
+      "referenceOutline": "情境→任务→行动→结果→反思；每步含量化指标",
+      "curated": false,
+      "tags": [
+        "传统产品业务面",
+        "通用",
+        "easy"
+      ]
+    },
+    {
+      "id": "pm-v2-245",
+      "num": 245,
+      "text": "【面试·深度】请分析：游戏通过应用商店发行的优缺点各 2 点（流量转化/安装门槛 vs 渠道成本/用户分散）。",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "传统产品业务面",
+      "difficulty": "easy",
+      "topicId": "iv-ops",
+      "source": "v1.0面经",
+      "sourceFile": "scenarios-industry-map",
+      "framework": "结构化分析",
+      "referenceOutline": "定义问题→拆解维度→假设→验证路径→风险",
+      "curated": false,
+      "tags": [
+        "传统产品业务面",
+        "通用",
+        "easy"
+      ]
+    },
+    {
       "id": "pm-v2-246",
       "num": 246,
-      "text": "【面试·深度】停留时长反映平台偏好，完播率反映单条内容质量。若完播升、时长降，你如何向算法/运营解释？",
+      "text": "【面试·深度】什么是「成功的产品」？写用户价值、可持续迭代、商业与社会价值三方面，各 1 条可检验标准。",
       "company": "通用",
       "type": "business",
       "typeLabel": "传统产品业务面",
@@ -4948,47 +4948,7 @@
     {
       "id": "pm-v2-247",
       "num": 247,
-      "text": "【面试·深度】游戏分发平台相对通用社交 App 的 4 个优势：用户纯、长尾曝光、研玩家互动、个性化分发—各写 1 句。",
-      "company": "通用",
-      "type": "business",
-      "typeLabel": "传统产品业务面",
-      "difficulty": "easy",
-      "topicId": "iv-ops",
-      "source": "v1.0面经",
-      "sourceFile": "scenarios-industry-map",
-      "framework": "STAR",
-      "referenceOutline": "情境→任务→行动→结果→反思；每步含量化指标",
-      "curated": false,
-      "tags": [
-        "传统产品业务面",
-        "通用",
-        "easy"
-      ]
-    },
-    {
-      "id": "pm-v2-248",
-      "num": 248,
-      "text": "【面试·深度】请分析：游戏通过应用商店发行的优缺点各 2 点（流量转化/安装门槛 vs 渠道成本/用户分散）。",
-      "company": "通用",
-      "type": "business",
-      "typeLabel": "传统产品业务面",
-      "difficulty": "easy",
-      "topicId": "iv-ops",
-      "source": "v1.0面经",
-      "sourceFile": "scenarios-industry-map",
-      "framework": "结构化分析",
-      "referenceOutline": "定义问题→拆解维度→假设→验证路径→风险",
-      "curated": false,
-      "tags": [
-        "传统产品业务面",
-        "通用",
-        "easy"
-      ]
-    },
-    {
-      "id": "pm-v2-249",
-      "num": 249,
-      "text": "【面试·深度】什么是「成功的产品」？写用户价值、可持续迭代、商业与社会价值三方面，各 1 条可检验标准。",
+      "text": "【面试·深度】服饰等非标品搜索如何改进？除点击/下单外，纳入「不感兴趣、曝光无点、快速换词」等负反馈如何改变排序？",
       "company": "通用",
       "type": "business",
       "typeLabel": "传统产品业务面",
@@ -5006,9 +4966,49 @@
       ]
     },
     {
+      "id": "pm-v2-248",
+      "num": 248,
+      "text": "【面试·深度】双 12 为何淡化？双 11 周期拉长、与年货节太近、缺乏独特心智、促销疲劳、价格不如 11—选 3 点展开。",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "传统产品业务面",
+      "difficulty": "easy",
+      "topicId": "iv-ops",
+      "source": "v1.0面经",
+      "sourceFile": "scenarios-industry-map",
+      "framework": "结构化分析",
+      "referenceOutline": "结论先行→业务背景→策略选项→取舍理由→验证指标",
+      "curated": false,
+      "tags": [
+        "传统产品业务面",
+        "通用",
+        "easy"
+      ]
+    },
+    {
+      "id": "pm-v2-249",
+      "num": 249,
+      "text": "【面试·深度】PM 能力按阶段：规划期（共情/前瞻）、设计执行期（逻辑/拆解/协调）、上线后（分析/复盘）。你最强在哪阶段？",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "传统产品业务面",
+      "difficulty": "easy",
+      "topicId": "iv-ops",
+      "source": "v1.0面经",
+      "sourceFile": "scenarios-industry-map",
+      "framework": "Design Thinking",
+      "referenceOutline": "用户场景→痛点→方案对比→MVP→成功指标",
+      "curated": false,
+      "tags": [
+        "传统产品业务面",
+        "通用",
+        "easy"
+      ]
+    },
+    {
       "id": "pm-v2-250",
       "num": 250,
-      "text": "【面试·深度】服饰等非标品搜索如何改进？除点击/下单外，纳入「不感兴趣、曝光无点、快速换词」等负反馈如何改变排序？",
+      "text": "【面试·深度】某 App 首页 CTR 环比降 10%：先验口径→看同比/曝光→查版本与大促→漏斗定位→动作。写出你的排查顺序。",
       "company": "通用",
       "type": "business",
       "typeLabel": "传统产品业务面",
@@ -5028,66 +5028,6 @@
     {
       "id": "pm-v2-251",
       "num": 251,
-      "text": "【面试·深度】双 12 为何淡化？双 11 周期拉长、与年货节太近、缺乏独特心智、促销疲劳、价格不如 11—选 3 点展开。",
-      "company": "通用",
-      "type": "business",
-      "typeLabel": "传统产品业务面",
-      "difficulty": "easy",
-      "topicId": "iv-ops",
-      "source": "v1.0面经",
-      "sourceFile": "scenarios-industry-map",
-      "framework": "结构化分析",
-      "referenceOutline": "结论先行→业务背景→策略选项→取舍理由→验证指标",
-      "curated": false,
-      "tags": [
-        "传统产品业务面",
-        "通用",
-        "easy"
-      ]
-    },
-    {
-      "id": "pm-v2-252",
-      "num": 252,
-      "text": "【面试·深度】PM 能力按阶段：规划期（共情/前瞻）、设计执行期（逻辑/拆解/协调）、上线后（分析/复盘）。你最强在哪阶段？",
-      "company": "通用",
-      "type": "business",
-      "typeLabel": "传统产品业务面",
-      "difficulty": "easy",
-      "topicId": "iv-ops",
-      "source": "v1.0面经",
-      "sourceFile": "scenarios-industry-map",
-      "framework": "Design Thinking",
-      "referenceOutline": "用户场景→痛点→方案对比→MVP→成功指标",
-      "curated": false,
-      "tags": [
-        "传统产品业务面",
-        "通用",
-        "easy"
-      ]
-    },
-    {
-      "id": "pm-v2-253",
-      "num": 253,
-      "text": "【面试·深度】某 App 首页 CTR 环比降 10%：先验口径→看同比/曝光→查版本与大促→漏斗定位→动作。写出你的排查顺序。",
-      "company": "通用",
-      "type": "business",
-      "typeLabel": "传统产品业务面",
-      "difficulty": "easy",
-      "topicId": "iv-ops",
-      "source": "v1.0面经",
-      "sourceFile": "scenarios-industry-map",
-      "framework": "结构化分析",
-      "referenceOutline": "结论先行→业务背景→策略选项→取舍理由→验证指标",
-      "curated": false,
-      "tags": [
-        "传统产品业务面",
-        "通用",
-        "easy"
-      ]
-    },
-    {
-      "id": "pm-v2-254",
-      "num": 254,
       "text": "【面试·深度】直播适合珠宝文玩：信任背书、人群匹配、内容讲故事。写 3 条平台优势 + 1 条风控要点。",
       "company": "通用",
       "type": "business",
@@ -5106,9 +5046,69 @@
       ]
     },
     {
+      "id": "pm-v2-252",
+      "num": 252,
+      "text": "【面试·深度】如何抓当前阶段用户痛点？主观（自用/竞品）+ 客观（漏斗数据/广泛反馈）各 2 条方法。",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "传统产品业务面",
+      "difficulty": "easy",
+      "topicId": "iv-ops",
+      "source": "v1.0面经",
+      "sourceFile": "scenarios-industry-map",
+      "framework": "结构化分析",
+      "referenceOutline": "结论先行→业务背景→策略选项→取舍理由→验证指标",
+      "curated": false,
+      "tags": [
+        "传统产品业务面",
+        "通用",
+        "easy"
+      ]
+    },
+    {
+      "id": "pm-v2-253",
+      "num": 253,
+      "text": "【面试·深度】用户抱怨「已购商品仍被推荐」。请分析 3 个可能原因，并提出 2 条可落地的改进策略。",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "传统产品业务面",
+      "difficulty": "easy",
+      "topicId": "iv-ops",
+      "source": "v1.0面经",
+      "sourceFile": "scenarios-industry-map",
+      "framework": "结构化分析",
+      "referenceOutline": "定义问题→拆解维度→假设→验证路径→风险",
+      "curated": false,
+      "tags": [
+        "传统产品业务面",
+        "通用",
+        "easy"
+      ]
+    },
+    {
+      "id": "pm-v2-254",
+      "num": 254,
+      "text": "【面试·深度】费米估算：估算一座一线城市的加油站数量。写出假设（车辆数、单车加油频次、站服务能力）与计算链。",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "传统产品业务面",
+      "difficulty": "easy",
+      "topicId": "iv-ops",
+      "source": "v1.0面经",
+      "sourceFile": "scenarios-industry-map",
+      "framework": "Fermi",
+      "referenceOutline": "明确口径→拆解公式→假设取值→敏感性→结论区间",
+      "curated": false,
+      "tags": [
+        "传统产品业务面",
+        "通用",
+        "easy"
+      ]
+    },
+    {
       "id": "pm-v2-255",
       "num": 255,
-      "text": "【面试·深度】如何抓当前阶段用户痛点？主观（自用/竞品）+ 客观（漏斗数据/广泛反馈）各 2 条方法。",
+      "text": "【面试·深度】为何微信朋友圈入口不在 Tab 首屏？从打扰度、加载、产品定位写 2 点；若你要提高打开率会怎么做（不破坏克制）。",
       "company": "通用",
       "type": "business",
       "typeLabel": "传统产品业务面",
@@ -5128,7 +5128,7 @@
     {
       "id": "pm-v2-256",
       "num": 256,
-      "text": "【面试·深度】用户抱怨「已购商品仍被推荐」。请分析 3 个可能原因，并提出 2 条可落地的改进策略。",
+      "text": "【面试·深度】已购商品仍被推荐：请从「标签脏数据」与「只在排序干预、未从召回剔除」两种机制分析原因，并各给 1 个修复思路。",
       "company": "通用",
       "type": "business",
       "typeLabel": "传统产品业务面",
@@ -5148,66 +5148,6 @@
     {
       "id": "pm-v2-257",
       "num": 257,
-      "text": "【面试·深度】费米估算：估算一座一线城市的加油站数量。写出假设（车辆数、单车加油频次、站服务能力）与计算链。",
-      "company": "通用",
-      "type": "business",
-      "typeLabel": "传统产品业务面",
-      "difficulty": "easy",
-      "topicId": "iv-ops",
-      "source": "v1.0面经",
-      "sourceFile": "scenarios-industry-map",
-      "framework": "Fermi",
-      "referenceOutline": "明确口径→拆解公式→假设取值→敏感性→结论区间",
-      "curated": false,
-      "tags": [
-        "传统产品业务面",
-        "通用",
-        "easy"
-      ]
-    },
-    {
-      "id": "pm-v2-258",
-      "num": 258,
-      "text": "【面试·深度】为何微信朋友圈入口不在 Tab 首屏？从打扰度、加载、产品定位写 2 点；若你要提高打开率会怎么做（不破坏克制）。",
-      "company": "通用",
-      "type": "business",
-      "typeLabel": "传统产品业务面",
-      "difficulty": "easy",
-      "topicId": "iv-ops",
-      "source": "v1.0面经",
-      "sourceFile": "scenarios-industry-map",
-      "framework": "结构化分析",
-      "referenceOutline": "结论先行→业务背景→策略选项→取舍理由→验证指标",
-      "curated": false,
-      "tags": [
-        "传统产品业务面",
-        "通用",
-        "easy"
-      ]
-    },
-    {
-      "id": "pm-v2-259",
-      "num": 259,
-      "text": "【面试·深度】已购商品仍被推荐：请从「标签脏数据」与「只在排序干预、未从召回剔除」两种机制分析原因，并各给 1 个修复思路。",
-      "company": "通用",
-      "type": "business",
-      "typeLabel": "传统产品业务面",
-      "difficulty": "easy",
-      "topicId": "iv-ops",
-      "source": "v1.0面经",
-      "sourceFile": "scenarios-industry-map",
-      "framework": "结构化分析",
-      "referenceOutline": "定义问题→拆解维度→假设→验证路径→风险",
-      "curated": false,
-      "tags": [
-        "传统产品业务面",
-        "通用",
-        "easy"
-      ]
-    },
-    {
-      "id": "pm-v2-260",
-      "num": 260,
       "text": "【面试·深度】定指标时为何要设「守护指标」？举例：拉 uCTR 的同时浏览时长不能低于 X；说明核心指标与体验护栏如何一起写进方案。",
       "company": "通用",
       "type": "business",
@@ -5226,8 +5166,8 @@
       ]
     },
     {
-      "id": "pm-v2-261",
-      "num": 261,
+      "id": "pm-v2-258",
+      "num": 258,
       "text": "【面试·深度】音乐 App「看 15 秒广告换 30 分钟听歌」：从会员转化试探、时间成本权衡、用户薅羊毛心智、站内导流四角度评价，是否可持续？",
       "company": "通用",
       "type": "business",
@@ -5246,8 +5186,8 @@
       ]
     },
     {
-      "id": "pm-v2-262",
-      "num": 262,
+      "id": "pm-v2-259",
+      "num": 259,
       "text": "【面试·深度】为 18–24 岁设计信贷产品：写用户/场景（购物、教育、医疗）、低门槛授信、小额多场景、额度与担保风控、还款提醒—各 1 条原则。",
       "company": "通用",
       "type": "business",
@@ -5266,8 +5206,8 @@
       ]
     },
     {
-      "id": "pm-v2-263",
-      "num": 263,
+      "id": "pm-v2-260",
+      "num": 260,
       "text": "【面试·综合】本地生活 App 为什么加大内容/种草投入？从「用完即走」的工具属性、竞品内容化、存量流量转化效率 3 点分析。",
       "company": "通用",
       "type": "business",
@@ -5286,8 +5226,8 @@
       ]
     },
     {
-      "id": "pm-v2-264",
-      "num": 264,
+      "id": "pm-v2-261",
+      "num": 261,
       "text": "【面试·综合】本地生活超级 App 的护城河是什么？从供给、履约、用户习惯、跨业务协同中选 2 点深入。",
       "company": "通用",
       "type": "business",
@@ -5306,168 +5246,8 @@
       ]
     },
     {
-      "id": "pm-v2-265",
-      "num": 265,
-      "text": "【面试·综合】你如何理解产品经理？写认知演变：从「画原型写 PRD」到「连接用户需求与商业目标、对全生命周期结果负责」。",
-      "company": "通用",
-      "type": "business",
-      "typeLabel": "传统产品业务面",
-      "difficulty": "easy",
-      "topicId": "iv-misc",
-      "source": "v1.0面经",
-      "sourceFile": "scenarios-interview-misc",
-      "framework": "结构化分析",
-      "referenceOutline": "结论先行→业务背景→策略选项→取舍理由→验证指标",
-      "curated": false,
-      "tags": [
-        "传统产品业务面",
-        "通用",
-        "easy"
-      ]
-    },
-    {
-      "id": "pm-v2-266",
-      "num": 266,
-      "text": "【面试·综合】业务理解、执行力、创造力哪个最重要？结论可以是「都重要但阶段不同」，并各用 1 句话定义 + 1 个经历片段。",
-      "company": "通用",
-      "type": "business",
-      "typeLabel": "传统产品业务面",
-      "difficulty": "easy",
-      "topicId": "iv-misc",
-      "source": "v1.0面经",
-      "sourceFile": "scenarios-interview-misc",
-      "framework": "结构化分析",
-      "referenceOutline": "结论先行→业务背景→策略选项→取舍理由→验证指标",
-      "curated": false,
-      "tags": [
-        "传统产品业务面",
-        "通用",
-        "easy"
-      ]
-    },
-    {
-      "id": "pm-v2-267",
-      "num": 267,
-      "text": "【面试·综合】中途接盘项目：先读交接文档—高频沟通同事—拉通业务与研发对需求和技术现状的理解；写第一周 checklist。",
-      "company": "通用",
-      "type": "business",
-      "typeLabel": "传统产品业务面",
-      "difficulty": "easy",
-      "topicId": "iv-misc",
-      "source": "v1.0面经",
-      "sourceFile": "scenarios-interview-misc",
-      "framework": "结构化分析",
-      "referenceOutline": "结论先行→业务背景→策略选项→取舍理由→验证指标",
-      "curated": false,
-      "tags": [
-        "传统产品业务面",
-        "通用",
-        "easy"
-      ]
-    },
-    {
-      "id": "pm-v2-268",
-      "num": 268,
-      "text": "【面试·综合】请回答「最近读的书」：1 个核心观点 + 1 个可应用到工作的原则（如体验价值=新体验-旧体验-迁移成本），勿长篇书评。",
-      "company": "通用",
-      "type": "business",
-      "typeLabel": "传统产品业务面",
-      "difficulty": "easy",
-      "topicId": "iv-misc",
-      "source": "v1.0面经",
-      "sourceFile": "scenarios-interview-misc",
-      "framework": "结构化分析",
-      "referenceOutline": "结论先行→业务背景→策略选项→取舍理由→验证指标",
-      "curated": false,
-      "tags": [
-        "传统产品业务面",
-        "通用",
-        "easy"
-      ]
-    },
-    {
-      "id": "pm-v2-269",
-      "num": 269,
-      "text": "【面试·综合】描述一次实习中的「成就感」：0→1 裂变/大促项目—你如何从协助到 Owner—跨 4 方数据对齐—与运营何时对齐方案。",
-      "company": "通用",
-      "type": "business",
-      "typeLabel": "传统产品业务面",
-      "difficulty": "easy",
-      "topicId": "iv-misc",
-      "source": "v1.0面经",
-      "sourceFile": "scenarios-interview-misc",
-      "framework": "STAR",
-      "referenceOutline": "情境→任务→行动→结果→反思；每步含量化指标",
-      "curated": false,
-      "tags": [
-        "传统产品业务面",
-        "通用",
-        "easy"
-      ]
-    },
-    {
-      "id": "pm-v2-270",
-      "num": 270,
-      "text": "【面试·综合】生活中一次挫折及应对：写心态调整、向谁请教、如何复盘改进；映射到职场可迁移的 1 条原则。",
-      "company": "通用",
-      "type": "business",
-      "typeLabel": "传统产品业务面",
-      "difficulty": "easy",
-      "topicId": "iv-misc",
-      "source": "v1.0面经",
-      "sourceFile": "scenarios-interview-misc",
-      "framework": "结构化分析",
-      "referenceOutline": "结论先行→业务背景→策略选项→取舍理由→验证指标",
-      "curated": false,
-      "tags": [
-        "传统产品业务面",
-        "通用",
-        "easy"
-      ]
-    },
-    {
-      "id": "pm-v2-271",
-      "num": 271,
-      "text": "【面试·综合】你如何看待工作？可结合「交付确定性」「从执行到对指标负责」；真实、职业化，避免空泛鸡汤。",
-      "company": "通用",
-      "type": "business",
-      "typeLabel": "传统产品业务面",
-      "difficulty": "easy",
-      "topicId": "iv-misc",
-      "source": "v1.0面经",
-      "sourceFile": "scenarios-interview-misc",
-      "framework": "结构化分析",
-      "referenceOutline": "结论先行→业务背景→策略选项→取舍理由→验证指标",
-      "curated": false,
-      "tags": [
-        "传统产品业务面",
-        "通用",
-        "easy"
-      ]
-    },
-    {
-      "id": "pm-v2-272",
-      "num": 272,
-      "text": "【面试·综合】整个实习中你在创造力/任务拆解/数据分析三方面各提升 1 点，各举 1 个例子（不要重复 STAR 全文）。",
-      "company": "通用",
-      "type": "business",
-      "typeLabel": "传统产品业务面",
-      "difficulty": "easy",
-      "topicId": "iv-misc",
-      "source": "v1.0面经",
-      "sourceFile": "scenarios-interview-misc",
-      "framework": "STAR",
-      "referenceOutline": "情境→任务→行动→结果→反思；每步含量化指标",
-      "curated": false,
-      "tags": [
-        "传统产品业务面",
-        "通用",
-        "easy"
-      ]
-    },
-    {
-      "id": "pm-v2-273",
-      "num": 273,
+      "id": "pm-v2-262",
+      "num": 262,
       "text": "【面试·开放·Q88】平台创作者激励：新作者（培训+流量测试）、中腰部（现金+倾斜）、头部（品牌活动+先发后审+历史召回）—各写 1 条策略目标。",
       "company": "通用",
       "type": "business",
@@ -5486,8 +5266,8 @@
       ]
     },
     {
-      "id": "pm-v2-274",
-      "num": 274,
+      "id": "pm-v2-263",
+      "num": 263,
       "text": "【面试·开放·Q89】外卖平台为何推「神券节/会员红包」？写降低决策成本、对抗商户同质化、培养固定「薅券」心智三点，各配 1 个指标。",
       "company": "通用",
       "type": "business",
@@ -5506,8 +5286,8 @@
       ]
     },
     {
-      "id": "pm-v2-275",
-      "num": 275,
+      "id": "pm-v2-264",
+      "num": 264,
       "text": "【面试·开放·Q90】同样是出行：为何滴滴推「特惠快车」、高德推「全网比价」？从自营匹配 vs 聚合流量、司机闲置 vs 决策入口、防御低价分流写。",
       "company": "滴滴",
       "type": "business",
@@ -5526,8 +5306,8 @@
       ]
     },
     {
-      "id": "pm-v2-276",
-      "num": 276,
+      "id": "pm-v2-265",
+      "num": 265,
       "text": "【面试·开放·Q93】外卖为何愿给新客大额券、不愿给老客直接降商品价 1 元？对比 CAC 破门槛 vs LTV 路径依赖、红包灵活 vs 底价刚性。",
       "company": "通用",
       "type": "business",
@@ -5546,8 +5326,8 @@
       ]
     },
     {
-      "id": "pm-v2-277",
-      "num": 277,
+      "id": "pm-v2-266",
+      "num": 266,
       "text": "【面试·开放·Q94】即时零售为何坚持「满 X 元免配送费」？从单笔履约成本线、凑单提升 GMV、过滤碎片化低质需求写。",
       "company": "通用",
       "type": "business",
@@ -5566,8 +5346,8 @@
       ]
     },
     {
-      "id": "pm-v2-278",
-      "num": 278,
+      "id": "pm-v2-267",
+      "num": 267,
       "text": "【面试·开放·Q96】支付宝/微信为何推「先享后付/免押」？写降低高客单决策门槛、信用消费与金融变现铺垫、生态锁定（信用分迁移成本）。",
       "company": "通用",
       "type": "business",
@@ -5586,8 +5366,8 @@
       ]
     },
     {
-      "id": "pm-v2-279",
-      "num": 279,
+      "id": "pm-v2-268",
+      "num": 268,
       "text": "【面试·开放·Q97】出行 App 为何大力推顺风车？写低价心智防线、潮汐运力补充高峰、DAU 与导流快车等高毛利业务；并承认合规风险。",
       "company": "通用",
       "type": "business",
@@ -5606,8 +5386,8 @@
       ]
     },
     {
-      "id": "pm-v2-280",
-      "num": 280,
+      "id": "pm-v2-269",
+      "num": 269,
       "text": "【面试·开放·Q98】拼多多早期「砍一刀」为何淘宝难学？写下沉市场时间成本、中产社交压力、微信生态与外链规则变化。",
       "company": "拼多多",
       "type": "business",
@@ -5626,8 +5406,8 @@
       ]
     },
     {
-      "id": "pm-v2-281",
-      "num": 281,
+      "id": "pm-v2-270",
+      "num": 270,
       "text": "【面试·开放·Q99】为何连工具类 App 也做「签到领金币/现金」？从防卸载留存钩、DAU 数据装饰、签到页二次导流（激励视频/广告）写，并说明对数据质量的隐患。",
       "company": "通用",
       "type": "business",
@@ -5646,9 +5426,229 @@
       ]
     },
     {
+      "id": "pm-v2-271",
+      "num": 271,
+      "text": "【面试·开放·Q100】网约车为何坚持「一口价」即便司机抵制？写用户确定性/心理低价、平台对运力与拥堵路段的定价权、对抗聚合平台比价的武器。",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "传统产品业务面",
+      "difficulty": "hard",
+      "topicId": "iv-open",
+      "source": "v1.0面经",
+      "sourceFile": "scenarios-interview-open",
+      "framework": "结构化分析",
+      "referenceOutline": "定义问题→拆解维度→假设→验证路径→风险",
+      "curated": false,
+      "tags": [
+        "传统产品业务面",
+        "通用",
+        "hard"
+      ]
+    },
+    {
+      "id": "pm-v2-272",
+      "num": 272,
+      "text": "【面试·开放·Q102】京东为何坚持自建物流、淘宝才加码菜鸟？写 3C 高客单基因、履约确定性竞争、全链路数据闭环—对比淘系轻资产红利期结束。",
+      "company": "京东",
+      "type": "business",
+      "typeLabel": "传统产品业务面",
+      "difficulty": "hard",
+      "topicId": "iv-open",
+      "source": "v1.0面经",
+      "sourceFile": "scenarios-interview-open",
+      "framework": "结构化分析",
+      "referenceOutline": "定义问题→拆解维度→假设→验证路径→风险",
+      "curated": false,
+      "tags": [
+        "传统产品业务面",
+        "京东",
+        "hard"
+      ]
+    },
+    {
+      "id": "pm-v2-273",
+      "num": 273,
+      "text": "【面试·开放·Q103】外卖为何推「拼好饭/单人低价餐」？写下沉防守、同楼同店同批配送提效、消费降级下仍要打开 App 的兜底入口。",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "传统产品业务面",
+      "difficulty": "hard",
+      "topicId": "iv-open",
+      "source": "v1.0面经",
+      "sourceFile": "scenarios-interview-open",
+      "framework": "结构化分析",
+      "referenceOutline": "定义问题→拆解维度→假设→验证路径→风险",
+      "curated": false,
+      "tags": [
+        "传统产品业务面",
+        "通用",
+        "hard"
+      ]
+    },
+    {
+      "id": "pm-v2-274",
+      "num": 274,
+      "text": "【面试·开放·Q108】共享单车涨价用户仍用还骂：从最后一公里垄断、获客期结束回归盈利、月卡锁高频写—并写 1 个你会做的价格实验。",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "传统产品业务面",
+      "difficulty": "hard",
+      "topicId": "iv-open",
+      "source": "v1.0面经",
+      "sourceFile": "scenarios-interview-open",
+      "framework": "结构化分析",
+      "referenceOutline": "定义问题→拆解维度→假设→验证路径→风险",
+      "curated": false,
+      "tags": [
+        "传统产品业务面",
+        "通用",
+        "hard"
+      ]
+    },
+    {
+      "id": "pm-v2-275",
+      "num": 275,
+      "text": "【面试·开放·Q111】淘宝/拼多多推「仅退款」对生态好吗？写用户极致信任、倒逼商家洗牌、高毛利/强供应链幸存者—平台 trade-off 1 条。",
+      "company": "拼多多",
+      "type": "business",
+      "typeLabel": "传统产品业务面",
+      "difficulty": "hard",
+      "topicId": "iv-open",
+      "source": "v1.0面经",
+      "sourceFile": "scenarios-interview-open",
+      "framework": "结构化分析",
+      "referenceOutline": "定义问题→拆解维度→假设→验证路径→风险",
+      "curated": false,
+      "tags": [
+        "传统产品业务面",
+        "拼多多",
+        "hard"
+      ]
+    },
+    {
+      "id": "pm-v2-276",
+      "num": 276,
+      "text": "【面试·开放·Q112】外卖为何在非正餐推下午茶/夜宵？写平滑骑手波峰波谷、拓展非刚需 GMV、帮商户覆盖下午固定成本。",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "传统产品业务面",
+      "difficulty": "hard",
+      "topicId": "iv-open",
+      "source": "v1.0面经",
+      "sourceFile": "scenarios-interview-open",
+      "framework": "Fermi",
+      "referenceOutline": "明确口径→拆解公式→假设取值→敏感性→结论区间",
+      "curated": false,
+      "tags": [
+        "传统产品业务面",
+        "通用",
+        "hard"
+      ]
+    },
+    {
+      "id": "pm-v2-277",
+      "num": 277,
+      "text": "【面试·开放·Q113】打车 App 为何弱化「评价司机」、突出「感谢费/加价」？写供给端情绪价值、即时激励 vs 事后考核、把难打车焦虑转为用户自愿加价。",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "传统产品业务面",
+      "difficulty": "hard",
+      "topicId": "iv-open",
+      "source": "v1.0面经",
+      "sourceFile": "scenarios-interview-open",
+      "framework": "结构化分析",
+      "referenceOutline": "定义问题→拆解维度→假设→验证路径→风险",
+      "curated": false,
+      "tags": [
+        "传统产品业务面",
+        "通用",
+        "hard"
+      ]
+    },
+    {
+      "id": "pm-v2-278",
+      "num": 278,
+      "text": "【面试·开放·Q115】银行 App 为何狂做「积分换视频会员」？写低频带高频回访、积分资产留存、异业联盟低成本高感知营销。",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "传统产品业务面",
+      "difficulty": "hard",
+      "topicId": "iv-open",
+      "source": "v1.0面经",
+      "sourceFile": "scenarios-interview-open",
+      "framework": "结构化分析",
+      "referenceOutline": "定义问题→拆解维度→假设→验证路径→风险",
+      "curated": false,
+      "tags": [
+        "传统产品业务面",
+        "通用",
+        "hard"
+      ]
+    },
+    {
+      "id": "pm-v2-279",
+      "num": 279,
+      "text": "【面试·开放·Q116】为何淘拼「百亿补贴」心智强于京东？写用户价格带错位、补贴成本结构、平台心智一致性（便宜 vs 快/真）。",
+      "company": "京东",
+      "type": "business",
+      "typeLabel": "传统产品业务面",
+      "difficulty": "hard",
+      "topicId": "iv-open",
+      "source": "v1.0面经",
+      "sourceFile": "scenarios-interview-open",
+      "framework": "结构化分析",
+      "referenceOutline": "定义问题→拆解维度→假设→验证路径→风险",
+      "curated": false,
+      "tags": [
+        "传统产品业务面",
+        "京东",
+        "hard"
+      ]
+    },
+    {
+      "id": "pm-v2-280",
+      "num": 280,
+      "text": "【面试·开放·Q118】短视频商业化为何走向「切片分销」？写头部直播长尾复用、去中心化渗透长尾标签、MCN 试错成本极低。",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "传统产品业务面",
+      "difficulty": "hard",
+      "topicId": "iv-open",
+      "source": "v1.0面经",
+      "sourceFile": "scenarios-interview-open",
+      "framework": "结构化分析",
+      "referenceOutline": "定义问题→拆解维度→假设→验证路径→风险",
+      "curated": false,
+      "tags": [
+        "传统产品业务面",
+        "通用",
+        "hard"
+      ]
+    },
+    {
+      "id": "pm-v2-281",
+      "num": 281,
+      "text": "【面试·开放·Q119】话费/银行 App 为何爱「充值返现」而非直接降价？写资金池无息占用、分期返现锁次月回访、锚定效应保原价感知。",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "传统产品业务面",
+      "difficulty": "hard",
+      "topicId": "iv-open",
+      "source": "v1.0面经",
+      "sourceFile": "scenarios-interview-open",
+      "framework": "结构化分析",
+      "referenceOutline": "定义问题→拆解维度→假设→验证路径→风险",
+      "curated": false,
+      "tags": [
+        "传统产品业务面",
+        "通用",
+        "hard"
+      ]
+    },
+    {
       "id": "pm-v2-282",
       "num": 282,
-      "text": "【面试·开放·Q100】网约车为何坚持「一口价」即便司机抵制？写用户确定性/心理低价、平台对运力与拥堵路段的定价权、对抗聚合平台比价的武器。",
+      "text": "【面试·开放·Q121】短视频平台为何做长视频/短剧/买版权？写打破快感阈值、品牌广告主入口、独家内容资产护城河。",
       "company": "通用",
       "type": "business",
       "typeLabel": "传统产品业务面",
@@ -5668,8 +5668,8 @@
     {
       "id": "pm-v2-283",
       "num": 283,
-      "text": "【面试·开放·Q102】京东为何坚持自建物流、淘宝才加码菜鸟？写 3C 高客单基因、履约确定性竞争、全链路数据闭环—对比淘系轻资产红利期结束。",
-      "company": "京东",
+      "text": "【面试·开放·Q123】美团/携程为何向酒店既收佣金又收广告费？写佣金是生存线、广告是流量二次拍卖、广告费改善财报弹性。",
+      "company": "美团",
       "type": "business",
       "typeLabel": "传统产品业务面",
       "difficulty": "hard",
@@ -5681,14 +5681,14 @@
       "curated": false,
       "tags": [
         "传统产品业务面",
-        "京东",
+        "美团",
         "hard"
       ]
     },
     {
       "id": "pm-v2-284",
       "num": 284,
-      "text": "【面试·开放·Q103】外卖为何推「拼好饭/单人低价餐」？写下沉防守、同楼同店同批配送提效、消费降级下仍要打开 App 的兜底入口。",
+      "text": "【面试·开放·Q124】外卖/快递为何推「先用后付/月结」？写平滑支付痛感、信用画像与金融导流、欠费/授信提高迁移成本。",
       "company": "通用",
       "type": "business",
       "typeLabel": "传统产品业务面",
@@ -5708,7 +5708,7 @@
     {
       "id": "pm-v2-285",
       "num": 285,
-      "text": "【面试·开放·Q108】共享单车涨价用户仍用还骂：从最后一公里垄断、获客期结束回归盈利、月卡锁高频写—并写 1 个你会做的价格实验。",
+      "text": "【面试·开放·Q125】陌陌/探探类 App 为何做直播与语音房？写文字社交效率低、礼物变现比匹配更直接、单向陪伴降门槛。",
       "company": "通用",
       "type": "business",
       "typeLabel": "传统产品业务面",
@@ -5728,8 +5728,8 @@
     {
       "id": "pm-v2-286",
       "num": 286,
-      "text": "【面试·开放·Q111】淘宝/拼多多推「仅退款」对生态好吗？写用户极致信任、倒逼商家洗牌、高毛利/强供应链幸存者—平台 trade-off 1 条。",
-      "company": "拼多多",
+      "text": "【面试·开放·Q126】大厂会员为何从「攒积分升级」转向「付费卡（88VIP 类）」？写快速筛高净值、预付锁定未来预算、会费沉淀资金池。",
+      "company": "通用",
       "type": "business",
       "typeLabel": "传统产品业务面",
       "difficulty": "hard",
@@ -5741,14 +5741,14 @@
       "curated": false,
       "tags": [
         "传统产品业务面",
-        "拼多多",
+        "通用",
         "hard"
       ]
     },
     {
       "id": "pm-v2-287",
       "num": 287,
-      "text": "【面试·开放·Q112】外卖为何在非正餐推下午茶/夜宵？写平滑骑手波峰波谷、拓展非刚需 GMV、帮商户覆盖下午固定成本。",
+      "text": "【面试·开放·Q128】外卖为何推准时宝/慢必赔类保险？写转移延误冲突、保费-赔付利差变现、识别高焦虑用户优先派可靠运力。",
       "company": "通用",
       "type": "business",
       "typeLabel": "传统产品业务面",
@@ -5756,8 +5756,8 @@
       "topicId": "iv-open",
       "source": "v1.0面经",
       "sourceFile": "scenarios-interview-open",
-      "framework": "Fermi",
-      "referenceOutline": "明确口径→拆解公式→假设取值→敏感性→结论区间",
+      "framework": "结构化分析",
+      "referenceOutline": "定义问题→拆解维度→假设→验证路径→风险",
       "curated": false,
       "tags": [
         "传统产品业务面",
@@ -5768,7 +5768,7 @@
     {
       "id": "pm-v2-288",
       "num": 288,
-      "text": "【面试·开放·Q113】打车 App 为何弱化「评价司机」、突出「感谢费/加价」？写供给端情绪价值、即时激励 vs 事后考核、把难打车焦虑转为用户自愿加价。",
+      "text": "【面试·开放·Q129】用户点「注销账号」时为何弹出大额券？写流失漏斗最后挽留杠杆、打断冲动决策路径、收集死亡反馈优化留存。",
       "company": "通用",
       "type": "business",
       "typeLabel": "传统产品业务面",
@@ -5788,226 +5788,6 @@
     {
       "id": "pm-v2-289",
       "num": 289,
-      "text": "【面试·开放·Q115】银行 App 为何狂做「积分换视频会员」？写低频带高频回访、积分资产留存、异业联盟低成本高感知营销。",
-      "company": "通用",
-      "type": "business",
-      "typeLabel": "传统产品业务面",
-      "difficulty": "hard",
-      "topicId": "iv-open",
-      "source": "v1.0面经",
-      "sourceFile": "scenarios-interview-open",
-      "framework": "结构化分析",
-      "referenceOutline": "定义问题→拆解维度→假设→验证路径→风险",
-      "curated": false,
-      "tags": [
-        "传统产品业务面",
-        "通用",
-        "hard"
-      ]
-    },
-    {
-      "id": "pm-v2-290",
-      "num": 290,
-      "text": "【面试·开放·Q116】为何淘拼「百亿补贴」心智强于京东？写用户价格带错位、补贴成本结构、平台心智一致性（便宜 vs 快/真）。",
-      "company": "京东",
-      "type": "business",
-      "typeLabel": "传统产品业务面",
-      "difficulty": "hard",
-      "topicId": "iv-open",
-      "source": "v1.0面经",
-      "sourceFile": "scenarios-interview-open",
-      "framework": "结构化分析",
-      "referenceOutline": "定义问题→拆解维度→假设→验证路径→风险",
-      "curated": false,
-      "tags": [
-        "传统产品业务面",
-        "京东",
-        "hard"
-      ]
-    },
-    {
-      "id": "pm-v2-291",
-      "num": 291,
-      "text": "【面试·开放·Q118】短视频商业化为何走向「切片分销」？写头部直播长尾复用、去中心化渗透长尾标签、MCN 试错成本极低。",
-      "company": "通用",
-      "type": "business",
-      "typeLabel": "传统产品业务面",
-      "difficulty": "hard",
-      "topicId": "iv-open",
-      "source": "v1.0面经",
-      "sourceFile": "scenarios-interview-open",
-      "framework": "结构化分析",
-      "referenceOutline": "定义问题→拆解维度→假设→验证路径→风险",
-      "curated": false,
-      "tags": [
-        "传统产品业务面",
-        "通用",
-        "hard"
-      ]
-    },
-    {
-      "id": "pm-v2-292",
-      "num": 292,
-      "text": "【面试·开放·Q119】话费/银行 App 为何爱「充值返现」而非直接降价？写资金池无息占用、分期返现锁次月回访、锚定效应保原价感知。",
-      "company": "通用",
-      "type": "business",
-      "typeLabel": "传统产品业务面",
-      "difficulty": "hard",
-      "topicId": "iv-open",
-      "source": "v1.0面经",
-      "sourceFile": "scenarios-interview-open",
-      "framework": "结构化分析",
-      "referenceOutline": "定义问题→拆解维度→假设→验证路径→风险",
-      "curated": false,
-      "tags": [
-        "传统产品业务面",
-        "通用",
-        "hard"
-      ]
-    },
-    {
-      "id": "pm-v2-293",
-      "num": 293,
-      "text": "【面试·开放·Q121】短视频平台为何做长视频/短剧/买版权？写打破快感阈值、品牌广告主入口、独家内容资产护城河。",
-      "company": "通用",
-      "type": "business",
-      "typeLabel": "传统产品业务面",
-      "difficulty": "hard",
-      "topicId": "iv-open",
-      "source": "v1.0面经",
-      "sourceFile": "scenarios-interview-open",
-      "framework": "结构化分析",
-      "referenceOutline": "定义问题→拆解维度→假设→验证路径→风险",
-      "curated": false,
-      "tags": [
-        "传统产品业务面",
-        "通用",
-        "hard"
-      ]
-    },
-    {
-      "id": "pm-v2-294",
-      "num": 294,
-      "text": "【面试·开放·Q123】美团/携程为何向酒店既收佣金又收广告费？写佣金是生存线、广告是流量二次拍卖、广告费改善财报弹性。",
-      "company": "美团",
-      "type": "business",
-      "typeLabel": "传统产品业务面",
-      "difficulty": "hard",
-      "topicId": "iv-open",
-      "source": "v1.0面经",
-      "sourceFile": "scenarios-interview-open",
-      "framework": "结构化分析",
-      "referenceOutline": "定义问题→拆解维度→假设→验证路径→风险",
-      "curated": false,
-      "tags": [
-        "传统产品业务面",
-        "美团",
-        "hard"
-      ]
-    },
-    {
-      "id": "pm-v2-295",
-      "num": 295,
-      "text": "【面试·开放·Q124】外卖/快递为何推「先用后付/月结」？写平滑支付痛感、信用画像与金融导流、欠费/授信提高迁移成本。",
-      "company": "通用",
-      "type": "business",
-      "typeLabel": "传统产品业务面",
-      "difficulty": "hard",
-      "topicId": "iv-open",
-      "source": "v1.0面经",
-      "sourceFile": "scenarios-interview-open",
-      "framework": "结构化分析",
-      "referenceOutline": "定义问题→拆解维度→假设→验证路径→风险",
-      "curated": false,
-      "tags": [
-        "传统产品业务面",
-        "通用",
-        "hard"
-      ]
-    },
-    {
-      "id": "pm-v2-296",
-      "num": 296,
-      "text": "【面试·开放·Q125】陌陌/探探类 App 为何做直播与语音房？写文字社交效率低、礼物变现比匹配更直接、单向陪伴降门槛。",
-      "company": "通用",
-      "type": "business",
-      "typeLabel": "传统产品业务面",
-      "difficulty": "hard",
-      "topicId": "iv-open",
-      "source": "v1.0面经",
-      "sourceFile": "scenarios-interview-open",
-      "framework": "结构化分析",
-      "referenceOutline": "定义问题→拆解维度→假设→验证路径→风险",
-      "curated": false,
-      "tags": [
-        "传统产品业务面",
-        "通用",
-        "hard"
-      ]
-    },
-    {
-      "id": "pm-v2-297",
-      "num": 297,
-      "text": "【面试·开放·Q126】大厂会员为何从「攒积分升级」转向「付费卡（88VIP 类）」？写快速筛高净值、预付锁定未来预算、会费沉淀资金池。",
-      "company": "通用",
-      "type": "business",
-      "typeLabel": "传统产品业务面",
-      "difficulty": "hard",
-      "topicId": "iv-open",
-      "source": "v1.0面经",
-      "sourceFile": "scenarios-interview-open",
-      "framework": "结构化分析",
-      "referenceOutline": "定义问题→拆解维度→假设→验证路径→风险",
-      "curated": false,
-      "tags": [
-        "传统产品业务面",
-        "通用",
-        "hard"
-      ]
-    },
-    {
-      "id": "pm-v2-298",
-      "num": 298,
-      "text": "【面试·开放·Q128】外卖为何推准时宝/慢必赔类保险？写转移延误冲突、保费-赔付利差变现、识别高焦虑用户优先派可靠运力。",
-      "company": "通用",
-      "type": "business",
-      "typeLabel": "传统产品业务面",
-      "difficulty": "hard",
-      "topicId": "iv-open",
-      "source": "v1.0面经",
-      "sourceFile": "scenarios-interview-open",
-      "framework": "结构化分析",
-      "referenceOutline": "定义问题→拆解维度→假设→验证路径→风险",
-      "curated": false,
-      "tags": [
-        "传统产品业务面",
-        "通用",
-        "hard"
-      ]
-    },
-    {
-      "id": "pm-v2-299",
-      "num": 299,
-      "text": "【面试·开放·Q129】用户点「注销账号」时为何弹出大额券？写流失漏斗最后挽留杠杆、打断冲动决策路径、收集死亡反馈优化留存。",
-      "company": "通用",
-      "type": "business",
-      "typeLabel": "传统产品业务面",
-      "difficulty": "hard",
-      "topicId": "iv-open",
-      "source": "v1.0面经",
-      "sourceFile": "scenarios-interview-open",
-      "framework": "结构化分析",
-      "referenceOutline": "定义问题→拆解维度→假设→验证路径→风险",
-      "curated": false,
-      "tags": [
-        "传统产品业务面",
-        "通用",
-        "hard"
-      ]
-    },
-    {
-      "id": "pm-v2-300",
-      "num": 300,
       "text": "【面试·开放·Q131】滴滴/美团/携程为何推「先享后付/信用分」？写对抗结账理性、虚拟违约成本锁定用户、从撮合走向金融化终局。",
       "company": "美团",
       "type": "business",
@@ -6026,8 +5806,8 @@
       ]
     },
     {
-      "id": "pm-v2-301",
-      "num": 301,
+      "id": "pm-v2-290",
+      "num": 290,
       "text": "【面试·开放·Q133】美团/拼多多已成垄断为何仍养大地推与城市经理？写线下供给重资产、关系链护城河、纠正线上数据最后一公里。",
       "company": "美团",
       "type": "business",
@@ -6046,8 +5826,8 @@
       ]
     },
     {
-      "id": "pm-v2-302",
-      "num": 302,
+      "id": "pm-v2-291",
+      "num": 291,
       "text": "【面试·开放·Q135】高德/百度地图为何要做打车/酒店闭环交易？写从导流分佣到聚合抽佣、导航终点即消费场景、交易数据补全商业地图。",
       "company": "百度",
       "type": "business",
@@ -6066,8 +5846,8 @@
       ]
     },
     {
-      "id": "pm-v2-303",
-      "num": 303,
+      "id": "pm-v2-292",
+      "num": 292,
       "text": "【面试·开放·Q137】抖音/快手为何强推「走路/看视频领金币」？写低成本拉回老用户、金币即时反馈对抗内容疲劳—与工具类签到差异 1 点。",
       "company": "抖音",
       "type": "business",
@@ -6086,8 +5866,8 @@
       ]
     },
     {
-      "id": "pm-v2-304",
-      "num": 304,
+      "id": "pm-v2-293",
+      "num": 293,
       "text": "【面试·深度·Q82】面试官问：微信朋友圈为什么不做首屏入口？请从 IM 核心定位、消息降噪、使用频率与社交压力、发现页导流使命四角度作答。",
       "company": "通用",
       "type": "business",
@@ -6106,8 +5886,8 @@
       ]
     },
     {
-      "id": "pm-v2-305",
-      "num": 305,
+      "id": "pm-v2-294",
+      "num": 294,
       "text": "【面试·产品设计·Q82】朋友圈入口为何不在微信首屏？从 IM 核心定位、消息降噪（推送 vs 主动浏览）、使用频率与社交压力、发现页导流使命四角度回答。",
       "company": "通用",
       "type": "business",
@@ -6126,8 +5906,8 @@
       ]
     },
     {
-      "id": "pm-v2-306",
-      "num": 306,
+      "id": "pm-v2-295",
+      "num": 295,
       "text": "【面试·产品设计·Q83】线上面试中突然弹出广告，你希望是什么类型？先界定用户（求职者/面试官）与场景（秋招互联网岗），再写内容与推送时机，并说明召回/排序如何匹配。",
       "company": "通用",
       "type": "business",
@@ -6146,8 +5926,8 @@
       ]
     },
     {
-      "id": "pm-v2-307",
-      "num": 307,
+      "id": "pm-v2-296",
+      "num": 296,
       "text": "【面试·产品设计·Q85】微信做搜索的优势？写用户诉求（站内闭环）、数据（生态画像+私域信息）、触达链路（直达小程序/视频号/群），对比外跳搜索引擎。",
       "company": "通用",
       "type": "business",
@@ -6166,9 +5946,229 @@
       ]
     },
     {
+      "id": "pm-v2-297",
+      "num": 297,
+      "text": "【面试·产品设计·Q86】如何制定创作者分级策略？提出 4 类标准（原创度、垂直度、活跃度、传播度）并说明各如何量化、如何与流量权益挂钩。",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "传统产品业务面",
+      "difficulty": "easy",
+      "topicId": "prod-open",
+      "source": "v1.0面经",
+      "sourceFile": "scenarios-interview-open",
+      "framework": "Design Thinking",
+      "referenceOutline": "用户场景→痛点→方案对比→MVP→成功指标",
+      "curated": false,
+      "tags": [
+        "传统产品业务面",
+        "通用",
+        "easy"
+      ]
+    },
+    {
+      "id": "pm-v2-298",
+      "num": 298,
+      "text": "【面试·产品设计·Q87】如何衡量「扶持优质创作者」策略有效？写冷启动 CTR 是否高于大盘、人群标签匹配消费、垂类内容池补充度三类指标，并说明运营与策略 PM 的分歧点。",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "传统产品业务面",
+      "difficulty": "medium",
+      "topicId": "prod-open",
+      "source": "v1.0面经",
+      "sourceFile": "scenarios-interview-open",
+      "framework": "Design Thinking",
+      "referenceOutline": "用户场景→痛点→方案对比→MVP→成功指标",
+      "curated": false,
+      "tags": [
+        "传统产品业务面",
+        "通用",
+        "medium"
+      ]
+    },
+    {
+      "id": "pm-v2-299",
+      "num": 299,
+      "text": "【面试·产品设计·Q92】面试官问：为什么朋友圈广告克制，而视频号商业化更快？请从私域社交厌恶、公域刷视频容忍度、广告增长使命三角解释。",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "传统产品业务面",
+      "difficulty": "easy",
+      "topicId": "prod-open",
+      "source": "v1.0面经",
+      "sourceFile": "scenarios-interview-open",
+      "framework": "Design Thinking",
+      "referenceOutline": "用户场景→痛点→方案对比→MVP→成功指标",
+      "curated": false,
+      "tags": [
+        "传统产品业务面",
+        "通用",
+        "easy"
+      ]
+    },
+    {
+      "id": "pm-v2-300",
+      "num": 300,
+      "text": "【面试·产品设计·Q95】短视频评论区为何与内容同等重要？写神评拉升完播与推荐、社交归属感、舆情与梗反馈三条价值链。",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "传统产品业务面",
+      "difficulty": "easy",
+      "topicId": "prod-open",
+      "source": "v1.0面经",
+      "sourceFile": "scenarios-interview-open",
+      "framework": "Design Thinking",
+      "referenceOutline": "用户场景→痛点→方案对比→MVP→成功指标",
+      "curated": false,
+      "tags": [
+        "传统产品业务面",
+        "通用",
+        "easy"
+      ]
+    },
+    {
+      "id": "pm-v2-301",
+      "num": 301,
+      "text": "【面试·产品设计·Q104】社交 App 为何用虚拟形象而非真人头像（如 Soul）？写降低颜值焦虑、延长探索链提升互动深度、虚拟装扮商业化路径。",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "传统产品业务面",
+      "difficulty": "medium",
+      "topicId": "prod-open",
+      "source": "v1.0面经",
+      "sourceFile": "scenarios-interview-open",
+      "framework": "Design Thinking",
+      "referenceOutline": "用户场景→痛点→方案对比→MVP→成功指标",
+      "curated": false,
+      "tags": [
+        "传统产品业务面",
+        "通用",
+        "medium"
+      ]
+    },
+    {
+      "id": "pm-v2-302",
+      "num": 302,
+      "text": "【面试·产品设计·Q106】内容平台为何重仓「搜索」并称其为终局？写从被动推荐到主动意图、从杀时间到解决问题、搜索对商业化与留存的差异。",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "传统产品业务面",
+      "difficulty": "easy",
+      "topicId": "prod-open",
+      "source": "v1.0面经",
+      "sourceFile": "scenarios-interview-open",
+      "framework": "Design Thinking",
+      "referenceOutline": "用户场景→痛点→方案对比→MVP→成功指标",
+      "curated": false,
+      "tags": [
+        "传统产品业务面",
+        "通用",
+        "easy"
+      ]
+    },
+    {
+      "id": "pm-v2-303",
+      "num": 303,
+      "text": "【面试·产品设计·Q109】瑞幸 App 首页为何把券/活动做得比菜单更大？写价格敏感心智、私域社群导流入口、新品 SKU 快速试错位。",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "传统产品业务面",
+      "difficulty": "easy",
+      "topicId": "prod-open",
+      "source": "v1.0面经",
+      "sourceFile": "scenarios-interview-open",
+      "framework": "Design Thinking",
+      "referenceOutline": "用户场景→痛点→方案对比→MVP→成功指标",
+      "curated": false,
+      "tags": [
+        "传统产品业务面",
+        "通用",
+        "easy"
+      ]
+    },
+    {
+      "id": "pm-v2-304",
+      "num": 304,
+      "text": "【面试·产品设计·Q110】网易云音乐版权劣势下为何坚持「乐评」？写情感连接软资产、评论区停留闭环、UGC 发现与独立音乐人生态。",
+      "company": "网易",
+      "type": "business",
+      "typeLabel": "传统产品业务面",
+      "difficulty": "easy",
+      "topicId": "prod-open",
+      "source": "v1.0面经",
+      "sourceFile": "scenarios-interview-open",
+      "framework": "Design Thinking",
+      "referenceOutline": "用户场景→痛点→方案对比→MVP→成功指标",
+      "curated": false,
+      "tags": [
+        "传统产品业务面",
+        "网易",
+        "easy"
+      ]
+    },
+    {
+      "id": "pm-v2-305",
+      "num": 305,
+      "text": "【面试·产品设计·Q117】外卖计费为何仍用步行距离而非时间成本？写用户理解成本、规则确定性防纠纷、倒逼算法在同距离内提速。",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "传统产品业务面",
+      "difficulty": "easy",
+      "topicId": "prod-open",
+      "source": "v1.0面经",
+      "sourceFile": "scenarios-interview-open",
+      "framework": "Design Thinking",
+      "referenceOutline": "用户场景→痛点→方案对比→MVP→成功指标",
+      "curated": false,
+      "tags": [
+        "传统产品业务面",
+        "通用",
+        "easy"
+      ]
+    },
+    {
+      "id": "pm-v2-306",
+      "num": 306,
+      "text": "【面试·产品设计·Q120】网约车排队预估为何常略长于实际？写超预期惊喜、测试耐心阈值防流失、对 ETA 模型的产品策略取舍。",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "传统产品业务面",
+      "difficulty": "easy",
+      "topicId": "prod-open",
+      "source": "v1.0面经",
+      "sourceFile": "scenarios-interview-open",
+      "framework": "Design Thinking",
+      "referenceOutline": "用户场景→痛点→方案对比→MVP→成功指标",
+      "curated": false,
+      "tags": [
+        "传统产品业务面",
+        "通用",
+        "easy"
+      ]
+    },
+    {
+      "id": "pm-v2-307",
+      "num": 307,
+      "text": "【面试·产品设计·Q127】创作者商业价值为何从粉丝量转向互动率/搜索渗透？写僵尸粉、算法分发、品牌要真实种草转化—各举 1 个衡量方式。",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "传统产品业务面",
+      "difficulty": "easy",
+      "topicId": "prod-open",
+      "source": "v1.0面经",
+      "sourceFile": "scenarios-interview-open",
+      "framework": "Design Thinking",
+      "referenceOutline": "用户场景→痛点→方案对比→MVP→成功指标",
+      "curated": false,
+      "tags": [
+        "传统产品业务面",
+        "通用",
+        "easy"
+      ]
+    },
+    {
       "id": "pm-v2-308",
       "num": 308,
-      "text": "【面试·产品设计·Q86】如何制定创作者分级策略？提出 4 类标准（原创度、垂直度、活跃度、传播度）并说明各如何量化、如何与流量权益挂钩。",
+      "text": "【面试·产品设计·Q130】短视频为何必须「无缝全屏」滑动而非网页双列？写剥夺选择权强化沉浸投喂、减少边框与 UI 分散注意力带宽。",
       "company": "通用",
       "type": "business",
       "typeLabel": "传统产品业务面",
@@ -6188,11 +6188,11 @@
     {
       "id": "pm-v2-309",
       "num": 309,
-      "text": "【面试·产品设计·Q87】如何衡量「扶持优质创作者」策略有效？写冷启动 CTR 是否高于大盘、人群标签匹配消费、垂类内容池补充度三类指标，并说明运营与策略 PM 的分歧点。",
+      "text": "【面试·产品设计·Q132】打车排队页为何做小动画/小游戏？写消化负面等待时间、提高切 App 比价成本、用视觉补偿掩盖调度黑箱。",
       "company": "通用",
       "type": "business",
       "typeLabel": "传统产品业务面",
-      "difficulty": "medium",
+      "difficulty": "easy",
       "topicId": "prod-open",
       "source": "v1.0面经",
       "sourceFile": "scenarios-interview-open",
@@ -6202,13 +6202,13 @@
       "tags": [
         "传统产品业务面",
         "通用",
-        "medium"
+        "easy"
       ]
     },
     {
       "id": "pm-v2-310",
       "num": 310,
-      "text": "【面试·产品设计·Q92】面试官问：为什么朋友圈广告克制，而视频号商业化更快？请从私域社交厌恶、公域刷视频容忍度、广告增长使命三角解释。",
+      "text": "【面试·产品设计·Q134】支付/地图/招聘 App 为何都做短视频？写抢注意力防流失、视频信息密度降决策成本、扩充信息流广告库存。",
       "company": "通用",
       "type": "business",
       "typeLabel": "传统产品业务面",
@@ -6228,226 +6228,6 @@
     {
       "id": "pm-v2-311",
       "num": 311,
-      "text": "【面试·产品设计·Q95】短视频评论区为何与内容同等重要？写神评拉升完播与推荐、社交归属感、舆情与梗反馈三条价值链。",
-      "company": "通用",
-      "type": "business",
-      "typeLabel": "传统产品业务面",
-      "difficulty": "easy",
-      "topicId": "prod-open",
-      "source": "v1.0面经",
-      "sourceFile": "scenarios-interview-open",
-      "framework": "Design Thinking",
-      "referenceOutline": "用户场景→痛点→方案对比→MVP→成功指标",
-      "curated": false,
-      "tags": [
-        "传统产品业务面",
-        "通用",
-        "easy"
-      ]
-    },
-    {
-      "id": "pm-v2-312",
-      "num": 312,
-      "text": "【面试·产品设计·Q104】社交 App 为何用虚拟形象而非真人头像（如 Soul）？写降低颜值焦虑、延长探索链提升互动深度、虚拟装扮商业化路径。",
-      "company": "通用",
-      "type": "business",
-      "typeLabel": "传统产品业务面",
-      "difficulty": "medium",
-      "topicId": "prod-open",
-      "source": "v1.0面经",
-      "sourceFile": "scenarios-interview-open",
-      "framework": "Design Thinking",
-      "referenceOutline": "用户场景→痛点→方案对比→MVP→成功指标",
-      "curated": false,
-      "tags": [
-        "传统产品业务面",
-        "通用",
-        "medium"
-      ]
-    },
-    {
-      "id": "pm-v2-313",
-      "num": 313,
-      "text": "【面试·产品设计·Q106】内容平台为何重仓「搜索」并称其为终局？写从被动推荐到主动意图、从杀时间到解决问题、搜索对商业化与留存的差异。",
-      "company": "通用",
-      "type": "business",
-      "typeLabel": "传统产品业务面",
-      "difficulty": "easy",
-      "topicId": "prod-open",
-      "source": "v1.0面经",
-      "sourceFile": "scenarios-interview-open",
-      "framework": "Design Thinking",
-      "referenceOutline": "用户场景→痛点→方案对比→MVP→成功指标",
-      "curated": false,
-      "tags": [
-        "传统产品业务面",
-        "通用",
-        "easy"
-      ]
-    },
-    {
-      "id": "pm-v2-314",
-      "num": 314,
-      "text": "【面试·产品设计·Q109】瑞幸 App 首页为何把券/活动做得比菜单更大？写价格敏感心智、私域社群导流入口、新品 SKU 快速试错位。",
-      "company": "通用",
-      "type": "business",
-      "typeLabel": "传统产品业务面",
-      "difficulty": "easy",
-      "topicId": "prod-open",
-      "source": "v1.0面经",
-      "sourceFile": "scenarios-interview-open",
-      "framework": "Design Thinking",
-      "referenceOutline": "用户场景→痛点→方案对比→MVP→成功指标",
-      "curated": false,
-      "tags": [
-        "传统产品业务面",
-        "通用",
-        "easy"
-      ]
-    },
-    {
-      "id": "pm-v2-315",
-      "num": 315,
-      "text": "【面试·产品设计·Q110】网易云音乐版权劣势下为何坚持「乐评」？写情感连接软资产、评论区停留闭环、UGC 发现与独立音乐人生态。",
-      "company": "网易",
-      "type": "business",
-      "typeLabel": "传统产品业务面",
-      "difficulty": "easy",
-      "topicId": "prod-open",
-      "source": "v1.0面经",
-      "sourceFile": "scenarios-interview-open",
-      "framework": "Design Thinking",
-      "referenceOutline": "用户场景→痛点→方案对比→MVP→成功指标",
-      "curated": false,
-      "tags": [
-        "传统产品业务面",
-        "网易",
-        "easy"
-      ]
-    },
-    {
-      "id": "pm-v2-316",
-      "num": 316,
-      "text": "【面试·产品设计·Q117】外卖计费为何仍用步行距离而非时间成本？写用户理解成本、规则确定性防纠纷、倒逼算法在同距离内提速。",
-      "company": "通用",
-      "type": "business",
-      "typeLabel": "传统产品业务面",
-      "difficulty": "easy",
-      "topicId": "prod-open",
-      "source": "v1.0面经",
-      "sourceFile": "scenarios-interview-open",
-      "framework": "Design Thinking",
-      "referenceOutline": "用户场景→痛点→方案对比→MVP→成功指标",
-      "curated": false,
-      "tags": [
-        "传统产品业务面",
-        "通用",
-        "easy"
-      ]
-    },
-    {
-      "id": "pm-v2-317",
-      "num": 317,
-      "text": "【面试·产品设计·Q120】网约车排队预估为何常略长于实际？写超预期惊喜、测试耐心阈值防流失、对 ETA 模型的产品策略取舍。",
-      "company": "通用",
-      "type": "business",
-      "typeLabel": "传统产品业务面",
-      "difficulty": "easy",
-      "topicId": "prod-open",
-      "source": "v1.0面经",
-      "sourceFile": "scenarios-interview-open",
-      "framework": "Design Thinking",
-      "referenceOutline": "用户场景→痛点→方案对比→MVP→成功指标",
-      "curated": false,
-      "tags": [
-        "传统产品业务面",
-        "通用",
-        "easy"
-      ]
-    },
-    {
-      "id": "pm-v2-318",
-      "num": 318,
-      "text": "【面试·产品设计·Q127】创作者商业价值为何从粉丝量转向互动率/搜索渗透？写僵尸粉、算法分发、品牌要真实种草转化—各举 1 个衡量方式。",
-      "company": "通用",
-      "type": "business",
-      "typeLabel": "传统产品业务面",
-      "difficulty": "easy",
-      "topicId": "prod-open",
-      "source": "v1.0面经",
-      "sourceFile": "scenarios-interview-open",
-      "framework": "Design Thinking",
-      "referenceOutline": "用户场景→痛点→方案对比→MVP→成功指标",
-      "curated": false,
-      "tags": [
-        "传统产品业务面",
-        "通用",
-        "easy"
-      ]
-    },
-    {
-      "id": "pm-v2-319",
-      "num": 319,
-      "text": "【面试·产品设计·Q130】短视频为何必须「无缝全屏」滑动而非网页双列？写剥夺选择权强化沉浸投喂、减少边框与 UI 分散注意力带宽。",
-      "company": "通用",
-      "type": "business",
-      "typeLabel": "传统产品业务面",
-      "difficulty": "easy",
-      "topicId": "prod-open",
-      "source": "v1.0面经",
-      "sourceFile": "scenarios-interview-open",
-      "framework": "Design Thinking",
-      "referenceOutline": "用户场景→痛点→方案对比→MVP→成功指标",
-      "curated": false,
-      "tags": [
-        "传统产品业务面",
-        "通用",
-        "easy"
-      ]
-    },
-    {
-      "id": "pm-v2-320",
-      "num": 320,
-      "text": "【面试·产品设计·Q132】打车排队页为何做小动画/小游戏？写消化负面等待时间、提高切 App 比价成本、用视觉补偿掩盖调度黑箱。",
-      "company": "通用",
-      "type": "business",
-      "typeLabel": "传统产品业务面",
-      "difficulty": "easy",
-      "topicId": "prod-open",
-      "source": "v1.0面经",
-      "sourceFile": "scenarios-interview-open",
-      "framework": "Design Thinking",
-      "referenceOutline": "用户场景→痛点→方案对比→MVP→成功指标",
-      "curated": false,
-      "tags": [
-        "传统产品业务面",
-        "通用",
-        "easy"
-      ]
-    },
-    {
-      "id": "pm-v2-321",
-      "num": 321,
-      "text": "【面试·产品设计·Q134】支付/地图/招聘 App 为何都做短视频？写抢注意力防流失、视频信息密度降决策成本、扩充信息流广告库存。",
-      "company": "通用",
-      "type": "business",
-      "typeLabel": "传统产品业务面",
-      "difficulty": "easy",
-      "topicId": "prod-open",
-      "source": "v1.0面经",
-      "sourceFile": "scenarios-interview-open",
-      "framework": "Design Thinking",
-      "referenceOutline": "用户场景→痛点→方案对比→MVP→成功指标",
-      "curated": false,
-      "tags": [
-        "传统产品业务面",
-        "通用",
-        "easy"
-      ]
-    },
-    {
-      "id": "pm-v2-322",
-      "num": 322,
       "text": "【面试·产品设计·Q138】Boss 直聘为何用「聊天」而非传统投简历？写打破权力不对等焦虑、聊天颗粒度反哺匹配算法、提高双方动作难度过滤海投。",
       "company": "通用",
       "type": "business",
@@ -6466,8 +6246,8 @@
       ]
     },
     {
-      "id": "pm-v2-323",
-      "num": 323,
+      "id": "pm-v2-312",
+      "num": 312,
       "text": "【面试·深度】大促活动除付费投放外，如何提升活动页流量？写 2 条可落地手段（如页面 CTR 优化、口碑/裂变）+ 各 1 个观测指标。",
       "company": "通用",
       "type": "business",
@@ -6486,9 +6266,229 @@
       ]
     },
     {
+      "id": "pm-v2-313",
+      "num": 313,
+      "text": "【面试·深度】存量用户运营常见手段：小游戏/签到/专题活动。各写 1 个优点、1 个风险（如空心化签到），并说你更推荐哪种场景用哪种。",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "传统产品业务面",
+      "difficulty": "easy",
+      "topicId": "iv-ops",
+      "source": "v1.0面经",
+      "sourceFile": "scenarios-interview-ops",
+      "framework": "结构化分析",
+      "referenceOutline": "结论先行→业务背景→策略选项→取舍理由→验证指标",
+      "curated": false,
+      "tags": [
+        "传统产品业务面",
+        "通用",
+        "easy"
+      ]
+    },
+    {
+      "id": "pm-v2-314",
+      "num": 314,
+      "text": "【面试·深度】中台 PM 相对业务线 PM，常遇到哪 2 类难题（如多业务域学习成本、技术架构复杂）？你会如何缩短上手周期？",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "传统产品业务面",
+      "difficulty": "easy",
+      "topicId": "iv-ops",
+      "source": "v1.0面经",
+      "sourceFile": "scenarios-interview-ops",
+      "framework": "结构化分析",
+      "referenceOutline": "结论先行→业务背景→策略选项→取舍理由→验证指标",
+      "curated": false,
+      "tags": [
+        "传统产品业务面",
+        "通用",
+        "easy"
+      ]
+    },
+    {
+      "id": "pm-v2-315",
+      "num": 315,
+      "text": "【面试·深度】需求优先级：从「解决问题类型、人力 ROI、产品迭代节奏/版本」三维，对 3 个假想需求做一次排序并说明理由。",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "传统产品业务面",
+      "difficulty": "easy",
+      "topicId": "iv-ops",
+      "source": "v1.0面经",
+      "sourceFile": "scenarios-interview-ops",
+      "framework": "结构化分析",
+      "referenceOutline": "结论先行→业务背景→策略选项→取舍理由→验证指标",
+      "curated": false,
+      "tags": [
+        "传统产品业务面",
+        "通用",
+        "easy"
+      ]
+    },
+    {
+      "id": "pm-v2-316",
+      "num": 316,
+      "text": "【面试·深度】你在某项目担任 Owner：写角色定义、与 UI/研发的协作、竞品与技术路径、上线后埋点复盘—各 1 句，形成 30 秒自我介绍。",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "传统产品业务面",
+      "difficulty": "medium",
+      "topicId": "iv-ops",
+      "source": "v1.0面经",
+      "sourceFile": "scenarios-interview-ops",
+      "framework": "结构化分析",
+      "referenceOutline": "情境→任务→行动→结果→反思；每步含量化指标",
+      "curated": false,
+      "tags": [
+        "传统产品业务面",
+        "通用",
+        "medium"
+      ]
+    },
+    {
+      "id": "pm-v2-317",
+      "num": 317,
+      "text": "【面试·深度】内容营销解决什么问题？对比纯折扣，它如何降低用户的「决策风险」（尤其高试错成本品类）？",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "传统产品业务面",
+      "difficulty": "easy",
+      "topicId": "iv-ops",
+      "source": "v1.0面经",
+      "sourceFile": "scenarios-interview-ops",
+      "framework": "结构化分析",
+      "referenceOutline": "定义问题→拆解维度→假设→验证路径→风险",
+      "curated": false,
+      "tags": [
+        "传统产品业务面",
+        "通用",
+        "easy"
+      ]
+    },
+    {
+      "id": "pm-v2-318",
+      "num": 318,
+      "text": "【面试·深度】传统广告 vs 互联网广告：从体验（精准/过度推荐）、形态互动、效果可衡量、投放自助与竞价四方面各写 1 点差异。",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "传统产品业务面",
+      "difficulty": "easy",
+      "topicId": "iv-ops",
+      "source": "v1.0面经",
+      "sourceFile": "scenarios-interview-ops",
+      "framework": "结构化分析",
+      "referenceOutline": "结论先行→业务背景→策略选项→取舍理由→验证指标",
+      "curated": false,
+      "tags": [
+        "传统产品业务面",
+        "通用",
+        "easy"
+      ]
+    },
+    {
+      "id": "pm-v2-319",
+      "num": 319,
+      "text": "【面试·深度】视频弹幕为什么难商业化？从触发不稳定、兴趣匹配难、破坏互动氛围 3 点论证，并提出 1 个「不伤害体验」的试探方向。",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "传统产品业务面",
+      "difficulty": "easy",
+      "topicId": "iv-ops",
+      "source": "v1.0面经",
+      "sourceFile": "scenarios-interview-ops",
+      "framework": "结构化分析",
+      "referenceOutline": "定义问题→拆解维度→假设→验证路径→风险",
+      "curated": false,
+      "tags": [
+        "传统产品业务面",
+        "通用",
+        "easy"
+      ]
+    },
+    {
+      "id": "pm-v2-320",
+      "num": 320,
+      "text": "【面试·深度】微信为什么不做「已读」？从隐私、社交压力、沟通自然度、界面简洁各写 1 点；若要做，你会设什么开关策略？",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "传统产品业务面",
+      "difficulty": "easy",
+      "topicId": "iv-ops",
+      "source": "v1.0面经",
+      "sourceFile": "scenarios-interview-ops",
+      "framework": "结构化分析",
+      "referenceOutline": "结论先行→业务背景→策略选项→取舍理由→验证指标",
+      "curated": false,
+      "tags": [
+        "传统产品业务面",
+        "通用",
+        "easy"
+      ]
+    },
+    {
+      "id": "pm-v2-321",
+      "num": 321,
+      "text": "【面试·深度】如何权衡收益与体验？按产品阶段（早期留存 vs 成熟变现）写不同策略，并给 1 个「体验损耗可接受」的指标例子。",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "传统产品业务面",
+      "difficulty": "easy",
+      "topicId": "iv-ops",
+      "source": "v1.0面经",
+      "sourceFile": "scenarios-interview-ops",
+      "framework": "结构化分析",
+      "referenceOutline": "结论先行→业务背景→策略选项→取舍理由→验证指标",
+      "curated": false,
+      "tags": [
+        "传统产品业务面",
+        "通用",
+        "easy"
+      ]
+    },
+    {
+      "id": "pm-v2-322",
+      "num": 322,
+      "text": "【面试·深度】如何衡量营销活动效果？写 CVR、ROI、流量指标（CTR/留存）、用户反馈四类，并说明各适合回答什么问题。",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "传统产品业务面",
+      "difficulty": "easy",
+      "topicId": "iv-ops",
+      "source": "v1.0面经",
+      "sourceFile": "scenarios-interview-ops",
+      "framework": "结构化分析",
+      "referenceOutline": "结论先行→业务背景→策略选项→取舍理由→验证指标",
+      "curated": false,
+      "tags": [
+        "传统产品业务面",
+        "通用",
+        "easy"
+      ]
+    },
+    {
+      "id": "pm-v2-323",
+      "num": 323,
+      "text": "【面试·深度】简述 AARRR 中 Acquisition / Activation / Retention / Revenue 各阶段的核心指标（每阶段列 2 个），并说明为何存量时代更重视 Retention。",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "传统产品业务面",
+      "difficulty": "medium",
+      "topicId": "iv-ops",
+      "source": "v1.0面经",
+      "sourceFile": "scenarios-interview-ops",
+      "framework": "结构化分析",
+      "referenceOutline": "结论先行→业务背景→策略选项→取舍理由→验证指标",
+      "curated": false,
+      "tags": [
+        "传统产品业务面",
+        "通用",
+        "medium"
+      ]
+    },
+    {
       "id": "pm-v2-324",
       "num": 324,
-      "text": "【面试·深度】存量用户运营常见手段：小游戏/签到/专题活动。各写 1 个优点、1 个风险（如空心化签到），并说你更推荐哪种场景用哪种。",
+      "text": "【面试·深度】电子邮箱会被 IM 完全取代吗？写 4 条「邮件仍不可替代」的理由（正式性、跨平台、长文主题、归档等）。",
       "company": "通用",
       "type": "business",
       "typeLabel": "传统产品业务面",
@@ -6508,7 +6508,7 @@
     {
       "id": "pm-v2-325",
       "num": 325,
-      "text": "【面试·深度】中台 PM 相对业务线 PM，常遇到哪 2 类难题（如多业务域学习成本、技术架构复杂）？你会如何缩短上手周期？",
+      "text": "【面试·深度】用户多次点击却长期抢不到「免单」感到落差：你会设计什么补偿/备选玩法？如何区分高价值用户与羊毛党？",
       "company": "通用",
       "type": "business",
       "typeLabel": "传统产品业务面",
@@ -6516,8 +6516,8 @@
       "topicId": "iv-ops",
       "source": "v1.0面经",
       "sourceFile": "scenarios-interview-ops",
-      "framework": "结构化分析",
-      "referenceOutline": "结论先行→业务背景→策略选项→取舍理由→验证指标",
+      "framework": "Design Thinking",
+      "referenceOutline": "用户场景→痛点→方案对比→MVP→成功指标",
       "curated": false,
       "tags": [
         "传统产品业务面",
@@ -6528,7 +6528,7 @@
     {
       "id": "pm-v2-326",
       "num": 326,
-      "text": "【面试·深度】需求优先级：从「解决问题类型、人力 ROI、产品迭代节奏/版本」三维，对 3 个假想需求做一次排序并说明理由。",
+      "text": "【面试·深度】拉新手段归纳：私域引流 vs 公域投放。各写 pros/cons，并举例适合私域的用户标签场景。",
       "company": "通用",
       "type": "business",
       "typeLabel": "传统产品业务面",
@@ -6548,27 +6548,7 @@
     {
       "id": "pm-v2-327",
       "num": 327,
-      "text": "【面试·深度】你在某项目担任 Owner：写角色定义、与 UI/研发的协作、竞品与技术路径、上线后埋点复盘—各 1 句，形成 30 秒自我介绍。",
-      "company": "通用",
-      "type": "business",
-      "typeLabel": "传统产品业务面",
-      "difficulty": "medium",
-      "topicId": "iv-ops",
-      "source": "v1.0面经",
-      "sourceFile": "scenarios-interview-ops",
-      "framework": "结构化分析",
-      "referenceOutline": "情境→任务→行动→结果→反思；每步含量化指标",
-      "curated": false,
-      "tags": [
-        "传统产品业务面",
-        "通用",
-        "medium"
-      ]
-    },
-    {
-      "id": "pm-v2-328",
-      "num": 328,
-      "text": "【面试·深度】内容营销解决什么问题？对比纯折扣，它如何降低用户的「决策风险」（尤其高试错成本品类）？",
+      "text": "【面试·深度】A/B 测试的 5 个局限：成本、样本量、偏差、难覆盖长期心智、短期≠长期。各举 1 个你会用其他方法补充验证的场景。",
       "company": "通用",
       "type": "business",
       "typeLabel": "传统产品业务面",
@@ -6577,7 +6557,27 @@
       "source": "v1.0面经",
       "sourceFile": "scenarios-interview-ops",
       "framework": "结构化分析",
-      "referenceOutline": "定义问题→拆解维度→假设→验证路径→风险",
+      "referenceOutline": "结论先行→业务背景→策略选项→取舍理由→验证指标",
+      "curated": false,
+      "tags": [
+        "传统产品业务面",
+        "通用",
+        "easy"
+      ]
+    },
+    {
+      "id": "pm-v2-328",
+      "num": 328,
+      "text": "【面试·深度】商家为何重视私域？从从众心理、购买链路更短、触达公域难覆盖场景写；并提 1 个私域运营的坑（人力/重复用户）。",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "传统产品业务面",
+      "difficulty": "easy",
+      "topicId": "iv-ops",
+      "source": "v1.0面经",
+      "sourceFile": "scenarios-interview-ops",
+      "framework": "结构化分析",
+      "referenceOutline": "结论先行→业务背景→策略选项→取舍理由→验证指标",
       "curated": false,
       "tags": [
         "传统产品业务面",
@@ -6588,7 +6588,7 @@
     {
       "id": "pm-v2-329",
       "num": 329,
-      "text": "【面试·深度】传统广告 vs 互联网广告：从体验（精准/过度推荐）、形态互动、效果可衡量、投放自助与竞价四方面各写 1 点差异。",
+      "text": "【面试·深度】社群引流常见方式：KOL 建群、优惠券裂变、公域转私域。各写 pros/cons。",
       "company": "通用",
       "type": "business",
       "typeLabel": "传统产品业务面",
@@ -6608,7 +6608,7 @@
     {
       "id": "pm-v2-330",
       "num": 330,
-      "text": "【面试·深度】视频弹幕为什么难商业化？从触发不稳定、兴趣匹配难、破坏互动氛围 3 点论证，并提出 1 个「不伤害体验」的试探方向。",
+      "text": "【面试·深度】短视频双列 feed vs 单列沉浸：从用户习惯门槛、平台属性（创作者曝光 vs 算法集中分发）分析为何会出现两种形态。",
       "company": "通用",
       "type": "business",
       "typeLabel": "传统产品业务面",
@@ -6628,7 +6628,7 @@
     {
       "id": "pm-v2-331",
       "num": 331,
-      "text": "【面试·深度】微信为什么不做「已读」？从隐私、社交压力、沟通自然度、界面简洁各写 1 点；若要做，你会设什么开关策略？",
+      "text": "【面试·深度】双列侧重 CTR（点击/曝光），单列更看几秒留存、均播、完播。各举 1 个你会在复盘会上报的指标。",
       "company": "通用",
       "type": "business",
       "typeLabel": "传统产品业务面",
@@ -6648,7 +6648,7 @@
     {
       "id": "pm-v2-332",
       "num": 332,
-      "text": "【面试·深度】如何权衡收益与体验？按产品阶段（早期留存 vs 成熟变现）写不同策略，并给 1 个「体验损耗可接受」的指标例子。",
+      "text": "【面试·深度】图文种草平台坚持双列：从「给用户选择空间、提升种草效率、图文视觉」写 2 点；并说明与单列视频平台的差异。",
       "company": "通用",
       "type": "business",
       "typeLabel": "传统产品业务面",
@@ -6668,7 +6668,7 @@
     {
       "id": "pm-v2-333",
       "num": 333,
-      "text": "【面试·深度】如何衡量营销活动效果？写 CVR、ROI、流量指标（CTR/留存）、用户反馈四类，并说明各适合回答什么问题。",
+      "text": "【面试·深度】「停留时长」与「完播率」分别反映什么？若完播升、时长降，可能说明什么产品问题？",
       "company": "通用",
       "type": "business",
       "typeLabel": "传统产品业务面",
@@ -6688,226 +6688,6 @@
     {
       "id": "pm-v2-334",
       "num": 334,
-      "text": "【面试·深度】简述 AARRR 中 Acquisition / Activation / Retention / Revenue 各阶段的核心指标（每阶段列 2 个），并说明为何存量时代更重视 Retention。",
-      "company": "通用",
-      "type": "business",
-      "typeLabel": "传统产品业务面",
-      "difficulty": "medium",
-      "topicId": "iv-ops",
-      "source": "v1.0面经",
-      "sourceFile": "scenarios-interview-ops",
-      "framework": "结构化分析",
-      "referenceOutline": "结论先行→业务背景→策略选项→取舍理由→验证指标",
-      "curated": false,
-      "tags": [
-        "传统产品业务面",
-        "通用",
-        "medium"
-      ]
-    },
-    {
-      "id": "pm-v2-335",
-      "num": 335,
-      "text": "【面试·深度】电子邮箱会被 IM 完全取代吗？写 4 条「邮件仍不可替代」的理由（正式性、跨平台、长文主题、归档等）。",
-      "company": "通用",
-      "type": "business",
-      "typeLabel": "传统产品业务面",
-      "difficulty": "easy",
-      "topicId": "iv-ops",
-      "source": "v1.0面经",
-      "sourceFile": "scenarios-interview-ops",
-      "framework": "结构化分析",
-      "referenceOutline": "结论先行→业务背景→策略选项→取舍理由→验证指标",
-      "curated": false,
-      "tags": [
-        "传统产品业务面",
-        "通用",
-        "easy"
-      ]
-    },
-    {
-      "id": "pm-v2-336",
-      "num": 336,
-      "text": "【面试·深度】用户多次点击却长期抢不到「免单」感到落差：你会设计什么补偿/备选玩法？如何区分高价值用户与羊毛党？",
-      "company": "通用",
-      "type": "business",
-      "typeLabel": "传统产品业务面",
-      "difficulty": "easy",
-      "topicId": "iv-ops",
-      "source": "v1.0面经",
-      "sourceFile": "scenarios-interview-ops",
-      "framework": "Design Thinking",
-      "referenceOutline": "用户场景→痛点→方案对比→MVP→成功指标",
-      "curated": false,
-      "tags": [
-        "传统产品业务面",
-        "通用",
-        "easy"
-      ]
-    },
-    {
-      "id": "pm-v2-337",
-      "num": 337,
-      "text": "【面试·深度】拉新手段归纳：私域引流 vs 公域投放。各写 pros/cons，并举例适合私域的用户标签场景。",
-      "company": "通用",
-      "type": "business",
-      "typeLabel": "传统产品业务面",
-      "difficulty": "easy",
-      "topicId": "iv-ops",
-      "source": "v1.0面经",
-      "sourceFile": "scenarios-interview-ops",
-      "framework": "结构化分析",
-      "referenceOutline": "结论先行→业务背景→策略选项→取舍理由→验证指标",
-      "curated": false,
-      "tags": [
-        "传统产品业务面",
-        "通用",
-        "easy"
-      ]
-    },
-    {
-      "id": "pm-v2-338",
-      "num": 338,
-      "text": "【面试·深度】A/B 测试的 5 个局限：成本、样本量、偏差、难覆盖长期心智、短期≠长期。各举 1 个你会用其他方法补充验证的场景。",
-      "company": "通用",
-      "type": "business",
-      "typeLabel": "传统产品业务面",
-      "difficulty": "easy",
-      "topicId": "iv-ops",
-      "source": "v1.0面经",
-      "sourceFile": "scenarios-interview-ops",
-      "framework": "结构化分析",
-      "referenceOutline": "结论先行→业务背景→策略选项→取舍理由→验证指标",
-      "curated": false,
-      "tags": [
-        "传统产品业务面",
-        "通用",
-        "easy"
-      ]
-    },
-    {
-      "id": "pm-v2-339",
-      "num": 339,
-      "text": "【面试·深度】商家为何重视私域？从从众心理、购买链路更短、触达公域难覆盖场景写；并提 1 个私域运营的坑（人力/重复用户）。",
-      "company": "通用",
-      "type": "business",
-      "typeLabel": "传统产品业务面",
-      "difficulty": "easy",
-      "topicId": "iv-ops",
-      "source": "v1.0面经",
-      "sourceFile": "scenarios-interview-ops",
-      "framework": "结构化分析",
-      "referenceOutline": "结论先行→业务背景→策略选项→取舍理由→验证指标",
-      "curated": false,
-      "tags": [
-        "传统产品业务面",
-        "通用",
-        "easy"
-      ]
-    },
-    {
-      "id": "pm-v2-340",
-      "num": 340,
-      "text": "【面试·深度】社群引流常见方式：KOL 建群、优惠券裂变、公域转私域。各写 pros/cons。",
-      "company": "通用",
-      "type": "business",
-      "typeLabel": "传统产品业务面",
-      "difficulty": "easy",
-      "topicId": "iv-ops",
-      "source": "v1.0面经",
-      "sourceFile": "scenarios-interview-ops",
-      "framework": "结构化分析",
-      "referenceOutline": "结论先行→业务背景→策略选项→取舍理由→验证指标",
-      "curated": false,
-      "tags": [
-        "传统产品业务面",
-        "通用",
-        "easy"
-      ]
-    },
-    {
-      "id": "pm-v2-341",
-      "num": 341,
-      "text": "【面试·深度】短视频双列 feed vs 单列沉浸：从用户习惯门槛、平台属性（创作者曝光 vs 算法集中分发）分析为何会出现两种形态。",
-      "company": "通用",
-      "type": "business",
-      "typeLabel": "传统产品业务面",
-      "difficulty": "easy",
-      "topicId": "iv-ops",
-      "source": "v1.0面经",
-      "sourceFile": "scenarios-interview-ops",
-      "framework": "结构化分析",
-      "referenceOutline": "定义问题→拆解维度→假设→验证路径→风险",
-      "curated": false,
-      "tags": [
-        "传统产品业务面",
-        "通用",
-        "easy"
-      ]
-    },
-    {
-      "id": "pm-v2-342",
-      "num": 342,
-      "text": "【面试·深度】双列侧重 CTR（点击/曝光），单列更看几秒留存、均播、完播。各举 1 个你会在复盘会上报的指标。",
-      "company": "通用",
-      "type": "business",
-      "typeLabel": "传统产品业务面",
-      "difficulty": "easy",
-      "topicId": "iv-ops",
-      "source": "v1.0面经",
-      "sourceFile": "scenarios-interview-ops",
-      "framework": "结构化分析",
-      "referenceOutline": "结论先行→业务背景→策略选项→取舍理由→验证指标",
-      "curated": false,
-      "tags": [
-        "传统产品业务面",
-        "通用",
-        "easy"
-      ]
-    },
-    {
-      "id": "pm-v2-343",
-      "num": 343,
-      "text": "【面试·深度】图文种草平台坚持双列：从「给用户选择空间、提升种草效率、图文视觉」写 2 点；并说明与单列视频平台的差异。",
-      "company": "通用",
-      "type": "business",
-      "typeLabel": "传统产品业务面",
-      "difficulty": "easy",
-      "topicId": "iv-ops",
-      "source": "v1.0面经",
-      "sourceFile": "scenarios-interview-ops",
-      "framework": "结构化分析",
-      "referenceOutline": "结论先行→业务背景→策略选项→取舍理由→验证指标",
-      "curated": false,
-      "tags": [
-        "传统产品业务面",
-        "通用",
-        "easy"
-      ]
-    },
-    {
-      "id": "pm-v2-344",
-      "num": 344,
-      "text": "【面试·深度】「停留时长」与「完播率」分别反映什么？若完播升、时长降，可能说明什么产品问题？",
-      "company": "通用",
-      "type": "business",
-      "typeLabel": "传统产品业务面",
-      "difficulty": "easy",
-      "topicId": "iv-ops",
-      "source": "v1.0面经",
-      "sourceFile": "scenarios-interview-ops",
-      "framework": "结构化分析",
-      "referenceOutline": "结论先行→业务背景→策略选项→取舍理由→验证指标",
-      "curated": false,
-      "tags": [
-        "传统产品业务面",
-        "通用",
-        "easy"
-      ]
-    },
-    {
-      "id": "pm-v2-345",
-      "num": 345,
       "text": "【面试·深度】提升 App 粘性：行为特征对比（活跃 vs 沉默）、扩展需求池（场景延伸）、单场景趣味互动。各写 1 个例子 + 指标。",
       "company": "通用",
       "type": "business",
@@ -6926,8 +6706,8 @@
       ]
     },
     {
-      "id": "pm-v2-346",
-      "num": 346,
+      "id": "pm-v2-335",
+      "num": 335,
       "text": "【面试·深度】旅行类 App 只保留 3 个功能你会留什么？用「频次 + 核心需求 + 平台投入成熟度」论证，不要只报名字。",
       "company": "通用",
       "type": "business",
@@ -6946,8 +6726,8 @@
       ]
     },
     {
-      "id": "pm-v2-347",
-      "num": 347,
+      "id": "pm-v2-336",
+      "num": 336,
       "text": "【面试·Q35】判断伪需求：用户是否真受益、业务能否标准化盈利、能否用通用能力而非定制 hack。各写 1 个检验问题。",
       "company": "通用",
       "type": "business",
@@ -6966,8 +6746,8 @@
       ]
     },
     {
-      "id": "pm-v2-348",
-      "num": 348,
+      "id": "pm-v2-337",
+      "num": 337,
       "text": "【面试·Q1】「每段实习有什么收获？」面试官在做认知深度审计。请用「执行层→规则层→价值层」结构，为一段实习写 3 条收获（每条含动作+结果+方法论）。",
       "company": "通用",
       "type": "business",
@@ -6986,8 +6766,8 @@
       ]
     },
     {
-      "id": "pm-v2-349",
-      "num": 349,
+      "id": "pm-v2-338",
+      "num": 338,
       "text": "【面试·Q1-数据向】若写「曝光涨 80%」，请补充：基线、你改动的策略/规则、如何排除季节性干扰。",
       "company": "通用",
       "type": "business",
@@ -7006,8 +6786,8 @@
       ]
     },
     {
-      "id": "pm-v2-350",
-      "num": 350,
+      "id": "pm-v2-339",
+      "num": 339,
       "text": "【面试·Q2】介绍最有收获的一段实习。按 STAR：背景 1 句—问题—你的动作（协同了谁）—量化结果—反思。避免只报 KPI 不说过程逻辑。",
       "company": "通用",
       "type": "business",
@@ -7023,6 +6803,226 @@
         "传统产品业务面",
         "通用",
         "medium"
+      ]
+    },
+    {
+      "id": "pm-v2-340",
+      "num": 340,
+      "text": "【面试·Q2】若项目是 0→1 功能：写清 MVP 砍掉了什么、为什么、上线后用什么指标判断继续迭代还是止损。",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "传统产品业务面",
+      "difficulty": "easy",
+      "topicId": "iv-exp",
+      "source": "v1.0面经",
+      "sourceFile": "scenarios-interview-pm",
+      "framework": "Design Thinking",
+      "referenceOutline": "用户场景→痛点→方案对比→MVP→成功指标",
+      "curated": false,
+      "tags": [
+        "传统产品业务面",
+        "通用",
+        "easy"
+      ]
+    },
+    {
+      "id": "pm-v2-341",
+      "num": 341,
+      "text": "【面试·Q2】口述练习：60 秒内讲完最有收获项目，结尾必须有一句「如果重做我会___」。",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "传统产品业务面",
+      "difficulty": "easy",
+      "topicId": "iv-exp",
+      "source": "v1.0面经",
+      "sourceFile": "scenarios-interview-pm",
+      "framework": "结构化分析",
+      "referenceOutline": "情境→任务→行动→结果→反思；每步含量化指标",
+      "curated": false,
+      "tags": [
+        "传统产品业务面",
+        "通用",
+        "easy"
+      ]
+    },
+    {
+      "id": "pm-v2-342",
+      "num": 342,
+      "text": "【面试·Q3】你认为做产品经理有哪些优势？用结构：优势标签 + 逻辑内涵 + 实战 Case + 与投递岗位的匹配句（Case 可合理虚构）。",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "传统产品业务面",
+      "difficulty": "medium",
+      "topicId": "iv-self",
+      "source": "v1.0面经",
+      "sourceFile": "scenarios-interview-pm",
+      "framework": "STAR",
+      "referenceOutline": "情境→任务→行动→结果→反思；每步含量化指标",
+      "curated": false,
+      "tags": [
+        "传统产品业务面",
+        "通用",
+        "medium"
+      ]
+    },
+    {
+      "id": "pm-v2-343",
+      "num": 343,
+      "text": "【面试·Q3】优势若写「数据驱动」：举一个从数据异常发现假设—验证—推动改动的完整闭环。",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "传统产品业务面",
+      "difficulty": "easy",
+      "topicId": "iv-self",
+      "source": "v1.0面经",
+      "sourceFile": "scenarios-interview-pm",
+      "framework": "STAR",
+      "referenceOutline": "情境→任务→行动→结果→反思；每步含量化指标",
+      "curated": false,
+      "tags": [
+        "传统产品业务面",
+        "通用",
+        "easy"
+      ]
+    },
+    {
+      "id": "pm-v2-344",
+      "num": 344,
+      "text": "【面试·Q3】优势若写「逻辑/抽象」：如何把零散需求抽象成可落地的规则或模型（可用路线/推荐/审核任一场景）。",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "传统产品业务面",
+      "difficulty": "easy",
+      "topicId": "iv-self",
+      "source": "v1.0面经",
+      "sourceFile": "scenarios-interview-pm",
+      "framework": "STAR",
+      "referenceOutline": "情境→任务→行动→结果→反思；每步含量化指标",
+      "curated": false,
+      "tags": [
+        "传统产品业务面",
+        "通用",
+        "easy"
+      ]
+    },
+    {
+      "id": "pm-v2-345",
+      "num": 345,
+      "text": "【面试·Q3】优势若写「跨部门推动」：写分工表（谁输入/谁决策）+ 一次冲突如何化解。",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "传统产品业务面",
+      "difficulty": "easy",
+      "topicId": "iv-self",
+      "source": "v1.0面经",
+      "sourceFile": "scenarios-interview-pm",
+      "framework": "STAR",
+      "referenceOutline": "情境→任务→行动→结果→反思；每步含量化指标",
+      "curated": false,
+      "tags": [
+        "传统产品业务面",
+        "通用",
+        "easy"
+      ]
+    },
+    {
+      "id": "pm-v2-346",
+      "num": 346,
+      "text": "【面试·Q4】用三个词形容 PM 最重要能力。每个词：定义 + 与另两词的区别 + 简历可核验的 1 个细节。可选：认知力/抽象力/推动力；B 端：归纳/壁垒/长远规划；策略：归因/建模/博弈平衡。",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "传统产品业务面",
+      "difficulty": "medium",
+      "topicId": "iv-self",
+      "source": "v1.0面经",
+      "sourceFile": "scenarios-interview-pm",
+      "framework": "结构化分析",
+      "referenceOutline": "情境→任务→行动→结果→反思；每步含量化指标",
+      "curated": false,
+      "tags": [
+        "传统产品业务面",
+        "通用",
+        "medium"
+      ]
+    },
+    {
+      "id": "pm-v2-347",
+      "num": 347,
+      "text": "【面试·Q4-C端】若选「快速学习、逻辑抽象、落地执行」：各举 1 个快速验证假设的例子（A/B 或灰度），失败时如何调整。",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "传统产品业务面",
+      "difficulty": "easy",
+      "topicId": "iv-self",
+      "source": "v1.0面经",
+      "sourceFile": "scenarios-interview-pm",
+      "framework": "结构化分析",
+      "referenceOutline": "结论先行→业务背景→策略选项→取舍理由→验证指标",
+      "curated": false,
+      "tags": [
+        "传统产品业务面",
+        "通用",
+        "easy"
+      ]
+    },
+    {
+      "id": "pm-v2-348",
+      "num": 348,
+      "text": "【面试·Q5】最大困难：上线前 3 天发现核心数据/逻辑故障。写：风险—降级方案—仍坚持上线的理由—事后复盘沉淀的规则。",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "传统产品业务面",
+      "difficulty": "easy",
+      "topicId": "iv-self",
+      "source": "v1.0面经",
+      "sourceFile": "scenarios-interview-pm",
+      "framework": "STAR",
+      "referenceOutline": "情境→任务→行动→结果→反思；每步含量化指标",
+      "curated": false,
+      "tags": [
+        "传统产品业务面",
+        "通用",
+        "easy"
+      ]
+    },
+    {
+      "id": "pm-v2-349",
+      "num": 349,
+      "text": "【面试·Q5】请描述你遇到的最大困难之一，并按结构回答：困难是什么 → 压力点 → 你做了什么 → 结果 → T+1 复盘（下次如何避免，列 3 条检查项）。",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "传统产品业务面",
+      "difficulty": "medium",
+      "topicId": "iv-self",
+      "source": "v1.0面经",
+      "sourceFile": "scenarios-interview-pm",
+      "framework": "STAR",
+      "referenceOutline": "情境→任务→行动→结果→反思；每步含量化指标",
+      "curated": false,
+      "tags": [
+        "传统产品业务面",
+        "通用",
+        "medium"
+      ]
+    },
+    {
+      "id": "pm-v2-350",
+      "num": 350,
+      "text": "【面试·Q5】请把「核心城市手工校准 + 非核心降级」迁移到你自己熟悉的业务：写出等价的风险分级与降级方案（勿照抄范文）。",
+      "company": "通用",
+      "type": "business",
+      "typeLabel": "传统产品业务面",
+      "difficulty": "easy",
+      "topicId": "iv-self",
+      "source": "v1.0面经",
+      "sourceFile": "scenarios-interview-pm",
+      "framework": "结构化分析",
+      "referenceOutline": "结论先行→业务背景→策略选项→取舍理由→验证指标",
+      "curated": false,
+      "tags": [
+        "传统产品业务面",
+        "通用",
+        "easy"
       ]
     }
   ]

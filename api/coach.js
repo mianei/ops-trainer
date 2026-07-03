@@ -200,7 +200,7 @@ export default async function handler(req) {
     const compact = Boolean(action);
     const actionLimits = {
       'resume-score': { maxTokens: 1100, temperature: 0.25 },
-      'resume-optimize': { maxTokens: 1000, temperature: 0.3 },
+      'resume-optimize': { maxTokens: 1400, temperature: 0.25 },
       'interview-prep': { maxTokens: 1600, temperature: 0.5 }
     };
     const limits = action ? (actionLimits[action] || { maxTokens: 1200, temperature: 0.5 }) : null;
