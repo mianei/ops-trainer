@@ -153,28 +153,16 @@
   .bg-horizon-svg {
     position: absolute;
     top: 0;
-    left: -10%;
-    width: 120%;
+    left: 0;
+    width: 100%;
     height: clamp(300px, 44vh, 480px);
     z-index: 1;
     opacity: 0.96;
     pointer-events: none;
-    will-change: transform;
-    animation: horizonPan 28s ease-in-out infinite;
   }
   .bg-horizon-svg path {
     transform-box: fill-box;
     transform-origin: 50% 100%;
-    animation: horizonPathSway 14s ease-in-out infinite;
-  }
-  @keyframes horizonPan {
-    0%, 100% { transform: translate3d(0, 0, 0); }
-    50% { transform: translate3d(-5%, 0, 0); }
-  }
-  @keyframes horizonPathSway {
-    0%, 100% { transform: translate3d(0, 0, 0) scaleY(1); }
-    33% { transform: translate3d(2%, -4%, 0) scaleY(1.06); }
-    66% { transform: translate3d(-2%, 3%, 0) scaleY(0.94); }
   }
   .bg-wave-svg {
     position: absolute; width: 140%; left: -20%; top: 10%;
@@ -4387,10 +4375,7 @@
           <stop offset="1" stop-color="#f2f8f5"/>
         </linearGradient>
       </defs>
-      <path fill="url(#skyCapGradApp)" d="M0,0 H1440 V320 C1253,490 965,290 720,420 C475,500 187,300 0,400 V0 Z">
-        <animate attributeName="d" dur="16s" repeatCount="indefinite" calcMode="spline" keyTimes="0; 0.33; 0.66; 1" keySplines="0.42 0 0.58 1; 0.42 0 0.58 1; 0.42 0 0.58 1"
-          values="M0,0 H1440 V320 C1253,490 965,290 720,420 C475,500 187,300 0,400 V0 Z;M0,0 H1440 V300 C1230,470 980,310 720,390 C470,480 200,320 0,415 V0 Z;M0,0 H1440 V340 C1275,510 940,270 720,440 C490,515 170,280 0,375 V0 Z;M0,0 H1440 V320 C1253,490 965,290 720,420 C475,500 187,300 0,400 V0 Z"/>
-      </path>
+      <path fill="url(#skyCapGradApp)" d="M0,0 H1440 V320 C1253,490 965,290 720,420 C475,500 187,300 0,400 V0 Z"/>
     </svg>
     <svg class="bg-wave-svg" viewBox="0 0 1440 900" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       <defs>
