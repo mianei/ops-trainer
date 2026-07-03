@@ -561,7 +561,10 @@
     display: grid;
     grid-template-columns: var(--agent-nav-w) minmax(0, 1fr) var(--agent-chat-w);
     gap: 0;
-    min-height: min(72vh, 720px);
+    --agent-workspace-h: min(72vh, 720px);
+    height: var(--agent-workspace-h);
+    min-height: var(--agent-workspace-h);
+    max-height: var(--agent-workspace-h);
     border-radius: var(--r-xl);
     overflow: hidden;
     background: var(--block-bg-inset);
@@ -576,6 +579,8 @@
     display: flex;
     flex-direction: column;
     gap: 6px;
+    min-height: 0;
+    overflow-y: auto;
   }
   .agent-nav-brand {
     font-family: var(--sans-en);
@@ -627,6 +632,8 @@
     display: flex;
     flex-direction: column;
     min-width: 0;
+    min-height: 0;
+    overflow: hidden;
     background: var(--block-bg-muted);
     border-right: 1px solid var(--block-border);
   }
@@ -639,6 +646,7 @@
     background: var(--block-bg-subtle);
     border-bottom: 1px solid var(--block-border-subtle);
     flex-wrap: wrap;
+    flex-shrink: 0;
   }
   .canvas-topbar-main { flex: 1; min-width: 0; }
   .canvas-title-row {
@@ -838,10 +846,11 @@
     box-shadow: var(--shadow-sm);
   }
   .canvas-body {
-    flex: 1;
+    flex: 1 1 auto;
     overflow-y: auto;
+    overscroll-behavior: contain;
     padding: 14px 16px 16px;
-    min-height: 360px;
+    min-height: 0;
   }
   .canvas-body .knowledge-intro { margin-top: 0; font-size: 13px; }
   .canvas-body .knowledge-pager { margin-bottom: 12px; padding-bottom: 10px; }
@@ -1159,7 +1168,10 @@
   @media (max-width: 899px) {
     .agent-workspace {
       grid-template-columns: 1fr;
-      min-height: auto;
+      --agent-workspace-h: min(calc(100dvh - 168px), 720px);
+      height: var(--agent-workspace-h);
+      min-height: var(--agent-workspace-h);
+      max-height: var(--agent-workspace-h);
     }
     .agent-nav { display: none; }
     .agent-canvas { border-right: none; }
@@ -1222,7 +1234,7 @@
       background: var(--accent-soft);
       color: var(--accent);
     }
-    .canvas-body { min-height: min(52vh, 420px); }
+    .canvas-body { min-height: 0; }
     .canvas-topbar {
       padding: 10px 12px 8px;
       flex-direction: column;
@@ -1290,7 +1302,6 @@
     .agent-workspace {
       border-radius: var(--r-lg);
       margin-bottom: 0;
-      min-height: min(calc(100dvh - 168px), 720px);
     }
     .sense-home { padding: 0 2px; }
     .sense-cta { max-width: none; }
