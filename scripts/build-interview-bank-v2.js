@@ -24,7 +24,10 @@ const COMPANIES = [
 
 const AI_PRODUCT_RE = /Agent|RAG|Prompt|评测|Eval|大模型|LLM|向量|embedding|微调|badcase|幻觉|生成模型|Copilot|多模态|AI辅助|AI功能/i;
 
-const TRADITIONAL_HINT_RE = /产品|业务|竞品|增长|设计|案例|行为|估算|策略|商业化|运营|留存|MVP|需求|用户|STAR|实习|面经|面试/i;
+const TRADITIONAL_PRODUCT_RE = /产品|PM|产品经理|面经·产品|【产品|【面经·产品|【面试·PM|【面试·产品|设计|需求|竞品|功能|MVP|用户|增长|策略|方案|商业化|案例|行为|估算|STAR|实习|面经|面试|判断|业务|开放·Q|【面经·策略|【面经·竞品|【面经·危机|【面经·变现|【面试·综合|【面试·深度|【面试·产品设计/i;
+
+/** 纯运营岗面经（非产品经理业务面） */
+const OPS_ROLE_TAG_RE = /^【面经·运营】|^【运营·|^【面试·运营】/;
 
 const TYPE_LABELS = {
   ai_product: 'AI产品经理',
@@ -148,7 +151,8 @@ function isTraditionalCandidate(q) {
   if (!isScenarioSource(q)) return false;
   if (isAiPmSource(q)) return false;
   if (AI_PRODUCT_RE.test(q.text)) return false;
-  return TRADITIONAL_HINT_RE.test(q.text);
+  if (OPS_ROLE_TAG_RE.test(String(q.text || '').trim())) return false;
+  return TRADITIONAL_PRODUCT_RE.test(q.text);
 }
 
 function score(q, bucket) {
@@ -206,6 +210,9 @@ function pickSplit(items) {
     const extraTrad = items.filter(q =>
       isScenarioSource(q) &&
       !isAiPmSource(q) &&
+      !AI_PRODUCT_RE.test(q.text) &&
+      !OPS_ROLE_TAG_RE.test(String(q.text || '').trim()) &&
+      TRADITIONAL_PRODUCT_RE.test(q.text) &&
       !seenText.has(q.text)
     );
     tradPicked = tradPicked.concat(pickFromPool(extraTrad, TRADITIONAL_TARGET - tradPicked.length, seenText, 'business'));
