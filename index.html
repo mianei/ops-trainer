@@ -1758,16 +1758,24 @@
     font-family: inherit;
     font-size: 12px;
     font-weight: 600;
-    padding: 4px 10px;
-    border-radius: var(--btn-pill-radius);
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    border-radius: 8px;
     border: 1px solid var(--btn-chip-border);
     background: var(--btn-chip-bg);
     color: var(--btn-chip-color);
     cursor: pointer;
-    transition: background 0.2s, color 0.2s;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
   }
+  .btn-voice .agent-voice-icon { width: 18px; height: 18px; display: block; fill: currentColor; }
   .btn-voice:hover:not(:disabled) { background: var(--btn-chip-hover-bg); color: var(--btn-chip-active-color); }
   .btn-voice.recording { background: #ff3b30; color: #fff; border-color: #ff3b30; }
+  .btn-voice.transcribing { opacity: 0.65; pointer-events: none; }
   .review-extras { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--frost-border); }
   .review-extra-block {
     margin-bottom: 10px;
@@ -4162,12 +4170,19 @@ const AGENT_MIC_SVG = '<svg class="agent-voice-icon" viewBox="0 0 1024 1024" xml
 
 const AGENT_ATTACH_SVG = '<svg class="agent-attach-icon" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M800 556.8L524.8 832c-38.4 38.4-83.2 64-140.8 64s-102.4-25.6-140.8-64c-76.8-76.8-76.8-204.8 0-281.6l384-384c25.6-25.6 57.6-38.4 89.6-38.4 32 0 64 12.8 89.6 38.4 44.8 44.8 44.8 128 0 172.8l-384 384c-6.4 6.4-19.2 12.8-32 12.8s-25.6-6.4-32-12.8c-19.2-19.2-19.2-44.8 0-64l384-384c12.8-12.8 12.8-32 0-44.8-6.4-6.4-12.8-12.8-25.6-12.8-6.4 0-19.2 6.4-25.6 12.8l-384 384c-19.2 19.2-32 51.2-32 76.8 0 32 12.8 57.6 32 76.8 19.2 19.2 51.2 32 76.8 32 32 0 57.6-12.8 76.8-32l384-384c38.4-38.4 57.6-83.2 57.6-134.4s-19.2-96-57.6-134.4c-32-32-76.8-51.2-128-51.2s-96 19.2-134.4 57.6l-384 384c-51.2 51.2-76.8 115.2-76.8 185.6 0 70.4 25.6 140.8 76.8 185.6C249.6 934.4 313.6 960 384 960s140.8-25.6 185.6-76.8L844.8 608c12.8-12.8 12.8-32 0-44.8-12.8-19.2-32-12.8-44.8-6.4z"/></svg>';
 
-function setAgentMicIcon(mic, state) {
-  if (!mic) return;
-  mic.classList.toggle('recording', state === 'recording');
-  mic.classList.toggle('transcribing', state === 'transcribing');
-  mic.innerHTML = state === 'recording' ? '<span aria-hidden="true" style="font-size:12px;line-height:1">■</span>' : AGENT_MIC_SVG;
+function setVoiceBtnIcon(btn, state) {
+  if (!btn) return;
+  btn.classList.toggle('recording', state === 'recording');
+  btn.classList.toggle('transcribing', state === 'transcribing');
+  btn.innerHTML = state === 'recording'
+    ? '<span aria-hidden="true" style="font-size:12px;line-height:1">■</span>'
+    : AGENT_MIC_SVG;
 }
+
+function setAgentMicIcon(mic, state) {
+  setVoiceBtnIcon(mic, state);
+}
+/** @type {{ name: string, status: string, detail: string }[]} */
 let agentToolSteps = [];
 let senseSubView = 'home';
 let interviewSubView = localStorage.getItem('interviewSubView') || 'prep';
@@ -7864,7 +7879,7 @@ function senseCanvasInnerHtml(q, tid, meta, draft) {
             <div class="wb-hint">独立作答后提交，获取 AI 点评</div>
             <textarea id="answer-${tid}" placeholder="写下你的产品判断…">${escapeHtml(draft)}</textarea>
             <div class="answer-inline-tools">
-              <button type="button" class="btn-voice" id="voice-${tid}">语音输入</button>
+              <button type="button" class="btn-voice" id="voice-${tid}" title="语音输入" aria-label="语音输入"></button>
             </div>
           </div>
         </div>
@@ -7924,7 +7939,10 @@ function applyBankQuestion(q) {
 }
 
 function bindVoiceInput(topicId) {
-  document.getElementById('voice-' + topicId)?.addEventListener('click', () => toggleV2Voice(topicId));
+  const btn = document.getElementById('voice-' + topicId);
+  if (!btn) return;
+  setVoiceBtnIcon(btn, 'idle');
+  btn.addEventListener('click', () => toggleV2Voice(topicId));
 }
 
 async function fetchV2Analyze(topicId, mode, answer) {
@@ -8021,25 +8039,24 @@ async function toggleV2Voice(topicId) {
     const chunks = [];
     recorder.ondataavailable = e => { if (e.data.size) chunks.push(e.data); };
     recorder.onstop = async () => {
-      btn.classList.remove('recording'); btn.textContent = '语音输入';
+      setVoiceBtnIcon(btn, 'transcribing');
       v2RecorderByTopic[topicId] = { recording: false };
       stream.getTracks().forEach(tr => tr.stop());
       const blob = new Blob(chunks, { type: 'audio/webm' });
       const b64 = await new Promise((resolve, reject) => {
         const r = new FileReader(); r.onload = () => resolve(String(r.result).split(',')[1]); r.onerror = reject; r.readAsDataURL(blob);
       });
-      btn.textContent = '转写中…';
       try {
         const res = await fetch('/api/chat', { method: 'POST', headers: authHeaders(), body: JSON.stringify({ accessCode, userId: userAccountId, tool: 'transcribe', audioBase64: b64, mimeType: 'audio/webm' }) });
         const data = await res.json();
         if (res.ok && data.text) ta.value = (ta.value ? ta.value + '\n' : '') + data.text;
         else alert(data.error || '转写失败');
       } catch (e) { alert(e.message); }
-      btn.textContent = '语音输入';
+      setVoiceBtnIcon(btn, 'idle');
     };
     recorder.start();
     v2RecorderByTopic[topicId] = { recording: true, recorder };
-    btn.classList.add('recording'); btn.textContent = '停止录音';
+    setVoiceBtnIcon(btn, 'recording');
   } catch { alert('无法访问麦克风'); }
 }
 
@@ -8565,7 +8582,7 @@ function renderTopics() {
             <div class="wb-hint">${escapeHtml(t.fieldLabel)}</div>
             <textarea id="answer-${t.id}" placeholder="${escapeAttr(t.placeholder)}"></textarea>
             <div class="answer-inline-tools">
-              <button type="button" class="btn-voice" id="voice-${t.id}">语音输入</button>
+              <button type="button" class="btn-voice" id="voice-${t.id}" title="语音输入" aria-label="语音输入"></button>
             </div>
           </div>
         </div>
