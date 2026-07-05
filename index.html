@@ -33,6 +33,9 @@
 <meta property="og:title" content="CVassistant · AI 产品经理训练" />
 <meta property="og:description" content="简历优化、面试准备、场景练题与 Agent 助手一体化工作台。" />
 <meta property="og:locale" content="zh_CN" />
+<meta property="og:image" content="https://cvassistant-ai.vercel.app/logo-light.png" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:image" content="https://cvassistant-ai.vercel.app/logo-light.png" />
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:title" content="CVassistant · AI 产品经理训练" />
 <meta name="twitter:description" content="简历优化、面试准备、场景练题与 Agent 助手一体化工作台。" />
@@ -502,6 +505,18 @@
     height: 28px;
     border-radius: 7px;
     box-shadow: none;
+  }
+  .app-logo-wrap--footer .app-logo {
+    width: 20px;
+    height: 20px;
+    border-radius: 5px;
+    box-shadow: none;
+  }
+  .footer-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    vertical-align: baseline;
   }
   .agent-nav-brand-row {
     display: flex;
@@ -1321,6 +1336,14 @@
     .page-wrap.page-wrap--agent .hero-brand {
       font-size: clamp(1.35rem, 6vw, 1.65rem);
       margin-bottom: 0;
+    }
+    .page-wrap.page-wrap--agent .hero-brand-row {
+      margin-bottom: 0.35rem;
+    }
+    .page-wrap.page-wrap--agent .app-logo-wrap--hero .app-logo {
+      width: 36px;
+      height: 36px;
+      border-radius: 9px;
     }
     .header-actions {
       top: max(8px, env(safe-area-inset-top));
@@ -3709,11 +3732,10 @@
     border-bottom: 1px solid rgba(0, 0, 0, 0.12);
   }
   .footer-link:hover { color: var(--accent); border-bottom-color: var(--accent); }
-  .footer-brand {
+  .footer-brand-text {
     font-family: var(--sans-en);
     font-size: 13px;
     letter-spacing: -0.03em;
-    vertical-align: baseline;
   }
   .footer-brand .hb-mind {
     font-weight: 800;
@@ -4689,7 +4711,13 @@
   <div id="mainContent" class="loading-main">加载中…</div>
 
   <footer class="footer">
-    <p class="footer-line"><span class="footer-brand" aria-label="CVassistant"><span class="hb-mind">CV</span><span class="hb-train">assistant</span></span><span class="v2-badge">3.0</span> · <a class="footer-link" href="/download">下载</a> · <a class="footer-link" href="https://github.com/mianei/ops-trainer" target="_blank" rel="noopener noreferrer">GitHub</a></p>
+    <p class="footer-line"><span class="footer-brand" aria-label="CVassistant">
+      <span class="app-logo-wrap app-logo-wrap--footer" aria-hidden="true">
+        <img class="app-logo app-logo-light" src="logo-light.png" alt="" width="20" height="20" decoding="async" />
+        <img class="app-logo app-logo-dark" src="logo-dark.png" alt="" width="20" height="20" decoding="async" />
+      </span>
+      <span class="footer-brand-text"><span class="hb-mind">CV</span><span class="hb-train">assistant</span></span>
+    </span><span class="v2-badge">3.0</span> · <a class="footer-link" href="/download">下载</a> · <a class="footer-link" href="https://github.com/mianei/ops-trainer" target="_blank" rel="noopener noreferrer">GitHub</a></p>
     <p class="footer-mutter" lang="ko">씨발이력서 수정은 왜 이렇게 어려울까요</p>
   </footer>
   </div>
@@ -4723,7 +4751,7 @@
 <script src="/agent-intent.browser.js"></script>
 <script>
 const GITHUB_TOPICS_URL = '';
-const APP_ASSET_VERSION = '3.0.3';
+const APP_ASSET_VERSION = '3.0.4';
 
 function assetUrl(path) {
   const sep = path.includes('?') ? '&' : '?';
