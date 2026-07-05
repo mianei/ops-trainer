@@ -14,7 +14,11 @@
 | Context Guard | `lib/context-guard.js` | 40 轮压缩，coach/followup 护栏 |
 | CI smoke | `test-trace-guard.mjs` | vercel-build 内 trace/guard 冒烟 |
 
-**缺口**：评测集偏小、无 CI 定期回归、生产 badcase 难回流 Golden Set、简历/准备模块缺独立 eval、无 hosted trace 可视化。
+**缺口**：评测集偏小、无 CI 定期回归、**线上 Trace 不会自动打 badcase**（缺人工标准分）、生产问题案例难回流 Golden Set、简历/准备模块缺独立 eval、无 hosted trace 可视化。
+
+> **Badcase 两种语境**  
+> - **离线 eval**（`eval-scoring.js`）：有 `humanScores` 时可自动打标（维度差 ≥2、均分差 ≥1.5、parse/timeout）。  
+> - **线上 Trace**（真实练题）：**不会**自动知道「点评质量差」，只能可靠捕获 parse 失败 / 超时；其余需 **你或用户手动标记**。
 
 ---
 
@@ -28,7 +32,7 @@ flowchart LR
     R[eval 报告 Markdown]
   end
   subgraph P2 [Phase 2 · 2–3 周]
-    B[Trace → Badcase 一键导出]
+    B[人工标记 → 导出候选]
     P[Prompt diff 回归]
   end
   subgraph P3 [Phase 3 · 按需]
@@ -62,19 +66,36 @@ flowchart LR
 
 ---
 
-## Phase 2：生产 Trace → Badcase 闭环
+## Phase 2：生产 Trace → Golden Set 回流（人工闭环）
 
-**目标**：线上真实作答 badcase 能回流评测集，而不是只存在 Redis 里。
+**目标**：你在 Trace 里看到「这条 AI 点评明显不对」时，能 **一键打包上下文** 丢进 `eval/inbox/`，补人工分后再并进 Golden Set。**不是** Agent 自动识别 badcase。
+
+### 流程（谁做什么）
+
+```
+真实练题 → Trace 记录（题目/作答/AI 分/parseOk）
+    ↓
+你在 Trace 面板点「标记问题 / 加入评测候选」（或点评页「这点评不准」）
+    ↓
+导出 JSON → eval/inbox/pending-*.json（含 scenario、answer、aiScores、你的备注）
+    ↓
+你离线补 humanScores（五维人工分）→ merge 进 eval/scoring-golden.json
+    ↓
+下次 node scripts/eval-scoring.js → 自动 detectBadcase，CI 回归
+```
 
 | 任务 | 产出 | 工作量 |
 |------|------|--------|
-| Trace 面板增强 | 「加入 Golden Set 候选」按钮 → 导出 `{ scenario, answer, aiScores, humanNote }` JSON | 1 天 |
-| Badcase 收件箱 | `eval/inbox/` 待标注 JSONL，人工补 `humanScores` 后 merge 进 Golden Set | 0.5 天 |
-| Prompt 版本标记 | trace 写入 `promptVersion`（git short hash 或 `PROMPT_VERSION` env） | 0.5 天 |
-| 对比报告 | `scripts/compare-eval-runs.js`：两次 run 的 badcase diff | 1 天 |
+| Trace / 点评 UI | **「标记为评测候选」** + 可选原因（打分偏高/偏低、漏点、胡编…） | 1 天 |
+| 导出格式 | `{ scenario, answer, aiScores, userNote, traceId, promptVersion }` → 下载或写入 inbox | 0.5 天 |
+| Badcase 收件箱 | `eval/inbox/` 待标注 JSONL；**人工补 `humanScores` 后** merge Golden Set | 0.5 天 |
+| Prompt 版本标记 | trace 写入 `promptVersion`（git hash / env） | 0.5 天 |
+| 对比报告 | `scripts/compare-eval-runs.js`：两次 **离线 eval run** 的 badcase diff | 1 天 |
+
+**自动可筛（可选增强，非主路径）**：Trace 列表筛 `parse_failure` / `timeout` —— 这类系统已知异常，但仍建议人工确认后再进 Golden Set。
 
 **成功标准**：
-- 每周至少 3 条生产 badcase 进入 inbox 并完成标注
+- 每周至少 3 条 **你手动标记** 的候选进入 inbox，并完成 `humanScores` 标注
 
 ---
 
@@ -125,7 +146,7 @@ flowchart LR
 
 - [ ] Golden Set 扩至 50 条（优先补 business / 估算 / 开放题 badcase 类型）
 - [ ] `eval-weekly.yml` + GitHub secret `DEEPSEEK_API_KEY`
-- [ ] Trace 面板：导出 badcase 候选 JSON
+- [ ] Trace 面板：**手动**「标记评测候选」并导出 JSON（非自动 badcase）
 - [ ] README 增加「Eval 回归」小节链到本文档
 - [ ] 改 prompt 前固定流程：跑 eval → 看 badcase → 再 deploy
 
