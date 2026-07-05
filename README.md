@@ -46,7 +46,7 @@ npx vercel dev
 
 **框架与定义** 在 `knowledge.json`，App 内 **知识库** Tab 阅读，不当作练习题。内容规范见 [docs/content-audit.md](./docs/content-audit.md)。
 
-3.0 布局与 Agent 方案见 [docs/v3.0-agent-workspace.md](./docs/v3.0-agent-workspace.md)；观测追踪见 [docs/observation-trace.md](./docs/observation-trace.md)。
+3.0 布局与 Agent 方案见 [docs/v3.0-agent-workspace.md](./docs/v3.0-agent-workspace.md)；观测追踪见 [docs/observation-trace.md](./docs/observation-trace.md)；**Eval/Trace 落地路线**见 [docs/eval-trace-roadmap.md](./docs/eval-trace-roadmap.md)。
 
 ## API（4 个 Serverless 端点）
 
