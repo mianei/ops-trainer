@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="CVassistant">
+  <defs>
+    <clipPath id="squircle">
+      <rect width="512" height="512" rx="112" ry="112"/>
+    </clipPath>
+    <linearGradient id="gTop" x1="0" y1="0" x2="0.2" y2="1">
+      <stop offset="0%" stop-color="#4ae0ad"/>
+      <stop offset="100%" stop-color="#26c281"/>
+    </linearGradient>
+    <clipPath id="topHalf"><rect width="512" height="268"/></clipPath>
+    <clipPath id="botHalf"><rect y="244" width="512" height="268"/></clipPath>
+  </defs>
+  <g clip-path="url(#squircle)">
+    <rect width="512" height="512" fill="#ffffff"/>
+    <path fill="url(#gTop)" d="M0,0 H512 V262 C392,312 120,312 0,262 Z"/>
+    <g fill="none" stroke-width="26" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="256" cy="268" r="118" stroke="#ffffff" clip-path="url(#topHalf)"/>
+      <circle cx="256" cy="268" r="118" stroke="#26c281" clip-path="url(#botHalf)"/>
+      <path stroke="#ffffff" clip-path="url(#topHalf)" d="M256 152 V268 L318 332"/>
+      <path stroke="#26c281" clip-path="url(#botHalf)" d="M256 152 V268 L318 332"/>
+    </g>
+  </g>
+</svg>

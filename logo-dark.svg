@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="CVassistant">
+  <defs>
+    <clipPath id="squircleDark">
+      <rect width="512" height="512" rx="112" ry="112"/>
+    </clipPath>
+    <linearGradient id="gTopDark" x1="0" y1="0" x2="0.2" y2="1">
+      <stop offset="0%" stop-color="#c084fc"/>
+      <stop offset="100%" stop-color="#9333ea"/>
+    </linearGradient>
+    <clipPath id="topHalfDark"><rect width="512" height="268"/></clipPath>
+    <clipPath id="botHalfDark"><rect y="244" width="512" height="268"/></clipPath>
+  </defs>
+  <g clip-path="url(#squircleDark)">
+    <rect width="512" height="512" fill="#120a1e"/>
+    <path fill="url(#gTopDark)" d="M0,0 H512 V262 C392,312 120,312 0,262 Z"/>
+    <g fill="none" stroke-width="26" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="256" cy="268" r="118" stroke="#f5f0ff" clip-path="url(#topHalfDark)"/>
+      <circle cx="256" cy="268" r="118" stroke="#c084fc" clip-path="url(#botHalfDark)"/>
+      <path stroke="#f5f0ff" clip-path="url(#topHalfDark)" d="M256 152 V268 L318 332"/>
+      <path stroke="#c084fc" clip-path="url(#botHalfDark)" d="M256 152 V268 L318 332"/>
+    </g>
+  </g>
+</svg>

@@ -26,16 +26,16 @@
 <title>CVassistant · AI 产品经理训练</title>
 <meta name="description" content="CVassistant：AI 产品经理简历评分与优化、面试准备、350 题场景练题与 Agent 助手，打开即用。" />
 <link rel="canonical" href="https://cvassistant-ai.vercel.app/" />
-<link rel="icon" href="/logo-light.png" type="image/png" id="faviconLink" />
-<link rel="apple-touch-icon" href="/logo-light.png" id="appleTouchLink" />
+<link rel="icon" href="/logo-light.svg" type="image/svg+xml" id="faviconLink" />
+<link rel="apple-touch-icon" href="/logo-light.svg" id="appleTouchLink" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://cvassistant-ai.vercel.app/" />
 <meta property="og:title" content="CVassistant · AI 产品经理训练" />
 <meta property="og:description" content="简历优化、面试准备、场景练题与 Agent 助手一体化工作台。" />
 <meta property="og:locale" content="zh_CN" />
-<meta property="og:image" content="https://cvassistant-ai.vercel.app/logo-light.png" />
+<meta property="og:image" content="https://cvassistant-ai.vercel.app/logo-light.svg" />
 <meta name="twitter:card" content="summary" />
-<meta name="twitter:image" content="https://cvassistant-ai.vercel.app/logo-light.png" />
+<meta name="twitter:image" content="https://cvassistant-ai.vercel.app/logo-light.svg" />
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:title" content="CVassistant · AI 产品经理训练" />
 <meta name="twitter:description" content="简历优化、面试准备、场景练题与 Agent 助手一体化工作台。" />
@@ -495,7 +495,6 @@
     border-radius: clamp(10px, 2vw, 13px);
     object-fit: cover;
     display: block;
-    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.1);
   }
   .app-logo-dark { display: none; }
   html[data-theme="dark"] .app-logo-light { display: none; }
@@ -4692,8 +4691,8 @@
     <div class="hero-copy">
       <div class="hero-brand-row">
         <span class="app-logo-wrap app-logo-wrap--hero" aria-hidden="true">
-          <img class="app-logo app-logo-light" src="logo-light.png" alt="" width="52" height="52" decoding="async" />
-          <img class="app-logo app-logo-dark" src="logo-dark.png" alt="" width="52" height="52" decoding="async" />
+          <img class="app-logo app-logo-light" src="logo-light.svg" alt="" width="52" height="52" decoding="async" />
+          <img class="app-logo app-logo-dark" src="logo-dark.svg" alt="" width="52" height="52" decoding="async" />
         </span>
         <p class="hero-brand" aria-label="CVassistant"><span class="hb-mind">CV</span><span class="hb-train">assistant</span></p>
       </div>
@@ -4713,8 +4712,8 @@
   <footer class="footer">
     <p class="footer-line"><span class="footer-brand" aria-label="CVassistant">
       <span class="app-logo-wrap app-logo-wrap--footer" aria-hidden="true">
-        <img class="app-logo app-logo-light" src="logo-light.png" alt="" width="20" height="20" decoding="async" />
-        <img class="app-logo app-logo-dark" src="logo-dark.png" alt="" width="20" height="20" decoding="async" />
+        <img class="app-logo app-logo-light" src="logo-light.svg" alt="" width="20" height="20" decoding="async" />
+        <img class="app-logo app-logo-dark" src="logo-dark.svg" alt="" width="20" height="20" decoding="async" />
       </span>
       <span class="footer-brand-text"><span class="hb-mind">CV</span><span class="hb-train">assistant</span></span>
     </span><span class="v2-badge">3.0</span> · <a class="footer-link" href="/download">下载</a> · <a class="footer-link" href="https://github.com/mianei/ops-trainer" target="_blank" rel="noopener noreferrer">GitHub</a></p>
@@ -5793,8 +5792,8 @@ function agentMobileNavHtml(activeScene) {
 function appLogoHtml(extraClass) {
   const cls = 'app-logo-wrap' + (extraClass ? ' ' + extraClass : '');
   return `<span class="${cls}" aria-hidden="true">
-    <img class="app-logo app-logo-light" src="${assetUrl('logo-light.png')}" alt="" width="28" height="28" decoding="async">
-    <img class="app-logo app-logo-dark" src="${assetUrl('logo-dark.png')}" alt="" width="28" height="28" decoding="async">
+    <img class="app-logo app-logo-light" src="${assetUrl('logo-light.svg')}" alt="" width="28" height="28" decoding="async">
+    <img class="app-logo app-logo-dark" src="${assetUrl('logo-dark.svg')}" alt="" width="28" height="28" decoding="async">
   </span>`;
 }
 
@@ -10000,8 +9999,8 @@ function getTheme() {
 
 function syncAppLogo() {
   const dark = getTheme() === 'dark';
-  const light = assetUrl('logo-light.png');
-  const darkUrl = assetUrl('logo-dark.png');
+  const light = assetUrl('logo-light.svg');
+  const darkUrl = assetUrl('logo-dark.svg');
   document.querySelectorAll('#faviconLink, #appleTouchIcon, #appleTouchLink').forEach(el => {
     if (el) el.href = dark ? darkUrl : light;
   });
