@@ -605,12 +605,24 @@
     box-shadow: var(--shadow-sm), var(--inset-hi);
   }
 
+  #agentCanvasMeasure {
+    position: fixed;
+    left: -10000px;
+    top: 0;
+    visibility: hidden;
+    pointer-events: none;
+    height: auto;
+    max-height: none;
+    overflow: visible;
+    flex: none;
+  }
+
   /* —— 3.0 Agent 工作台：左 Nav · 中 Canvas · 右 Chat —— */
   .agent-workspace {
     display: grid;
     grid-template-columns: var(--agent-nav-w) minmax(0, 1fr) var(--agent-chat-w);
     gap: 0;
-    --agent-workspace-h: min(calc(100dvh - 128px), 960px);
+    --agent-workspace-h: 720px;
     height: var(--agent-workspace-h);
     min-height: var(--agent-workspace-h);
     max-height: var(--agent-workspace-h);
@@ -1217,10 +1229,6 @@
   @media (max-width: 899px) {
     .agent-workspace {
       grid-template-columns: 1fr;
-      --agent-workspace-h: min(calc(100dvh - 100px), 960px);
-      height: var(--agent-workspace-h);
-      min-height: var(--agent-workspace-h);
-      max-height: var(--agent-workspace-h);
     }
     .agent-nav { display: none; }
     .agent-canvas { border-right: none; }
@@ -6792,6 +6800,67 @@ function applyScenarioCanvasPanels(tab) {
   });
 }
 
+let agentWorkspaceHeightTimer = 0;
+
+function agentCanvasMeasureWidth() {
+  const body = document.getElementById('agentCanvasBody');
+  if (body?.clientWidth) return body.clientWidth;
+  const canvas = document.getElementById('agentWorkspace')?.querySelector('.agent-canvas');
+  if (canvas?.clientWidth) return Math.max(280, canvas.clientWidth - 32);
+  return 640;
+}
+
+function ensureAgentCanvasMeasureProbe() {
+  let probe = document.getElementById('agentCanvasMeasure');
+  if (!probe) {
+    probe = document.createElement('div');
+    probe.id = 'agentCanvasMeasure';
+    probe.className = 'canvas-body';
+    probe.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(probe);
+  }
+  probe.style.width = `${agentCanvasMeasureWidth()}px`;
+  return probe;
+}
+
+function measureCanvasBodyScrollHeight(innerHtml, afterMount) {
+  const probe = ensureAgentCanvasMeasureProbe();
+  probe.innerHTML = innerHtml;
+  if (typeof afterMount === 'function') afterMount(probe);
+  return probe.scrollHeight;
+}
+
+function resumeAgentBaselineBodyHtml() {
+  return `<div id="resumeCanvasRootMeasure">
+    <div class="canvas-panel active" data-resume-panel="评分">
+      <div class="canvas-profile-compact">${profileUploadHtml()}</div>
+      <div class="resume-pane-body">${renderScorePaneContent(null, { skeleton: 'idle' })}</div>
+    </div>
+  </div>`;
+}
+
+function measureAgentWorkspaceTopbarHeight() {
+  const topbar = document.querySelector('#agentWorkspace .canvas-topbar');
+  return topbar?.offsetHeight || 118;
+}
+
+function syncAgentWorkspaceHeight() {
+  const workspace = document.getElementById('agentWorkspace');
+  if (!workspace) return;
+  const bodyH = measureCanvasBodyScrollHeight(resumeAgentBaselineBodyHtml());
+  const total = Math.ceil(measureAgentWorkspaceTopbarHeight() + bodyH + 8);
+  const maxH = Math.max(480, window.innerHeight - 72);
+  const next = Math.min(total, maxH);
+  workspace.style.setProperty('--agent-workspace-h', `${next}px`);
+}
+
+function scheduleAgentWorkspaceHeightSync() {
+  window.clearTimeout(agentWorkspaceHeightTimer);
+  agentWorkspaceHeightTimer = window.setTimeout(() => {
+    try { syncAgentWorkspaceHeight(); } catch { /* ignore */ }
+  }, 0);
+}
+
 function mountAgentWorkspace(innerHtml) {
   const scene = agentScene;
   const tab = getCanvasTab(scene);
@@ -6855,6 +6924,11 @@ function mountAgentWorkspace(innerHtml) {
   bindAgentVoiceAttach(scene);
   document.getElementById('agentChatAttach')?.addEventListener('click', () => document.getElementById('agentChatFile')?.click());
   updateCanvasChrome(scene);
+  scheduleAgentWorkspaceHeightSync();
+  if (!window.__agentWorkspaceResizeBound) {
+    window.__agentWorkspaceResizeBound = true;
+    window.addEventListener('resize', scheduleAgentWorkspaceHeightSync);
+  }
 }
 
 function bindAgentChatClone() {
@@ -6992,6 +7066,7 @@ function updateCanvasChrome(scene) {
     btn.onclick = () => { setCanvasTab(scene, btn.dataset.canvasTab); refreshAgentCanvas(); };
   });
   renderCanvasTitleCta(scene, tab);
+  scheduleAgentWorkspaceHeightSync();
 }
 
 function renderCanvasSubtitleActions(scene, tab) {
@@ -7243,6 +7318,7 @@ function renderResumeCanvasPanels() {
     bindDocExportControls();
   }
   bindResumePaneActions();
+  scheduleAgentWorkspaceHeightSync();
 }
 
 function renderPrepCanvasPanels() {
