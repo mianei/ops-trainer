@@ -380,6 +380,13 @@ export default async function handler(req) {
     }
 
     return json({
+      ok: true,
+      reply: result.text,
+      mode,
+      action: action || undefined,
+      traceId,
+      contextGuard: guardResult.compressed ? guardResult.meta : undefined
+    });
   } catch (e) {
     console.error('[coach]', e);
     return json({ error: e?.message || '服务内部错误，请稍后重试' }, 500);

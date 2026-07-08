@@ -18,7 +18,6 @@ import {
   getLlmConfig
 } from '../lib/scenario-generate.js';
 import { recordUsageEvent } from '../lib/usage-stats.js';
-import { recordUsageEvent } from '../lib/usage-stats.js';
 import { buildChunksFromSearchResults, loadInterviewRagFeed, filterFeedChunksByIntent } from '../lib/rag.js';
 
 function interviewSearchEnabled() {
