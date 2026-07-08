@@ -1101,6 +1101,29 @@
     align-items: center;
     gap: 8px;
   }
+  .agent-chat-user {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ink2);
+    max-width: 88px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .agent-chat-logout {
+    display: none;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 99px;
+    border: 1px solid var(--frost-border);
+    background: var(--frost-solid);
+    color: var(--ink2);
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+  .agent-chat-logout:hover { color: var(--ink); background: var(--block-bg); }
   .agent-chat-close {
     display: none;
     width: 32px;
@@ -1355,6 +1378,11 @@
     }
     .agent-chat.drawer-open { display: flex; }
     .agent-chat-close { display: inline-flex; align-items: center; justify-content: center; }
+    .agent-chat-user { display: inline; }
+    .agent-chat-logout { display: inline-flex; align-items: center; justify-content: center; }
+    .agent-nav-badge--desktop { display: none; }
+    .header-actions .btn-logout { display: none; }
+    .header-actions .user-badge { display: none; }
     .agent-chat-fab {
       display: flex;
       align-items: center;
@@ -4959,7 +4987,7 @@
 <script src="/agent-intent.browser.js"></script>
 <script>
 const GITHUB_TOPICS_URL = '';
-const APP_ASSET_VERSION = '3.0.8';
+const APP_ASSET_VERSION = '3.0.9';
 
 function assetUrl(path) {
   const sep = path.includes('?') ? '&' : '?';
@@ -5234,12 +5262,18 @@ function applyAuth(username, password) {
 function updateUserBadge() {
   const badge = document.getElementById('userBadge');
   const btnLogout = document.getElementById('btnLogout');
+  const agentUser = document.getElementById('agentChatUser');
+  const agentLogout = document.getElementById('agentChatLogout');
   if (loggedInUsername) {
     if (badge) { badge.textContent = loggedInUsername; badge.hidden = false; }
     if (btnLogout) btnLogout.hidden = false;
+    if (agentUser) { agentUser.textContent = loggedInUsername; agentUser.hidden = false; }
+    if (agentLogout) agentLogout.hidden = false;
   } else {
     if (badge) badge.hidden = true;
     if (btnLogout) btnLogout.hidden = true;
+    if (agentUser) agentUser.hidden = true;
+    if (agentLogout) agentLogout.hidden = true;
   }
 }
 
@@ -5276,13 +5310,18 @@ async function fetchAuthConfig() {
     const res = await fetch('/api/auth', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'config' })
+      body: JSON.stringify({ action: 'config' }),
+      cache: 'no-store'
     });
     const data = await res.json();
     if (data.ok) {
-      return { authRequired: !!data.authRequired, registrationEnabled: !!data.registrationEnabled };
+      return {
+        authRequired: !!data.authRequired,
+        registrationEnabled: !!data.registrationEnabled
+      };
     }
   } catch { /* */ }
+  // API 不可用时仍要求登录，避免误进访客模式
   return { authRequired: true, registrationEnabled: false };
 }
 
@@ -7451,7 +7490,9 @@ function mountAgentWorkspace(innerHtml) {
         <div class="agent-chat-head">
           <h3>助手 Bot</h3>
           <div class="agent-chat-head-actions">
-            <span class="agent-nav-badge">随时问</span>
+            <span class="agent-chat-user" id="agentChatUser" hidden></span>
+            <button type="button" class="agent-chat-logout" id="agentChatLogout" hidden>退出</button>
+            <span class="agent-nav-badge agent-nav-badge--desktop">随时问</span>
             <button type="button" class="agent-chat-close" id="agentChatClose" aria-label="关闭助手">×</button>
           </div>
         </div>
@@ -7483,6 +7524,11 @@ function mountAgentWorkspace(innerHtml) {
   renderAgentSuggestionChips(scene);
   bindAgentVoiceAttach(scene);
   document.getElementById('agentChatAttach')?.addEventListener('click', () => document.getElementById('agentChatFile')?.click());
+  document.getElementById('agentChatLogout')?.addEventListener('click', () => {
+    closeAgentChatDrawer();
+    logout();
+  });
+  updateUserBadge();
   updateCanvasChrome(scene);
   scheduleAgentWorkspaceHeightSync();
   if (!window.__agentWorkspaceResizeBound) {
