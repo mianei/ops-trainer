@@ -6,6 +6,8 @@ import {
   aggregateTokensFromStore,
   summarizeBadcases
 } from '../lib/observation-trace.js';
+import { getUserUsageSummary } from '../lib/usage-stats.js';
+import { listResumeHistory, RESUME_HISTORY_LABELS } from '../lib/user-profile.js';
 
 const DEFAULT_TOPIC_IDS = [
   'user', 'decision', 'data', 'competitor', 'feature', 'interaction', 'growth', 'retention', 'content', 'crisis',
@@ -164,6 +166,26 @@ async function handleTokenAggregate(auth, body) {
   return json({ ok: true, userId: auth.userId, ...agg });
 }
 
+async function handleMyUsage(auth) {
+  const summary = await getUserUsageSummary(auth.userId);
+  return json({ ok: true, userId: auth.userId, ...summary });
+}
+
+async function handleResumeHistory(auth, body) {
+  if (!historyEnabled()) {
+    return json({ ok: true, historyEnabled: false, items: [] });
+  }
+  const limit = Math.min(Number(body.limit) || 30, 50);
+  const items = await listResumeHistory(auth.userId, limit);
+  return json({
+    ok: true,
+    historyEnabled: true,
+    userId: auth.userId,
+    items,
+    labels: RESUME_HISTORY_LABELS
+  });
+}
+
 export default async function handler(req) {
   if (req.method !== 'POST') return json({ error: 'Method not allowed' }, 405);
 
@@ -174,6 +196,8 @@ export default async function handler(req) {
   if (!auth.ok) return json({ error: auth.error }, auth.status);
 
   const recordType = String(body.recordType || body.type || 'history').trim();
+  if (recordType === 'my-usage') return handleMyUsage(auth);
+  if (recordType === 'resume-history') return handleResumeHistory(auth, body);
   if (recordType === 'analytics') return handleAnalytics(auth, body);
   if (recordType === 'traces') return handleTraces(auth, body);
   if (recordType === 'token-aggregate' || recordType === 'tokens') return handleTokenAggregate(auth, body);

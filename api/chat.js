@@ -38,6 +38,7 @@ import {
   saveTraceToStore,
   recordTokenUsageToStore
 } from '../lib/observation-trace.js';
+import { recordUsageEvent } from '../lib/usage-stats.js';
 
 function getClientIp(req) {
   const xff = getHeader(req, 'x-forwarded-for');
@@ -318,8 +319,14 @@ export default async function handler(req) {
   }
 
   const tool = String(body?.tool || '').trim();
-  if (tool === 'analyze') return handleAnalyze(body);
-  if (tool === 'transcribe') return handleTranscribe(body);
+  if (tool === 'analyze') {
+    await recordUsageEvent(auth.userId, 'analyze');
+    return handleAnalyze(body);
+  }
+  if (tool === 'transcribe') {
+    await recordUsageEvent(auth.userId, 'transcribe');
+    return handleTranscribe(body);
+  }
 
   const llm = getLlmConfig();
   if (llm.error) {
@@ -327,6 +334,7 @@ export default async function handler(req) {
   }
 
   const mode = body?.mode === 'followup' ? 'followup' : 'review';
+  await recordUsageEvent(auth.userId, mode === 'followup' ? 'chat-followup' : 'chat-review');
   const { systemPrompt, scenario, answer } = body || {};
   const topicId = body.topicId || body.topic || '';
 

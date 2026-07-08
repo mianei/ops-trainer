@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="robots" content="noindex, nofollow" />
+<link rel="icon" href="/logo-dark.png" type="image/png" />
+<title>CVassistant · 管理后台</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0a0a0b;
+    --card: #141416;
+    --border: rgba(255,255,255,0.08);
+    --ink: #f5f5f7;
+    --ink2: #a1a1a6;
+    --green: #26c281;
+    --danger: #ff6b6b;
+    --sans: 'PingFang SC', 'Microsoft YaHei', -apple-system, sans-serif;
+  }
+  html, body {
+    min-height: 100vh;
+    min-height: 100dvh;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: max(20px, env(safe-area-inset-top)) 20px max(40px, env(safe-area-inset-bottom));
+  }
+  h1 { font-size: 1.35rem; margin-bottom: 0.35rem; }
+  .sub { color: var(--ink2); font-size: 14px; margin-bottom: 1.5rem; }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.25rem;
+    margin-bottom: 1.25rem;
+  }
+  label { display: block; font-size: 13px; color: var(--ink2); margin-bottom: 6px; }
+  input[type="password"], input[type="number"] {
+    width: 100%;
+    max-width: 360px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: #0e0e10;
+    color: var(--ink);
+    font: inherit;
+  }
+  .row { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; margin-top: 10px; }
+  button {
+    font: inherit;
+    font-weight: 600;
+    padding: 10px 16px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    background: var(--green);
+    color: #0a0a0b;
+  }
+  button:disabled { opacity: 0.6; cursor: not-allowed; }
+  .err { color: var(--danger); font-size: 13px; margin-top: 8px; min-height: 1.2em; }
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+    margin-bottom: 1rem;
+  }
+  .stat {
+    background: #0e0e10;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px;
+  }
+  .stat .k { font-size: 11px; color: var(--ink2); margin-bottom: 4px; }
+  .stat .v { font-size: 1.4rem; font-weight: 700; color: var(--green); }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--border); }
+  th { color: var(--ink2); font-weight: 600; font-size: 12px; }
+  .chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 4px;
+    height: 120px;
+    margin-top: 8px;
+  }
+  .bar {
+    flex: 1;
+    min-width: 6px;
+    background: linear-gradient(180deg, var(--green), rgba(38,194,129,0.35));
+    border-radius: 4px 4px 0 0;
+  }
+  .chart-labels {
+    display: flex;
+    gap: 4px;
+    margin-top: 6px;
+    font-size: 10px;
+    color: var(--ink2);
+  }
+  .chart-labels span { flex: 1; text-align: center; overflow: hidden; text-overflow: ellipsis; }
+  .hidden { display: none !important; }
+  .hint { font-size: 12px; color: var(--ink2); margin-top: 8px; line-height: 1.5; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>CVassistant 管理后台</h1>
+  <p class="sub">维护者专用 · 与用户站点完全分离</p>
+
+  <div class="card" id="authCard">
+    <label for="adminSecret">管理密钥 (ADMIN_SECRET)</label>
+    <div class="row">
+      <input type="password" id="adminSecret" autocomplete="off" placeholder="输入后保存在本页 sessionStorage" />
+      <button type="button" id="btnUnlock">解锁</button>
+    </div>
+    <p class="err" id="authErr"></p>
+    <p class="hint">密钥仅保存在当前浏览器标签页的 sessionStorage，不会写入用户站点。</p>
+  </div>
+
+  <div id="dashboard" class="hidden">
+    <div class="card">
+      <div class="row">
+        <div>
+          <label for="daysRange">统计天数</label>
+          <input type="number" id="daysRange" min="1" max="90" value="30" />
+        </div>
+        <button type="button" id="btnRefresh">刷新</button>
+        <button type="button" id="btnLock" style="background:#333;color:#fff">锁定</button>
+      </div>
+      <p class="err" id="dashErr"></p>
+    </div>
+
+    <div class="stat-grid" id="statGrid"></div>
+
+    <div class="card">
+      <h2 style="font-size:1rem;margin-bottom:0.75rem">日活 (DAU)</h2>
+      <div class="chart" id="dauChart"></div>
+      <div class="chart-labels" id="dauLabels"></div>
+    </div>
+
+    <div class="card">
+      <h2 style="font-size:1rem;margin-bottom:0.75rem">功能使用</h2>
+      <table>
+        <thead><tr><th>功能</th><th>次数</th></tr></thead>
+        <tbody id="featureBody"></tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2 style="font-size:1rem;margin-bottom:0.75rem">Token 用量（按日）</h2>
+      <table>
+        <thead><tr><th>日期</th><th>Tokens</th></tr></thead>
+        <tbody id="tokenBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<script>
+const SECRET_KEY = 'cv-admin-secret';
+
+const authCard = document.getElementById('authCard');
+const dashboard = document.getElementById('dashboard');
+const adminSecretInput = document.getElementById('adminSecret');
+const authErr = document.getElementById('authErr');
+const dashErr = document.getElementById('dashErr');
+
+function getSecret() {
+  return sessionStorage.getItem(SECRET_KEY) || '';
+}
+
+function setSecret(v) {
+  if (v) sessionStorage.setItem(SECRET_KEY, v);
+  else sessionStorage.removeItem(SECRET_KEY);
+}
+
+function showDashboard(show) {
+  dashboard.classList.toggle('hidden', !show);
+  authCard.classList.toggle('hidden', show);
+}
+
+async function fetchDashboard() {
+  const secret = getSecret();
+  if (!secret) return;
+  dashErr.textContent = '';
+  const days = Math.min(90, Math.max(1, Number(document.getElementById('daysRange').value) || 30));
+  const res = await fetch('/api/admin', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-Admin-Secret': secret },
+    body: JSON.stringify({ action: 'dashboard', adminSecret: secret, days })
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    dashErr.textContent = data.error || '加载失败';
+    if (res.status === 401) {
+      setSecret('');
+      showDashboard(false);
+    }
+    return;
+  }
+  renderDashboard(data);
+}
+
+function renderDashboard(data) {
+  const features = data.features || [];
+  const dau = data.dailyActive || [];
+  const totalCalls = features.reduce((s, f) => s + (f.count || 0), 0);
+  const statGrid = document.getElementById('statGrid');
+  statGrid.innerHTML = [
+    ['统计天数', data.days || '—'],
+    ['注册用户', data.totalUsers ?? '—'],
+    ['功能调用', totalCalls],
+    ['Token 合计', data.tokenTotal ?? '—']
+  ].map(([k, v]) => `<div class="stat"><div class="k">${k}</div><div class="v">${v}</div></div>`).join('');
+
+  const maxDau = Math.max(...dau.map(d => d.users), 1);
+  const chart = document.getElementById('dauChart');
+  const labels = document.getElementById('dauLabels');
+  if (!dau.length) {
+    chart.innerHTML = '<p style="color:var(--ink2);font-size:13px">暂无 DAU 数据（需 Upstash）</p>';
+    labels.innerHTML = '';
+  } else {
+    chart.innerHTML = dau.map(d =>
+      `<div class="bar" style="height:${Math.round((d.users / maxDau) * 100)}%" title="${d.date}: ${d.users}"></div>`
+    ).join('');
+    labels.innerHTML = dau.map(d => `<span>${d.date.slice(5)}</span>`).join('');
+  }
+
+  const fb = document.getElementById('featureBody');
+  fb.innerHTML = features.length
+    ? features.map(f => `<tr><td>${escapeHtml(f.label || f.feature)}</td><td>${f.count}</td></tr>`).join('')
+    : '<tr><td colspan="2" style="color:var(--ink2)">暂无功能使用记录</td></tr>';
+
+  const tokens = data.tokenBuckets || [];
+  const tb = document.getElementById('tokenBody');
+  tb.innerHTML = tokens.length
+    ? tokens.map(b => `<tr><td>${escapeHtml(b.date || b.period || '—')}</td><td>${b.total ?? 0}</td></tr>`).join('')
+    : '<tr><td colspan="2" style="color:var(--ink2)">暂无 Token 统计</td></tr>';
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+document.getElementById('btnUnlock').onclick = async () => {
+  authErr.textContent = '';
+  const v = adminSecretInput.value.trim();
+  if (!v) { authErr.textContent = '请输入管理密钥'; return; }
+  setSecret(v);
+  try {
+    await fetchDashboard();
+    if (getSecret()) showDashboard(true);
+  } catch (e) {
+    authErr.textContent = e.message;
+    setSecret('');
+  }
+};
+
+document.getElementById('btnRefresh').onclick = () => fetchDashboard();
+document.getElementById('btnLock').onclick = () => {
+  setSecret('');
+  adminSecretInput.value = '';
+  showDashboard(false);
+};
+
+adminSecretInput.addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.getElementById('btnUnlock').click();
+});
+
+(function init() {
+  const saved = getSecret();
+  if (saved) {
+    adminSecretInput.value = saved;
+    showDashboard(true);
+    fetchDashboard().catch(() => showDashboard(false));
+  }
+})();
+</script>
+</body>
+</html>

@@ -17,6 +17,8 @@ import {
   injectGeneratedSteps,
   getLlmConfig
 } from '../lib/scenario-generate.js';
+import { recordUsageEvent } from '../lib/usage-stats.js';
+import { recordUsageEvent } from '../lib/usage-stats.js';
 import { buildChunksFromSearchResults, loadInterviewRagFeed, filterFeedChunksByIntent } from '../lib/rag.js';
 
 function interviewSearchEnabled() {
@@ -663,6 +665,8 @@ export default async function handler(req) {
   const cardCatalog = Array.isArray(body.cardCatalog) ? body.cardCatalog : [];
   if (!goal) return json({ error: '请提供学习目标 goal' }, 400);
   if (!catalog.length) return json({ error: '请提供 catalog' }, 400);
+
+  await recordUsageEvent(auth.userId, 'plan');
 
   const topicIdsForHistory = catalog.map(c => c.id);
   const historySummary = await buildHistorySummary(auth.userId, topicIdsForHistory);

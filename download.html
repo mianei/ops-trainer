@@ -209,7 +209,7 @@
     <a class="card card-primary active" href="https://cvassistant-ai.vercel.app">
       <div class="card-body">
         <strong>在线训练</strong>
-        <span>浏览器打开 · 免注册 · 直接使用</span>
+        <span>浏览器打开 · 邀请码注册 · 一人一号</span>
       </div>
       <span class="card-arrow">→</span>
     </a>
@@ -238,9 +238,9 @@
 
   <section class="steps">
     <h2>说明</h2>
-    <p>CVassistant 以 Web 应用为主：打开即用，无需注册或访问码。桌面版为 Electron 封装，内容与线上一致。</p>
+    <p>CVassistant 以 Web 应用为主：注册登录后使用，简历与练习记录保存在你的账号下。桌面版为 Electron 封装，内容与线上一致。</p>
     <ul>
-      <li>单人使用：部署时设 <code>AUTH_DISABLED=1</code>，不配 <code>ACCESS_CODE</code> 即可访客模式</li>
+      <li>在线版：需邀请码注册；部署时设 <code>AUTH_DISABLED=0</code> 并配置 Upstash 与 <code>REGISTER_INVITE_CODE</code></li>
       <li>源码下载：仓库页 <strong>Code → Download ZIP</strong>，或见 <a href="https://github.com/mianei/ops-trainer/blob/main/README.md" target="_blank" rel="noopener">README</a> 部署说明</li>
       <li>桌面版：在 <a href="https://github.com/mianei/ops-trainer/releases" target="_blank" rel="noopener">Releases</a> 查找 <code>Windows-portable</code> 附件</li>
     </ul>

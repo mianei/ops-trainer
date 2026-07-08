@@ -18,6 +18,8 @@ import {
   saveTraceToStore,
   recordTokenUsageToStore
 } from '../lib/observation-trace.js';
+import { recordUsageEvent } from '../lib/usage-stats.js';
+import { appendResumeHistory, RESUME_HISTORY_LABELS } from '../lib/user-profile.js';
 
 async function callDeepSeekCoach(cfg, systemPrompt, messages, maxTokens = 4096, temperature = 0.7) {
   const res = await fetch(`${cfg.baseUrl}/chat/completions`, {
@@ -153,6 +155,37 @@ async function persistCoachTrace(auth, payload) {
   return record.traceId;
 }
 
+async function recordResumeCoachHistory(auth, { action, mode, resultText, scoreReport, optimizeReport }) {
+  if (!auth.userId || auth.guest) return;
+  if (action === 'resume-score') {
+    await appendResumeHistory(auth.userId, {
+      type: 'score',
+      label: RESUME_HISTORY_LABELS.score,
+      summary: scoreReport?.summary
+        || (scoreReport?.overallScore != null ? `综合 ${scoreReport.overallScore}/100` : String(resultText || '').slice(0, 200)),
+      preview: scoreReport?.topFixes?.[0] || ''
+    });
+    return;
+  }
+  if (action === 'resume-optimize') {
+    await appendResumeHistory(auth.userId, {
+      type: 'optimize',
+      label: RESUME_HISTORY_LABELS.optimize,
+      summary: optimizeReport?.weakProject || String(resultText || '').slice(0, 200),
+      preview: optimizeReport?.bullets?.[0]?.after?.slice(0, 120) || ''
+    });
+    return;
+  }
+  if (mode === 'resume-diagnosis') {
+    await appendResumeHistory(auth.userId, {
+      type: 'diagnosis',
+      label: RESUME_HISTORY_LABELS.diagnosis,
+      summary: String(resultText || '').slice(0, 200),
+      preview: ''
+    });
+  }
+}
+
 export default async function handler(req) {
   if (req.method !== 'POST') {
     return json({ error: 'Method not allowed' }, 405);
@@ -180,6 +213,8 @@ export default async function handler(req) {
       message = resolved.message;
       mode = resolved.mode;
     }
+
+    await recordUsageEvent(auth.userId, action ? `coach-action-${action}` : 'coach');
 
     if (!message) {
       return json({ error: '消息不能为空' }, 400);
@@ -303,6 +338,7 @@ export default async function handler(req) {
 
     if (action === 'resume-score') {
       const scoreReport = parseResumeScoreReport(result.text);
+      await recordResumeCoachHistory(auth, { action, mode, resultText: result.text, scoreReport });
       return json({
         ok: true,
         reply: scoreReport ? formatResumeScoreReply(scoreReport) : result.text,
@@ -316,6 +352,7 @@ export default async function handler(req) {
 
     if (action === 'resume-optimize') {
       const optimizeReport = parseResumeOptimizeReport(result.text);
+      await recordResumeCoachHistory(auth, { action, mode, resultText: result.text, optimizeReport });
       return json({
         ok: true,
         reply: optimizeReport ? formatResumeOptimizeReply(optimizeReport) : result.text,
@@ -338,14 +375,11 @@ export default async function handler(req) {
       });
     }
 
+    if (!action && mode === 'resume-diagnosis') {
+      await recordResumeCoachHistory(auth, { mode, resultText: result.text });
+    }
+
     return json({
-      ok: true,
-      reply: result.text,
-      mode,
-      action: action || undefined,
-      traceId,
-      contextGuard: guardResult.compressed ? guardResult.meta : undefined
-    });
   } catch (e) {
     console.error('[coach]', e);
     return json({ error: e?.message || '服务内部错误，请稍后重试' }, 500);

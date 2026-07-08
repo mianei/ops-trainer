@@ -399,6 +399,113 @@
     line-height: 1.5;
   }
 
+  /* —— 登录门禁 —— */
+  #gate {
+    position: fixed;
+    inset: 0;
+    z-index: 300;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: var(--bg);
+  }
+  #gate.visible { display: flex; }
+  .gate-layout { width: min(920px, 100%); }
+  .gate-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(24px, 5vw, 48px);
+    align-items: center;
+  }
+  @media (max-width: 720px) {
+    .gate-grid { grid-template-columns: 1fr; }
+    .gate-intro { text-align: center; }
+  }
+  .gate-intro h1 {
+    font-family: 'Syne', var(--sans);
+    font-size: clamp(1.6rem, 4vw, 2.1rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin: 0.5rem 0 0.75rem;
+    color: var(--hero-ink);
+  }
+  .gate-intro .lead { color: var(--ink2); line-height: 1.65; font-size: 15px; }
+  .gate-card {
+    background: var(--frost-solid);
+    border: 1px solid var(--frost-border);
+    border-radius: var(--r-lg);
+    padding: 1.35rem;
+    box-shadow: var(--block-shadow);
+  }
+  .gate-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 1rem;
+  }
+  .gate-tab {
+    flex: 1;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 12px;
+    border-radius: 10px;
+    border: 1px solid var(--frost-border);
+    background: var(--block-bg-muted);
+    color: var(--ink2);
+    cursor: pointer;
+  }
+  .gate-tab.active {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .gate-panel[hidden] { display: none !important; }
+  .gate-field { margin-bottom: 0.85rem; }
+  .gate-field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink2);
+    margin-bottom: 6px;
+  }
+  .gate-field input {
+    width: 100%;
+    padding: 10px 12px;
+    font: inherit;
+    font-size: 14px;
+    border-radius: 10px;
+    border: 1px solid var(--frost-border);
+    background: var(--white);
+    color: var(--ink);
+  }
+  html[data-theme="dark"] .gate-field input {
+    background: rgba(255,255,255,0.06);
+    color: var(--ink);
+  }
+  .gate-remember {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--ink2);
+    margin-bottom: 0.85rem;
+    cursor: pointer;
+  }
+  .gate-submit { width: 100%; margin-top: 0.25rem; }
+  .gate-error {
+    min-height: 1.2em;
+    font-size: 13px;
+    color: var(--danger, #c62828);
+    margin-top: 0.65rem;
+  }
+  .gate-hint {
+    font-size: 11px;
+    color: var(--ink3);
+    margin-top: 0.75rem;
+    line-height: 1.5;
+  }
+
   /* —— 主应用 —— */
   #app { display: none; position: relative; z-index: 1; min-height: 100vh; }
   #app.visible { display: flex; flex-direction: column; }
@@ -3220,6 +3327,31 @@
     gap: 8px;
     align-items: center;
   }
+  .user-badge {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ink2);
+    padding: 6px 10px;
+    border-radius: 99px;
+    border: 1px solid var(--frost-border);
+    background: var(--frost-solid);
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .btn-logout {
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 6px 10px;
+    border-radius: 99px;
+    border: 1px solid var(--frost-border);
+    background: transparent;
+    color: var(--ink2);
+    cursor: pointer;
+  }
+  .btn-logout:hover { color: var(--ink); background: var(--frost-solid); }
   .history-modal {
     position: fixed;
     inset: 0;
@@ -3243,6 +3375,43 @@
   }
   .history-panel h3 { font-size: 1.1rem; margin-bottom: 0.75rem; }
   .history-panel--wide { width: min(720px, 100%); }
+  .records-user-id {
+    font-size: 11px;
+    color: var(--ink3);
+    margin: -0.35rem 0 0.75rem;
+    word-break: break-all;
+  }
+  .records-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+  .records-tab {
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 99px;
+    border: 1px solid var(--frost-border);
+    background: var(--block-bg-muted);
+    color: var(--ink2);
+    cursor: pointer;
+  }
+  .records-tab.active {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .records-usage-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--frost-border);
+    font-size: 13px;
+  }
+  .records-usage-row strong { font-weight: 600; color: var(--ink); }
   .history-item {
     padding: 10px 0;
     border-bottom: 1px solid var(--frost-border);
@@ -4651,7 +4820,39 @@
 </head>
 <body>
 
-<div id="app" class="visible">
+<div id="gate" aria-label="登录或注册">
+  <div class="gate-layout">
+    <div class="gate-grid">
+      <div class="gate-intro">
+        <p class="hero-brand" aria-label="CVassistant"><span class="hb-mind">CV</span><span class="hb-train">assistant</span></p>
+        <h1>AI 产品经理训练</h1>
+        <p class="lead">注册登录后使用简历评分、面试练题与 Agent 助手；你的练习记录保存在账号下。</p>
+      </div>
+      <div class="gate-card">
+        <div class="gate-tabs" role="tablist">
+          <button type="button" class="gate-tab active" data-gate="login" role="tab" aria-selected="true">登录</button>
+          <button type="button" class="gate-tab" data-gate="register" role="tab" aria-selected="false">注册</button>
+        </div>
+        <div id="gatePanelLogin" class="gate-panel" role="tabpanel">
+          <div class="gate-field"><label for="loginUser">用户名</label><input id="loginUser" autocomplete="username" /></div>
+          <div class="gate-field"><label for="loginPass">密码</label><input id="loginPass" type="password" autocomplete="current-password" /></div>
+          <label class="gate-remember"><input type="checkbox" id="gateRemember" checked /> 记住我（7 天）</label>
+          <button type="button" class="btn-primary gate-submit" id="gateBtn">开始训练</button>
+        </div>
+        <div id="gatePanelRegister" class="gate-panel" role="tabpanel" hidden>
+          <div class="gate-field"><label for="regUser">用户名</label><input id="regUser" autocomplete="username" placeholder="2–24 位字母数字下划线" /></div>
+          <div class="gate-field"><label for="regPass">密码</label><input id="regPass" type="password" autocomplete="new-password" /></div>
+          <div class="gate-field"><label for="regInvite">邀请码</label><input id="regInvite" autocomplete="off" /></div>
+          <button type="button" class="btn-primary gate-submit" id="regBtn">注册并进入</button>
+        </div>
+        <div class="gate-error" id="gateError" role="alert"></div>
+        <p class="gate-hint" id="gateHint">需有效邀请码注册 · 数据仅保存在你的账号下</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="app">
   <div class="bg-scene" aria-hidden="true">
     <svg class="bg-horizon-svg" viewBox="0 0 1440 480" preserveAspectRatio="none" aria-hidden="true">
       <defs>
@@ -4684,6 +4885,8 @@
     <div class="bg-cubes" aria-hidden="true"></div>
   </div>
   <div class="header-actions" id="headerActions" hidden>
+    <span class="user-badge" id="userBadge" hidden></span>
+    <button type="button" class="btn-logout" id="btnLogout" hidden>退出</button>
     <button type="button" class="btn-theme" id="btnTheme" aria-label="切换深浅色主题">深色</button>
     <button type="button" class="btn-trace" id="btnTrace">Trace</button>
     <button type="button" class="btn-history" id="btnHistory">练习记录</button>
@@ -4730,9 +4933,16 @@
 </div>
 
 <div class="history-modal" id="historyModal" aria-hidden="true">
-  <div class="history-panel" role="dialog" aria-labelledby="historyTitle">
+  <div class="history-panel history-panel--wide" role="dialog" aria-labelledby="historyTitle">
     <button type="button" class="history-close" id="historyClose" aria-label="关闭">×</button>
-    <h3 id="historyTitle">AI PM 练习记录</h3>
+    <h3 id="historyTitle">我的记录</h3>
+    <p class="records-user-id" id="recordsUserId"></p>
+    <div class="records-tabs" id="recordsTabs">
+      <button type="button" class="records-tab active" data-records-tab="analytics">进步曲线</button>
+      <button type="button" class="records-tab" data-records-tab="timeline">练习时间线</button>
+      <button type="button" class="records-tab" data-records-tab="resume-history">简历记录</button>
+      <button type="button" class="records-tab" data-records-tab="usage">功能使用</button>
+    </div>
     <div id="historyBody"><p style="color:var(--ink3)">加载中…</p></div>
   </div>
 </div>
@@ -4749,7 +4959,7 @@
 <script src="/agent-intent.browser.js"></script>
 <script>
 const GITHUB_TOPICS_URL = '';
-const APP_ASSET_VERSION = '3.0.7';
+const APP_ASSET_VERSION = '3.0.8';
 
 function assetUrl(path) {
   const sep = path.includes('?') ? '&' : '?';
@@ -4811,11 +5021,11 @@ function setAgentMicIcon(mic, state) {
 let agentToolSteps = [];
 let senseSubView = 'home';
 let interviewSubView = localStorage.getItem('interviewSubView') || 'prep';
-let profileResume = localStorage.getItem('profileResume') || '';
-let profileJd = localStorage.getItem('profileJd') || '';
+let profileResume = '';
+let profileJd = '';
 let profileResumeFileName = '';
 let profileJdFileName = '';
-let profileTargetRole = localStorage.getItem('profileTargetRole') || '';
+let profileTargetRole = '';
 /** @type {{ version: number, questions: object[] } | null} */
 let INTERVIEW_BANK_V2 = null;
 /** @type {{ questions: object[] } | null} */
@@ -4972,10 +5182,258 @@ function unlockApp() {
   }
 }
 
-async function enterApp() {
-  accessCode = 'guest';
+const AUTH_USER_KEY = 'cv-auth-user';
+const AUTH_PASS_KEY = 'cv-auth-pass';
+const SESSION_UNTIL_KEY = 'cv-session-until';
+const SESSION_MS = 7 * 86400000;
+
+let loggedInUsername = '';
+let authConfig = { authRequired: true, registrationEnabled: false };
+
+function getSessionStore(remember) {
+  return remember ? localStorage : sessionStorage;
+}
+
+function persistSession(username, password, remember) {
+  const store = getSessionStore(remember);
+  const other = remember ? sessionStorage : localStorage;
+  store.setItem(AUTH_USER_KEY, username);
+  store.setItem(AUTH_PASS_KEY, password);
+  store.setItem(SESSION_UNTIL_KEY, String(Date.now() + SESSION_MS));
+  other.removeItem(AUTH_USER_KEY);
+  other.removeItem(AUTH_PASS_KEY);
+  other.removeItem(SESSION_UNTIL_KEY);
+}
+
+function readStoredSession() {
+  for (const store of [localStorage, sessionStorage]) {
+    const user = store.getItem(AUTH_USER_KEY);
+    const pass = store.getItem(AUTH_PASS_KEY);
+    const until = Number(store.getItem(SESSION_UNTIL_KEY) || 0);
+    if (user && pass && until > Date.now()) {
+      return { user, pass };
+    }
+  }
+  return null;
+}
+
+function clearSession() {
+  [localStorage, sessionStorage].forEach((s) => {
+    s.removeItem(AUTH_USER_KEY);
+    s.removeItem(AUTH_PASS_KEY);
+    s.removeItem(SESSION_UNTIL_KEY);
+  });
+}
+
+function applyAuth(username, password) {
+  userAccountId = username;
+  accessCode = password;
+  loggedInUsername = username;
+}
+
+function updateUserBadge() {
+  const badge = document.getElementById('userBadge');
+  const btnLogout = document.getElementById('btnLogout');
+  if (loggedInUsername) {
+    if (badge) { badge.textContent = loggedInUsername; badge.hidden = false; }
+    if (btnLogout) btnLogout.hidden = false;
+  } else {
+    if (badge) badge.hidden = true;
+    if (btnLogout) btnLogout.hidden = true;
+  }
+}
+
+function showGate() {
+  const gate = document.getElementById('gate');
+  if (gate) gate.classList.add('visible');
+}
+
+function hideGate() {
+  const gate = document.getElementById('gate');
+  if (gate) gate.classList.remove('visible');
+}
+
+function setGateError(msg) {
+  const el = document.getElementById('gateError');
+  if (el) el.textContent = msg || '';
+}
+
+function switchGateTab(tab) {
+  const loginPanel = document.getElementById('gatePanelLogin');
+  const regPanel = document.getElementById('gatePanelRegister');
+  document.querySelectorAll('.gate-tab').forEach((btn) => {
+    const active = btn.dataset.gate === tab;
+    btn.classList.toggle('active', active);
+    btn.setAttribute('aria-selected', active ? 'true' : 'false');
+  });
+  if (loginPanel) loginPanel.hidden = tab !== 'login';
+  if (regPanel) regPanel.hidden = tab !== 'register';
+  setGateError('');
+}
+
+async function fetchAuthConfig() {
+  try {
+    const res = await fetch('/api/auth', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'config' })
+    });
+    const data = await res.json();
+    if (data.ok) {
+      return { authRequired: !!data.authRequired, registrationEnabled: !!data.registrationEnabled };
+    }
+  } catch { /* */ }
+  return { authRequired: true, registrationEnabled: false };
+}
+
+async function tryRestoreSession() {
+  const sess = readStoredSession();
+  if (!sess) return false;
+  try {
+    const res = await fetch('/api/auth', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'login', username: sess.user, password: sess.pass })
+    });
+    const data = await res.json();
+    if (res.ok && data.ok) {
+      applyAuth(data.userId || sess.user, sess.pass);
+      return true;
+    }
+  } catch { /* */ }
+  clearSession();
+  return false;
+}
+
+async function doLogin(username, password, remember) {
+  setGateError('');
+  const res = await fetch('/api/auth', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action: 'login', username, password })
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok || !data.ok) {
+    setGateError(data.error || '登录失败');
+    return false;
+  }
+  applyAuth(data.userId || username, password);
+  persistSession(data.userId || username, password, remember);
+  hideGate();
+  await enterAppAuthed();
+  return true;
+}
+
+async function doRegister(username, password, inviteCode) {
+  setGateError('');
+  const res = await fetch('/api/auth', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action: 'register', username, password, inviteCode })
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok || !data.ok) {
+    setGateError(data.error || '注册失败');
+    return false;
+  }
+  const remember = document.getElementById('gateRemember')?.checked !== false;
+  applyAuth(data.userId || username, password);
+  persistSession(data.userId || username, password, remember);
+  hideGate();
+  await enterAppAuthed();
+  return true;
+}
+
+function logout() {
+  clearSession();
+  userAccountId = '';
+  accessCode = '';
+  loggedInUsername = '';
+  resetProfileInMemory();
+  app.classList.remove('visible');
+  const headerActions = document.getElementById('headerActions');
+  if (headerActions) headerActions.hidden = true;
+  updateUserBadge();
+  showGate();
+}
+
+function bindAuthGate() {
+  document.querySelectorAll('.gate-tab').forEach((btn) => {
+    btn.onclick = () => switchGateTab(btn.dataset.gate);
+  });
+  const regTab = document.querySelector('.gate-tab[data-gate="register"]');
+  if (regTab && !authConfig.registrationEnabled) {
+    regTab.hidden = true;
+  }
+  const gateHint = document.getElementById('gateHint');
+  if (gateHint) {
+    gateHint.textContent = authConfig.registrationEnabled
+      ? '需有效邀请码注册 · 简历与练习记录保存在你的账号下'
+      : '注册暂未开放，请联系管理员获取账号';
+  }
+  const gateBtn = document.getElementById('gateBtn');
+  const regBtn = document.getElementById('regBtn');
+  const loginPass = document.getElementById('loginPass');
+  const regInvite = document.getElementById('regInvite');
+  if (gateBtn) {
+    gateBtn.onclick = async () => {
+      gateBtn.disabled = true;
+      try {
+        await doLogin(
+          (document.getElementById('loginUser')?.value || '').trim(),
+          document.getElementById('loginPass')?.value || '',
+          document.getElementById('gateRemember')?.checked !== false
+        );
+      } finally { gateBtn.disabled = false; }
+    };
+  }
+  if (regBtn) {
+    regBtn.onclick = async () => {
+      regBtn.disabled = true;
+      try {
+        await doRegister(
+          (document.getElementById('regUser')?.value || '').trim(),
+          document.getElementById('regPass')?.value || '',
+          (document.getElementById('regInvite')?.value || '').trim()
+        );
+      } finally { regBtn.disabled = false; }
+    };
+  }
+  loginPass?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') gateBtn?.click();
+  });
+  regInvite?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') regBtn?.click();
+  });
+  const btnLogout = document.getElementById('btnLogout');
+  if (btnLogout) btnLogout.onclick = logout;
+}
+
+function bindRecordsTabs() {
+  document.querySelectorAll('#recordsTabs .records-tab').forEach((btn) => {
+    if (btn.dataset.bound === '1') return;
+    btn.dataset.bound = '1';
+    btn.onclick = () => loadRecordsTab(btn.dataset.recordsTab);
+  });
+}
+
+async function enterAppGuest() {
   userAccountId = 'guest';
+  accessCode = 'guest';
+  loggedInUsername = '';
+  loadProfileFromLocalStorage();
+  hideGate();
   unlockApp();
+  updateUserBadge();
+  await loadTopicsAndRender();
+}
+
+async function enterAppAuthed() {
+  migrateLegacyProfileKeys();
+  loadProfileFromLocalStorage();
+  await syncProfileFromServer();
+  unlockApp();
+  updateUserBadge();
   await loadTopicsAndRender();
 }
 
@@ -4985,6 +5443,107 @@ function authHeaders() {
     'X-Access-Code': accessCode,
     'X-User-Id': userAccountId
   };
+}
+
+function accountStorageId() {
+  const uid = String(loggedInUsername || userAccountId || '').trim();
+  return uid && uid !== 'guest' ? uid : 'guest';
+}
+
+function userScopedKey(base) {
+  return `${base}:${accountStorageId()}`;
+}
+
+function loadProfileFromLocalStorage() {
+  profileResume = localStorage.getItem(userScopedKey('profileResume')) || '';
+  profileJd = localStorage.getItem(userScopedKey('profileJd')) || '';
+  profileTargetRole = localStorage.getItem(userScopedKey('profileTargetRole')) || '';
+  profileResumeFileName = localStorage.getItem(userScopedKey('profileResumeFileName')) || '';
+  profileJdFileName = localStorage.getItem(userScopedKey('profileJdFileName')) || '';
+}
+
+function migrateLegacyProfileKeys() {
+  if (accountStorageId() === 'guest') return;
+  const pairs = [
+    ['profileResume', 'profileResume'],
+    ['profileJd', 'profileJd'],
+    ['profileTargetRole', 'profileTargetRole']
+  ];
+  pairs.forEach(([legacy, field]) => {
+    const scoped = userScopedKey(field);
+    if (!localStorage.getItem(scoped)) {
+      const legacyVal = localStorage.getItem(legacy);
+      if (legacyVal) localStorage.setItem(scoped, legacyVal);
+    }
+  });
+}
+
+function persistProfileLocal() {
+  localStorage.setItem(userScopedKey('profileResume'), profileResume);
+  localStorage.setItem(userScopedKey('profileJd'), profileJd);
+  localStorage.setItem(userScopedKey('profileTargetRole'), profileTargetRole);
+  localStorage.setItem(userScopedKey('profileResumeFileName'), profileResumeFileName || '');
+  localStorage.setItem(userScopedKey('profileJdFileName'), profileJdFileName || '');
+}
+
+let profileCloudSyncTimer = null;
+function scheduleProfileCloudSync(opts = {}) {
+  if (accountStorageId() === 'guest') return;
+  clearTimeout(profileCloudSyncTimer);
+  profileCloudSyncTimer = setTimeout(() => syncProfileToServer(opts), 700);
+}
+
+async function syncProfileToServer(opts = {}) {
+  if (accountStorageId() === 'guest') return false;
+  try {
+    const res = await fetch('/api/profile', {
+      method: 'POST',
+      headers: authHeaders(),
+      body: JSON.stringify({
+        action: 'save',
+        accessCode,
+        userId: userAccountId,
+        resume: profileResume,
+        jd: profileJd,
+        targetRole: profileTargetRole,
+        resumeFileName: profileResumeFileName,
+        jdFileName: profileJdFileName,
+        recordUpload: opts.recordUpload === true
+      })
+    });
+    const data = await res.json().catch(() => ({}));
+    return res.ok && data.ok;
+  } catch {
+    return false;
+  }
+}
+
+async function syncProfileFromServer() {
+  if (accountStorageId() === 'guest') return;
+  try {
+    const res = await fetch('/api/profile', {
+      method: 'POST',
+      headers: authHeaders(),
+      body: JSON.stringify({ action: 'get', accessCode, userId: userAccountId })
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || !data.ok || !data.profile) return;
+    const p = data.profile;
+    profileResume = p.resume || profileResume;
+    profileJd = p.jd || profileJd;
+    profileTargetRole = p.targetRole || profileTargetRole;
+    profileResumeFileName = p.resumeFileName || profileResumeFileName;
+    profileJdFileName = p.jdFileName || profileJdFileName;
+    persistProfileLocal();
+  } catch { /* */ }
+}
+
+function resetProfileInMemory() {
+  profileResume = '';
+  profileJd = '';
+  profileTargetRole = '';
+  profileResumeFileName = '';
+  profileJdFileName = '';
 }
 
 async function loadTopics() {
@@ -5878,7 +6437,7 @@ function buildAgentCanvasContext(scene) {
 
 function loadCrossSceneMemoryString() {
   try {
-    const raw = localStorage.getItem(CROSS_SCENE_MEM_KEY);
+    const raw = localStorage.getItem(userScopedKey(CROSS_SCENE_MEM_KEY));
     if (!raw) return '';
     const o = JSON.parse(raw);
     const lines = [];
@@ -5894,7 +6453,7 @@ function persistCrossSceneMemory() {
   try {
     const tid = activeBankQuestion?.topicId || activeTopicId;
     const sess = tid ? mentorSessions[tid] : null;
-    localStorage.setItem(CROSS_SCENE_MEM_KEY, JSON.stringify({
+    localStorage.setItem(userScopedKey(CROSS_SCENE_MEM_KEY), JSON.stringify({
       resumeScore: (resumeScoreResult.content || '').slice(0, 500),
       optimize: (resumeOptimizeResult.content || '').slice(0, 500),
       prep: (interviewPrepResult.content || '').slice(0, 500),
@@ -6188,7 +6747,8 @@ function bindAgentVoiceAttach(scene) {
         input.value = (input.value ? input.value + '\n' : '') + snippet;
         if (scene === 'resume' && !profileResume.trim()) {
           profileResume = snippet;
-          localStorage.setItem('profileResume', profileResume);
+          persistProfileLocal();
+          scheduleProfileCloudSync({ recordUpload: true });
           saveProfileFromDom();
           renderResumeCanvasPanels();
         }
@@ -6240,7 +6800,7 @@ function renderAgentToolsPanel() {
 
 function loadAgentChatHistoryStore() {
   try {
-    const raw = localStorage.getItem(AGENT_CHAT_HISTORY_KEY);
+    const raw = localStorage.getItem(userScopedKey(AGENT_CHAT_HISTORY_KEY));
     const parsed = raw ? JSON.parse(raw) : {};
     return parsed && typeof parsed === 'object' ? parsed : {};
   } catch {
@@ -6249,7 +6809,7 @@ function loadAgentChatHistoryStore() {
 }
 
 function saveAgentChatHistoryStore(store) {
-  try { localStorage.setItem(AGENT_CHAT_HISTORY_KEY, JSON.stringify(store)); } catch { /* */ }
+  try { localStorage.setItem(userScopedKey(AGENT_CHAT_HISTORY_KEY), JSON.stringify(store)); } catch { /* */ }
 }
 
 function agentChatHistoryTitle(scene, messages) {
@@ -7520,9 +8080,8 @@ function saveProfileFromDom() {
   profileResume = document.getElementById('profileResumeInput')?.value?.trim() || profileResume;
   profileJd = document.getElementById('profileJdInput')?.value?.trim() || profileJd;
   profileTargetRole = document.getElementById('profileTargetRoleInput')?.value?.trim() || profileTargetRole;
-  localStorage.setItem('profileResume', profileResume);
-  localStorage.setItem('profileJd', profileJd);
-  localStorage.setItem('profileTargetRole', profileTargetRole);
+  persistProfileLocal();
+  scheduleProfileCloudSync();
 }
 
 function buildCoachIntakeFromProfile(extra = {}) {
@@ -7776,11 +8335,13 @@ async function applyParsedFileToField(file, field) {
     if (isResume) {
       profileResume = text;
       profileResumeFileName = file.name;
-      localStorage.setItem('profileResume', profileResume);
+      persistProfileLocal();
+      scheduleProfileCloudSync({ recordUpload: true });
     } else {
       profileJd = text;
       profileJdFileName = file.name;
-      localStorage.setItem('profileJd', profileJd);
+      persistProfileLocal();
+      scheduleProfileCloudSync();
     }
     if (ta) ta.value = text;
     updateUploadDropzoneUI(field, { fileName: file.name, charCount: text.length });
@@ -7800,9 +8361,10 @@ function bindProfileUpload() {
   bindFileDropzone('jdDropzone', 'jdFileInput', 'jd');
   document.getElementById('profileResumeInput')?.addEventListener('input', e => {
     profileResume = e.target.value;
-    localStorage.setItem('profileResume', profileResume);
     if (profileResume.trim()) {
       profileResumeFileName = '';
+      persistProfileLocal();
+      scheduleProfileCloudSync({ recordUpload: true });
       updateUploadDropzoneUI('resume', { charCount: profileResume.trim().length });
       if (agentScene === 'resume') {
         renderResumeScorePane();
@@ -7812,15 +8374,17 @@ function bindProfileUpload() {
   });
   document.getElementById('profileJdInput')?.addEventListener('input', e => {
     profileJd = e.target.value;
-    localStorage.setItem('profileJd', profileJd);
     if (profileJd.trim()) {
       profileJdFileName = '';
+      persistProfileLocal();
+      scheduleProfileCloudSync();
       updateUploadDropzoneUI('jd', { charCount: profileJd.trim().length });
     }
   });
   document.getElementById('profileTargetRoleInput')?.addEventListener('input', e => {
     profileTargetRole = e.target.value;
-    localStorage.setItem('profileTargetRole', profileTargetRole);
+    persistProfileLocal();
+    scheduleProfileCloudSync();
   });
 }
 
@@ -8937,39 +9501,132 @@ async function toggleV2Voice(topicId) {
   } catch { alert('无法访问麦克风'); }
 }
 
-async function openAnalyticsModal() {
-  let modal = document.getElementById('analyticsModal');
-  if (!modal) {
-    modal = document.createElement('div');
-    modal.id = 'analyticsModal';
-    modal.className = 'history-modal';
-    modal.setAttribute('aria-hidden', 'true');
-    modal.innerHTML = '<div class="history-panel" role="dialog" aria-labelledby="analyticsTitle"><button type="button" class="history-close" id="analyticsClose" aria-label="关闭">×</button><h3 id="analyticsTitle">练习记录</h3><div id="analyticsBody"></div></div>';
-    document.body.appendChild(modal);
-    bindModalA11y(modal, '#analyticsClose');
-    modal.onclick = e => { if (e.target === modal) closeModalEl(modal); };
-  }
-  const body = document.getElementById('analyticsBody');
+async function loadRecordsTab(tab) {
+  const body = document.getElementById('historyBody');
+  if (!body) return;
   body.innerHTML = '<p style="color:var(--ink3)">加载中…</p>';
+  document.querySelectorAll('#recordsTabs .records-tab').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.recordsTab === tab);
+  });
+  try {
+    if (tab === 'analytics') {
+      const res = await fetch('/api/records', {
+        method: 'POST',
+        headers: authHeaders(),
+        body: JSON.stringify({ accessCode, userId: userAccountId, recordType: 'analytics', topicIds: TOPICS.map(t => t.id) })
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        const hint = /upstash|redis|storage|未配置/i.test(String(data.error || ''))
+          ? '记录功能需配置 Upstash Redis。不影响评分与练题。'
+          : (data.error || '加载失败');
+        body.innerHTML = '<p style="color:var(--ink2);line-height:1.65">' + escapeHtml(hint) + '</p>';
+        return;
+      }
+      if (!data.progressCurve?.length) {
+        body.innerHTML = '<p style="color:var(--ink2);line-height:1.65">' + escapeHtml(data.summary || '暂无练习记录。完成场景作答并获取点评后，这里会显示进步曲线。') + '</p>';
+        return;
+      }
+      const max = Math.max(...data.progressCurve.map(p => p.score), 5);
+      body.innerHTML = `<p>${escapeHtml(data.summary || '')}</p><div class="analytics-chart">${data.progressCurve.map(p => `<div class="analytics-bar" style="height:${Math.round((p.score / max) * 100)}%"></div>`).join('')}</div><ul>${(data.weakTypes || []).map(w => `<li>${escapeHtml(w.typeLabel)} ${w.avgScore}/5（${w.count} 次）</li>`).join('')}</ul>`;
+      return;
+    }
+    if (tab === 'timeline') {
+      const res = await fetch('/api/records', {
+        method: 'POST',
+        headers: authHeaders(),
+        body: JSON.stringify({ accessCode, userId: userAccountId, recordType: 'history', topicIds: TOPICS.map(t => t.id) })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.timeline?.length) {
+        body.innerHTML = '<p style="color:var(--ink3)">暂无记录。提交分析后会出现在这里。</p>';
+        return;
+      }
+      body.innerHTML = data.timeline.map(item => {
+        const label = getTopic(item.topicId)?.label || item.topicId;
+        const when = item.at ? item.at.slice(0, 16).replace('T', ' ') : '';
+        const score = item.rubricAvg ? ` · ${item.rubricAvg}/5` : '';
+        const scene = stripQuestionPrefix(item.scenario || '').slice(0, 60);
+        return `<div class="history-item"><strong>${escapeHtml(label)}</strong>${escapeHtml(score)}<br/><span>${escapeHtml(when)}</span><br/>${escapeHtml(scene)}…</div>`;
+      }).join('');
+      return;
+    }
+    if (tab === 'resume-history') {
+      const res = await fetch('/api/records', {
+        method: 'POST',
+        headers: authHeaders(),
+        body: JSON.stringify({ accessCode, userId: userAccountId, recordType: 'resume-history' })
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || data.historyEnabled === false) {
+        body.innerHTML = '<p style="color:var(--ink2)">简历记录需登录并配置 Upstash Redis。</p>';
+        return;
+      }
+      if (!data.items?.length) {
+        body.innerHTML = '<p style="color:var(--ink3)">暂无简历记录。上传简历、评分或优化后会出现在这里。</p>';
+        return;
+      }
+      body.innerHTML = data.items.map(item => {
+        const when = item.at ? item.at.slice(0, 16).replace('T', ' ') : '';
+        const summary = item.summary || item.preview || '';
+        return `<div class="history-item"><strong>${escapeHtml(item.label || item.type)}</strong><br/><span>${escapeHtml(when)}</span><br/>${escapeHtml(summary)}</div>`;
+      }).join('');
+      return;
+    }
+    if (tab === 'usage') {
+      const res = await fetch('/api/records', {
+        method: 'POST',
+        headers: authHeaders(),
+        body: JSON.stringify({ accessCode, userId: userAccountId, recordType: 'my-usage' })
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || data.historyEnabled === false) {
+        body.innerHTML = '<p style="color:var(--ink2)">功能使用统计需配置 Upstash Redis。</p>';
+        return;
+      }
+      if (!data.usage?.length) {
+        body.innerHTML = '<p style="color:var(--ink3)">暂无使用记录。使用评分、练题、教练等功能后会出现在这里。</p>';
+        return;
+      }
+      body.innerHTML = data.usage.map(row =>
+        `<div class="records-usage-row"><strong>${escapeHtml(row.label)}</strong><span>${row.count} 次</span></div>`
+      ).join('');
+    }
+  } catch (e) {
+    body.innerHTML = '<p style="color:var(--danger)">加载失败：' + escapeHtml(e.message) + '</p>';
+  }
+}
+
+async function openMyRecordsModal() {
+  const modal = document.getElementById('historyModal');
+  const uidEl = document.getElementById('recordsUserId');
+  if (!modal) return;
+  if (uidEl) {
+    uidEl.textContent = loggedInUsername
+      ? '已登录：' + loggedInUsername
+      : (userAccountId === 'guest' ? '访客模式（本地调试）' : '用户：' + userAccountId);
+  }
   modal.classList.add('open');
   modal.setAttribute('aria-hidden', 'false');
-  try {
-    const res = await fetch('/api/records', { method: 'POST', headers: authHeaders(), body: JSON.stringify({ accessCode, userId: userAccountId, recordType: 'analytics', topicIds: TOPICS.map(t => t.id) }) });
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok) {
-      const hint = res.status === 503 || /upstash|redis|storage|未配置|not configured/i.test(String(data.error || ''))
-        ? '练习记录与进步曲线需配置 Upstash Redis（部署可选），不影响评分、优化与练题。'
-        : (data.error || '加载失败（HTTP ' + res.status + '）');
-      body.innerHTML = '<p style="color:var(--ink2);line-height:1.65">' + escapeHtml(hint) + '</p>';
-      return;
-    }
-    if (!data.progressCurve?.length) {
-      body.innerHTML = '<p style="color:var(--ink2);line-height:1.65">' + escapeHtml(data.summary || '暂无练习记录。完成场景作答并获取点评后，这里会显示进步曲线。') + '</p>';
-      return;
-    }
-    const max = Math.max(...data.progressCurve.map(p => p.score), 5);
-    body.innerHTML = `<p>${escapeHtml(data.summary || '')}</p><div class="analytics-chart">${data.progressCurve.map(p => `<div class="analytics-bar" style="height:${Math.round((p.score / max) * 100)}%"></div>`).join('')}</div><ul>${(data.weakTypes || []).map(w => `<li>${escapeHtml(w.typeLabel)} ${w.avgScore}/5</li>`).join('')}</ul>`;
-  } catch (e) { body.innerHTML = '<p style="color:var(--ink2);line-height:1.65">' + escapeHtml(e.message) + '</p>'; }
+  await loadRecordsTab('analytics');
+}
+
+async function openAnalyticsModal() {
+  await openMyRecordsModal();
+}
+
+async function openHistoryModal() {
+  const modal = document.getElementById('historyModal');
+  if (!modal) return;
+  const uidEl = document.getElementById('recordsUserId');
+  if (uidEl) {
+    uidEl.textContent = loggedInUsername
+      ? '已登录：' + loggedInUsername
+      : (userAccountId === 'guest' ? '访客模式' : '用户：' + userAccountId);
+  }
+  modal.classList.add('open');
+  modal.setAttribute('aria-hidden', 'false');
+  await loadRecordsTab('timeline');
 }
 
 function closeModalEl(modal) {
@@ -9152,33 +9809,8 @@ function topicPromptsPayload() {
 }
 
 async function openHistoryModal() {
-  const modal = document.getElementById('historyModal');
-  const body = document.getElementById('historyBody');
-  if (!modal || !body) return;
-  modal.classList.add('open');
-  modal.setAttribute('aria-hidden', 'false');
-  body.innerHTML = '<p style="color:var(--ink3)">加载中…</p>';
-  try {
-    const res = await fetch('/api/records', {
-      method: 'POST',
-      headers: authHeaders(),
-      body: JSON.stringify({ accessCode, userId: userAccountId, topicIds: TOPICS.map(t => t.id) })
-    });
-    const data = await res.json();
-    if (!res.ok || !data.timeline?.length) {
-      body.innerHTML = '<p style="color:var(--ink3)">暂无记录。提交分析后会出现在这里。</p>';
-      return;
-    }
-    body.innerHTML = data.timeline.map(item => {
-      const label = getTopic(item.topicId)?.label || item.topicId;
-      const when = item.at ? item.at.slice(0, 16).replace('T', ' ') : '';
-      const score = item.rubricAvg ? ` · ${item.rubricAvg}/5` : '';
-      const scene = stripQuestionPrefix(item.scenario || '').slice(0, 60);
-      return `<div class="history-item"><strong>${escapeHtml(label)}</strong>${escapeHtml(score)}<br/><span>${escapeHtml(when)}</span><br/>${escapeHtml(scene)}…</div>`;
-    }).join('');
-  } catch (e) {
-    body.innerHTML = '<p style="color:var(--danger)">加载失败：' + escapeHtml(e.message) + '</p>';
-  }
+  await openMyRecordsModal();
+  await loadRecordsTab('timeline');
 }
 
 function closeHistoryModal() {
@@ -10138,7 +10770,19 @@ async function bootstrap() {
   const historyClose = document.getElementById('historyClose');
   if (historyClose) historyClose.onclick = () => closeModalEl(historyModal);
   bindAgentChatHistoryModal();
-  await enterApp();
+  authConfig = await fetchAuthConfig();
+  bindAuthGate();
+  bindRecordsTabs();
+  if (!authConfig.authRequired) {
+    await enterAppGuest();
+    return;
+  }
+  if (await tryRestoreSession()) {
+    hideGate();
+    await enterAppAuthed();
+    return;
+  }
+  showGate();
 }
 
 bootstrap().catch((err) => {
