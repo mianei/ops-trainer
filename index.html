@@ -5081,7 +5081,8 @@ const scenarioAgentMessages = [];
 const kbAgentMessages = [];
 const AGENT_CHAT_HISTORY_KEY = 'cvAgentChatHistory_v1';
 let interviewPrepResult = { content: '', prepReport: null, loading: false };
-const SCORE_DIMENSION_NAMES = ['AI产品信号', '项目可信度', '叙述结构', '证据完整度', '面试可防守性'];
+const SCORE_DIMENSION_NAMES = ['AI产品匹配度', '结果量化度', '结构化表达', '决策深度', '差异化程度'];
+const PREP_DIMENSION_NAMES = ['项目真实性', '证据完整度', '面试防御力'];
 let lastAnimatedScoreKey = '';
 /** @type {{ cancelled: boolean, timeouts: number[], rafIds: number[] } | null} */
 let scorePaneAnimationCtrl = null;
@@ -8673,6 +8674,17 @@ function getInterviewCoachHistory(priorChat = []) {
 }
 
 function renderInterviewPrepPaneContent(report) {
+  const prepDims = (report.prepDimensions && report.prepDimensions.length)
+    ? report.prepDimensions
+    : PREP_DIMENSION_NAMES.map(name => ({ name, score: 0, diagnosis: '' }));
+  const prepDimBars = prepDims.map((d) => {
+    const pct = Math.round((Number(d.score) / 5) * 100);
+    return `<div class="score-pane-bar-row">
+      <span class="score-pane-bar-name" title="${escapeAttr(d.name)}">${escapeHtml(d.name)}</span>
+      <div class="score-pane-bar-track"><div class="score-pane-bar-fill" style="width:${pct}%"></div></div>
+      <span class="score-pane-bar-num">${escapeHtml(String(d.score))}</span>
+    </div>${d.diagnosis ? `<p class="prep-dim-diagnosis">${escapeHtml(d.diagnosis)}</p>` : ''}`;
+  }).join('');
   const projects = (report.projects || []).map(p =>
     `<div class="opt-pane-bullet">
       <p><strong>${escapeHtml(p.name || '项目')}</strong></p>
@@ -8690,11 +8702,12 @@ function renderInterviewPrepPaneContent(report) {
   const doNotSay = (report.doNotSay || []).map(s => `<li>${escapeHtml(s)}</li>`).join('');
   return `<div class="opt-pane-stack">
     ${report.summary ? `<div class="opt-pane-section"><h4>总评</h4><p>${escapeHtml(report.summary)}</p></div>` : ''}
-    <div class="opt-pane-section"><h4>① 前 15 秒</h4><p>${escapeHtml(report.opening15s || '—')}</p></div>
-    <div class="opt-pane-section"><h4>② 项目讲述</h4>${projects || '<p>—</p>'}</div>
-    <div class="opt-pane-section"><h4>③ 追问与防守</h4>${followUps || '<p>—</p>'}</div>
-    <div class="opt-pane-section"><h4>④ Badcase</h4>${badcases ? `<ul>${badcases}</ul>` : '<p>—</p>'}</div>
-    <div class="opt-pane-section"><h4>⑤ 不能说的话</h4>${doNotSay ? `<ul>${doNotSay}</ul>` : '<p>—</p>'}</div>
+    <div class="opt-pane-section"><h4>① 面试就绪度</h4><p class="prep-dim-hint">项目真实性 · 证据完整度 · 面试防御力</p><div class="score-pane-bars prep-dim-bars">${prepDimBars}</div></div>
+    <div class="opt-pane-section"><h4>② 前 15 秒</h4><p>${escapeHtml(report.opening15s || '—')}</p></div>
+    <div class="opt-pane-section"><h4>③ 项目讲述</h4>${projects || '<p>—</p>'}</div>
+    <div class="opt-pane-section"><h4>④ 追问与防守</h4>${followUps || '<p>—</p>'}</div>
+    <div class="opt-pane-section"><h4>⑤ Badcase</h4>${badcases ? `<ul>${badcases}</ul>` : '<p>—</p>'}</div>
+    <div class="opt-pane-section"><h4>⑥ 不能说的话</h4>${doNotSay ? `<ul>${doNotSay}</ul>` : '<p>—</p>'}</div>
   </div>`;
 }
 
@@ -8946,7 +8959,7 @@ async function runResumeAction(action, triggerBtnId, triggerBtnLabel) {
         action,
         intake: buildCoachIntakeFromProfile(),
         history: [],
-        ragChunks: await resolveCoachRagChunks(buildCoachRagQuery(isScore ? '简历评分 AI产品信号' : '简历优化 bullet AI产品'), 6)
+        ragChunks: await resolveCoachRagChunks(buildCoachRagQuery(isScore ? '简历评分 AI产品匹配 结果量化' : '简历优化 bullet AI产品'), 6)
       })
     });
     const raw = await res.text();
