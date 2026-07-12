@@ -7207,7 +7207,7 @@ function renderDocumentPanelHtml() {
   if (!hasDoc) {
     return `<div class="resume-pane-empty">先完成「优化」标签页中的优化，再在此预览 / 导出文档</div>`;
   }
-  const changes = (report?.evalBadcase || []).slice(0, 4);
+  const changes = (report?.detailSupplements || []).slice(0, 4);
   const preview = (report?.bullets || []).map(b =>
     `<p><strong>改后：</strong>${escapeHtml(b.after || '')}</p>`
   ).join('') || `<p>${escapeHtml(resumeOptimizeResult.content.slice(0, 600))}</p>`;
@@ -7216,10 +7216,10 @@ function renderDocumentPanelHtml() {
       <div class="doc-artifact-icon">W</div>
       <div style="flex:1;min-width:0">
         <strong>简历优化_v2.docx</strong>
-        <p style="font-size:13px;color:var(--ink2);margin:4px 0 0">Agent 已更新 bullet 与 eval 描述</p>
+        <p style="font-size:13px;color:var(--ink2);margin:4px 0 0">Agent 已更新 bullet 与细节补充</p>
       </div>
     </div>
-    ${changes.length ? `<div class="surface-card surface-card--flat" style="padding:12px;margin-bottom:12px;font-size:13px"><strong>变更摘要</strong><ol style="margin:8px 0 0 18px">${changes.map(c => `<li>${escapeHtml(c)}</li>`).join('')}</ol></div>` : ''}
+    ${changes.length ? `<div class="surface-card surface-card--flat" style="padding:12px;margin-bottom:12px;font-size:13px"><strong>细节补充</strong><ol style="margin:8px 0 0 18px">${changes.map(c => `<li>${escapeHtml(c)}</li>`).join('')}</ol></div>` : ''}
     <div class="doc-preview-pane">${preview}</div>`;
 }
 
@@ -7814,12 +7814,12 @@ function getResumeDocumentExportContent() {
   const title = '简历优化';
   const mdLines = [`# ${title}`, ''];
   const htmlParts = [`<h1>${escapeHtml(title)}</h1>`];
-  const changes = (report?.evalBadcase || []).slice(0, 10);
+  const changes = (report?.detailSupplements || []).slice(0, 10);
   if (changes.length) {
-    mdLines.push('## 变更摘要', '');
+    mdLines.push('## 细节补充', '');
     changes.forEach((c, i) => mdLines.push(`${i + 1}. ${c}`));
     mdLines.push('');
-    htmlParts.push('<h2>变更摘要</h2><ol>');
+    htmlParts.push('<h2>细节补充</h2><ol>');
     changes.forEach(c => htmlParts.push(`<li>${escapeHtml(c)}</li>`));
     htmlParts.push('</ol>');
   }
@@ -8638,15 +8638,11 @@ function renderOptimizePaneContent(report) {
       <div class="opt-bullet-pair opt-after"><span class="opt-label">改后 · 可直接粘贴</span><p>${escapeHtml(b.after || '—')}</p></div>
     </div>`
   ).join('');
-  const evalItems = (report.evalBadcase || []).map(s => `<li>${escapeHtml(s)}</li>`).join('');
+  const detailItems = (report.detailSupplements || []).map(s => `<li>${escapeHtml(s)}</li>`).join('');
   return `<div class="opt-pane-stack">
     <div class="opt-pane-section"><h4>① 诊断</h4><p>${escapeHtml(report.weakProject || '—')}</p></div>
     <div class="opt-pane-section"><h4>② 改写方案</h4><p class="opt-section-hint">以下是可直接复制进简历的 bullet，不是点评分析。</p>${bullets || '<p>—</p>'}</div>
-    <div class="opt-pane-section"><h4>③ Eval / Badcase 补充</h4>${evalItems ? `<ul>${evalItems}</ul>` : '<p>—</p>'}</div>
-    <div class="opt-pane-section"><h4>④ 项目方向</h4>
-      <p><strong>主方向：</strong>${escapeHtml(report.mainDirection || '—')}</p>
-      <p style="margin-top:6px"><strong>备方向：</strong>${escapeHtml(report.backupDirection || '—')}</p>
-    </div>
+    <div class="opt-pane-section"><h4>③ 细节补充</h4>${detailItems ? `<ul>${detailItems}</ul>` : '<p>—</p>'}</div>
   </div>`;
 }
 
