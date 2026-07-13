@@ -7755,7 +7755,7 @@ function renderDocExportSplitHtml(scope) {
     <button type="button" class="doc-export-toggle" data-doc-export-scope="${scope}" aria-expanded="false" aria-haspopup="menu" aria-label="选择导出格式">▾</button>
     <div class="doc-export-menu" id="${id}Menu" hidden role="menu">
       <button type="button" role="menuitem" data-doc-export-scope="${scope}" data-doc-format="md">Markdown (.md)</button>
-      <button type="button" role="menuitem" data-doc-export-scope="${scope}" data-doc-format="docx">Word 兼容 (.docx)</button>
+      <button type="button" role="menuitem" data-doc-export-scope="${scope}" data-doc-format="docx">Word (.docx)</button>
       <button type="button" role="menuitem" data-doc-export-scope="${scope}" data-doc-format="pdf">打印为 PDF</button>
     </div>
   </div>`;
@@ -7835,7 +7835,31 @@ function getResumeDocumentExportContent() {
     mdLines.push(resumeOptimizeResult.content);
     htmlParts.push(`<p>${escapeHtml(resumeOptimizeResult.content).replace(/\n/g, '<br/>')}</p>`);
   }
-  return { md: mdLines.join('\n'), html: htmlParts.join(''), title };
+  const docxBlocks = [{ type: 'title', text: title }];
+  if (changes.length) {
+    docxBlocks.push({ type: 'h2', text: '细节补充' });
+    changes.forEach(c => docxBlocks.push({ type: 'li', text: c }));
+  }
+  if (report?.bullets?.length) {
+    docxBlocks.push({ type: 'h2', text: '优化 Bullet' });
+    report.bullets.forEach((b, i) => {
+      if (b.before) {
+        docxBlocks.push({ type: 'h3', text: `条目 ${i + 1} · 改前` });
+        docxBlocks.push({ type: 'p', text: b.before });
+      }
+      if (b.after) {
+        docxBlocks.push({ type: 'h3', text: '改后' });
+        docxBlocks.push({ type: 'p', text: b.after });
+      }
+    });
+  } else if (resumeOptimizeResult.content) {
+    docxBlocks.push({ type: 'p', text: resumeOptimizeResult.content.slice(0, 8000) });
+  }
+  if (report?.weakProject) {
+    docxBlocks.push({ type: 'h2', text: '诊断' });
+    docxBlocks.push({ type: 'p', text: report.weakProject });
+  }
+  return { md: mdLines.join('\n'), html: htmlParts.join(''), title, docxBlocks };
 }
 
 function getPrepDocumentExportContent() {
@@ -7846,7 +7870,8 @@ function getPrepDocumentExportContent() {
     return {
       md: interviewPrepResult.content,
       html: `<p>${escapeHtml(interviewPrepResult.content).replace(/\n/g, '<br/>')}</p>`,
-      title
+      title,
+      docxBlocks: [{ type: 'title', text: title }, { type: 'p', text: interviewPrepResult.content.slice(0, 8000) }]
     };
   }
   const body = [report.opening15s, ...(report.projects || []).map(p => p.name + '：' + (p.structure30s || ''))].filter(Boolean);
@@ -7859,7 +7884,7 @@ function exportResumeDocument(format) {
   const payload = getResumeDocumentExportContent();
   if (!payload) { alert('暂无文档内容，请先完成优化'); return; }
   if (format === 'md') downloadTextFile('简历优化.md', payload.md, 'text/markdown;charset=utf-8');
-  else if (format === 'docx') downloadWordHtmlFile('简历优化.docx', payload.html, payload.title);
+  else if (format === 'docx') downloadDocxFile('简历优化.docx', payload.docxBlocks);
   else if (format === 'pdf') printHtmlDocument(payload.html, payload.title);
 }
 
@@ -7867,7 +7892,7 @@ function exportPrepDocument(format) {
   const payload = getPrepDocumentExportContent();
   if (!payload) { alert('暂无导出内容'); return; }
   if (format === 'md') downloadTextFile('面试准备.md', payload.md, 'text/markdown;charset=utf-8');
-  else if (format === 'docx') downloadWordHtmlFile('面试准备.docx', payload.html, payload.title);
+  else if (format === 'docx') downloadDocxFile('面试准备.docx', payload.docxBlocks);
   else if (format === 'pdf') printHtmlDocument(payload.html, payload.title);
 }
 
@@ -7884,17 +7909,87 @@ function downloadTextFile(name, text, mime) {
   URL.revokeObjectURL(a.href);
 }
 
-function downloadWordHtmlFile(name, bodyHtml, title) {
-  const html = `<!DOCTYPE html><html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word">
-<head><meta charset="utf-8"><title>${escapeHtml(title || '文档')}</title>
-<style>body{font-family:"Microsoft YaHei",SimSun,sans-serif;line-height:1.6;padding:24px;color:#111}h1{font-size:20px}h2{font-size:16px;margin-top:18px}p,li{font-size:14px}</style></head>
-<body>${bodyHtml}</body></html>`;
-  const blob = new Blob(['\ufeff', html], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+function downloadDocxFile(name, blocks) {
+  const bytes = buildDocxZipBytes(blocks || []);
+  if (!bytes || !bytes.byteLength) { alert('文档内容为空'); return; }
+  const blob = new Blob([bytes], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
   a.download = name;
   a.click();
   URL.revokeObjectURL(a.href);
+}
+
+function buildDocxZipBytes(blocks) {
+  const xmlEscape = (text) => String(text || '')
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&apos;');
+  const paragraphs = (blocks || []).map((block) => {
+    const text = xmlEscape(block.text);
+    let pPr = '';
+    if (block.type === 'title') pPr = '<w:pPr><w:pStyle w:val="Title"/></w:pPr>';
+    else if (block.type === 'h2') pPr = '<w:pPr><w:pStyle w:val="Heading2"/></w:pPr>';
+    else if (block.type === 'h3') pPr = '<w:pPr><w:pStyle w:val="Heading3"/></w:pPr>';
+    else if (block.type === 'li') {
+      return `<w:p><w:pPr><w:ind w:left="420"/></w:pPr><w:r><w:t xml:space="preserve">• ${text}</w:t></w:r></w:p>`;
+    }
+    return `<w:p>${pPr}<w:r><w:t xml:space="preserve">${text}</w:t></w:r></w:p>`;
+  }).join('');
+  const documentXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>${paragraphs}<w:sectPr/></w:body></w:document>`;
+  const contentTypes = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/></Types>`;
+  const rels = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>`;
+  const docRels = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"/>`;
+  return createZipStoreBytes([
+    { name: '[Content_Types].xml', text: contentTypes },
+    { name: '_rels/.rels', text: rels },
+    { name: 'word/document.xml', text: documentXml },
+    { name: 'word/_rels/document.xml.rels', text: docRels }
+  ]);
+}
+
+function createZipStoreBytes(files) {
+  const enc = new TextEncoder();
+  const crcTable = new Uint32Array(256);
+  for (let i = 0; i < 256; i++) {
+    let c = i;
+    for (let k = 0; k < 8; k++) c = (c & 1) ? (0xedb88320 ^ (c >>> 1)) : (c >>> 1);
+    crcTable[i] = c >>> 0;
+  }
+  const crc32 = (bytes) => {
+    let crc = 0xffffffff;
+    for (let i = 0; i < bytes.length; i++) crc = crcTable[(crc ^ bytes[i]) & 0xff] ^ (crc >>> 8);
+    return (crc ^ 0xffffffff) >>> 0;
+  };
+  const u16 = (n) => new Uint8Array([n & 0xff, (n >>> 8) & 0xff]);
+  const u32 = (n) => new Uint8Array([n & 0xff, (n >>> 8) & 0xff, (n >>> 16) & 0xff, (n >>> 24) & 0xff]);
+  const concat = (chunks) => {
+    const total = chunks.reduce((sum, c) => sum + c.byteLength, 0);
+    const out = new Uint8Array(total);
+    let offset = 0;
+    chunks.forEach((chunk) => { out.set(chunk, offset); offset += chunk.byteLength; });
+    return out;
+  };
+  const locals = [];
+  const central = [];
+  let offset = 0;
+  files.forEach(({ name, text }) => {
+    const data = enc.encode(text);
+    const nameBytes = enc.encode(name);
+    const crc = crc32(data);
+    const localHeader = concat([u32(0x04034b50), u16(20), u16(0), u16(0), u16(0), u16(0), u32(crc), u32(data.byteLength), u32(data.byteLength), u16(nameBytes.byteLength), u16(0)]);
+    locals.push(localHeader, nameBytes, data);
+    const centralHeader = concat([u32(0x02014b50), u16(20), u16(20), u16(0), u16(0), u16(0), u16(0), u32(crc), u32(data.byteLength), u32(data.byteLength), u16(nameBytes.byteLength), u16(0), u16(0), u16(0), u16(0), u32(0), u32(offset)]);
+    central.push(centralHeader, nameBytes);
+    offset += localHeader.byteLength + nameBytes.byteLength + data.byteLength;
+  });
+  const centralStart = offset;
+  const centralBody = concat(central);
+  const end = concat([u32(0x06054b50), u16(0), u16(0), u16(files.length), u16(files.length), u32(centralBody.byteLength), u32(centralStart), u16(0)]);
+  return concat([...locals, centralBody, end]).buffer;
+}
+
+function downloadWordHtmlFile(name, bodyHtml, title) {
+  downloadDocxFile(name.replace(/\.docx?$/i, '.docx'), [{ type: 'title', text: title || '文档' }, { type: 'p', text: (bodyHtml || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim() }]);
 }
 
 function printHtmlDocument(bodyHtml, title) {
