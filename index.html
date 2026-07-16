@@ -4226,7 +4226,7 @@
     inset: 0;
     width: auto;
     pointer-events: none;
-    z-index: 3; /* > #app(1)，< cubes(5) / modal(200) */
+    z-index: 0; /* 只做背景，绝不压住工作台 */
     overflow: hidden;
   }
   html:not([data-theme="dark"]) .bg-wave-svg {
@@ -4247,27 +4247,23 @@
   html:not([data-theme="dark"]) .bg-grid-left::after {
     background: radial-gradient(ellipse at 24% 42%, rgba(100, 180, 255, 0.14) 0%, rgba(38, 194, 129, 0.1) 38%, transparent 68%);
   }
-  /* 深色：全屏方格，不再只藏在左侧被工作台盖住 */
+  /* 深色网格：仅页面留白/页眉可见，不盖住工作台内容 */
   html[data-theme="dark"] .bg-grid-left {
     display: block;
-    -webkit-mask-image: radial-gradient(ellipse 95% 90% at 50% 42%, #000 30%, rgba(0, 0, 0, 0.72) 62%, rgba(0, 0, 0, 0.28) 82%, transparent 100%);
-    mask-image: radial-gradient(ellipse 95% 90% at 50% 42%, #000 30%, rgba(0, 0, 0, 0.72) 62%, rgba(0, 0, 0, 0.28) 82%, transparent 100%);
-    -webkit-mask-size: 100% 100%;
-    mask-size: 100% 100%;
-    -webkit-mask-repeat: no-repeat;
-    mask-repeat: no-repeat;
+    -webkit-mask-image: none;
+    mask-image: none;
   }
   html[data-theme="dark"] body:has(#gate.visible) .bg-grid-left {
-    z-index: 315; /* 登录页也要看见格子 */
+    z-index: 0;
   }
   html[data-theme="dark"] .bg-grid-layer {
     background-image:
-      linear-gradient(rgba(192, 132, 252, 0.42) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(192, 132, 252, 0.42) 1px, transparent 1px);
+      linear-gradient(rgba(168, 85, 247, 0.22) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(168, 85, 247, 0.22) 1px, transparent 1px);
   }
-  html[data-theme="dark"] .bg-grid-back { opacity: 0.22; }
-  html[data-theme="dark"] .bg-grid-mid { opacity: 0.34; }
-  html[data-theme="dark"] .bg-grid-front { opacity: 0.5; }
+  html[data-theme="dark"] .bg-grid-back { opacity: 0.12; }
+  html[data-theme="dark"] .bg-grid-mid { opacity: 0.18; }
+  html[data-theme="dark"] .bg-grid-front { opacity: 0.26; }
   .bg-grid-layer {
     position: absolute;
     inset: -24%;
@@ -4349,12 +4345,12 @@
     display: none;
     pointer-events: none;
   }
-  /* 深色 3D 方块：screen 混合去掉 PNG 黑底，避免出现两块「黑卡片」 */
+  /* 深色 3D 方块：只在页边装饰，screen 去黑底，绝不盖住工作台文字 */
   html[data-theme="dark"] .bg-cubes {
     display: block;
     position: fixed;
     inset: 0;
-    z-index: 4;
+    z-index: 0;
     overflow: hidden;
     background-color: transparent;
     background-image:
@@ -4362,25 +4358,25 @@
       url('/assets/purple-cubes-bg.png');
     background-repeat: no-repeat, no-repeat;
     background-position:
-      left -60px bottom -100px,
-      right -40px top 20px;
+      left -80px bottom -120px,
+      right -60px top 8px;
     background-size:
-      min(480px, 50vw) auto,
-      min(540px, 48vw) auto;
-    opacity: 1;
-    filter: brightness(1.35) contrast(1.12) saturate(1.15);
+      min(420px, 38vw) auto,
+      min(460px, 36vw) auto;
+    opacity: 0.85;
+    filter: brightness(1.25) contrast(1.08) saturate(1.1);
     mix-blend-mode: screen;
     -webkit-mask-image:
-      radial-gradient(ellipse 55% 60% at 8% 92%, #000 0%, #000 35%, transparent 72%),
-      radial-gradient(ellipse 50% 55% at 92% 12%, #000 0%, #000 38%, transparent 74%);
+      radial-gradient(ellipse 42% 48% at 0% 100%, #000 0%, #000 40%, transparent 70%),
+      radial-gradient(ellipse 40% 45% at 100% 0%, #000 0%, #000 42%, transparent 72%);
     mask-image:
-      radial-gradient(ellipse 55% 60% at 8% 92%, #000 0%, #000 35%, transparent 72%),
-      radial-gradient(ellipse 50% 55% at 92% 12%, #000 0%, #000 38%, transparent 74%);
+      radial-gradient(ellipse 42% 48% at 0% 100%, #000 0%, #000 40%, transparent 70%),
+      radial-gradient(ellipse 40% 45% at 100% 0%, #000 0%, #000 42%, transparent 72%);
     -webkit-mask-composite: source-over;
     mask-composite: add;
   }
   html[data-theme="dark"] body:has(#gate.visible) .bg-cubes {
-    z-index: 320;
+    z-index: 0;
   }
   html[data-theme="dark"] .bg-cubes::after {
     content: none;
@@ -4982,7 +4978,7 @@
 <script src="/agent-intent.browser.js"></script>
 <script>
 const GITHUB_TOPICS_URL = '';
-const APP_ASSET_VERSION = '3.0.18';
+const APP_ASSET_VERSION = '3.0.19';
 
 function assetUrl(path) {
   const sep = path.includes('?') ? '&' : '?';
