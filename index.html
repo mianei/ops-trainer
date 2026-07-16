@@ -5017,7 +5017,7 @@
 <script src="/agent-intent.browser.js"></script>
 <script>
 const GITHUB_TOPICS_URL = '';
-const APP_ASSET_VERSION = '3.0.11';
+const APP_ASSET_VERSION = '3.0.12';
 
 function assetUrl(path) {
   const sep = path.includes('?') ? '&' : '?';
@@ -8470,8 +8470,8 @@ function profileUploadHtml() {
        <div class="upload-done-meta">${profileJdFileName ? escapeHtml(profileJdFileName) + ' · ' : ''}${jdChars.toLocaleString()} 字</div>
        <button type="button" class="upload-done-repick" id="jdRepickBtn">换一份</button>`
     : `<div class="upload-dropzone-icon">↑</div>
-       <div class="upload-dropzone-title">点击或拖拽上传 JD</div>
-       <div class="upload-dropzone-hint">PDF · DOCX · TXT</div>`;
+       <div class="upload-dropzone-title">点击、拖拽或粘贴 JD</div>
+       <div class="upload-dropzone-hint">PDF · DOCX · TXT · 截图</div>`;
   return `<div class="profile-upload-grid">
     <div class="profile-box">
       <label>简历 <span style="color:var(--danger)">*</span></label>
@@ -8487,14 +8487,14 @@ function profileUploadHtml() {
     </div>
     <div class="profile-box">
       <label>目标 JD <span style="color:var(--ink3)">（可选）</span></label>
-      <div class="upload-dropzone${jdChars > 0 ? ' upload-dropzone--done' : ''}" id="jdDropzone" tabindex="0" role="button" aria-label="上传 JD">
-        <input type="file" id="jdFileInput" accept=".pdf,.doc,.docx,.txt,.md,.text,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" hidden />
+      <div class="upload-dropzone${jdChars > 0 ? ' upload-dropzone--done' : ''}" id="jdDropzone" tabindex="0" role="button" aria-label="上传 JD 或粘贴截图">
+        <input type="file" id="jdFileInput" accept=".pdf,.doc,.docx,.txt,.md,.text,image/*,.png,.jpg,.jpeg,.webp,.gif,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" hidden />
         <div class="upload-dropzone-body" id="jdDropzoneBody">${jdDoneHtml}</div>
       </div>
       <p class="profile-file-status" id="jdFileStatus"></p>
       <details class="upload-paste-fallback">
         <summary>没有文件？粘贴 JD</summary>
-        <textarea id="profileJdInput" placeholder="粘贴目标岗位 JD">${escapeHtml(profileJd)}</textarea>
+        <textarea id="profileJdInput" placeholder="粘贴目标岗位 JD，或在上方区域 Ctrl+V 粘贴截图">${escapeHtml(profileJd)}</textarea>
       </details>
       <label for="profileTargetRoleInput" style="margin-top:10px;display:block">目标岗位</label>
       <input type="text" id="profileTargetRoleInput" value="${escapeAttr(profileTargetRole)}" placeholder="如：字节 AI 产品实习" style="width:100%;padding:8px 10px;border:1px solid var(--frost-border);border-radius:var(--r);font-family:inherit;font-size:13px" />
@@ -8550,11 +8550,144 @@ function fileExtension(name) {
   return i >= 0 ? n.slice(i + 1) : '';
 }
 
-async function parseUploadedDocument(file) {
+function isImageUpload(file) {
+  if (!file) return false;
+  const type = String(file.type || '').toLowerCase();
+  const ext = fileExtension(file.name);
+  return type.startsWith('image/') || ['png', 'jpg', 'jpeg', 'webp', 'gif', 'bmp'].includes(ext);
+}
+
+/** 压缩截图，降低 OCR 请求体积 */
+async function compressImageForOcr(file, maxSide = 1600, quality = 0.82) {
+  let bitmap = null;
+  try {
+    if (typeof createImageBitmap === 'function') {
+      bitmap = await createImageBitmap(file);
+    }
+  } catch { /* fall through */ }
+
+  const drawToCanvas = (img, w, h) => {
+    const canvas = document.createElement('canvas');
+    canvas.width = w;
+    canvas.height = h;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0, w, h);
+    return canvas;
+  };
+
+  let width;
+  let height;
+  let source;
+  if (bitmap) {
+    width = bitmap.width;
+    height = bitmap.height;
+    source = bitmap;
+  } else {
+    const url = URL.createObjectURL(file);
+    try {
+      const img = await new Promise((resolve, reject) => {
+        const el = new Image();
+        el.onload = () => resolve(el);
+        el.onerror = () => reject(new Error('无法读取截图'));
+        el.src = url;
+      });
+      width = img.naturalWidth || img.width;
+      height = img.naturalHeight || img.height;
+      source = img;
+    } finally {
+      URL.revokeObjectURL(url);
+    }
+  }
+
+  try {
+    const scale = Math.min(1, maxSide / Math.max(width, height, 1));
+    width = Math.max(1, Math.round(width * scale));
+    height = Math.max(1, Math.round(height * scale));
+    const canvas = drawToCanvas(source, width, height);
+    const mime = 'image/jpeg';
+    const blob = await new Promise((resolve, reject) => {
+      canvas.toBlob(b => (b ? resolve(b) : reject(new Error('截图压缩失败'))), mime, quality);
+    });
+    const dataUrl = await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(String(reader.result || ''));
+      reader.onerror = () => reject(new Error('读取截图失败'));
+      reader.readAsDataURL(blob);
+    });
+    return { dataUrl, mime, blob };
+  } finally {
+    bitmap?.close?.();
+  }
+}
+
+async function ocrViaServer(dataUrl, mime) {
+  const res = await fetch('/api/chat', {
+    method: 'POST',
+    headers: authHeaders(),
+    body: JSON.stringify({
+      accessCode,
+      userId: userAccountId,
+      tool: 'ocr',
+      imageBase64: dataUrl,
+      mimeType: mime || 'image/jpeg'
+    })
+  });
+  const data = await res.json().catch(() => ({}));
+  if (res.ok && data.text) return { text: String(data.text).trim(), provider: data.provider || 'server' };
+  const err = new Error(data.error || '截图识别失败');
+  err.fallbackLocal = Boolean(data.fallbackLocal) || res.status === 503;
+  err.status = res.status;
+  throw err;
+}
+
+async function ensureTesseract() {
+  if (window.Tesseract) return;
+  await loadExternalScript([
+    'https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js',
+    'https://unpkg.com/tesseract.js@5.1.1/dist/tesseract.min.js'
+  ]);
+  if (!window.Tesseract) throw new Error('本地 OCR 组件加载失败');
+}
+
+async function ocrViaTesseract(fileOrBlob) {
+  await ensureTesseract();
+  const result = await window.Tesseract.recognize(fileOrBlob, 'chi_sim+eng', {
+    logger: () => {}
+  });
+  const text = String(result?.data?.text || '').replace(/\n{3,}/g, '\n\n').trim();
+  if (!text) throw new Error('本地 OCR 未识别到文字，请换更清晰截图或粘贴文本');
+  return { text, provider: 'tesseract' };
+}
+
+async function parseJdScreenshot(file) {
+  if (file.size > MAX_UPLOAD_BYTES) throw new Error('截图超过 10MB，请裁剪后重试');
+  const { dataUrl, mime, blob } = await compressImageForOcr(file);
+  try {
+    const remote = await ocrViaServer(dataUrl, mime);
+    return { text: remote.text, format: 'image' };
+  } catch (e) {
+    if (!e.fallbackLocal && e.status && e.status < 500 && e.status !== 503) throw e;
+    try {
+      const local = await ocrViaTesseract(blob || file);
+      return { text: local.text, format: 'image' };
+    } catch (localErr) {
+      throw new Error((e.message || '截图识别失败') + '；本地识别也失败：' + (localErr.message || ''));
+    }
+  }
+}
+
+async function parseUploadedDocument(file, field = 'resume') {
   if (!file) throw new Error('未选择文件');
   if (file.size > MAX_UPLOAD_BYTES) throw new Error('文件超过 10MB，请压缩或粘贴文本');
   const ext = fileExtension(file.name);
   const type = String(file.type || '').toLowerCase();
+
+  if (isImageUpload(file)) {
+    if (field !== 'jd') {
+      throw new Error('简历请上传 PDF / DOCX / TXT；截图识别目前仅支持 JD');
+    }
+    return parseJdScreenshot(file);
+  }
 
   if (['txt', 'md', 'text'].includes(ext) || type.startsWith('text/')) {
     return { text: await file.text(), format: ext || 'txt' };
@@ -8576,6 +8709,9 @@ async function parseUploadedDocument(file) {
     }
     const text = parts.join('\n').replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
     if (!text) {
+      if (field === 'jd') {
+        throw new Error('PDF 未识别到文字（可能是扫描件）。请改传截图（PNG/JPG），或粘贴 JD 文本');
+      }
       throw new Error('PDF 未识别到文字（可能是扫描件图片）。请换可复制文字的 PDF，或直接粘贴简历内容');
     }
     return { text, format: 'pdf' };
@@ -8588,7 +8724,9 @@ async function parseUploadedDocument(file) {
     return { text, format: 'docx' };
   }
 
-  throw new Error('不支持的格式，请上传 PDF、DOCX 或 TXT');
+  throw new Error(field === 'jd'
+    ? '不支持的格式，请上传 PDF、DOCX、TXT 或 JD 截图（PNG/JPG）'
+    : '不支持的格式，请上传 PDF、DOCX 或 TXT');
 }
 
 function updateUploadDropzoneUI(field, { fileName, charCount, parsing, error }) {
@@ -8613,7 +8751,7 @@ function updateUploadDropzoneUI(field, { fileName, charCount, parsing, error }) 
     zone.classList.remove('upload-dropzone--done');
     body.innerHTML = `<div class="upload-dropzone-icon">↑</div>
       <div class="upload-dropzone-title">点击或拖拽上传${isResume ? '简历' : ' JD'}</div>
-      <div class="upload-dropzone-hint">自动识别 PDF · DOCX · TXT</div>`;
+      <div class="upload-dropzone-hint">自动识别 PDF · DOCX · TXT${isResume ? '' : ' · 截图'}</div>`;
     if (statusEl) {
       statusEl.textContent = error;
       statusEl.classList.add('is-error');
@@ -8675,6 +8813,26 @@ function bindFileDropzone(dropzoneId, inputId, field) {
     e.stopPropagation();
     input.click();
   });
+
+  // JD：支持 Ctrl+V / 右键粘贴截图
+  if (field === 'jd' && !zone.dataset.pasteBound) {
+    zone.dataset.pasteBound = '1';
+    zone.addEventListener('paste', async e => {
+      const items = e.clipboardData?.items;
+      if (!items) return;
+      for (const item of items) {
+        if (item.type && item.type.startsWith('image/')) {
+          e.preventDefault();
+          const blob = item.getAsFile();
+          if (!blob) return;
+          const name = 'jd-screenshot.' + (blob.type.split('/')[1] || 'png').replace('jpeg', 'jpg');
+          const file = new File([blob], name, { type: blob.type || 'image/png' });
+          await applyParsedFileToField(file, 'jd');
+          return;
+        }
+      }
+    });
+  }
 }
 
 async function applyParsedFileToField(file, field) {
@@ -8682,7 +8840,7 @@ async function applyParsedFileToField(file, field) {
   const ta = document.getElementById(isResume ? 'profileResumeInput' : 'profileJdInput');
   updateUploadDropzoneUI(field, { fileName: file.name, parsing: true });
   try {
-    const { text, format } = await parseUploadedDocument(file);
+    const { text, format } = await parseUploadedDocument(file, field);
     if (isResume) {
       profileResume = text;
       profileResumeFileName = file.name;
@@ -8700,6 +8858,7 @@ async function applyParsedFileToField(file, field) {
       renderResumeScorePane();
       updateCanvasChrome('resume');
     }
+    if (!isResume) updateCanvasChrome('resume');
   } catch (e) {
     const msg = e.message || '文件解析失败';
     updateUploadDropzoneUI(field, { error: msg });

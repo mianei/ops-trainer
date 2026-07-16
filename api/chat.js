@@ -30,6 +30,7 @@ import {
 import { resolveSystemPrompt } from '../lib/prompt-route.js';
 import { handleAnalyze } from '../lib/analyze-tool.js';
 import { handleTranscribe } from '../lib/transcribe-tool.js';
+import { handleOcr } from '../lib/ocr-tool.js';
 import { guardFollowupHistory, getGuardConfig } from '../lib/context-guard.js';
 import {
   newTraceId,
@@ -326,6 +327,10 @@ export default async function handler(req) {
   if (tool === 'transcribe') {
     await recordUsageEvent(auth.userId, 'transcribe');
     return handleTranscribe(body);
+  }
+  if (tool === 'ocr') {
+    await recordUsageEvent(auth.userId, 'ocr');
+    return handleOcr(body);
   }
 
   const llm = getLlmConfig();
