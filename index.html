@@ -1162,15 +1162,18 @@
   }
   .agent-chat-bubble.agent { background: var(--block-bg); }
   .agent-chat-role { font-size: 10px; color: var(--ink3); margin-bottom: 2px; }
-  .agent-tools {
+  .agent-tools,
+  .trace-session-tools {
     border: 1px solid var(--frost-border);
     border-radius: var(--r);
     padding: 8px 10px;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
     background: rgba(255, 255, 255, 0.55);
     font-size: 12px;
   }
-  .agent-tools[hidden] { display: none !important; }
+  .agent-tools[hidden],
+  .trace-session-tools[hidden] { display: none !important; }
+  .trace-session-tools strong { display: block; margin-bottom: 4px; }
   .agent-tool-row {
     display: flex;
     align-items: center;
@@ -5023,7 +5026,7 @@
 <script src="/agent-intent.browser.js"></script>
 <script>
 const GITHUB_TOPICS_URL = '';
-const APP_ASSET_VERSION = '3.0.13';
+const APP_ASSET_VERSION = '3.0.14';
 
 function assetUrl(path) {
   const sep = path.includes('?') ? '&' : '?';
@@ -6960,16 +6963,24 @@ function agentToolStepsHtml() {
   }).join('');
 }
 
+/** 工具调用只展示在 Trace，不放助手 Bot 对话框 */
 function renderAgentToolsPanel() {
-  const toolsEl = document.querySelector('.agent-tools');
-  if (!toolsEl) return;
+  const host = document.getElementById('traceSessionTools');
+  if (!host) return;
   if (!agentToolSteps.length) {
-    toolsEl.hidden = true;
-    toolsEl.innerHTML = '';
+    host.hidden = true;
+    host.innerHTML = '';
     return;
   }
-  toolsEl.hidden = false;
-  toolsEl.innerHTML = '<strong>工具调用</strong>' + agentToolStepsHtml();
+  host.hidden = false;
+  host.innerHTML = '<strong>本次会话 · 工具调用</strong>' + agentToolStepsHtml();
+}
+
+function buildSessionToolsBlockHtml() {
+  if (!agentToolSteps.length) {
+    return `<div class="trace-session-tools" id="traceSessionTools" hidden></div>`;
+  }
+  return `<div class="trace-session-tools" id="traceSessionTools"><strong>本次会话 · 工具调用</strong>${agentToolStepsHtml()}</div>`;
 }
 
 
@@ -7497,14 +7508,15 @@ function formatTokenBucketsBar(buckets) {
 }
 
 function buildTracePanelHtml(scene, { historyEnabled, traces, badcases, tokenBuckets, error }) {
+  const toolsBlock = buildSessionToolsBlockHtml();
   if (error) {
-    return `<div class="resume-pane-empty" style="color:var(--danger)">${escapeHtml(error)}</div>`;
+    return `${toolsBlock}<div class="resume-pane-empty" style="color:var(--danger)">${escapeHtml(error)}</div>`;
   }
   if (!historyEnabled) {
-    return `<div class="resume-pane-empty">历史存储未启用（需配置 Upstash）</div>`;
+    return `${toolsBlock}<div class="resume-pane-empty">历史存储未启用（需配置 Upstash）</div>`;
   }
   if (!traces.length) {
-    return `<div class="resume-pane-empty">暂无 trace，先完成一次评分/点评/准备</div>`;
+    return `${toolsBlock}<div class="resume-pane-empty">暂无服务端 trace，先完成一次评分/点评/准备；上方仍可看本次会话工具调用</div>`;
   }
   const rows = traces.map((t) => `
     <tr>
@@ -7518,6 +7530,7 @@ function buildTracePanelHtml(scene, { historyEnabled, traces, badcases, tokenBuc
     ? `<p style="font-size:12px;color:var(--ink3);margin-top:10px">全账号 badcase ${badcases.length} 条（本场景 ${traces.filter(t => t.badcase?.tagged).length} 条）</p>`
     : '';
   return `
+    ${toolsBlock}
     ${formatTokenBucketsBar(tokenBuckets)}
     <div class="surface-card surface-card--flat" style="padding:0;overflow:hidden">
       <table class="trace-table">
@@ -7691,7 +7704,6 @@ function mountAgentWorkspace(innerHtml) {
         <div class="agent-chat-plan" id="agentChatPlan" aria-label="训练计划"></div>
         <div class="agent-chat-msgs" id="agentChatMsgs"></div>
         <div class="agent-chat-chips" id="agentChatChips" hidden></div>
-        <div class="agent-tools" hidden></div>
         <div class="agent-chat-compose">
           <div class="agent-compose-row">
             <button type="button" class="agent-compose-icon" id="agentChatMic" title="语音输入" aria-label="语音输入"></button>
