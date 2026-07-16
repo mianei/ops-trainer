@@ -236,7 +236,7 @@ export default async function handler(req) {
 
     const compact = Boolean(action);
     const actionLimits = {
-      'resume-score': { maxTokens: 1100, temperature: 0.25 },
+      'resume-score': { maxTokens: 1100, temperature: 0 },
       'resume-optimize': { maxTokens: 1400, temperature: 0.25 },
       'resume-jd-rewrite': { maxTokens: 2800, temperature: 0.3 },
       'interview-prep': { maxTokens: 3200, temperature: 0.4 }
@@ -341,7 +341,8 @@ export default async function handler(req) {
     });
 
     if (action === 'resume-score') {
-      const scoreReport = parseResumeScoreReport(result.text);
+      const hasJd = Boolean(String(intake?.jd || '').trim());
+      const scoreReport = parseResumeScoreReport(result.text, { hasJd });
       await recordResumeCoachHistory(auth, { action, mode, resultText: result.text, scoreReport });
       return json({
         ok: true,

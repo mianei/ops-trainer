@@ -2635,6 +2635,12 @@
   .score-pane-metric-value--amber { color: #ca8a04; }
   .score-pane-metric-value--blue { color: #2563eb; }
   .score-pane-metric-value--green { color: #16a34a; }
+  .score-pane-formula {
+    font-size: 11px;
+    color: var(--ink3);
+    margin: 6px 0 0;
+    line-height: 1.4;
+  }
   .score-pane-summary {
     font-size: 11px;
     color: var(--ink2);
@@ -5017,7 +5023,7 @@
 <script src="/agent-intent.browser.js"></script>
 <script>
 const GITHUB_TOPICS_URL = '';
-const APP_ASSET_VERSION = '3.0.12';
+const APP_ASSET_VERSION = '3.0.13';
 
 function assetUrl(path) {
   const sep = path.includes('?') ? '&' : '?';
@@ -9004,7 +9010,7 @@ function renderScoreSkeletonHtml(mode) {
     </div>`).join('');
   return `<div class="${paneCls}">
     <div class="score-pane-metrics score-pane-metrics--single">
-      <div class="score-pane-metric"><div class="score-pane-metric-label">评分</div><div class="${overallCls}">${overallText}</div></div>
+      <div class="score-pane-metric"><div class="score-pane-metric-label">综合分</div><div class="${overallCls}">${overallText}</div></div>
     </div>
     <div class="score-pane-bars">${bars}</div>
     <div class="score-pane-fixes score-pane-fixes--shell"><strong>优先改</strong><ol><li class="score-fix-line"></li><li class="score-fix-line"></li><li class="score-fix-line"></li></ol></div>
@@ -9039,10 +9045,14 @@ function renderScorePaneContent(report, opts) {
   const overallText = animate && !Number.isNaN(overallNum) ? '0' : String(overall);
   const overallValueCls = scoreOverallColorClass(overallNum);
   const scoreKey = options.scoreKey ? ` data-score-key="${escapeAttr(options.scoreKey)}"` : '';
+  const passHint = report.passRate != null
+    ? `<div class="score-pane-formula">综合分 = 五维均分×20 · 预计过筛约 ${escapeHtml(String(report.passRate))}%</div>`
+    : `<div class="score-pane-formula">综合分 = 五维均分×20（量尺固定，避免每次乱跳）</div>`;
   return `<div class="score-pane${animate ? ' score-pane--animating' : ''}"${scoreKey}>
     <div class="score-pane-metrics score-pane-metrics--single">
-      <div class="score-pane-metric"><div class="score-pane-metric-label">评分</div><div class="${overallValueCls}"${countAttr}>${escapeHtml(overallText)}</div></div>
+      <div class="score-pane-metric"><div class="score-pane-metric-label">综合分</div><div class="${overallValueCls}"${countAttr}>${escapeHtml(overallText)}</div></div>
     </div>
+    ${passHint}
     ${report.summary ? `<p class="score-pane-summary${summaryCls}">${escapeHtml(report.summary)}</p>` : ''}
     <div class="score-pane-bars">${bars}</div>
     ${fixes ? `<div class="score-pane-fixes${fixesCls}"><strong>优先改</strong><ol>${fixes}</ol></div>` : ''}
