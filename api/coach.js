@@ -21,19 +21,21 @@ import {
 import { recordUsageEvent } from '../lib/usage-stats.js';
 import { appendResumeHistory, RESUME_HISTORY_LABELS } from '../lib/user-profile.js';
 
-async function callDeepSeekCoach(cfg, systemPrompt, messages, maxTokens = 4096, temperature = 0.7) {
+async function callDeepSeekCoach(cfg, systemPrompt, messages, maxTokens = 4096, temperature = 0.7, opts = {}) {
+  const body = {
+    model: cfg.model,
+    max_tokens: maxTokens,
+    temperature,
+    messages: [{ role: 'system', content: systemPrompt }, ...messages]
+  };
+  if (opts.jsonMode) body.response_format = { type: 'json_object' };
   const res = await fetch(`${cfg.baseUrl}/chat/completions`, {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
       authorization: `Bearer ${cfg.apiKey}`
     },
-    body: JSON.stringify({
-      model: cfg.model,
-      max_tokens: maxTokens,
-      temperature,
-      messages: [{ role: 'system', content: systemPrompt }, ...messages]
-    })
+    body: JSON.stringify(body)
   });
   const data = await res.json();
   if (!res.ok) {
@@ -236,11 +238,12 @@ export default async function handler(req) {
     const actionLimits = {
       'resume-score': { maxTokens: 1100, temperature: 0.25 },
       'resume-optimize': { maxTokens: 1400, temperature: 0.25 },
-      'interview-prep': { maxTokens: 1600, temperature: 0.5 }
+      'interview-prep': { maxTokens: 3200, temperature: 0.4 }
     };
     const limits = action ? (actionLimits[action] || { maxTokens: 1200, temperature: 0.5 }) : null;
     const maxTokens = limits?.maxTokens ?? (compact ? 2048 : 4096);
     const temperature = limits?.temperature ?? 0.7;
+    const jsonMode = Boolean(action);
     const actionIntake = action ? slimIntakeForAction(intake, action) : intake;
     const systemPrompt = action
       ? buildActionCoachSystemPrompt(action)
@@ -310,7 +313,7 @@ export default async function handler(req) {
     const result =
       cfg.provider === 'anthropic'
         ? await callAnthropicCoach(cfg, systemPrompt, chatMessages, maxTokens)
-        : await callDeepSeekCoach(cfg, systemPrompt, chatMessages, maxTokens, temperature);
+        : await callDeepSeekCoach(cfg, systemPrompt, chatMessages, maxTokens, temperature, { jsonMode });
 
     if (result.error) {
       return json({ error: result.error }, result.status >= 400 && result.status < 600 ? result.status : 502);

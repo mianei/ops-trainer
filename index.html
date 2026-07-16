@@ -2647,7 +2647,25 @@
   .score-pane-bar-num { font-weight: 700; color: #2563eb; text-align: right; font-variant-numeric: tabular-nums; }
   .prep-dim-hint { font-size: 12px; color: var(--ink3); margin: 0 0 8px; }
   .prep-dim-bars { margin-bottom: 4px; }
-  .prep-dim-diagnosis { font-size: 12px; color: var(--ink2); line-height: 1.5; margin: -2px 0 10px 0; }
+  .prep-dim-diagnosis { font-size: 12px; color: var(--ink2); line-height: 1.5; margin: 8px 0 0; }
+  .prep-dim-cards { display: flex; flex-direction: column; gap: 12px; }
+  .prep-dim-card {
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--surface2, #f4f6f8) 88%, transparent);
+    border: 1px solid color-mix(in srgb, var(--line, #e5e7eb) 80%, transparent);
+  }
+  .prep-dim-card-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+  .prep-dim-card-title { font-size: 14px; font-weight: 650; color: var(--ink); }
+  .prep-dim-card-score { font-size: 18px; font-weight: 700; color: var(--accent, #0f766e); line-height: 1; }
+  .prep-dim-card-score small { font-size: 12px; font-weight: 500; color: var(--ink3); margin-left: 1px; }
+  .prep-dim-card .score-pane-bar-track { height: 6px; }
   .score-pane-metrics--single {
     grid-template-columns: 1fr;
     max-width: 108px;
@@ -8806,13 +8824,17 @@ function renderInterviewPrepPaneContent(report) {
   const prepDims = (report.prepDimensions && report.prepDimensions.length)
     ? report.prepDimensions
     : PREP_DIMENSION_NAMES.map(name => ({ name, score: 0, diagnosis: '' }));
-  const prepDimBars = prepDims.map((d) => {
+  const prepDimCards = prepDims.map((d, i) => {
     const pct = Math.round((Number(d.score) / 5) * 100);
-    return `<div class="score-pane-bar-row">
-      <span class="score-pane-bar-name" title="${escapeAttr(d.name)}">${escapeHtml(d.name)}</span>
+    const idx = ['①', '②', '③'][i] || String(i + 1);
+    return `<div class="prep-dim-card">
+      <div class="prep-dim-card-head">
+        <span class="prep-dim-card-title">${idx} ${escapeHtml(d.name)}</span>
+        <span class="prep-dim-card-score">${escapeHtml(String(d.score))}<small>/5</small></span>
+      </div>
       <div class="score-pane-bar-track"><div class="score-pane-bar-fill" style="width:${pct}%"></div></div>
-      <span class="score-pane-bar-num">${escapeHtml(String(d.score))}</span>
-    </div>${d.diagnosis ? `<p class="prep-dim-diagnosis">${escapeHtml(d.diagnosis)}</p>` : ''}`;
+      <p class="prep-dim-diagnosis">${escapeHtml(d.diagnosis || '—')}</p>
+    </div>`;
   }).join('');
   const projects = (report.projects || []).map(p =>
     `<div class="opt-pane-bullet">
@@ -8831,13 +8853,64 @@ function renderInterviewPrepPaneContent(report) {
   const doNotSay = (report.doNotSay || []).map(s => `<li>${escapeHtml(s)}</li>`).join('');
   return `<div class="opt-pane-stack">
     ${report.summary ? `<div class="opt-pane-section"><h4>总评</h4><p>${escapeHtml(report.summary)}</p></div>` : ''}
-    <div class="opt-pane-section"><h4>① 面试就绪度</h4><p class="prep-dim-hint">项目真实性 · 证据完整度 · 面试防御力</p><div class="score-pane-bars prep-dim-bars">${prepDimBars}</div></div>
-    <div class="opt-pane-section"><h4>② 前 15 秒</h4><p>${escapeHtml(report.opening15s || '—')}</p></div>
-    <div class="opt-pane-section"><h4>③ 项目讲述</h4>${projects || '<p>—</p>'}</div>
-    <div class="opt-pane-section"><h4>④ 追问与防守</h4>${followUps || '<p>—</p>'}</div>
-    <div class="opt-pane-section"><h4>⑤ Badcase</h4>${badcases ? `<ul>${badcases}</ul>` : '<p>—</p>'}</div>
-    <div class="opt-pane-section"><h4>⑥ 不能说的话</h4>${doNotSay ? `<ul>${doNotSay}</ul>` : '<p>—</p>'}</div>
+    <div class="opt-pane-section">
+      <h4>面试就绪度三维</h4>
+      <p class="prep-dim-hint">项目真实性 · 证据完整度 · 面试防御力</p>
+      <div class="prep-dim-cards">${prepDimCards}</div>
+    </div>
+    ${report.opening15s ? `<div class="opt-pane-section"><h4>前 15 秒</h4><p>${escapeHtml(report.opening15s)}</p></div>` : ''}
+    ${projects ? `<div class="opt-pane-section"><h4>项目讲述</h4>${projects}</div>` : ''}
+    ${followUps ? `<div class="opt-pane-section"><h4>追问与防守</h4>${followUps}</div>` : ''}
+    ${badcases ? `<div class="opt-pane-section"><h4>Badcase</h4><ul>${badcases}</ul></div>` : ''}
+    ${doNotSay ? `<div class="opt-pane-section"><h4>不能说的话</h4><ul>${doNotSay}</ul></div>` : ''}
   </div>`;
+}
+
+/** 前端兜底：服务端未解析出 prepReport 时，尽量从原文抠出三维，避免直接甩 JSON */
+function tryParsePrepReportClient(raw) {
+  const text = String(raw || '').trim();
+  if (!text || text[0] !== '{' && !text.includes('prepDimensions') && !text.includes('项目真实性')) return null;
+  try {
+    const start = text.indexOf('{');
+    const end = text.lastIndexOf('}');
+    const slice = start >= 0 ? (end > start ? text.slice(start, end + 1) : text.slice(start)) : text;
+    let parsed = null;
+    try { parsed = JSON.parse(slice); } catch {
+      let t = slice.replace(/,\s*"[^"]*$/u, '').replace(/,\s*$/u, '');
+      const oc = (t.match(/\{/g) || []).length - (t.match(/\}/g) || []).length;
+      const os = (t.match(/\[/g) || []).length - (t.match(/\]/g) || []).length;
+      t += ']'.repeat(Math.max(0, os)) + '}'.repeat(Math.max(0, oc));
+      try { parsed = JSON.parse(t); } catch { parsed = null; }
+    }
+    const dimsSrc = Array.isArray(parsed?.prepDimensions)
+      ? parsed.prepDimensions
+      : (Array.isArray(parsed?.dimensions) ? parsed.dimensions : []);
+    const names = PREP_DIMENSION_NAMES;
+    const prepDimensions = names.map((name, i) => {
+      const hit = dimsSrc.find(d => String(d?.name || '').includes(name.slice(0, 2))) || dimsSrc[i] || {};
+      const score = Math.max(1, Math.min(5, Number(hit.score) || 3));
+      return { name, score, diagnosis: String(hit.diagnosis || hit.comment || '').trim() };
+    });
+    if (!prepDimensions.some(d => d.diagnosis) && !parsed?.summary && !parsed?.opening15s) return null;
+    return {
+      summary: String(parsed?.summary || '').trim(),
+      prepDimensions,
+      opening15s: String(parsed?.opening15s || parsed?.opening || '').trim(),
+      projects: (Array.isArray(parsed?.projects) ? parsed.projects : []).slice(0, 4).map(p => ({
+        name: String(p?.name || '项目').trim(),
+        structure30s: String(p?.structure30s || p?.structure || '').trim(),
+        keyEvidence: String(p?.keyEvidence || p?.evidence || '').trim()
+      })).filter(p => p.structure30s || p.keyEvidence),
+      followUps: (Array.isArray(parsed?.followUps) ? parsed.followUps : []).slice(0, 6).map(f => ({
+        question: String(f?.question || f?.q || '').trim(),
+        defense: String(f?.defense || f?.answer || '').trim()
+      })).filter(f => f.question),
+      badcases: (Array.isArray(parsed?.badcases) ? parsed.badcases : []).map(b => String(typeof b === 'string' ? b : b?.text || '').trim()).filter(Boolean).slice(0, 4),
+      doNotSay: (Array.isArray(parsed?.doNotSay) ? parsed.doNotSay : []).map(s => String(s || '').trim()).filter(Boolean).slice(0, 6)
+    };
+  } catch {
+    return null;
+  }
 }
 
 function renderInterviewPrepPane() {
@@ -8849,13 +8922,22 @@ function renderInterviewPrepPane() {
     if (errEl) errEl.hidden = true;
     return;
   }
-  if (interviewPrepResult.prepReport) {
-    body.innerHTML = renderInterviewPrepPaneContent(interviewPrepResult.prepReport);
+  let report = interviewPrepResult.prepReport;
+  if (!report && interviewPrepResult.content) {
+    report = tryParsePrepReportClient(interviewPrepResult.content);
+    if (report) interviewPrepResult.prepReport = report;
+  }
+  if (report) {
+    body.innerHTML = renderInterviewPrepPaneContent(report);
     if (errEl) errEl.hidden = true;
     return;
   }
   if (interviewPrepResult.content) {
-    body.innerHTML = `<div class="score-pane-summary">${renderCoachBubbleHtml(interviewPrepResult.content, 'assistant')}</div>`;
+    // 绝不直接展示原始 JSON
+    const looksJson = /^\s*[{\[]/.test(interviewPrepResult.content) || interviewPrepResult.content.includes('"prepDimensions"');
+    body.innerHTML = looksJson
+      ? `<div class="resume-pane-empty"><p>准备报告解析失败。请点标题栏「一键准备面试」重试。</p></div>`
+      : `<div class="score-pane-summary">${renderCoachBubbleHtml(interviewPrepResult.content, 'assistant')}</div>`;
     if (errEl) errEl.hidden = true;
     return;
   }
