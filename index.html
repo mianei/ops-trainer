@@ -7905,7 +7905,8 @@ function renderCanvasTitleCta(scene, tab) {
     else {
       const canJd = Boolean(profileResume.trim() && profileJd.trim());
       parts.push(`<button type="button" class="btn-primary" id="resumeJdRewriteBtn"${canJd ? '' : ' disabled'}>按 JD 一键改简历</button>`);
-    } else if (scene === 'prep' && tab === '准备报告') {
+    }
+  } else if (scene === 'prep' && tab === '准备报告') {
     if (interviewPrepResult.loading) parts.push('<button type="button" class="btn-primary" disabled>准备中…</button>');
     else if (!interviewPrepResult.prepReport && !interviewPrepResult.content) {
       parts.push('<button type="button" class="btn-primary" id="interviewPrepBtn">一键准备面试</button>');
