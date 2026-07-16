@@ -13,7 +13,14 @@
 
   const COACH_MODE_TO_SCENE = {"full-report":"resume","project-direction":"resume","project-iteration":"resume","resume-diagnosis":"resume","ai-pm-qa":"prep","interview-defense":"prep"};
   const RESUME_COACH_MODES = new Set(["full-report","project-direction","project-iteration","resume-diagnosis"]);
-  const AGENT_INTENT_LABELS = {"score_resume":"简历评分","optimize_resume":"简历优化","prep_interview":"面试准备","next_scenario":"换题","switch_tab":"切换 Tab","export_doc":"导出文档","navigate_scene":"切换模块","coach_mode":"教练模式","coach_followup":"追问","goal_plan":"训练规划","submit_scenario":"提交点评"};
+  const AGENT_INTENT_LABELS = {"score_resume":"简历评分","optimize_resume":"简历优化","prep_interview":"面试准备","next_scenario":"换题","switch_tab":"切换 Tab","export_doc":"导出文档","navigate_scene":"切换模块","coach_mode":"教练模式","coach_followup":"追问","goal_plan":"训练规划","submit_scenario":"提交点评","refine_canvas":"按要求改画布"};
+
+  function looksLikeRefineRequest(text) {
+    const t = String(text || '').trim();
+    if (!t) return false;
+    if (/^(优化简历|开始优化|去优化|优化|optimize|评分|打分|准备面试|一键准备)$/i.test(t)) return false;
+    return /太长|太短|改短|改长|再来一版|再写一版|再出一版|再.*一版|润色一下|缩短|精简|压缩|简洁|详细一点|展开|写短|写长|少写|多写|内容太长|改写.*长|长了|短了|不满意|重新改|改一下|改成|去掉|删掉|按.*三条|项目真实性|证据完整度|面试防御/.test(t);
+  }
 
   function resolveAgentIntent(msg, ctx) {
     ctx = ctx || {};
@@ -27,10 +34,18 @@
     if (/提交.*点评|获取点评|提交作答|submit/i.test(t) && (scene === 'scenario' || /业务|场景|题目/.test(t))) {
       return { intent: 'submit_scenario', tool: 'submit_scenario_answer', targetScene: 'scenario', confidence: 'high', source: 'regex' };
     }
+    if (looksLikeRefineRequest(t)) {
+      var targetScene = scene;
+      if (/项目真实性|证据完整度|面试防御|准备报告|三维|三条/.test(t)) targetScene = 'prep';
+      else if (/bullet|简历|改写|优化/.test(t)) targetScene = 'resume';
+      return { intent: 'refine_canvas', tool: 'refine_canvas', targetScene: targetScene, confidence: 'high', source: 'regex' };
+    }
     if (/评分|打分|评一下|score/i.test(t)) {
       return { intent: 'score_resume', tool: 'score_resume', targetScene: 'resume', confidence: 'high', source: 'regex' };
     }
-    if (/优化简历|改写简历|优化 bullet|optimize/i.test(t) || (/优化|改写/.test(t) && !/项目/.test(t))) {
+    if (/优化简历|改写简历|优化 bullet|一键优化|开始优化|去优化|^optimize$/i.test(t)
+      || (/^优化$/.test(t))
+      || (/优化/.test(t) && !/太长|太短|改短|项目/.test(t) && t.length <= 12)) {
       return { intent: 'optimize_resume', tool: 'optimize_resume', targetScene: 'resume', confidence: 'high', source: 'regex' };
     }
     if (/准备面试|面试准备|一键准备|prep|备战|根据简历准备/i.test(t)) {
@@ -69,18 +84,16 @@
     }
     const coachMode = detectCoachIntentBrowser(t);
     if (coachMode) {
-      return { intent: 'coach_mode', tool: 'coach_mode', coachMode, targetScene: COACH_MODE_TO_SCENE[coachMode] || 'resume', confidence: 'high', source: 'regex' };
+      return { intent: 'coach_mode', tool: 'coach_reply', mode: coachMode, targetScene: COACH_MODE_TO_SCENE[coachMode] || 'resume', confidence: 'medium', source: 'regex' };
     }
-    if (/规划|训练计划|学习计划|帮我安排|明天面|后天面|紧急面试/i.test(t)) {
-      return { intent: 'goal_plan', tool: 'goal_plan', confidence: 'medium', source: 'regex' };
-    }
-    if (/追问|followup|解释|为什么|怎么改|不满意|再.*一版|改短|改长|润色/i.test(t)) {
-      return { intent: 'coach_followup', tool: 'coach_reply', confidence: 'medium', source: 'regex' };
+    if (/计划|规划|学习路径|训练计划|goal/i.test(t)) {
+      return { intent: 'goal_plan', tool: 'plan_goal', confidence: 'medium', source: 'regex' };
     }
     return { intent: 'coach_followup', tool: 'coach_reply', confidence: 'low', source: 'regex' };
   }
 
   global.resolveAgentIntent = resolveAgentIntent;
+  global.looksLikeRefineRequest = looksLikeRefineRequest;
   global.detectCoachIntentUnified = detectCoachIntentBrowser;
   global.AGENT_INTENT_LABELS = AGENT_INTENT_LABELS;
   global.RESUME_COACH_MODES_UNIFIED = RESUME_COACH_MODES;

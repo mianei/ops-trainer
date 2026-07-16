@@ -6654,16 +6654,92 @@ function searchKnowledgeRagLocal(query, limit) {
 }
 
 function isRefineIntent(text) {
-  return /追问|改|润色|再.*一版|改短|改长|不满意|补充|优化这段|太长|太短|精简|压缩|缩短|简洁|详细|展开/.test(String(text || ''));
+  return /追问|改|润色|再.*一版|改短|改长|不满意|补充|优化这段|太长|太短|精简|压缩|缩短|简洁|详细|展开|长了|短了/.test(String(text || ''));
 }
 
 /** 已有优化结果后，用户提出改短/太长等要求 → 应重跑优化而不是只切 Tab */
 function isOptimizeRefineRequest(text) {
+  if (typeof looksLikeRefineRequest === 'function') return looksLikeRefineRequest(text);
   const t = String(text || '').trim();
   if (!t) return false;
   if (/^(优化简历|开始优化|去优化|优化|optimize)$/i.test(t)) return false;
-  return /太长|太短|改短|改长|再.*一版|润色|缩短|精简|压缩|简洁|详细|展开|不满意|改一下|改成|内容太|写短|写长|少写|多写|去掉|删掉/.test(t)
+  return /太长|太短|改短|改长|再.*一版|润色|缩短|精简|压缩|简洁|详细|展开|不满意|改一下|改成|内容太|写短|写长|少写|多写|去掉|删掉|长了|短了/.test(t)
     || (isRefineIntent(t) && resumeAlreadyOptimized());
+}
+
+/** 把口语要求翻译成模型必须遵守的改写约束 */
+function buildOptimizeRefineHint(userMsg) {
+  const t = String(userMsg || '').trim();
+  const parts = [`用户原话：${t}`];
+  if (/太长|改短|缩短|精简|压缩|简洁|写短|少写|内容太|长了/.test(t)) {
+    parts.push('必须缩短 bullets.after：每条 40–70 字；只保留「1 个核心动作 + 1 个结果数字」；删掉次要工具名、过程堆砌、并列从句。');
+  }
+  if (/太短|改长|详细|展开|写长|多写|短了/.test(t)) {
+    parts.push('必须加长 bullets.after：补决策节点、指标口径、验证方式，但仍可直接粘贴进简历。');
+  }
+  if (/项目真实性|证据完整度|面试防御/.test(t)) {
+    parts.push('注意：这三维属于「面试准备」报告，不是简历优化 bullet；若用户在谈这三维请引导去准备页。');
+  }
+  parts.push('必须输出完整 JSON；after 相对上一版要有肉眼可见的差异。');
+  return parts.join('\n');
+}
+
+async function applyCanvasRefine(msg, scene) {
+  pushAgentChatUser(scene, msg);
+  const wantsPrepDims = /项目真实性|证据完整度|面试防御|准备报告|三维|三条/.test(msg);
+  const onPrep = scene === 'prep' || wantsPrepDims;
+
+  if (onPrep) {
+    navigateToAgentScene('prep');
+    setCanvasTab('prep', '准备报告');
+    refreshAgentCanvas();
+    agentToolSteps = [{ name: 'refine_canvas', status: 'running', detail: '准备报告' }];
+    renderAgentToolsPanel();
+    pushAgentChatAssistant('prep', '收到，正在按「项目真实性 / 证据完整度 / 面试防御力」重新生成准备报告…');
+    await runInterviewPrepAction();
+    persistCrossSceneMemory();
+    agentToolSteps = [{ name: 'refine_canvas', status: 'done', detail: 'prep' }];
+    renderAgentToolsPanel();
+    pushAgentChatAssistant('prep', '准备报告已按三维更新，请看左边。');
+    renderAgentSuggestionChips('prep');
+    return;
+  }
+
+  if (!resumeHasScore()) {
+    pushAgentChatAssistant(scene, '请先完成评分，再说改短/改长等要求。');
+    return;
+  }
+  if (!resumeAlreadyOptimized()) {
+    // 还没有优化结果：带着要求直接跑一版优化
+    agentToolSteps = [{ name: 'refine_canvas', status: 'running', detail: '首次优化并落实要求' }];
+    renderAgentToolsPanel();
+    pushAgentChatAssistant(scene, '还没有优化稿，我先按你的要求直接生成一版…');
+    pushAgentUndoSnapshot('优化前');
+    switchResumeOptimizeTab();
+    await runResumeAction('resume-optimize', 'agentChatSend', '优化', {
+      refineHint: buildOptimizeRefineHint(msg)
+    });
+    persistCrossSceneMemory();
+    agentToolSteps = [{ name: 'refine_canvas', status: 'done', detail: 'optimize' }];
+    renderAgentToolsPanel();
+    pushAgentChatAssistant(scene, '已生成并按你的要求写好「优化」页，请查看左边。');
+    renderAgentSuggestionChips(scene);
+    return;
+  }
+
+  agentToolSteps = [{ name: 'refine_canvas', status: 'running', detail: '按要求改写 bullet' }];
+  renderAgentToolsPanel();
+  pushAgentChatAssistant(scene, '收到，正在按你的要求改写左边 bullet（会真正重跑，不只切页）…');
+  pushAgentUndoSnapshot('改写前');
+  switchResumeOptimizeTab();
+  await runResumeAction('resume-optimize', 'agentChatSend', '改写', {
+    refineHint: buildOptimizeRefineHint(msg)
+  });
+  persistCrossSceneMemory();
+  agentToolSteps = [{ name: 'refine_canvas', status: 'done', detail: 'optimize' }];
+  renderAgentToolsPanel();
+  pushAgentChatAssistant(scene, '左边「优化」页已按你的要求更新。若还长/还短，继续说即可。');
+  renderAgentSuggestionChips(scene);
 }
 
 function applyRefineToCanvas(scene, reply, userMsg) {
@@ -6673,7 +6749,6 @@ function applyRefineToCanvas(scene, reply, userMsg) {
     resumeScoreResult.content += '\n\n---\n**Agent 补充**\n' + reply.trim();
     renderResumeCanvasPanels();
   } else if (scene === 'resume' && (tab === '优化' || resumeOptimizeResult.optimizeReport || resumeOptimizeResult.content)) {
-    // 优化页以 optimizeReport 为主；纯文本追加不会显示，改写请求应走重跑优化
     if (resumeOptimizeResult.content) {
       resumeOptimizeResult.content += '\n\n---\n**Agent 补充**\n' + reply.trim();
     }
@@ -7039,7 +7114,17 @@ async function handleGlobalAgentMessage(msg, scene) {
     renderAgentSuggestionChips(scene);
     return;
   }
+  if (intent.intent === 'refine_canvas') {
+    if (intent.targetScene && intent.targetScene !== scene) navigateToAgentScene(intent.targetScene);
+    await applyCanvasRefine(msg, intent.targetScene || scene);
+    return;
+  }
   if (intent.intent === 'optimize_resume') {
+    // 防御：即便被标成 optimize，只要像 refinement 就走改画布
+    if (isOptimizeRefineRequest(msg) && (resumeAlreadyOptimized() || resumeHasScore())) {
+      await applyCanvasRefine(msg, scene);
+      return;
+    }
     pushAgentChatUser(scene, msg);
     if (!resumeHasScore()) {
       pushAgentChatAssistant(scene, '请先完成评分，再执行优化。');
@@ -7048,24 +7133,14 @@ async function handleGlobalAgentMessage(msg, scene) {
     saveProfileFromDom();
     agentToolSteps = [{ name: 'optimize_resume', status: 'running', detail: '' }];
     renderAgentToolsPanel();
-    const refine = isOptimizeRefineRequest(msg);
-    const shouldStart = resumeShouldAutoStartOptimize() || refine;
-    pushAgentChatAssistant(scene, refine
-      ? '收到，正在按你的要求重新改写左边优化结果…'
-      : '收到，正在优化简历 bullet…');
-    if (shouldStart) pushAgentUndoSnapshot(refine ? '改写前' : '优化前');
+    pushAgentChatAssistant(scene, '收到，正在优化简历 bullet…');
+    pushAgentUndoSnapshot('优化前');
     switchResumeOptimizeTab();
-    if (shouldStart) {
-      await runResumeAction('resume-optimize', 'agentChatSend', refine ? '改写' : '优化', {
-        refineHint: refine ? msg : ''
-      });
-      persistCrossSceneMemory();
-    }
-    agentToolSteps = [{ name: 'optimize_resume', status: 'done', detail: refine ? '按要求改写' : '' }];
+    await runResumeAction('resume-optimize', 'agentChatSend', '优化');
+    persistCrossSceneMemory();
+    agentToolSteps = [{ name: 'optimize_resume', status: 'done', detail: '' }];
     renderAgentToolsPanel();
-    pushAgentChatAssistant(scene, shouldStart
-      ? (refine ? '已按你的要求更新「优化」页，请查看左边。' : '优化完成，请查看「优化」页。')
-      : '已切换到「优化」页。若要改短/改长，直接说具体要求即可。');
+    pushAgentChatAssistant(scene, '优化完成，请查看「优化」页。若要改短/改长，直接说即可。');
     renderAgentSuggestionChips(scene);
     return;
   }
@@ -7115,20 +7190,9 @@ async function handleGlobalAgentMessage(msg, scene) {
       pushAgentChatAssistant(scene, '请先一键评分或优化，再追问细节。');
       return;
     }
-    // 已有优化结果时，改短/太长等应直接重跑优化并更新左边画布
-    if (resumeAlreadyOptimized() && isOptimizeRefineRequest(msg)) {
-      pushAgentChatUser(scene, msg);
-      agentToolSteps = [{ name: 'optimize_resume', status: 'running', detail: '按要求改写' }];
-      renderAgentToolsPanel();
-      pushAgentChatAssistant(scene, '收到，正在按你的要求重新改写左边优化结果…');
-      pushAgentUndoSnapshot('改写前');
-      switchResumeOptimizeTab();
-      await runResumeAction('resume-optimize', 'agentChatSend', '改写', { refineHint: msg });
-      persistCrossSceneMemory();
-      agentToolSteps = [{ name: 'optimize_resume', status: 'done', detail: '按要求改写' }];
-      renderAgentToolsPanel();
-      pushAgentChatAssistant(scene, '已按你的要求更新「优化」页，请查看左边。');
-      renderAgentSuggestionChips(scene);
+    // 已有结果时，改短/太长等一律走改画布，禁止只聊天不更新左边
+    if (isOptimizeRefineRequest(msg)) {
+      await applyCanvasRefine(msg, scene);
       return;
     }
     saveProfileFromDom();
@@ -7147,6 +7211,10 @@ async function handleGlobalAgentMessage(msg, scene) {
   if (scene === 'prep') {
     if (!interviewPrepResult.content && !interviewPrepResult.prepReport) {
       pushAgentChatAssistant(scene, '请先一键准备面试，再在此 refine 报告。');
+      return;
+    }
+    if (isOptimizeRefineRequest(msg) || /项目真实性|证据完整度|面试防御|三维|三条/.test(msg)) {
+      await applyCanvasRefine(msg, 'prep');
       return;
     }
     saveProfileFromDom();
