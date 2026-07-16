@@ -6636,7 +6636,16 @@ function searchKnowledgeRagLocal(query, limit) {
 }
 
 function isRefineIntent(text) {
-  return /追问|改|润色|再.*一版|改短|改长|不满意|补充|优化这段/.test(String(text || ''));
+  return /追问|改|润色|再.*一版|改短|改长|不满意|补充|优化这段|太长|太短|精简|压缩|缩短|简洁|详细|展开/.test(String(text || ''));
+}
+
+/** 已有优化结果后，用户提出改短/太长等要求 → 应重跑优化而不是只切 Tab */
+function isOptimizeRefineRequest(text) {
+  const t = String(text || '').trim();
+  if (!t) return false;
+  if (/^(优化简历|开始优化|去优化|优化|optimize)$/i.test(t)) return false;
+  return /太长|太短|改短|改长|再.*一版|润色|缩短|精简|压缩|简洁|详细|展开|不满意|改一下|改成|内容太|写短|写长|少写|多写|去掉|删掉/.test(t)
+    || (isRefineIntent(t) && resumeAlreadyOptimized());
 }
 
 function applyRefineToCanvas(scene, reply, userMsg) {
@@ -6645,8 +6654,11 @@ function applyRefineToCanvas(scene, reply, userMsg) {
   if (scene === 'resume' && tab === '评分' && resumeScoreResult.content) {
     resumeScoreResult.content += '\n\n---\n**Agent 补充**\n' + reply.trim();
     renderResumeCanvasPanels();
-  } else if (scene === 'resume' && tab === '优化' && resumeOptimizeResult.content) {
-    resumeOptimizeResult.content += '\n\n---\n**Agent 补充**\n' + reply.trim();
+  } else if (scene === 'resume' && (tab === '优化' || resumeOptimizeResult.optimizeReport || resumeOptimizeResult.content)) {
+    // 优化页以 optimizeReport 为主；纯文本追加不会显示，改写请求应走重跑优化
+    if (resumeOptimizeResult.content) {
+      resumeOptimizeResult.content += '\n\n---\n**Agent 补充**\n' + reply.trim();
+    }
     renderResumeCanvasPanels();
   } else if (scene === 'prep' && interviewPrepResult.content) {
     interviewPrepResult.content += '\n\n---\n**Agent 补充**\n' + reply.trim();
@@ -7018,17 +7030,24 @@ async function handleGlobalAgentMessage(msg, scene) {
     saveProfileFromDom();
     agentToolSteps = [{ name: 'optimize_resume', status: 'running', detail: '' }];
     renderAgentToolsPanel();
-    pushAgentChatAssistant(scene, '收到，正在优化简历 bullet…');
-    pushAgentUndoSnapshot('优化前');
-    const shouldStart = resumeShouldAutoStartOptimize();
+    const refine = isOptimizeRefineRequest(msg);
+    const shouldStart = resumeShouldAutoStartOptimize() || refine;
+    pushAgentChatAssistant(scene, refine
+      ? '收到，正在按你的要求重新改写左边优化结果…'
+      : '收到，正在优化简历 bullet…');
+    if (shouldStart) pushAgentUndoSnapshot(refine ? '改写前' : '优化前');
     switchResumeOptimizeTab();
     if (shouldStart) {
-      await runResumeAction('resume-optimize', 'agentChatSend', '优化');
+      await runResumeAction('resume-optimize', 'agentChatSend', refine ? '改写' : '优化', {
+        refineHint: refine ? msg : ''
+      });
       persistCrossSceneMemory();
     }
-    agentToolSteps = [{ name: 'optimize_resume', status: 'done', detail: '' }];
+    agentToolSteps = [{ name: 'optimize_resume', status: 'done', detail: refine ? '按要求改写' : '' }];
     renderAgentToolsPanel();
-    pushAgentChatAssistant(scene, shouldStart ? '优化完成，请查看「优化」页。' : '已切换到「优化」页。');
+    pushAgentChatAssistant(scene, shouldStart
+      ? (refine ? '已按你的要求更新「优化」页，请查看左边。' : '优化完成，请查看「优化」页。')
+      : '已切换到「优化」页。若要改短/改长，直接说具体要求即可。');
     renderAgentSuggestionChips(scene);
     return;
   }
@@ -7074,8 +7093,24 @@ async function handleGlobalAgentMessage(msg, scene) {
     return;
   }
   if (scene === 'resume') {
-    if (!resumeScoreResult.content && !resumeOptimizeResult.content) {
+    if (!resumeScoreResult.content && !resumeOptimizeResult.content && !resumeOptimizeResult.optimizeReport) {
       pushAgentChatAssistant(scene, '请先一键评分或优化，再追问细节。');
+      return;
+    }
+    // 已有优化结果时，改短/太长等应直接重跑优化并更新左边画布
+    if (resumeAlreadyOptimized() && isOptimizeRefineRequest(msg)) {
+      pushAgentChatUser(scene, msg);
+      agentToolSteps = [{ name: 'optimize_resume', status: 'running', detail: '按要求改写' }];
+      renderAgentToolsPanel();
+      pushAgentChatAssistant(scene, '收到，正在按你的要求重新改写左边优化结果…');
+      pushAgentUndoSnapshot('改写前');
+      switchResumeOptimizeTab();
+      await runResumeAction('resume-optimize', 'agentChatSend', '改写', { refineHint: msg });
+      persistCrossSceneMemory();
+      agentToolSteps = [{ name: 'optimize_resume', status: 'done', detail: '按要求改写' }];
+      renderAgentToolsPanel();
+      pushAgentChatAssistant(scene, '已按你的要求更新「优化」页，请查看左边。');
+      renderAgentSuggestionChips(scene);
       return;
     }
     saveProfileFromDom();
@@ -9021,10 +9056,21 @@ function renderResumeOptimizePane() {
 function renderResumePanes() {
   renderResumeCanvasPanels();
 }
-async function runResumeAction(action, triggerBtnId, triggerBtnLabel) {
+async function runResumeAction(action, triggerBtnId, triggerBtnLabel, opts = {}) {
   const isScore = action === 'resume-score';
+  const refineHint = String(opts.refineHint || '').trim();
   const errEl = document.getElementById(isScore ? 'resumeScoreError' : 'resumeOptimizeError');
   const triggerBtn = triggerBtnId ? document.getElementById(triggerBtnId) : null;
+  let previousOptimizeReport = opts.previousReport || null;
+  if (!isScore && refineHint && !previousOptimizeReport) {
+    previousOptimizeReport = resumeOptimizeResult.optimizeReport
+      || (() => {
+        try {
+          const stack = JSON.parse(localStorage.getItem(AGENT_UNDO_STACK_KEY) || '[]');
+          return stack[0]?.resumeOptimize?.optimizeReport || null;
+        } catch { return null; }
+      })();
+  }
 
   if (errEl) { errEl.hidden = true; errEl.textContent = ''; }
   if (isScore) {
@@ -9043,6 +9089,15 @@ async function runResumeAction(action, triggerBtnId, triggerBtnLabel) {
   syncExtraNotesFromDom();
   saveProfileFromDom();
   try {
+    const intake = buildCoachIntakeFromProfile();
+    if (!isScore && refineHint) {
+      intake.refine = refineHint;
+      if (previousOptimizeReport?.bullets?.length) {
+        intake.previousOptimize = previousOptimizeReport.bullets.map((b, i) =>
+          `${i + 1}. 改前：${b.before || ''}\n改后：${b.after || ''}`
+        ).join('\n\n');
+      }
+    }
     const res = await fetch('/api/coach', {
       method: 'POST',
       headers: authHeaders(),
@@ -9051,7 +9106,7 @@ async function runResumeAction(action, triggerBtnId, triggerBtnLabel) {
         userId: userAccountId,
         contextModule: 'resume',
         action,
-        intake: buildCoachIntakeFromProfile(),
+        intake,
         history: [],
         ragChunks: await resolveCoachRagChunks(buildCoachRagQuery(isScore ? '简历评分 AI产品匹配 结果量化' : '简历优化 bullet AI产品'), 6)
       })
@@ -9086,7 +9141,7 @@ async function runResumeAction(action, triggerBtnId, triggerBtnLabel) {
     agentToolSteps = [{
       name: isScore ? 'score_resume' : 'optimize_resume',
       status: 'done',
-      detail: isScore ? '评分完成' : '优化完成'
+      detail: isScore ? '评分完成' : (refineHint ? '按要求改写完成' : '优化完成')
     }, { name: 'write_trace', status: 'done', detail: '' }];
     renderAgentToolsPanel();
     bindAgentChatClone();
