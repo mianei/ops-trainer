@@ -4199,8 +4199,9 @@
   html[data-theme="dark"] body {
     background: var(--page-bg);
   }
+  /* 透明，让 bg-scene 里的网格/方块透出来；底色由 body / .bg-scene 承担 */
   html[data-theme="dark"] #app {
-    background: var(--page-bg);
+    background: transparent;
   }
   html[data-theme="dark"] .page-wrap {
     background: transparent;
@@ -5027,7 +5028,7 @@
 <script src="/agent-intent.browser.js"></script>
 <script>
 const GITHUB_TOPICS_URL = '';
-const APP_ASSET_VERSION = '3.0.14';
+const APP_ASSET_VERSION = '3.0.15';
 
 function assetUrl(path) {
   const sep = path.includes('?') ? '&' : '?';
