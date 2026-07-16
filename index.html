@@ -4349,12 +4349,12 @@
     display: none;
     pointer-events: none;
   }
-  /* 深色装饰方块：独立 fixed 层，盖在页面内容之上、弹窗之下，避免再被工作台/登录卡吃掉 */
+  /* 深色 3D 方块：screen 混合去掉 PNG 黑底，避免出现两块「黑卡片」 */
   html[data-theme="dark"] .bg-cubes {
     display: block;
     position: fixed;
     inset: 0;
-    z-index: 5; /* > #app(1)，< history-modal(200) / gate(300) */
+    z-index: 4;
     overflow: hidden;
     background-color: transparent;
     background-image:
@@ -4362,29 +4362,23 @@
       url('/assets/purple-cubes-bg.png');
     background-repeat: no-repeat, no-repeat;
     background-position:
-      left -40px bottom -80px,
-      right -28px top 36px;
+      left -60px bottom -100px,
+      right -40px top 20px;
     background-size:
-      min(460px, 48vw) auto,
-      min(520px, 46vw) auto;
-    opacity: 0.9;
-    filter: brightness(1.75) contrast(1.22) saturate(1.25);
-    -webkit-mask-image: linear-gradient(
-      180deg,
-      #000 0%,
-      #000 78%,
-      rgba(0, 0, 0, 0.55) 90%,
-      transparent 100%
-    );
-    mask-image: linear-gradient(
-      180deg,
-      #000 0%,
-      #000 78%,
-      rgba(0, 0, 0, 0.55) 90%,
-      transparent 100%
-    );
+      min(480px, 50vw) auto,
+      min(540px, 48vw) auto;
+    opacity: 1;
+    filter: brightness(1.35) contrast(1.12) saturate(1.15);
+    mix-blend-mode: screen;
+    -webkit-mask-image:
+      radial-gradient(ellipse 55% 60% at 8% 92%, #000 0%, #000 35%, transparent 72%),
+      radial-gradient(ellipse 50% 55% at 92% 12%, #000 0%, #000 38%, transparent 74%);
+    mask-image:
+      radial-gradient(ellipse 55% 60% at 8% 92%, #000 0%, #000 35%, transparent 72%),
+      radial-gradient(ellipse 50% 55% at 92% 12%, #000 0%, #000 38%, transparent 74%);
+    -webkit-mask-composite: source-over;
+    mask-composite: add;
   }
-  /* 登录门 z=300 会盖住右侧；登录页额外提一层（仍可点穿） */
   html[data-theme="dark"] body:has(#gate.visible) .bg-cubes {
     z-index: 320;
   }
