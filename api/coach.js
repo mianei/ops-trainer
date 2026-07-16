@@ -238,6 +238,7 @@ export default async function handler(req) {
     const actionLimits = {
       'resume-score': { maxTokens: 1100, temperature: 0.25 },
       'resume-optimize': { maxTokens: 1400, temperature: 0.25 },
+      'resume-jd-rewrite': { maxTokens: 2800, temperature: 0.3 },
       'interview-prep': { maxTokens: 3200, temperature: 0.4 }
     };
     const limits = action ? (actionLimits[action] || { maxTokens: 1200, temperature: 0.5 }) : null;
@@ -353,9 +354,11 @@ export default async function handler(req) {
       });
     }
 
-    if (action === 'resume-optimize') {
-      const optimizeReport = parseResumeOptimizeReport(result.text);
-      await recordResumeCoachHistory(auth, { action, mode, resultText: result.text, optimizeReport });
+    if (action === 'resume-optimize' || action === 'resume-jd-rewrite') {
+      const optimizeReport = parseResumeOptimizeReport(result.text, {
+        maxBullets: action === 'resume-jd-rewrite' ? 5 : 2
+      });
+      await recordResumeCoachHistory(auth, { action: 'resume-optimize', mode, resultText: result.text, optimizeReport });
       return json({
         ok: true,
         reply: optimizeReport ? formatResumeOptimizeReply(optimizeReport) : result.text,

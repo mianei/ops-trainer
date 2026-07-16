@@ -1302,6 +1302,14 @@
     min-height: 200px;
   }
   .doc-preview-pane .hl { background: rgba(254, 240, 138, 0.65); padding: 0 2px; }
+  .doc-output-resume {
+    margin: 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-family: inherit;
+    font-size: 14px;
+    line-height: 1.65;
+  }
   .trace-table {
     width: 100%;
     border-collapse: collapse;
@@ -6556,7 +6564,8 @@ function parseMultiStepMessage(msg) {
   if (!/先.*再|然后|接着|之后|第一步|第二步/.test(msg)) return [];
   const steps = [];
   if (/评分|打分/.test(msg)) steps.push('score_resume');
-  if (/优化|改写/.test(msg)) steps.push('optimize_resume');
+  if (/根据.?JD|按.?JD|对照.?JD|一键.*改简历|JD.*改写|对齐.?JD/i.test(msg)) steps.push('jd_rewrite_resume');
+  else if (/优化|改写/.test(msg)) steps.push('optimize_resume');
   if (/准备|备战|prep/.test(msg)) steps.push('prep_interview');
   if (/换题|下一题/.test(msg)) steps.push('next_scenario');
   if (/导出/.test(msg)) steps.push('export_doc');
@@ -6576,6 +6585,15 @@ async function executeMultiStepAgentPlan(msg, scene, steps) {
       await runResumeAction('resume-score', 'agentChatSend', '评分');
       persistCrossSceneMemory();
       pushAgentChatAssistant(scene, '✓ 评分完成');
+    } else if (step === 'jd_rewrite_resume') {
+      saveProfileFromDom();
+      if (!profileResume.trim() || !profileJd.trim()) {
+        pushAgentChatAssistant(scene, '跳过按 JD 改写：需要简历和 JD。');
+        continue;
+      }
+      const ok = await runJdRewriteAndExport({ triggerBtnId: 'agentChatSend', autoExport: false });
+      persistCrossSceneMemory();
+      pushAgentChatAssistant(scene, ok ? '✓ 按 JD 改写完成' : '按 JD 改写失败');
     } else if (step === 'optimize_resume') {
       if (!resumeHasScore()) { pushAgentChatAssistant(scene, '跳过优化：请先评分。'); continue; }
       pushAgentUndoSnapshot('优化前');
@@ -6593,7 +6611,7 @@ async function executeMultiStepAgentPlan(msg, scene, steps) {
       startRandomSense();
       pushAgentChatAssistant(scene, '✓ 已换题');
     } else if (step === 'export_doc') {
-      if (scene === 'resume') exportResumeMarkdown();
+      if (scene === 'resume') exportResumeDocument('docx');
       else if (scene === 'prep') exportPrepMarkdown();
       pushAgentChatAssistant(scene, '✓ 已触发导出');
     }
@@ -6765,10 +6783,12 @@ function renderAgentSuggestionChips(scene) {
   const chips = [];
   if (scene === 'resume') {
     if (!profileResume.trim()) chips.push({ label: '上传简历后评分', msg: '帮我评分简历' });
+    else if (!profileJd.trim()) chips.push({ label: '上传 JD 后一键改', msg: '按JD改简历' });
+    else if (!resumeHasExportableDoc()) chips.push({ label: '按 JD 一键改简历', msg: '根据JD改原来的简历然后导出' });
     else if (!resumeScoreResult.content) chips.push({ label: '开始评分', msg: '评分' });
     else if (!resumeAlreadyOptimized()) chips.push({ label: '去优化 bullet', action: 'go_optimize', msg: '优化简历' });
     else chips.push({ label: '导出文档', msg: '导出 markdown' });
-    if (resumeOptimizeResult.content) chips.push({ label: '撤销上次优化', action: 'undo' });
+    if (resumeOptimizeResult.content || resumeOptimizeResult.optimizeReport) chips.push({ label: '撤销上次改写', action: 'undo' });
   } else if (scene === 'prep') {
     if (!interviewPrepResult.content) chips.push({ label: '一键准备面试', msg: '准备面试' });
     else chips.push({ label: '导出话术', msg: '导出文档' });
@@ -7144,6 +7164,34 @@ async function handleGlobalAgentMessage(msg, scene) {
     renderAgentSuggestionChips(scene);
     return;
   }
+  if (intent.intent === 'jd_rewrite_resume') {
+    if (intent.targetScene && intent.targetScene !== scene) navigateToAgentScene(intent.targetScene);
+    const s = intent.targetScene || 'resume';
+    pushAgentChatUser(s, msg);
+    saveProfileFromDom();
+    if (!profileResume.trim()) {
+      pushAgentChatAssistant(s, '请先上传或粘贴简历，再按 JD 改写。');
+      return;
+    }
+    if (!profileJd.trim()) {
+      pushAgentChatAssistant(s, '请先上传或粘贴目标 JD，再一键改简历。');
+      setCanvasTab('resume', '评分');
+      refreshAgentCanvas();
+      return;
+    }
+    agentToolSteps = [{ name: 'jd_rewrite_resume', status: 'running', detail: '按 JD 改写' }];
+    renderAgentToolsPanel();
+    pushAgentChatAssistant(s, '收到，正在按 JD 改写原简历并生成文档…');
+    const ok = await runJdRewriteAndExport({ triggerBtnId: 'agentChatSend', autoExport: true });
+    agentToolSteps = [{ name: 'jd_rewrite_resume', status: 'done', detail: ok ? '已生成并导出' : '失败' }];
+    renderAgentToolsPanel();
+    persistCrossSceneMemory();
+    pushAgentChatAssistant(s, ok
+      ? '已按 JD 改写完成：左边「优化」有对照，「文档」有成稿；Word 已尝试下载。若还要改短/改表述，直接说即可。'
+      : '按 JD 改写未成功，请检查简历与 JD 后重试。');
+    renderAgentSuggestionChips(s);
+    return;
+  }
   if (intent.intent === 'prep_interview') {
     pushAgentChatUser(scene, msg);
     saveProfileFromDom();
@@ -7322,26 +7370,37 @@ function renderAgentChatBubbles(scene) {
   el.scrollTop = el.scrollHeight;
 }
 
+function resumeHasExportableDoc() {
+  const report = resumeOptimizeResult.optimizeReport;
+  return Boolean(report?.outputResume || report?.bullets?.length || resumeOptimizeResult.content);
+}
+
 function renderDocumentPanelHtml() {
   const report = resumeOptimizeResult.optimizeReport;
-  const hasDoc = Boolean(report?.bullets?.length || resumeOptimizeResult.content);
+  const hasDoc = resumeHasExportableDoc();
   if (!hasDoc) {
-    return `<div class="resume-pane-empty">先完成「优化」标签页中的优化，再在此预览 / 导出文档</div>`;
+    return `<div class="resume-pane-empty">
+      <p>上传简历 + JD 后，点「按 JD 一键改简历」，生成可粘贴稿并导出</p>
+      <button type="button" class="btn-primary" id="resumeJdRewriteEmptyBtn" style="margin-top:12px">按 JD 一键改简历</button>
+    </div>`;
   }
+  const isJd = Boolean(report?.outputResume);
   const changes = (report?.detailSupplements || []).slice(0, 4);
-  const preview = (report?.bullets || []).map(b =>
-    `<p><strong>改后：</strong>${escapeHtml(b.after || '')}</p>`
-  ).join('') || `<p>${escapeHtml(resumeOptimizeResult.content.slice(0, 600))}</p>`;
+  const outputBlock = report?.outputResume
+    ? `<pre class="doc-output-resume">${escapeHtml(report.outputResume)}</pre>`
+    : (report?.bullets || []).map(b =>
+      `<p><strong>改后：</strong>${escapeHtml(b.after || '')}</p>`
+    ).join('') || `<p>${escapeHtml(String(resumeOptimizeResult.content || '').slice(0, 600))}</p>`;
   return `
     <div class="doc-artifact-card">
       <div class="doc-artifact-icon">W</div>
       <div style="flex:1;min-width:0">
-        <strong>简历优化_v2.docx</strong>
-        <p style="font-size:13px;color:var(--ink2);margin:4px 0 0">Agent 已更新 bullet 与细节补充</p>
+        <strong>${isJd ? '简历_JD对齐版.docx' : '简历优化_v2.docx'}</strong>
+        <p style="font-size:13px;color:var(--ink2);margin:4px 0 0">${isJd ? '按目标 JD 改写后的可粘贴稿' : 'Agent 已更新 bullet 与细节补充'}</p>
       </div>
     </div>
-    ${changes.length ? `<div class="surface-card surface-card--flat" style="padding:12px;margin-bottom:12px;font-size:13px"><strong>细节补充</strong><ol style="margin:8px 0 0 18px">${changes.map(c => `<li>${escapeHtml(c)}</li>`).join('')}</ol></div>` : ''}
-    <div class="doc-preview-pane">${preview}</div>`;
+    ${changes.length ? `<div class="surface-card surface-card--flat" style="padding:12px;margin-bottom:12px;font-size:13px"><strong>${isJd ? 'JD 对齐说明' : '细节补充'}</strong><ol style="margin:8px 0 0 18px">${changes.map(c => `<li>${escapeHtml(c)}</li>`).join('')}</ol></div>` : ''}
+    <div class="doc-preview-pane">${outputBlock}</div>`;
 }
 
 const TRACE_API_CACHE_MS = 30000;
@@ -7402,6 +7461,7 @@ function traceToolLabel(source) {
     'chat-followup': 'followup',
     'coach-action-resume-score': 'score_resume',
     'coach-action-resume-optimize': 'optimize_resume',
+    'coach-action-resume-jd-rewrite': 'jd_rewrite_resume',
     'coach-action-interview-prep': 'prepare_interview'
   };
   return map[source] || String(source || '—').replace(/^coach-action-/, '');
@@ -7829,15 +7889,23 @@ function renderCanvasTitleCta(scene, tab) {
       parts.push(`<button type="button" class="btn-primary" id="resumeStartScoreBtn"${disabled}>开始评分</button>`);
     }
   } else if (scene === 'resume' && tab === '优化') {
-    if (resumeOptimizeResult.loading) parts.push('<button type="button" class="btn-primary" disabled>优化中…</button>');
-    else if (!resumeOptimizeResult.optimizeReport && !resumeOptimizeResult.content) {
-      const disabled = !resumeHasScore() ? ' disabled' : '';
-      parts.push(`<button type="button" class="btn-primary" id="resumeStartOptimizeBtn"${disabled}>开始优化</button>`);
+    if (resumeOptimizeResult.loading) parts.push('<button type="button" class="btn-primary" disabled>改写中…</button>');
+    else {
+      const canJd = Boolean(profileResume.trim() && profileJd.trim());
+      parts.push(`<button type="button" class="btn-primary" id="resumeJdRewriteBtn"${canJd ? '' : ' disabled'} title="${canJd ? '' : '需先上传简历和 JD'}">按 JD 一键改简历</button>`);
+      if (!resumeOptimizeResult.optimizeReport && !resumeOptimizeResult.content) {
+        const disabled = !resumeHasScore() ? ' disabled' : '';
+        parts.push(`<button type="button" class="btn-frost" id="resumeStartOptimizeBtn"${disabled}>仅优化 bullet</button>`);
+      }
     }
   } else if (scene === 'resume' && tab === '文档') {
-    const hasDoc = Boolean(resumeOptimizeResult.optimizeReport?.bullets?.length || resumeOptimizeResult.content);
-    if (hasDoc) parts.push(renderDocExportSplitHtml('resume'));
-  } else if (scene === 'prep' && tab === '准备报告') {
+    const hasDoc = resumeHasExportableDoc();
+    if (resumeOptimizeResult.loading) parts.push('<button type="button" class="btn-primary" disabled>改写中…</button>');
+    else if (hasDoc) parts.push(renderDocExportSplitHtml('resume'));
+    else {
+      const canJd = Boolean(profileResume.trim() && profileJd.trim());
+      parts.push(`<button type="button" class="btn-primary" id="resumeJdRewriteBtn"${canJd ? '' : ' disabled'}>按 JD 一键改简历</button>`);
+    } else if (scene === 'prep' && tab === '准备报告') {
     if (interviewPrepResult.loading) parts.push('<button type="button" class="btn-primary" disabled>准备中…</button>');
     else if (!interviewPrepResult.prepReport && !interviewPrepResult.content) {
       parts.push('<button type="button" class="btn-primary" id="interviewPrepBtn">一键准备面试</button>');
@@ -7930,20 +7998,39 @@ function bindDocExportControls() {
 
 function getResumeDocumentExportContent() {
   const report = resumeOptimizeResult.optimizeReport;
-  const hasDoc = Boolean(report?.bullets?.length || resumeOptimizeResult.content);
-  if (!hasDoc) return null;
-  const title = '简历优化';
+  if (!resumeHasExportableDoc()) return null;
+  const isJd = Boolean(report?.outputResume);
+  const title = isJd ? '简历_JD对齐版' : '简历优化';
   const mdLines = [`# ${title}`, ''];
   const htmlParts = [`<h1>${escapeHtml(title)}</h1>`];
+  const docxBlocks = [{ type: 'title', text: title }];
   const changes = (report?.detailSupplements || []).slice(0, 10);
+  const changeTitle = isJd ? 'JD 对齐说明' : '细节补充';
+
+  if (report?.outputResume) {
+    mdLines.push('## 改后简历稿', '', report.outputResume, '');
+    htmlParts.push('<h2>改后简历稿</h2>');
+    htmlParts.push(`<pre style="white-space:pre-wrap;font-family:inherit">${escapeHtml(report.outputResume)}</pre>`);
+    docxBlocks.push({ type: 'h2', text: '改后简历稿' });
+    String(report.outputResume).split(/\n+/).forEach(line => {
+      const t = line.trim();
+      if (!t) return;
+      if (/^[-•*]\s+/.test(t)) docxBlocks.push({ type: 'li', text: t.replace(/^[-•*]\s+/, '') });
+      else docxBlocks.push({ type: 'p', text: t });
+    });
+  }
+
   if (changes.length) {
-    mdLines.push('## 细节补充', '');
+    mdLines.push(`## ${changeTitle}`, '');
     changes.forEach((c, i) => mdLines.push(`${i + 1}. ${c}`));
     mdLines.push('');
-    htmlParts.push('<h2>细节补充</h2><ol>');
+    htmlParts.push(`<h2>${escapeHtml(changeTitle)}</h2><ol>`);
     changes.forEach(c => htmlParts.push(`<li>${escapeHtml(c)}</li>`));
     htmlParts.push('</ol>');
+    docxBlocks.push({ type: 'h2', text: changeTitle });
+    changes.forEach(c => docxBlocks.push({ type: 'li', text: c }));
   }
+
   if (report?.bullets?.length) {
     mdLines.push('## 优化 Bullet', '');
     report.bullets.forEach((b, i) => {
@@ -7952,16 +8039,6 @@ function getResumeDocumentExportContent() {
       if (b.before) htmlParts.push(`<h3>条目 ${i + 1} · 改前</h3><p>${escapeHtml(b.before)}</p>`);
       if (b.after) htmlParts.push(`<p><strong>改后：</strong>${escapeHtml(b.after)}</p>`);
     });
-  } else if (resumeOptimizeResult.content) {
-    mdLines.push(resumeOptimizeResult.content);
-    htmlParts.push(`<p>${escapeHtml(resumeOptimizeResult.content).replace(/\n/g, '<br/>')}</p>`);
-  }
-  const docxBlocks = [{ type: 'title', text: title }];
-  if (changes.length) {
-    docxBlocks.push({ type: 'h2', text: '细节补充' });
-    changes.forEach(c => docxBlocks.push({ type: 'li', text: c }));
-  }
-  if (report?.bullets?.length) {
     docxBlocks.push({ type: 'h2', text: '优化 Bullet' });
     report.bullets.forEach((b, i) => {
       if (b.before) {
@@ -7973,14 +8050,19 @@ function getResumeDocumentExportContent() {
         docxBlocks.push({ type: 'p', text: b.after });
       }
     });
-  } else if (resumeOptimizeResult.content) {
+  } else if (!report?.outputResume && resumeOptimizeResult.content) {
+    mdLines.push(resumeOptimizeResult.content);
+    htmlParts.push(`<p>${escapeHtml(resumeOptimizeResult.content).replace(/\n/g, '<br/>')}</p>`);
     docxBlocks.push({ type: 'p', text: resumeOptimizeResult.content.slice(0, 8000) });
   }
+
   if (report?.weakProject) {
+    mdLines.push('## 诊断', '', report.weakProject);
+    htmlParts.push(`<h2>诊断</h2><p>${escapeHtml(report.weakProject)}</p>`);
     docxBlocks.push({ type: 'h2', text: '诊断' });
     docxBlocks.push({ type: 'p', text: report.weakProject });
   }
-  return { md: mdLines.join('\n'), html: htmlParts.join(''), title, docxBlocks };
+  return { md: mdLines.join('\n'), html: htmlParts.join(''), title, docxBlocks, fileBase: title };
 }
 
 function getPrepDocumentExportContent() {
@@ -8003,9 +8085,10 @@ function getPrepDocumentExportContent() {
 
 function exportResumeDocument(format) {
   const payload = getResumeDocumentExportContent();
-  if (!payload) { alert('暂无文档内容，请先完成优化'); return; }
-  if (format === 'md') downloadTextFile('简历优化.md', payload.md, 'text/markdown;charset=utf-8');
-  else if (format === 'docx') downloadDocxFile('简历优化.docx', payload.docxBlocks);
+  if (!payload) { alert('暂无文档内容，请先按 JD 改简历或完成优化'); return; }
+  const base = payload.fileBase || payload.title || '简历优化';
+  if (format === 'md') downloadTextFile(`${base}.md`, payload.md, 'text/markdown;charset=utf-8');
+  else if (format === 'docx') downloadDocxFile(`${base}.docx`, payload.docxBlocks);
   else if (format === 'pdf') printHtmlDocument(payload.html, payload.title);
 }
 
@@ -8855,10 +8938,14 @@ function renderOptimizePaneContent(report) {
     </div>`
   ).join('');
   const detailItems = (report.detailSupplements || []).map(s => `<li>${escapeHtml(s)}</li>`).join('');
+  const outputBlock = report.outputResume
+    ? `<div class="opt-pane-section"><h4>④ 改后简历稿</h4><p class="opt-section-hint">可整段复制；也可在「文档」页一键导出 Word。</p><pre class="doc-output-resume">${escapeHtml(report.outputResume)}</pre></div>`
+    : '';
   return `<div class="opt-pane-stack">
     <div class="opt-pane-section"><h4>① 诊断</h4><p>${escapeHtml(report.weakProject || '—')}</p></div>
     <div class="opt-pane-section"><h4>② 改写方案</h4><p class="opt-section-hint">以下是可直接复制进简历的 bullet，不是点评分析。</p>${bullets || '<p>—</p>'}</div>
     <div class="opt-pane-section"><h4>③ 细节补充</h4>${detailItems ? `<ul>${detailItems}</ul>` : '<p>—</p>'}</div>
+    ${outputBlock}
   </div>`;
 }
 
@@ -9103,6 +9190,37 @@ function goResumeOptimizeAndStart(triggerBtnId, triggerBtnLabel) {
   scheduleResumeOptimizeStart(triggerBtnId, triggerBtnLabel);
 }
 
+/** 一键：按 JD 改写原简历 → 更新优化/文档画布 → 切到文档并可下载 */
+async function runJdRewriteAndExport(opts = {}) {
+  const autoExport = opts.autoExport !== false;
+  const triggerBtnId = opts.triggerBtnId || null;
+  saveProfileFromDom();
+  if (!profileResume.trim()) {
+    alert('请先上传或粘贴简历');
+    setCanvasTab('resume', '评分');
+    refreshAgentCanvas();
+    return false;
+  }
+  if (!profileJd.trim()) {
+    alert('请先上传或粘贴目标 JD，才能按 JD 改简历');
+    setCanvasTab('resume', '评分');
+    refreshAgentCanvas();
+    return false;
+  }
+  pushAgentUndoSnapshot('按JD改写前');
+  setCanvasTab('resume', '优化');
+  refreshAgentCanvas();
+  await runResumeAction('resume-jd-rewrite', triggerBtnId, '按 JD 改写');
+  const ok = Boolean(resumeOptimizeResult.optimizeReport || resumeOptimizeResult.content);
+  if (!ok) return false;
+  setCanvasTab('resume', '文档');
+  refreshAgentCanvas();
+  if (autoExport && resumeHasExportableDoc()) {
+    try { exportResumeDocument('docx'); } catch (_) { /* 用户可手动下载 */ }
+  }
+  return true;
+}
+
 function bindResumePaneActions() {
   const scoreBtn = document.getElementById('resumeStartScoreBtn');
   if (scoreBtn) {
@@ -9124,6 +9242,14 @@ function bindResumePaneActions() {
       saveProfileFromDom();
       runResumeAction('resume-optimize', 'resumeStartOptimizeBtn', '开始优化');
     };
+  }
+  const jdBtn = document.getElementById('resumeJdRewriteBtn');
+  if (jdBtn) {
+    jdBtn.onclick = () => runJdRewriteAndExport({ triggerBtnId: 'resumeJdRewriteBtn', autoExport: true });
+  }
+  const jdEmptyBtn = document.getElementById('resumeJdRewriteEmptyBtn');
+  if (jdEmptyBtn) {
+    jdEmptyBtn.onclick = () => runJdRewriteAndExport({ triggerBtnId: 'resumeJdRewriteEmptyBtn', autoExport: true });
   }
   const goScoreBtn = document.getElementById('resumeGoScoreBtn');
   if (goScoreBtn) {
@@ -9208,6 +9334,7 @@ function renderResumePanes() {
 }
 async function runResumeAction(action, triggerBtnId, triggerBtnLabel, opts = {}) {
   const isScore = action === 'resume-score';
+  const isJdRewrite = action === 'resume-jd-rewrite';
   const refineHint = String(opts.refineHint || '').trim();
   const errEl = document.getElementById(isScore ? 'resumeScoreError' : 'resumeOptimizeError');
   const triggerBtn = triggerBtnId ? document.getElementById(triggerBtnId) : null;
@@ -9248,6 +9375,9 @@ async function runResumeAction(action, triggerBtnId, triggerBtnLabel, opts = {})
         ).join('\n\n');
       }
     }
+    const ragHint = isScore
+      ? '简历评分 AI产品匹配 结果量化'
+      : (isJdRewrite ? '简历 JD 对齐 改写 bullet Agent RAG 评测' : '简历优化 bullet AI产品');
     const res = await fetch('/api/coach', {
       method: 'POST',
       headers: authHeaders(),
@@ -9258,7 +9388,7 @@ async function runResumeAction(action, triggerBtnId, triggerBtnLabel, opts = {})
         action,
         intake,
         history: [],
-        ragChunks: await resolveCoachRagChunks(buildCoachRagQuery(isScore ? '简历评分 AI产品匹配 结果量化' : '简历优化 bullet AI产品'), 6)
+        ragChunks: await resolveCoachRagChunks(buildCoachRagQuery(ragHint), 6)
       })
     });
     const raw = await res.text();
@@ -9289,9 +9419,9 @@ async function runResumeAction(action, triggerBtnId, triggerBtnLabel, opts = {})
     }
     renderResumeCanvasPanels();
     agentToolSteps = [{
-      name: isScore ? 'score_resume' : 'optimize_resume',
+      name: isScore ? 'score_resume' : (isJdRewrite ? 'jd_rewrite_resume' : 'optimize_resume'),
       status: 'done',
-      detail: isScore ? '评分完成' : (refineHint ? '按要求改写完成' : '优化完成')
+      detail: isScore ? '评分完成' : (refineHint ? '按要求改写完成' : (isJdRewrite ? '按JD改写完成' : '优化完成'))
     }, { name: 'write_trace', status: 'done', detail: '' }];
     renderAgentToolsPanel();
     bindAgentChatClone();

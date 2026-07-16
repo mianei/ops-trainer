@@ -13,12 +13,12 @@
 
   const COACH_MODE_TO_SCENE = {"full-report":"resume","project-direction":"resume","project-iteration":"resume","resume-diagnosis":"resume","ai-pm-qa":"prep","interview-defense":"prep"};
   const RESUME_COACH_MODES = new Set(["full-report","project-direction","project-iteration","resume-diagnosis"]);
-  const AGENT_INTENT_LABELS = {"score_resume":"简历评分","optimize_resume":"简历优化","prep_interview":"面试准备","next_scenario":"换题","switch_tab":"切换 Tab","export_doc":"导出文档","navigate_scene":"切换模块","coach_mode":"教练模式","coach_followup":"追问","goal_plan":"训练规划","submit_scenario":"提交点评","refine_canvas":"按要求改画布"};
+  const AGENT_INTENT_LABELS = {"score_resume":"简历评分","optimize_resume":"简历优化","jd_rewrite_resume":"按JD改简历","prep_interview":"面试准备","next_scenario":"换题","switch_tab":"切换 Tab","export_doc":"导出文档","navigate_scene":"切换模块","coach_mode":"教练模式","coach_followup":"追问","goal_plan":"训练规划","submit_scenario":"提交点评","refine_canvas":"按要求改画布"};
 
   function looksLikeRefineRequest(text) {
     const t = String(text || '').trim();
     if (!t) return false;
-    if (/^(优化简历|开始优化|去优化|优化|optimize|评分|打分|准备面试|一键准备)$/i.test(t)) return false;
+    if (/^(优化简历|开始优化|去优化|优化|optimize|评分|打分|准备面试|一键准备|按JD改简历|根据JD改简历)$/i.test(t)) return false;
     return /太长|太短|改短|改长|再来一版|再写一版|再出一版|再.*一版|润色一下|缩短|精简|压缩|简洁|详细一点|展开|写短|写长|少写|多写|内容太长|改写.*长|长了|短了|不满意|重新改|改一下|改成|去掉|删掉|按.*三条|项目真实性|证据完整度|面试防御/.test(t);
   }
 
@@ -43,9 +43,12 @@
     if (/评分|打分|评一下|score/i.test(t)) {
       return { intent: 'score_resume', tool: 'score_resume', targetScene: 'resume', confidence: 'high', source: 'regex' };
     }
+    if (/根据.?JD|按.?JD|对照.?JD|一键.*改简历|JD.*改写|改写.*JD|对齐.?JD/i.test(t)) {
+      return { intent: 'jd_rewrite_resume', tool: 'jd_rewrite_resume', targetScene: 'resume', confidence: 'high', source: 'regex' };
+    }
     if (/优化简历|改写简历|优化 bullet|一键优化|开始优化|去优化|^optimize$/i.test(t)
       || (/^优化$/.test(t))
-      || (/优化/.test(t) && !/太长|太短|改短|项目/.test(t) && t.length <= 12)) {
+      || (/优化/.test(t) && !/太长|太短|改短|项目|JD/i.test(t) && t.length <= 12)) {
       return { intent: 'optimize_resume', tool: 'optimize_resume', targetScene: 'resume', confidence: 'high', source: 'regex' };
     }
     if (/准备面试|面试准备|一键准备|prep|备战|根据简历准备/i.test(t)) {
