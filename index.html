@@ -9126,7 +9126,7 @@ function renderOptimizePaneContent(report) {
     : '';
   return `<div class="opt-pane-stack">
     <div class="opt-pane-section"><h4>① 诊断</h4><p>${escapeHtml(report.weakProject || '—')}</p></div>
-    <div class="opt-pane-section"><h4>② 改写方案</h4><p class="opt-section-hint">以下是可直接复制进简历的 bullet，不是点评分析。</p>${bullets || '<p>—</p>'}</div>
+    <div class="opt-pane-section"><h4>② 改写方案</h4>${bullets || '<p>—</p>'}</div>
     <div class="opt-pane-section"><h4>③ 细节补充</h4>${detailItems ? `<ul>${detailItems}</ul>` : '<p>—</p>'}</div>
     ${outputBlock}
   </div>`;
