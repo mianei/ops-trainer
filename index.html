@@ -4978,7 +4978,7 @@
 <script src="/agent-intent.browser.js"></script>
 <script>
 const GITHUB_TOPICS_URL = '';
-const APP_ASSET_VERSION = '3.0.19';
+const APP_ASSET_VERSION = '3.0.21';
 
 function assetUrl(path) {
   const sep = path.includes('?') ? '&' : '?';
@@ -6535,9 +6535,7 @@ function parseMultiStepMessage(msg) {
 
 async function executeMultiStepAgentPlan(msg, scene, steps) {
   pushAgentChatUser(scene, msg);
-  pushAgentChatAssistant(scene, '收到，将按顺序执行 ' + steps.length + ' 步…');
   for (const step of steps) {
-    const fakeIntent = { intent: step, tool: step, tab: '文档' };
     agentToolSteps = [{ name: 'multi_step', status: 'running', detail: step, input: msg, output: '' }];
     renderAgentToolsPanel();
     if (step === 'score_resume') {
@@ -6545,7 +6543,7 @@ async function executeMultiStepAgentPlan(msg, scene, steps) {
       saveProfileFromDom();
       await runResumeAction('resume-score', 'agentChatSend', '评分');
       persistCrossSceneMemory();
-      pushAgentChatAssistant(scene, '✓ 评分完成');
+      pushAgentChatAssistant(scene, summarizeScoreForChat(resumeScoreResult.scoreReport));
     } else if (step === 'jd_rewrite_resume') {
       saveProfileFromDom();
       if (!profileResume.trim() || !profileJd.trim()) {
@@ -6554,7 +6552,9 @@ async function executeMultiStepAgentPlan(msg, scene, steps) {
       }
       const ok = await runJdRewriteAndExport({ triggerBtnId: 'agentChatSend', autoExport: false });
       persistCrossSceneMemory();
-      pushAgentChatAssistant(scene, ok ? '✓ 按 JD 改写完成' : '按 JD 改写失败');
+      pushAgentChatAssistant(scene, ok
+        ? summarizeOptimizeForChat(resumeOptimizeResult.optimizeReport, { isJd: true })
+        : '按 JD 改写没成功，检查一下简历和 JD 后重试。');
     } else if (step === 'optimize_resume') {
       if (!resumeHasScore()) { pushAgentChatAssistant(scene, '跳过优化：请先评分。'); continue; }
       pushAgentUndoSnapshot('优化前');
@@ -6562,24 +6562,23 @@ async function executeMultiStepAgentPlan(msg, scene, steps) {
       switchResumeOptimizeTab();
       await runResumeAction('resume-optimize', 'agentChatSend', '优化');
       persistCrossSceneMemory();
-      pushAgentChatAssistant(scene, '✓ 优化完成');
+      pushAgentChatAssistant(scene, summarizeOptimizeForChat(resumeOptimizeResult.optimizeReport));
     } else if (step === 'prep_interview') {
       saveProfileFromDom();
       await runInterviewPrepAction();
       persistCrossSceneMemory();
-      pushAgentChatAssistant(scene, '✓ 面试准备完成');
+      pushAgentChatAssistant(scene, summarizePrepForChat(interviewPrepResult.prepReport));
     } else if (step === 'next_scenario') {
       startRandomSense();
-      pushAgentChatAssistant(scene, '✓ 已换题');
+      pushAgentChatAssistant(scene, '已换一题，直接作答即可。');
     } else if (step === 'export_doc') {
       if (scene === 'resume') exportResumeDocument('docx');
       else if (scene === 'prep') exportPrepMarkdown();
-      pushAgentChatAssistant(scene, '✓ 已触发导出');
+      pushAgentChatAssistant(scene, '导出已开始下载。');
     }
     agentToolSteps = [{ name: 'multi_step', status: 'done', detail: step, input: msg, output: 'ok' }];
     renderAgentToolsPanel();
   }
-  pushAgentChatAssistant(scene, '多步任务全部执行完毕，请查看结果。');
   renderAgentSuggestionChips(scene);
 }
 
@@ -6636,6 +6635,103 @@ function isRefineIntent(text) {
   return /追问|改|润色|再.*一版|改短|改长|不满意|补充|优化这段|太长|太短|精简|压缩|缩短|简洁|详细|展开|长了|短了/.test(String(text || ''));
 }
 
+/** 评分结果 → 右侧对话摘要（说改了什么，不说系统元话） */
+function summarizeScoreForChat(report) {
+  if (!report) return '这轮评分没跑出来，再说一次「开始评分」即可。';
+  const lines = [];
+  if (report.overallScore != null) lines.push(`综合分 ${report.overallScore}/100。`);
+  if (report.summary) lines.push(report.summary);
+  const dims = (report.dimensions || []).slice().sort((a, b) => (a.score || 0) - (b.score || 0));
+  if (dims.length) {
+    const weak = dims.slice(0, 2).filter(d => d?.name);
+    const strong = dims[dims.length - 1];
+    if (weak.length) {
+      lines.push('偏弱：' + weak.map(d => `${d.name}${d.score != null ? ` ${d.score}/5` : ''}`).join('、') + '。');
+    }
+    if (strong?.name && strong !== weak[0]) {
+      lines.push(`相对更好：${strong.name}${strong.score != null ? ` ${strong.score}/5` : ''}。`);
+    }
+  }
+  const fixes = (report.topFixes || []).filter(Boolean).slice(0, 3);
+  if (fixes.length) {
+    lines.push('建议优先改：');
+    fixes.forEach((f, i) => lines.push(`${i + 1}. ${f}`));
+  }
+  lines.push('要接着改 bullet，直接说「优化」或「改短一点」。');
+  return lines.join('\n');
+}
+
+/** 优化 / JD 改写 → 右侧对话：加了什么、优化方向 */
+function summarizeOptimizeForChat(report, opts = {}) {
+  const { userMsg = '', isJd = false, refined = false, lead = '', tail = '' } = opts;
+  if (!report) {
+    return refined
+      ? '这轮没改出可用稿，再说具体一点我重来（比如「每条压到 50 字」）。'
+      : (opts.empty || '优化没产出可用稿，可再试一次。');
+  }
+  const lines = [];
+  if (lead) {
+    lines.push(lead);
+  } else if (refined) {
+    if (/太长|改短|缩短|精简|压缩|简洁|写短|少写|长了/.test(userMsg)) {
+      lines.push('已按你的要求缩短改写。');
+    } else if (/太短|改长|详细|展开|写长|多写|短了/.test(userMsg)) {
+      lines.push('已按你的要求加长、补证据。');
+    } else {
+      lines.push('已按你的要求改了一版。');
+    }
+  } else if (isJd) {
+    lines.push('已按目标 JD 改写项目经历。');
+  } else {
+    lines.push('已给出可粘贴的改写方案。');
+  }
+  if (report.weakProject) {
+    lines.push('优化方向：' + String(report.weakProject).replace(/\s+/g, ' ').trim());
+  }
+  const afters = (report.bullets || []).map(b => String(b.after || '').trim()).filter(Boolean);
+  if (afters.length) {
+    lines.push(`这版改了 ${afters.length} 条经历，例如：`);
+    afters.slice(0, 2).forEach((a, i) => {
+      const s = a.length > 72 ? a.slice(0, 72) + '…' : a;
+      lines.push(`${i + 1}. ${s}`);
+    });
+  }
+  const extras = (report.detailSupplements || []).map(s => String(s || '').trim()).filter(Boolean).slice(0, 2);
+  if (extras.length) {
+    lines.push('顺带补了：' + extras.map(s => s.replace(/[。.]$/, '')).join('；') + '。');
+  }
+  if (report.outputResume) lines.push('完整成稿在「文档」页，可直接导出 Word。');
+  lines.push(tail || '还想改短/换侧重，直接说就行。');
+  return lines.join('\n');
+}
+
+/** 面试准备 → 右侧对话摘要 */
+function summarizePrepForChat(report) {
+  if (!report) return '准备报告没生成成功，再说一次「一键准备面试」即可。';
+  const lines = [];
+  if (report.summary) lines.push(report.summary);
+  const dims = report.prepDimensions || [];
+  if (dims.length) {
+    lines.push('三维：' + dims.map(d => `${d.name} ${d.score != null ? d.score + '/5' : ''}`).join(' · ') + '。');
+    const weak = dims.slice().sort((a, b) => (a.score || 0) - (b.score || 0))[0];
+    if (weak?.diagnosis) lines.push(`最该补：${weak.name}——${String(weak.diagnosis).slice(0, 80)}`);
+  }
+  if (report.opening15s) {
+    const o = String(report.opening15s);
+    lines.push('开场可练：' + (o.length > 60 ? o.slice(0, 60) + '…' : o));
+  }
+  lines.push('还想换角度或加深某段，直接说。');
+  return lines.join('\n');
+}
+
+function refineAckMessage(userMsg) {
+  const t = String(userMsg || '');
+  if (/太长|改短|缩短|精简|压缩|简洁|写短|少写|长了/.test(t)) return '好的，按「改短」重写一版…';
+  if (/太短|改长|详细|展开|写长|多写|短了/.test(t)) return '好的，把经历写得更具体一点…';
+  if (/项目真实性|证据完整度|面试防御/.test(t)) return '好的，按这三维重出准备报告…';
+  return '好的，按你的要求改一版…';
+}
+
 /** 已有优化结果后，用户提出改短/太长等要求 → 应重跑优化而不是只切 Tab */
 function isOptimizeRefineRequest(text) {
   if (typeof looksLikeRefineRequest === 'function') return looksLikeRefineRequest(text);
@@ -6674,12 +6770,12 @@ async function applyCanvasRefine(msg, scene) {
     refreshAgentCanvas();
     agentToolSteps = [{ name: 'refine_canvas', status: 'running', detail: '准备报告' }];
     renderAgentToolsPanel();
-    pushAgentChatAssistant('prep', '收到，正在按「项目真实性 / 证据完整度 / 面试防御力」重新生成准备报告…');
+    pushAgentChatAssistant('prep', refineAckMessage(msg));
     await runInterviewPrepAction();
     persistCrossSceneMemory();
     agentToolSteps = [{ name: 'refine_canvas', status: 'done', detail: 'prep' }];
     renderAgentToolsPanel();
-    pushAgentChatAssistant('prep', '准备报告已按三维更新，请看左边。');
+    pushAgentChatAssistant('prep', summarizePrepForChat(interviewPrepResult.prepReport));
     renderAgentSuggestionChips('prep');
     return;
   }
@@ -6689,10 +6785,9 @@ async function applyCanvasRefine(msg, scene) {
     return;
   }
   if (!resumeAlreadyOptimized()) {
-    // 还没有优化结果：带着要求直接跑一版优化
     agentToolSteps = [{ name: 'refine_canvas', status: 'running', detail: '首次优化并落实要求' }];
     renderAgentToolsPanel();
-    pushAgentChatAssistant(scene, '还没有优化稿，我先按你的要求直接生成一版…');
+    pushAgentChatAssistant(scene, refineAckMessage(msg));
     pushAgentUndoSnapshot('优化前');
     switchResumeOptimizeTab();
     await runResumeAction('resume-optimize', 'agentChatSend', '优化', {
@@ -6701,14 +6796,17 @@ async function applyCanvasRefine(msg, scene) {
     persistCrossSceneMemory();
     agentToolSteps = [{ name: 'refine_canvas', status: 'done', detail: 'optimize' }];
     renderAgentToolsPanel();
-    pushAgentChatAssistant(scene, '已生成并按你的要求写好「优化」页，请查看左边。');
+    pushAgentChatAssistant(scene, summarizeOptimizeForChat(resumeOptimizeResult.optimizeReport, {
+      refined: true,
+      userMsg: msg
+    }));
     renderAgentSuggestionChips(scene);
     return;
   }
 
   agentToolSteps = [{ name: 'refine_canvas', status: 'running', detail: '按要求改写 bullet' }];
   renderAgentToolsPanel();
-  pushAgentChatAssistant(scene, '收到，正在按你的要求改写左边 bullet（会真正重跑，不只切页）…');
+  pushAgentChatAssistant(scene, refineAckMessage(msg));
   pushAgentUndoSnapshot('改写前');
   switchResumeOptimizeTab();
   await runResumeAction('resume-optimize', 'agentChatSend', '改写', {
@@ -6717,8 +6815,12 @@ async function applyCanvasRefine(msg, scene) {
   persistCrossSceneMemory();
   agentToolSteps = [{ name: 'refine_canvas', status: 'done', detail: 'optimize' }];
   renderAgentToolsPanel();
-  pushAgentChatAssistant(scene, '左边「优化」页已按你的要求更新。若还长/还短，继续说即可。');
+  pushAgentChatAssistant(scene, summarizeOptimizeForChat(resumeOptimizeResult.optimizeReport, {
+    refined: true,
+    userMsg: msg
+  }));
   renderAgentSuggestionChips(scene);
+  return;
 }
 
 function applyRefineToCanvas(scene, reply, userMsg) {
@@ -6776,17 +6878,21 @@ function renderAgentSuggestionChips(scene) {
         }
         agentToolSteps = [{ name: 'optimize_resume', status: 'running', detail: '' }];
         renderAgentToolsPanel();
-        pushAgentChatAssistant(scene, '收到，正在优化简历 bullet…');
         pushAgentUndoSnapshot('优化前');
         const shouldStart = resumeShouldAutoStartOptimize();
         switchResumeOptimizeTab();
         if (shouldStart) {
           await runResumeAction('resume-optimize', 'agentChatSend', '优化');
           persistCrossSceneMemory();
+          pushAgentChatAssistant(scene, summarizeOptimizeForChat(resumeOptimizeResult.optimizeReport));
+        } else {
+          pushAgentChatAssistant(scene, summarizeOptimizeForChat(resumeOptimizeResult.optimizeReport, {
+            lead: '优化结果还在：',
+            empty: '左边已打开「优化」页，点开始即可生成改写。'
+          }));
         }
         agentToolSteps = [{ name: 'optimize_resume', status: 'done', detail: '' }];
         renderAgentToolsPanel();
-        pushAgentChatAssistant(scene, shouldStart ? '优化完成，请查看「优化」页。' : '已切换到「优化」页。');
         renderAgentSuggestionChips(scene);
         return;
       }
@@ -7094,12 +7200,12 @@ async function handleGlobalAgentMessage(msg, scene) {
     saveProfileFromDom();
     agentToolSteps = [{ name: 'score_resume', status: 'running', detail: '' }];
     renderAgentToolsPanel();
-    pushAgentChatAssistant(scene, '收到，正在执行简历评分…');
+    pushAgentChatAssistant(scene, '好的，我先按五维评一下这份简历…');
     await runResumeAction('resume-score', 'agentChatSend', '评分');
     agentToolSteps = [{ name: 'score_resume', status: 'done', detail: '' }];
     renderAgentToolsPanel();
     persistCrossSceneMemory();
-    pushAgentChatAssistant(scene, resumeScoreResult.content ? '评分完成，请查看「评分」页。' : '评分已触发，请稍候。');
+    pushAgentChatAssistant(scene, summarizeScoreForChat(resumeScoreResult.scoreReport));
     renderAgentSuggestionChips(scene);
     return;
   }
@@ -7122,14 +7228,14 @@ async function handleGlobalAgentMessage(msg, scene) {
     saveProfileFromDom();
     agentToolSteps = [{ name: 'optimize_resume', status: 'running', detail: '' }];
     renderAgentToolsPanel();
-    pushAgentChatAssistant(scene, '收到，正在优化简历 bullet…');
+    pushAgentChatAssistant(scene, '好的，开始改经历表述，尽量写成可直接粘贴的 bullet…');
     pushAgentUndoSnapshot('优化前');
     switchResumeOptimizeTab();
     await runResumeAction('resume-optimize', 'agentChatSend', '优化');
     persistCrossSceneMemory();
     agentToolSteps = [{ name: 'optimize_resume', status: 'done', detail: '' }];
     renderAgentToolsPanel();
-    pushAgentChatAssistant(scene, '优化完成，请查看「优化」页。若要改短/改长，直接说即可。');
+    pushAgentChatAssistant(scene, summarizeOptimizeForChat(resumeOptimizeResult.optimizeReport));
     renderAgentSuggestionChips(scene);
     return;
   }
@@ -7150,14 +7256,17 @@ async function handleGlobalAgentMessage(msg, scene) {
     }
     agentToolSteps = [{ name: 'jd_rewrite_resume', status: 'running', detail: '按 JD 改写' }];
     renderAgentToolsPanel();
-    pushAgentChatAssistant(s, '收到，正在按 JD 改写原简历并生成文档…');
+    pushAgentChatAssistant(s, '好的，按这份 JD 对齐改经历…');
     const ok = await runJdRewriteAndExport({ triggerBtnId: 'agentChatSend', autoExport: true });
     agentToolSteps = [{ name: 'jd_rewrite_resume', status: 'done', detail: ok ? '已生成并导出' : '失败' }];
     renderAgentToolsPanel();
     persistCrossSceneMemory();
     pushAgentChatAssistant(s, ok
-      ? '已按 JD 改写完成：左边「优化」有对照，「文档」有成稿；Word 已尝试下载。若还要改短/改表述，直接说即可。'
-      : '按 JD 改写未成功，请检查简历与 JD 后重试。');
+      ? summarizeOptimizeForChat(resumeOptimizeResult.optimizeReport, {
+        isJd: true,
+        tail: 'Word 已尝试下载；还想改短/换关键词，直接说。'
+      })
+      : '这轮没改成功，检查一下简历和 JD 后重试。');
     renderAgentSuggestionChips(s);
     return;
   }
@@ -7166,12 +7275,12 @@ async function handleGlobalAgentMessage(msg, scene) {
     saveProfileFromDom();
     agentToolSteps = [{ name: 'prepare_interview', status: 'running', detail: '' }];
     renderAgentToolsPanel();
-    pushAgentChatAssistant(scene, '收到，正在生成面试准备报告…');
+    pushAgentChatAssistant(scene, '好的，根据简历整理面试准备要点…');
     await runInterviewPrepAction();
     persistCrossSceneMemory();
     agentToolSteps = [{ name: 'prepare_interview', status: 'done', detail: '' }];
     renderAgentToolsPanel();
-    pushAgentChatAssistant(scene, '准备报告已更新，请查看结果。');
+    pushAgentChatAssistant(scene, summarizePrepForChat(interviewPrepResult.prepReport));
     renderAgentSuggestionChips(scene);
     return;
   }
