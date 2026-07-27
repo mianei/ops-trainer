@@ -1,6 +1,6 @@
 /**
- * 从 v1.0 场景库 + AI PM 面经构建业务场景题库（350 道）
- * 固定配比：200 道 AI产品经理 + 150 道传统产品业务面
+ * 从 v1.0 场景库 + AI PM 原创题库构建业务场景题库（250 道）
+ * 固定配比：100 道 AI产品经理 + 150 道传统产品业务面
  * 运行: node scripts/build-interview-bank-v2.js
  */
 import fs from 'fs';
@@ -9,8 +9,8 @@ import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
-const TARGET = 350;
-const AI_TARGET = 200;
+const TARGET = 250;
+const AI_TARGET = 100;
 const TRADITIONAL_TARGET = 150;
 
 const EXCLUDE_FILES = new Set(['scenarios-sql-practice.json']);
@@ -130,7 +130,7 @@ function collectQuestions() {
         difficulty: q.difficulty,
         curated: Boolean(q.curated),
         source: file.replace('.json', ''),
-        sourceChannel: q.source || 'coach面经'
+        sourceChannel: q.source || 'CVassistant原创'
       });
     }
   }
@@ -165,7 +165,7 @@ function score(q, bucket) {
   if (/【面经|【面试|【产品|【PM|产品经理/.test(q.text)) s += 5;
   if (q.company && q.company !== '通用') s += 3;
   if (q.difficulty === 'medium') s += 1;
-  if (q.sourceChannel === 'coach面经') s += 1;
+  if (q.sourceChannel === 'CVassistant原创' || q.sourceChannel === 'CVassistant精选') s += 2;
   if (bucket === 'ai' && isAiPmSource(q)) s += 4;
   if (bucket === 'ai' && AI_PRODUCT_RE.test(q.text)) s += 2;
   if (bucket === 'trad' && isScenarioSource(q)) s += 2;
