@@ -399,7 +399,8 @@
     line-height: 1.5;
   }
 
-  /* —— 登录门禁 —— */
+  /* —— 登录门禁（已关闭：开放直进） —— */
+  #gate { display: none !important; }
   #gate {
     position: fixed;
     inset: 0;
@@ -4870,42 +4871,11 @@
 </div>
 <div class="bg-cubes" aria-hidden="true"></div>
 
-<div id="gate" aria-label="登录或注册">
-  <div class="gate-layout">
-    <div class="gate-grid">
-      <div class="gate-intro">
-        <p class="hero-brand" aria-label="CVassistant"><span class="hb-mind">CV</span><span class="hb-train">assistant</span></p>
-        <h1>AI 产品经理训练</h1>
-        <p class="lead">注册登录后使用简历评分、面试练题与 Agent 助手；你的练习记录保存在账号下。</p>
-      </div>
-      <div class="gate-card">
-        <div class="gate-tabs" role="tablist">
-          <button type="button" class="gate-tab active" data-gate="login" role="tab" aria-selected="true">登录</button>
-          <button type="button" class="gate-tab" data-gate="register" role="tab" aria-selected="false">注册</button>
-        </div>
-        <div id="gatePanelLogin" class="gate-panel" role="tabpanel">
-          <div class="gate-field"><label for="loginUser">用户名</label><input id="loginUser" autocomplete="username" /></div>
-          <div class="gate-field"><label for="loginPass">密码</label><input id="loginPass" type="password" autocomplete="current-password" /></div>
-          <label class="gate-remember"><input type="checkbox" id="gateRemember" checked /> 记住我（7 天）</label>
-          <button type="button" class="btn-primary gate-submit" id="gateBtn">开始训练</button>
-        </div>
-        <div id="gatePanelRegister" class="gate-panel" role="tabpanel" hidden>
-          <div class="gate-field"><label for="regUser">用户名</label><input id="regUser" autocomplete="username" placeholder="2–24 位字母数字下划线" /></div>
-          <div class="gate-field"><label for="regPass">密码</label><input id="regPass" type="password" autocomplete="new-password" /></div>
-          <div class="gate-field"><label for="regInvite">邀请码</label><input id="regInvite" autocomplete="off" /></div>
-          <button type="button" class="btn-primary gate-submit" id="regBtn">注册并进入</button>
-        </div>
-        <div class="gate-error" id="gateError" role="alert"></div>
-        <p class="gate-hint" id="gateHint">需有效邀请码注册 · 数据仅保存在你的账号下</p>
-      </div>
-    </div>
-  </div>
-</div>
+<div id="gate" hidden aria-hidden="true"></div>
 
 <div id="app">
   <div class="header-actions" id="headerActions" hidden>
     <span class="user-badge" id="userBadge" hidden></span>
-    <button type="button" class="btn-logout" id="btnLogout" hidden>退出</button>
     <button type="button" class="btn-theme" id="btnTheme" aria-label="切换深浅色主题">深色</button>
     <button type="button" class="btn-trace" id="btnTrace">Trace</button>
     <button type="button" class="btn-history" id="btnHistory">练习记录</button>
@@ -4978,7 +4948,7 @@
 <script src="/agent-intent.browser.js"></script>
 <script>
 const GITHUB_TOPICS_URL = '';
-const APP_ASSET_VERSION = '3.0.22';
+const APP_ASSET_VERSION = '3.0.23';
 
 function assetUrl(path) {
   const sep = path.includes('?') ? '&' : '?';
@@ -5208,7 +5178,7 @@ const SESSION_UNTIL_KEY = 'cv-session-until';
 const SESSION_MS = 7 * 86400000;
 
 let loggedInUsername = '';
-let authConfig = { authRequired: true, registrationEnabled: false };
+let authConfig = { authRequired: false, registrationEnabled: false };
 
 function getSessionStore(remember) {
   return remember ? localStorage : sessionStorage;
@@ -5253,30 +5223,22 @@ function applyAuth(username, password) {
 
 function updateUserBadge() {
   const badge = document.getElementById('userBadge');
-  const btnLogout = document.getElementById('btnLogout');
   const agentUser = document.getElementById('agentChatUser');
-  const agentLogout = document.getElementById('agentChatLogout');
-  if (loggedInUsername) {
-    if (badge) { badge.textContent = loggedInUsername; badge.hidden = false; }
-    if (btnLogout) btnLogout.hidden = false;
-    if (agentUser) { agentUser.textContent = loggedInUsername; agentUser.hidden = false; }
-    if (agentLogout) agentLogout.hidden = false;
-  } else {
-    if (badge) badge.hidden = true;
-    if (btnLogout) btnLogout.hidden = true;
-    if (agentUser) agentUser.hidden = true;
-    if (agentLogout) agentLogout.hidden = true;
-  }
+  if (badge) badge.hidden = true;
+  if (agentUser) agentUser.hidden = true;
 }
 
 function showGate() {
-  const gate = document.getElementById('gate');
-  if (gate) gate.classList.add('visible');
+  /* 开放直进：登录门禁已关闭，永不展示 */
 }
 
 function hideGate() {
   const gate = document.getElementById('gate');
-  if (gate) gate.classList.remove('visible');
+  if (gate) {
+    gate.classList.remove('visible');
+    gate.hidden = true;
+    gate.setAttribute('aria-hidden', 'true');
+  }
 }
 
 function setGateError(msg) {
@@ -5313,8 +5275,8 @@ async function fetchAuthConfig() {
       };
     }
   } catch { /* */ }
-  // API 不可用时仍要求登录，避免误进访客模式
-  return { authRequired: true, registrationEnabled: false };
+  // API 不可用时仍直进（开放模式）
+  return { authRequired: false, registrationEnabled: false };
 }
 
 async function tryRestoreSession() {
@@ -5377,15 +5339,9 @@ async function doRegister(username, password, inviteCode) {
 
 function logout() {
   clearSession();
-  userAccountId = '';
-  accessCode = '';
   loggedInUsername = '';
-  resetProfileInMemory();
-  app.classList.remove('visible');
-  const headerActions = document.getElementById('headerActions');
-  if (headerActions) headerActions.hidden = true;
   updateUserBadge();
-  showGate();
+  enterAppGuest();
 }
 
 function bindAuthGate() {
@@ -5436,8 +5392,6 @@ function bindAuthGate() {
   regInvite?.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') regBtn?.click();
   });
-  const btnLogout = document.getElementById('btnLogout');
-  if (btnLogout) btnLogout.onclick = logout;
 }
 
 function bindRecordsTabs() {
@@ -7757,7 +7711,6 @@ function mountAgentWorkspace(innerHtml) {
           <h3>助手 Bot</h3>
           <div class="agent-chat-head-actions">
             <span class="agent-chat-user" id="agentChatUser" hidden></span>
-            <button type="button" class="agent-chat-logout" id="agentChatLogout" hidden>退出</button>
             <span class="agent-nav-badge agent-nav-badge--desktop">随时问</span>
             <button type="button" class="agent-chat-close" id="agentChatClose" aria-label="关闭助手">×</button>
           </div>
@@ -7789,10 +7742,6 @@ function mountAgentWorkspace(innerHtml) {
   renderAgentSuggestionChips(scene);
   bindAgentVoiceAttach(scene);
   document.getElementById('agentChatAttach')?.addEventListener('click', () => document.getElementById('agentChatFile')?.click());
-  document.getElementById('agentChatLogout')?.addEventListener('click', () => {
-    closeAgentChatDrawer();
-    logout();
-  });
   updateUserBadge();
   updateCanvasChrome(scene);
   scheduleAgentWorkspaceHeightSync();
@@ -10291,7 +10240,7 @@ async function loadRecordsTab(tab) {
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok || data.historyEnabled === false) {
-        body.innerHTML = '<p style="color:var(--ink2)">简历记录需登录并配置 Upstash Redis。</p>';
+        body.innerHTML = '<p style="color:var(--ink2)">暂无云端简历记录（可选配置 Upstash Redis 后按设备持久化）。</p>';
         return;
       }
       if (!data.items?.length) {
@@ -11502,19 +11451,10 @@ async function bootstrap() {
   const historyClose = document.getElementById('historyClose');
   if (historyClose) historyClose.onclick = () => closeModalEl(historyModal);
   bindAgentChatHistoryModal();
-  authConfig = await fetchAuthConfig();
-  bindAuthGate();
+  authConfig = { authRequired: false, registrationEnabled: false };
+  hideGate();
   bindRecordsTabs();
-  if (!authConfig.authRequired) {
-    await enterAppGuest();
-    return;
-  }
-  if (await tryRestoreSession()) {
-    hideGate();
-    await enterAppAuthed();
-    return;
-  }
-  showGate();
+  await enterAppGuest();
 }
 
 bootstrap().catch((err) => {

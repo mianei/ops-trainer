@@ -22,12 +22,12 @@ AI 产品经理简历优化与面试训练：Agent 工作台（三栏布局）�
 - **项目教练**：`/api/coach` 六种辅导模式（简历诊断、面试防御、项目迭代等）
 - **训练计划**：在 3.0 工作台顶部输入目标，调用 `/api/plan` 生成「阅读 → 练题」多步任务流，自动推进
 - **成长与观测**：配置 Upstash 后支持答题历史、进步曲线、Observation Trace（badcase 打标、Token 聚合）
-- **注册登录（生产推荐）**：邀请码注册、一人一号；简历/JD 云端同步；练习记录与简历操作历史保存在账号下
+- **开放直进**：无需登录/邀请码，打开即可用；本地数据保存在浏览器，可选云端同步
 - **管理后台**：独立页面 `/admin`（需 `ADMIN_SECRET`）
 
 ## 使用方式
 
-在浏览器打开 [在线训练地址](https://cvassistant-ai.vercel.app)，**注册并登录**后使用（需有效邀请码）。
+在浏览器打开 [在线训练地址](https://cvassistant-ai.vercel.app)，打开即可使用（无需登录）。
 
 1. 克隆或 [下载源码 ZIP](https://github.com/mianei/ops-trainer/archive/refs/heads/main.zip)
 2. 在项目根目录复制 `.env.example` → `.env.local`，填入 `DEEPSEEK_API_KEY`、`UPSTASH_*`、`REGISTER_INVITE_CODE`
@@ -92,8 +92,8 @@ npx vercel dev
 | 变量 | 说明 |
 |------|------|
 | `DEEPSEEK_API_KEY` | **必填**，DeepSeek API Key（简历评分/教练/点评） |
-| `AUTH_DISABLED` | 生产设 **`0`** 开启登录；本地调试可设 `1` 访客模式 |
-| `REGISTER_INVITE_CODE` | **生产必填**，注册邀请码 |
+| `AUTH_DISABLED` | 当前产品默认开放直进；登录门禁已关闭 |
+| `REGISTER_INVITE_CODE` | 已不使用（注册入口关闭） |
 | `UPSTASH_REDIS_REST_URL` | **生产必填**，账号 / 简历 / 历史 / Trace |
 | `UPSTASH_REDIS_REST_TOKEN` | Upstash Token |
 | `ADMIN_SECRET` | 管理后台 `/admin` 密钥 |
@@ -109,19 +109,9 @@ npx vercel dev
 
 3. 修改环境变量后需重新部署（Redeploy）
 
-### 注册登录模式（生产推荐）
+### 开放访问
 
-1. `DEEPSEEK_API_KEY`（必填）
-2. `AUTH_DISABLED=0`
-3. `REGISTER_INVITE_CODE`（邀请码）
-4. `UPSTASH_REDIS_REST_URL` + `UPSTASH_REDIS_REST_TOKEN`
-5. `ADMIN_SECRET`（维护者后台）
-
-用户注册后：简历/JD 同步到云端；练题与简历操作历史按账号隔离。管理统计见 `/admin`。
-
-### 本地访客模式（可选）
-
-本地单人调试时可设 `AUTH_DISABLED=1`，无需 Upstash 与邀请码，历史落在 `guest` 下。
+产品默认 guest 直进，无需登录或邀请码。必备：`DEEPSEEK_API_KEY`。若需云端练习记录 / Trace，再配置 Upstash；管理后台仍用 `ADMIN_SECRET`。
 
 ### 答题记录与 Trace
 
