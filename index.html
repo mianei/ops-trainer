@@ -4948,7 +4948,7 @@
 <script src="/agent-intent.browser.js"></script>
 <script>
 const GITHUB_TOPICS_URL = '';
-const APP_ASSET_VERSION = '3.0.24';
+const APP_ASSET_VERSION = '3.0.25';
 
 function assetUrl(path) {
   const sep = path.includes('?') ? '&' : '?';
@@ -8403,18 +8403,25 @@ function formatCoachMarkdown(text) {
   const lines = String(text || '').split('\n');
   /** @type {string[]} */
   const parts = [];
-  /** @type {string[][]} */
+  /** Markdown 表格行原文（以 | 开头的整行字符串） */
+  /** @type {string[]} */
   let tableRows = [];
 
   function flushTable() {
     if (tableRows.length < 2) {
-      tableRows.forEach(row => parts.push(`<p>${escapeHtml(row.join(' | '))}</p>`));
+      // 不完整表格：按普通段落输出（tableRows 存的是 string，不是 cell 数组）
+      tableRows.forEach(row => parts.push(`<p>${escapeHtml(String(row))}</p>`));
       tableRows = [];
       return;
     }
-    const parseRow = (row) => row.split('|').map(c => c.trim()).filter(Boolean);
+    const parseRow = (row) => String(row || '').split('|').map(c => c.trim()).filter(Boolean);
     const header = parseRow(tableRows[0]);
-    const bodyRows = tableRows.slice(2).map(parseRow);
+    if (!header.length) {
+      tableRows.forEach(row => parts.push(`<p>${escapeHtml(String(row))}</p>`));
+      tableRows = [];
+      return;
+    }
+    const bodyRows = tableRows.slice(2).map(parseRow).filter(cells => cells.length);
     let tbl = '<table class="coach-md-table"><thead><tr>';
     header.forEach(c => { tbl += `<th>${escapeHtml(c)}</th>`; });
     tbl += '</tr></thead><tbody>';
