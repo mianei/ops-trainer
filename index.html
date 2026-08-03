@@ -4948,7 +4948,7 @@
 <script src="/agent-intent.browser.js"></script>
 <script>
 const GITHUB_TOPICS_URL = '';
-const APP_ASSET_VERSION = '3.0.26';
+const APP_ASSET_VERSION = '3.0.27';
 
 function assetUrl(path) {
   const sep = path.includes('?') ? '&' : '?';
@@ -7920,6 +7920,17 @@ function renderCanvasSubtitleActions(scene, tab) {
 function renderCanvasTitleCta(scene, tab) {
   const host = document.getElementById('canvasTitleCta');
   if (!host) return;
+  if (!host.dataset.ctaDelegated) {
+    host.dataset.ctaDelegated = '1';
+    host.addEventListener('click', (e) => {
+      const submitBtn = e.target.closest('button[id^="btn-"]');
+      if (submitBtn && host.contains(submitBtn)) {
+        const id = submitBtn.id.slice(4);
+        if (id) submitAnswer(id);
+        return;
+      }
+    });
+  }
   host.innerHTML = '';
   const parts = [];
 
@@ -7977,8 +7988,6 @@ function renderCanvasTitleCta(scene, tab) {
   document.getElementById('resumeGoOptimizeBtn')?.addEventListener('click', () => {
     goResumeOptimizeAndStart(null, '开始优化');
   });
-  const tid = activeBankQuestion?.topicId || activeTopicId;
-  if (tid) document.getElementById('btn-' + tid)?.addEventListener('click', () => submitAnswer(tid));
 }
 
 function renderDocExportSplitHtml(scope) {
@@ -9768,7 +9777,10 @@ async function sendModuleCoachMessage(opts) {
       renderAgentToolsPanel();
     }
   } catch (e) {
-    const errMsg = e.message || '发送失败';
+    const rawErr = e.message || '发送失败';
+    const errMsg = /Failed to fetch|NetworkError|network/i.test(rawErr)
+      ? '网络连接失败，请检查网络后重试'
+      : rawErr;
     if (errEl) { errEl.hidden = false; errEl.textContent = errMsg; }
     if (!action) {
       messages.pop();
@@ -11206,41 +11218,59 @@ function finishReviewForTopic(id, scenario, data) {
 }
 
 async function submitAnswer(id) {
-  if (!accessCode) { accessCode = 'guest'; userAccountId = userAccountId || 'guest'; }
-  const answer = document.getElementById('answer-' + id).value.trim();
-  if (!answer) { alert('请先写下你的回答'); return; }
-
-  const t = getTopic(id);
-  const scenario = document.getElementById('scenario-' + id).textContent;
-  const btn = document.getElementById('btn-' + id);
-  const respArea = document.getElementById('resp-' + id);
-  const respBody = document.getElementById('resp-body-' + id);
-  const systemPrompt = resolveSystemPrompt(scenario, t.systemPrompt);
-
-  btn.disabled = true;
-  btn.textContent = '点评生成中…';
-  respArea.classList.add('visible');
-  respBody.innerHTML = '<p class="stream-status">正在生成 AI 点评…</p>';
-  setInterviewFlowStep('review');
-
-  const payload = {
-    accessCode,
-    userId: userAccountId,
-    topicId: id,
-    stream: true,
-    systemPrompt,
-    scenario,
-    answer,
-    topicPrompts: topicPromptsPayload()
-  };
-  if (agentMission?.ragChunks?.length) {
-    payload.ragChunks = agentMission.ragChunks;
-  }
-  if (activeBankQuestion) {
-    payload.bankMeta = activeBankQuestion;
-  }
-
   try {
+    if (!accessCode) { accessCode = 'guest'; userAccountId = userAccountId || 'guest'; }
+    const answerEl = document.getElementById('answer-' + id);
+    if (!answerEl) {
+      alert('作答区未就绪，请刷新页面后重试');
+      return;
+    }
+    const answer = answerEl.value.trim();
+    if (!answer) { alert('请先写下你的回答'); return; }
+
+    const t = getTopic(id) || { id, systemPrompt: '', fieldLabel: '产品业务场景作答' };
+    const scenario = document.getElementById('scenario-' + id)?.textContent
+      || activeBankQuestion?.text
+      || '';
+    const btn = document.getElementById('btn-' + id);
+    const respArea = document.getElementById('resp-' + id);
+    const respBody = document.getElementById('resp-body-' + id);
+    if (!respBody) {
+      alert('点评区未就绪，请刷新页面后重试');
+      return;
+    }
+    const systemPrompt = resolveSystemPrompt(scenario, t.systemPrompt);
+
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = '点评生成中…';
+    }
+    // 立刻切到「点评」页，避免进度/错误写在隐藏面板里看起来像「没反应」
+    setCanvasTab('scenario', '点评');
+    applyScenarioCanvasPanels('点评');
+    updateCanvasChrome('scenario');
+    if (respArea) respArea.classList.add('visible');
+    respBody.innerHTML = '<p class="stream-status">正在生成 AI 点评…</p>';
+    setInterviewFlowStep('review');
+    pushAgentChatAssistant('scenario', '正在生成点评，请稍候…');
+
+    const payload = {
+      accessCode,
+      userId: userAccountId,
+      topicId: id,
+      stream: true,
+      systemPrompt,
+      scenario,
+      answer,
+      topicPrompts: topicPromptsPayload()
+    };
+    if (agentMission?.ragChunks?.length) {
+      payload.ragChunks = agentMission.ragChunks;
+    }
+    if (activeBankQuestion) {
+      payload.bankMeta = activeBankQuestion;
+    }
+
     const res = await fetch('/api/chat', {
       method: 'POST',
       headers: authHeaders(),
@@ -11252,6 +11282,7 @@ async function submitAnswer(id) {
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
       let buf = '';
+      let gotDone = false;
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
@@ -11263,38 +11294,62 @@ async function submitAnswer(id) {
           let evt;
           try { evt = JSON.parse(line); } catch { continue; }
           if (evt.type === 'done') {
+            gotDone = true;
             finishReviewForTopic(id, scenario, evt);
+            pushAgentChatAssistant('scenario', '点评已生成，可在「点评」页查看，也可继续追问。');
           } else if (evt.type === 'error') {
-            respBody.textContent = evt.error || '生成失败';
+            const msg = evt.error || '生成失败';
+            respBody.textContent = msg;
+            pushAgentChatAssistant('scenario', '点评失败：' + msg);
             clearMentorSession(id);
           }
         }
+      }
+      if (!gotDone && !String(respBody.textContent || '').includes('失败')) {
+        respBody.textContent = '点评未完整返回，请重试';
+        pushAgentChatAssistant('scenario', '点评未完整返回，请再点一次提交。');
       }
     } else {
       let data = {};
       const raw = await res.text();
       try { data = raw ? JSON.parse(raw) : {}; } catch {
         respBody.textContent = '服务端返回格式异常';
+        pushAgentChatAssistant('scenario', '点评失败：服务端返回格式异常');
         return;
       }
       if (res.ok && data.text) {
         finishReviewForTopic(id, scenario, data);
-      } else if (res.status === 401) {
-        respBody.textContent = '请求失败，请稍后重试。';
+        pushAgentChatAssistant('scenario', '点评已生成，可在「点评」页查看。');
       } else if (res.status === 429) {
-        respBody.textContent = data.error || '今日次数已达上限';
+        const msg = data.error || '今日次数已达上限';
+        respBody.textContent = msg;
+        pushAgentChatAssistant('scenario', '点评失败：' + msg);
       } else {
-        respBody.textContent = data.error || ('请求失败（HTTP ' + res.status + '）');
+        const msg = data.error || ('请求失败（HTTP ' + res.status + '）');
+        respBody.textContent = msg;
+        pushAgentChatAssistant('scenario', '点评失败：' + msg);
         clearMentorSession(id);
       }
     }
   } catch (e) {
-    respBody.textContent = '网络错误：' + e.message;
+    const msg = e?.message || String(e);
+    const friendly = /Failed to fetch|NetworkError|network/i.test(msg)
+      ? '网络连接失败，请检查网络后重试'
+      : msg;
+    const respBody = document.getElementById('resp-body-' + id);
+    if (respBody) respBody.textContent = '网络错误：' + friendly;
+    try { setCanvasTab('scenario', '点评'); applyScenarioCanvasPanels('点评'); updateCanvasChrome('scenario'); } catch { /* */ }
+    pushAgentChatAssistant('scenario', '点评失败：' + friendly + '。可点「提交 · 获取点评」重试。');
     clearMentorSession(id);
+  } finally {
+    const btn = document.getElementById('btn-' + id);
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = '提交 · 获取点评';
+    }
+    // 若仍停在题目页，补回提交按钮
+    if (getCanvasTab('scenario') === '题目') updateCanvasChrome('scenario');
   }
-
-  btn.disabled = false;
-  btn.textContent = '提交答案 · 获取点评';
 }
 
 
