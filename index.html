@@ -4948,7 +4948,7 @@
 <script src="/agent-intent.browser.js"></script>
 <script>
 const GITHUB_TOPICS_URL = '';
-const APP_ASSET_VERSION = '3.0.25';
+const APP_ASSET_VERSION = '3.0.26';
 
 function assetUrl(path) {
   const sep = path.includes('?') ? '&' : '?';
@@ -7396,9 +7396,24 @@ function renderAgentChatBubbles(scene) {
     el.innerHTML = `<div class="agent-chat-bubble agent"><div class="agent-chat-role">Agent</div>${hint}</div>`;
     return;
   }
-  el.innerHTML = msgs.map(m =>
-    `<div class="agent-chat-bubble ${m.role === 'user' ? 'user' : 'agent'}"><div class="agent-chat-role">${m.role === 'user' ? '你' : 'Agent'}</div>${m.role === 'assistant' ? renderCoachBubbleHtml(m.content, m.role) : escapeHtml(m.content).replace(/\n/g, '<br/>')}</div>`
-  ).join('');
+  try {
+    el.innerHTML = msgs.map(m => {
+      let body = '';
+      try {
+        body = m.role === 'assistant'
+          ? renderCoachBubbleHtml(m.content, m.role)
+          : escapeHtml(m.content).replace(/\n/g, '<br/>');
+      } catch {
+        body = escapeHtml(String(m.content || '')).replace(/\n/g, '<br/>');
+      }
+      return `<div class="agent-chat-bubble ${m.role === 'user' ? 'user' : 'agent'}"><div class="agent-chat-role">${m.role === 'user' ? '你' : 'Agent'}</div>${body}</div>`;
+    }).join('');
+  } catch (err) {
+    console.warn('[renderAgentChatBubbles]', err);
+    el.innerHTML = msgs.map(m =>
+      `<div class="agent-chat-bubble ${m.role === 'user' ? 'user' : 'agent'}"><div class="agent-chat-role">${m.role === 'user' ? '你' : 'Agent'}</div>${escapeHtml(String(m.content || '')).replace(/\n/g, '<br/>')}</div>`
+    ).join('');
+  }
   el.scrollTop = el.scrollHeight;
 }
 
@@ -8400,6 +8415,15 @@ function renderCoachBubbleHtml(content, role) {
 }
 
 function formatCoachMarkdown(text) {
+  try {
+    return formatCoachMarkdownUnsafe(text);
+  } catch (err) {
+    console.warn('[formatCoachMarkdown]', err);
+    return escapeHtml(String(text || '')).replace(/\n/g, '<br/>');
+  }
+}
+
+function formatCoachMarkdownUnsafe(text) {
   const lines = String(text || '').split('\n');
   /** @type {string[]} */
   const parts = [];
@@ -8410,14 +8434,21 @@ function formatCoachMarkdown(text) {
   function flushTable() {
     if (tableRows.length < 2) {
       // 不完整表格：按普通段落输出（tableRows 存的是 string，不是 cell 数组）
-      tableRows.forEach(row => parts.push(`<p>${escapeHtml(String(row))}</p>`));
+      tableRows.forEach(row => {
+        const cells = Array.isArray(row) ? row : null;
+        const plain = cells ? cells.join(' | ') : String(row || '');
+        parts.push(`<p>${escapeHtml(plain)}</p>`);
+      });
       tableRows = [];
       return;
     }
-    const parseRow = (row) => String(row || '').split('|').map(c => c.trim()).filter(Boolean);
+    const parseRow = (row) => {
+      if (Array.isArray(row)) return row.map(c => String(c || '').trim()).filter(Boolean);
+      return String(row || '').split('|').map(c => c.trim()).filter(Boolean);
+    };
     const header = parseRow(tableRows[0]);
     if (!header.length) {
-      tableRows.forEach(row => parts.push(`<p>${escapeHtml(String(row))}</p>`));
+      tableRows.forEach(row => parts.push(`<p>${escapeHtml(String(Array.isArray(row) ? row.join(' | ') : row))}</p>`));
       tableRows = [];
       return;
     }
