@@ -4948,7 +4948,7 @@
 <script src="/agent-intent.browser.js"></script>
 <script>
 const GITHUB_TOPICS_URL = '';
-const APP_ASSET_VERSION = '3.0.27';
+const APP_ASSET_VERSION = '3.0.28';
 
 function assetUrl(path) {
   const sep = path.includes('?') ? '&' : '?';
@@ -7392,7 +7392,7 @@ function renderAgentChatBubbles(scene) {
   if (!msgs.length) {
     const hint = scene === 'kb'
       ? '可以帮你查概念、解释知识点。阅读卡片时有不懂的，直接问我。'
-      : '我可以帮你评分简历、优化表述、准备面试或换题练习。左边结果不满意，直接说你想怎么改。';
+      : '我可以帮你评分简历、优化表述、准备面试或换题练习。或者直接问我。';
     el.innerHTML = `<div class="agent-chat-bubble agent"><div class="agent-chat-role">Agent</div>${hint}</div>`;
     return;
   }
