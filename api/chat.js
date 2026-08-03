@@ -40,6 +40,11 @@ import {
   recordTokenUsageToStore
 } from '../lib/observation-trace.js';
 import { recordUsageEvent } from '../lib/usage-stats.js';
+import {
+  isTrivialAnswer,
+  buildTrivialReview,
+  TRIVIAL_ANSWER_PROMPT_RULE
+} from '../lib/trivial-answer.js';
 
 function getClientIp(req) {
   const xff = getHeader(req, 'x-forwarded-for');
@@ -394,6 +399,59 @@ export default async function handler(req) {
       return json({ error: '答案过长或格式错误' }, 400);
     }
 
+    const trivial = isTrivialAnswer(answer);
+    if (trivial.trivial) {
+      const usePmDims = pmReviewEnabled() && isPmInterviewContext(topicId, scenario, body.bankMeta);
+      const review = buildTrivialReview(answer, { usePmDims });
+      const text = reviewToPlainText(review);
+      const dims = review.dimensions || [];
+      const rubricAvg = dims.length
+        ? Math.round((dims.reduce((s, d) => s + d.score, 0) / dims.length) * 10) / 10
+        : 1;
+      let trivialAttempt = 1;
+      if (historyEnabled() && topicId) {
+        const all = await loadTopicAttempts(auth.userId, topicId);
+        trivialAttempt = all.length + 1;
+        await saveAttempt(auth.userId, topicId, {
+          scenario,
+          answer,
+          feedback: text,
+          rubricAvg,
+          dimensions: dims
+        });
+      }
+      const payload = {
+        text,
+        structured: review,
+        rubricAvg,
+        attemptNumber: trivialAttempt,
+        comparedWith: 0,
+        historyEnabled: historyEnabled(),
+        ragEnabled: false,
+        ragRefs: [],
+        interviewRagCount: 0,
+        trivial: true,
+        trivialReason: trivial.reason
+      };
+      const wantStreamEarly = streamEnabled(body, mode);
+      if (wantStreamEarly) {
+        const encoder = new TextEncoder();
+        const stream = new ReadableStream({
+          start(controller) {
+            controller.enqueue(encoder.encode(JSON.stringify({ type: 'done', ...payload }) + '\n'));
+            controller.close();
+          }
+        });
+        return new Response(stream, {
+          headers: {
+            'Content-Type': 'application/x-ndjson; charset=utf-8',
+            'Cache-Control': 'no-cache'
+          }
+        });
+      }
+      return json(payload);
+    }
+
     if (historyEnabled() && topicId) {
       const all = await loadTopicAttempts(auth.userId, topicId);
       const prior = priorRecentAttempts(all, 3);
@@ -448,6 +506,7 @@ export default async function handler(req) {
   const usePmDims = useStructured && pmReviewEnabled() && isPmInterviewContext(topicId, scenario, body.bankMeta);
   if (useStructured) {
     reviewSystemPrompt += usePmDims ? PM_STRUCTURED_REVIEW_SUFFIX : STRUCTURED_REVIEW_SUFFIX;
+    reviewSystemPrompt += TRIVIAL_ANSWER_PROMPT_RULE;
   }
   if (mode === 'review' && usePmDims && body.bankMeta) {
     reviewSystemPrompt += PM_COACH_REVIEW_PRINCIPLES + buildBankReviewContext(body.bankMeta);
